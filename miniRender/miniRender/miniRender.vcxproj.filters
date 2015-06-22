@@ -1,0 +1,450 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="源文件\Base">
+      <UniqueIdentifier>{028ddc1b-6167-4b39-8ba2-7c499e250436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Math">
+      <UniqueIdentifier>{b1e2d8fb-7777-4856-bca6-110769f30f4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Blend">
+      <UniqueIdentifier>{f5c70c23-a3e9-42a1-ba1a-fc9eab0d10b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Buffer">
+      <UniqueIdentifier>{fbc85abf-3271-4ee2-ae90-619970f3088d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Platform">
+      <UniqueIdentifier>{565de1ed-59e1-4135-8d3e-11b80e0df4c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Camera">
+      <UniqueIdentifier>{308f0082-36fd-40a5-90d7-eca53d38a080}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Device">
+      <UniqueIdentifier>{b341caf5-9f7a-4ee4-a691-1a4cebfac231}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Engine">
+      <UniqueIdentifier>{5efd2bae-5396-4cfd-9704-8d4b8393db90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Entity">
+      <UniqueIdentifier>{fe189ff0-5861-401e-a952-09e94925d219}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Generator">
+      <UniqueIdentifier>{bb7f1112-c65e-4686-b1cf-abc45a2a5aa1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Layouts">
+      <UniqueIdentifier>{8a3f2ebc-4c55-46c4-8e79-129f6317b88e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Light">
+      <UniqueIdentifier>{fcef3870-dfc5-4f49-b27f-420cb1b06863}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Material">
+      <UniqueIdentifier>{5567c8a6-f3b2-4a87-be3a-04e95e397c58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Ref">
+      <UniqueIdentifier>{afafcabb-c8f3-4d60-811e-8bd5fd744157}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Render">
+      <UniqueIdentifier>{b254281f-481e-44fb-854f-42bb59253471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\RenderObject">
+      <UniqueIdentifier>{6dcfee7c-20d7-49ef-83ef-f340b97cea95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Repertory">
+      <UniqueIdentifier>{5274d9ef-e24f-4200-b365-0db9b02ab153}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Platform\D3D">
+      <UniqueIdentifier>{d067e364-445a-4b3f-9808-f61f2d1e9fba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Platform\D3D\D3D11">
+      <UniqueIdentifier>{810cefb2-6fde-4fb8-84ca-2acdf49cc229}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Platform\D3D\D3D11\Blend">
+      <UniqueIdentifier>{c6583c37-46b2-408b-9fff-9c1d0393b117}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Platform\D3D\D3D11\Buffer">
+      <UniqueIdentifier>{2b818130-3762-4fca-937e-4cada913570c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Platform\D3D\D3D11\Device">
+      <UniqueIdentifier>{b12a64db-30e8-4225-9400-a244126e87f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Platform\D3D\D3D11\Layouts">
+      <UniqueIdentifier>{5ea27fbc-6754-4a22-9cbc-e27f04cb2a92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Stencil">
+      <UniqueIdentifier>{fa85ee69-d2f9-482a-80a7-6521d26b6b84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Platform\D3D\D3D11\Stencil">
+      <UniqueIdentifier>{85800e1c-97f0-4cea-ad6c-0678bd68f4e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Texture">
+      <UniqueIdentifier>{6a26090f-e191-4493-bd08-160bb0ed4031}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Platform\D3D\D3D11\Texture">
+      <UniqueIdentifier>{660f7c76-8a1b-421f-b9fd-61585f3558dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Timer">
+      <UniqueIdentifier>{60393599-c5e5-43e0-841a-68caf9718b51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Shader">
+      <UniqueIdentifier>{e71cc7ac-b421-481c-9a70-9d2ad221b27f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Platform\D3D\D3D11\Shader">
+      <UniqueIdentifier>{0d5dcff2-243e-4093-a17e-1c19cc398a5d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Base\cwVector.h">
+      <Filter>源文件\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\cwMap.h">
+      <Filter>源文件\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\cwMacros.h">
+      <Filter>源文件\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\cwBasicType.h">
+      <Filter>源文件\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\cwStruct.h">
+      <Filter>源文件\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\cwAABB.h">
+      <Filter>源文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\cwCircle.h">
+      <Filter>源文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\cwIntersection.h">
+      <Filter>源文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\cwMath.h">
+      <Filter>源文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\cwMathUtil.h">
+      <Filter>源文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\cwMatrix4X4.h">
+      <Filter>源文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\cwPlane.h">
+      <Filter>源文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\cwPoint4D.h">
+      <Filter>源文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\cwQuaternion.h">
+      <Filter>源文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\cwRay.h">
+      <Filter>源文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\cwShape.h">
+      <Filter>源文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\cwVector2D.h">
+      <Filter>源文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\cwVector3D.h">
+      <Filter>源文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\cwVector4D.h">
+      <Filter>源文件\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\cwUtils.h">
+      <Filter>源文件\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\cwWinMain.h">
+      <Filter>源文件\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="cwMiniRender.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Blend\cwBlend.h">
+      <Filter>源文件\Blend</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer\cwBuffer.h">
+      <Filter>源文件\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D11\Blend\cwD3D11Blend.h">
+      <Filter>源文件\Platform\D3D\D3D11\Blend</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D11\Buffer\cwD3D11IndexBuffer.h">
+      <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D11\Buffer\cwD3D11VertexBuffer.h">
+      <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\cwCamera.h">
+      <Filter>源文件\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\cwColor.h">
+      <Filter>源文件\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\cwRunTime.h">
+      <Filter>源文件\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\cwStringConvert.h">
+      <Filter>源文件\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\cwValueMap.h">
+      <Filter>源文件\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\cwDevice.h">
+      <Filter>源文件\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\cwEngine.h">
+      <Filter>源文件\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\cwEntity.h">
+      <Filter>源文件\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\cwScene.h">
+      <Filter>源文件\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Generator\cwGeometryGenerator.h">
+      <Filter>源文件\Generator</Filter>
+    </ClInclude>
+    <ClInclude Include="Layouts\cwInputElementDescManager.h">
+      <Filter>源文件\Layouts</Filter>
+    </ClInclude>
+    <ClInclude Include="Layouts\cwLayouts.h">
+      <Filter>源文件\Layouts</Filter>
+    </ClInclude>
+    <ClInclude Include="Layouts\cwLayoutsManager.h">
+      <Filter>源文件\Layouts</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\cwLight.h">
+      <Filter>源文件\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="Material\cwMaterial.h">
+      <Filter>源文件\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Ref\cwAutoReleasePool.h">
+      <Filter>源文件\Ref</Filter>
+    </ClInclude>
+    <ClInclude Include="Ref\cwRef.h">
+      <Filter>源文件\Ref</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\cwRenderCommand.h">
+      <Filter>源文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\cwRenderQueue.h">
+      <Filter>源文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderObject\cwDynamicRenderObject.h">
+      <Filter>源文件\RenderObject</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderObject\cwRenderObject.h">
+      <Filter>源文件\RenderObject</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderObject\cwStaticRenderObject.h">
+      <Filter>源文件\RenderObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Repertory\cwRepertory.h">
+      <Filter>源文件\Repertory</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Layouts\cwD3D11Layouts.h">
+      <Filter>源文件\Platform\D3D\D3D11\Layouts</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Device\cwD3D11Device.h">
+      <Filter>源文件\Platform\D3D\D3D11\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Stencil\cwStencil.h">
+      <Filter>源文件\Stencil</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Stencil\cwD3D11Stencil.h">
+      <Filter>源文件\Platform\D3D\D3D11\Stencil</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\cwTexture.h">
+      <Filter>源文件\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\cwTextureManager.h">
+      <Filter>源文件\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11Texture.h">
+      <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer\cwTimer.h">
+      <Filter>源文件\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\cwShaderConstant.h">
+      <Filter>源文件\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\cwShader.h">
+      <Filter>源文件\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Shader\cwD3D11Shader.h">
+      <Filter>源文件\Platform\D3D\D3D11\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\cwPlatform.h">
+      <Filter>源文件\Platform</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Math\cwAABB.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\cwCircle.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\cwIntersection.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\cwMathUtil.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\cwMatrix4X4.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\cwPlane.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\cwPoint4D.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\cwQuaternion.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\cwRay.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\cwShape.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\cwVector2D.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\cwVector3D.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\cwVector4D.cpp">
+      <Filter>源文件\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\cwWinMain.cpp">
+      <Filter>源文件\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Blend\cwBlend.cpp">
+      <Filter>源文件\Blend</Filter>
+    </ClCompile>
+    <ClCompile Include="Buffer\cwBuffer.cpp">
+      <Filter>源文件\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D11\Blend\cwD3D11Blend.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Blend</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D11\Buffer\cwD3D11IndexBuffer.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D11\Buffer\cwD3D11VertexBuffer.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera\cwCamera.cpp">
+      <Filter>源文件\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\cwColor.cpp">
+      <Filter>源文件\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\cwRunTime.cpp">
+      <Filter>源文件\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\cwStringConvert.cpp">
+      <Filter>源文件\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Device\cwDevice.cpp">
+      <Filter>源文件\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\cwEngine.cpp">
+      <Filter>源文件\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\cwEntity.cpp">
+      <Filter>源文件\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\cwScene.cpp">
+      <Filter>源文件\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Generator\cwGeometryGenerator.cpp">
+      <Filter>源文件\Generator</Filter>
+    </ClCompile>
+    <ClCompile Include="Layouts\cwInputElementDescManager.cpp">
+      <Filter>源文件\Layouts</Filter>
+    </ClCompile>
+    <ClCompile Include="Layouts\cwLayouts.cpp">
+      <Filter>源文件\Layouts</Filter>
+    </ClCompile>
+    <ClCompile Include="Layouts\cwLayoutsManager.cpp">
+      <Filter>源文件\Layouts</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\cwLight.cpp">
+      <Filter>源文件\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Material\cwMaterial.cpp">
+      <Filter>源文件\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Ref\cwAutoReleasePool.cpp">
+      <Filter>源文件\Ref</Filter>
+    </ClCompile>
+    <ClCompile Include="Ref\cwRef.cpp">
+      <Filter>源文件\Ref</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\cwRenderCommand.cpp">
+      <Filter>源文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\cwRenderQueue.cpp">
+      <Filter>源文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderObject\cwDynamicRenderObject.cpp">
+      <Filter>源文件\RenderObject</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderObject\cwRenderObject.cpp">
+      <Filter>源文件\RenderObject</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderObject\cwStaticRenderObject.cpp">
+      <Filter>源文件\RenderObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Repertory\cwRepertory.cpp">
+      <Filter>源文件\Repertory</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Layouts\cwD3D11Layouts.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Layouts</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Device\cwD3D11Device.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Device</Filter>
+    </ClCompile>
+    <ClCompile Include="Stencil\cwStencil.cpp">
+      <Filter>源文件\Stencil</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Stencil\cwD3D11Stencil.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Stencil</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\cwTexture.cpp">
+      <Filter>源文件\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\cwTextureManager.cpp">
+      <Filter>源文件\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11Texture.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer\cwTimer.cpp">
+      <Filter>源文件\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\cwShader.cpp">
+      <Filter>源文件\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11Shader.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Shader</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
