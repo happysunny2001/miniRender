@@ -291,6 +291,9 @@
     <ClInclude Include="Platform\cwPlatform.h">
       <Filter>源文件\Platform</Filter>
     </ClInclude>
+    <ClInclude Include="Shader\cwShaderManager.h">
+      <Filter>源文件\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -445,6 +448,9 @@
     </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11Shader.cpp">
       <Filter>源文件\Platform\D3D\D3D11\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\cwShaderManager.cpp">
+      <Filter>源文件\Shader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

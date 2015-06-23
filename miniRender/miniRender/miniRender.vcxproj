@@ -77,6 +77,7 @@
     <ClInclude Include="Repertory\cwRepertory.h" />
     <ClInclude Include="Shader\cwShader.h" />
     <ClInclude Include="Shader\cwShaderConstant.h" />
+    <ClInclude Include="Shader\cwShaderManager.h" />
     <ClInclude Include="Stencil\cwStencil.h" />
     <ClInclude Include="Texture\cwTexture.h" />
     <ClInclude Include="Texture\cwTextureManager.h" />
@@ -130,6 +131,7 @@
     <ClCompile Include="Render\cwRenderQueue.cpp" />
     <ClCompile Include="Repertory\cwRepertory.cpp" />
     <ClCompile Include="Shader\cwShader.cpp" />
+    <ClCompile Include="Shader\cwShaderManager.cpp" />
     <ClCompile Include="Stencil\cwStencil.cpp" />
     <ClCompile Include="Texture\cwTexture.cpp" />
     <ClCompile Include="Texture\cwTextureManager.cpp" />
