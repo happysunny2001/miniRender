@@ -17,7 +17,7 @@ typedef int              CWINT;
 typedef bool             CWBOOL;
 typedef char             CWCHAR;
 
-#if _CW_PLATFORM_ == PLATFORM::EPLAT_WINDOWS
+#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
 typedef wstring          CWWSTRING;
 #endif
 
