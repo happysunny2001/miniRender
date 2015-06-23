@@ -27,12 +27,12 @@ NS_MINI_BEGIN
 class cwD3D11Shader : public cwShader
 {
 public:
-	static cwD3D11Shader* create(const std::string& strShaderFile);
+	static cwD3D11Shader* create(const CWSTRING& strShaderFile);
 
 	cwD3D11Shader();
 	virtual ~cwD3D11Shader();
 
-	virtual bool init(const std::string& strShaderFile) override;
+	virtual bool init(const CWSTRING& strShaderFile) override;
 
 	virtual void setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize) override;
 	virtual void setVariableData(const string& strVariable, CWUINT index, void* pData, CWUINT offset, CWUINT iSize) override;

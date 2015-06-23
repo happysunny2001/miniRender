@@ -33,12 +33,12 @@ class cwTexture;
 class cwShader : public cwRef
 {
 public:
-	static cwShader* create(const std::string& strShaderFile);
+	static cwShader* create(const CWSTRING& strShaderFile);
 
 	cwShader();
 	virtual ~cwShader();
 
-	virtual bool init(const std::string& strShaderFile) = 0;
+	virtual bool init(const CWSTRING& strShaderFile) = 0;
 
 	virtual bool hasVariable(const string& strVariable);
 	virtual void setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize) = 0;

@@ -16,3 +16,51 @@ PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS B
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
+#include "cwShaderManager.h"
+
+NS_MINI_BEGIN
+
+cwShaderManager& cwShaderManager::getInstance()
+{
+	static cwShaderManager shaderManager;
+	return shaderManager;
+}
+
+cwShaderManager::cwShaderManager()
+{
+
+}
+
+cwShaderManager::~cwShaderManager()
+{
+
+}
+
+cwShader* cwShaderManager::loadShader(const CWSTRING& strFile)
+{
+	auto itFind = m_nMapShader.find(strFile);
+	if (itFind != m_nMapShader.end()) return itFind->second;
+
+	cwShader* pShader = cwShader::create(strFile);
+	if (pShader) {
+		m_nMapShader.insert(strFile, pShader);
+		return pShader;
+	}
+
+	return nullptr;
+}
+
+cwShader* cwShaderManager::getShader(const CWSTRING& strFile)
+{
+	auto itFind = m_nMapShader.find(strFile);
+	if (itFind != m_nMapShader.end()) return itFind->second;
+	return nullptr;
+}
+
+void cwShaderManager::init()
+{
+
+}
+
+NS_MINI_END

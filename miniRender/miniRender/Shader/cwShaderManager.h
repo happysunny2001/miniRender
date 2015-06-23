@@ -16,3 +16,31 @@ PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS B
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
+#include "Base/cwMacros.h"
+#include "Base/cwMap.h"
+#include "cwShader.h"
+
+NS_MINI_BEGIN
+
+class CW_DLL cwShaderManager
+{
+public:
+	static cwShaderManager& getInstance();
+
+	~cwShaderManager();
+
+	void init();
+
+	cwShader* loadShader(const CWSTRING& strFile);
+	cwShader* getShader(const CWSTRING& strFile);
+
+private:
+	cwShaderManager();
+
+protected:
+	cwMap<CWSTRING, cwShader*> m_nMapShader;
+
+};
+
+NS_MINI_END

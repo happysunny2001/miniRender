@@ -46,7 +46,7 @@ cwD3D11Shader::cwD3D11Shader()
 
 cwD3D11Shader::~cwD3D11Shader()
 {
-
+	CW_RELEASE_COM(m_pEffect);
 }
 
 bool cwD3D11Shader::init(const std::string& strShaderFile)

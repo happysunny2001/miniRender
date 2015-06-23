@@ -21,7 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #define __CW_MAP_H__
 
 #include "cwMacros.h"
-#include "cwCommon.h"
+#include <assert.h>
 #include <unordered_map>
 
 NS_MINI_BEGIN
@@ -69,7 +69,7 @@ public:
 	}
 
 	void insert(const K& key, V object) {
-		CWAssert(object != nullptr, "Object is nullptr!");
+		assert(object != nullptr);
 		erase(key);
 		m_nData.insert(std::make_pair(key, object));
 		object->retain();
