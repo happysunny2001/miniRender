@@ -60,7 +60,7 @@ cwRepertory::~cwRepertory()
 	CW_SAFE_RELEASE_NULL(m_pCurrentCamera);
 }
 
-cwRenderDevice* cwRepertory::getDevice()
+cwDevice* cwRepertory::getDevice()
 {
 	return m_pDevice;
 }

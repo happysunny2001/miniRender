@@ -28,7 +28,7 @@ using namespace std;
 
 NS_MINI_BEGIN
 
-class cwRenderDevice;
+class cwDevice;
 class cwLog;
 class cwEffectManager;
 class cwLayoutsManager;
@@ -46,7 +46,7 @@ public:
 	CWUINT  getUInt(const string& strName);
 	CWVOID* getPtr(const string& strName);
 
-	virtual cwRenderDevice* getDevice();
+	virtual cwDevice* getDevice();
 	virtual cwLog* getLog();
 	virtual cwEffectManager* getEffectManager();
 	virtual cwLayoutsManager* getLayoutManager();
@@ -64,7 +64,7 @@ protected:
 	virtual ~cwRepertory();
 	
 protected:
-	cwRenderDevice* m_pDevice;
+	cwDevice* m_pDevice;
 	cwEffectManager* m_pEffectManager;
 	cwLayoutsManager* m_pLayoutManager;
 	cwAutoReleasePool* m_pAutoReleasePool;

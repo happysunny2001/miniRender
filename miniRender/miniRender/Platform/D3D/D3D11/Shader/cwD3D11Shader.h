@@ -34,7 +34,38 @@ public:
 
 	virtual bool init(const std::string& strShaderFile) override;
 
+	virtual void setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize) override;
+	virtual void setVariableData(const string& strVariable, CWUINT index, void* pData, CWUINT offset, CWUINT iSize) override;
+	virtual void setVariableMatrix(const string& strVariable, CWFLOAT* pData) override;
+	virtual void setVariableInt(const string& strVariable, CWINT value) override;
+	virtual void setVariableFloat(const string& strVariable, CWFLOAT value) override;
+	virtual void setVariableFloatArray(const string& strVariable, CWFLOAT* pData, CWUINT count) override;
+	virtual void setVariableTexture(const string& strVariable, cwTexture* pTexture) override;
+
+	virtual void apply(CWUINT techIndex, CWUINT passIndex) override;
+
 protected:
+	bool saveTech();
+	bool savePass(ID3DX11EffectTechnique* pTech);
+	bool saveVariable();
+
+	ID3DX11Effect* getEffect() { return m_pEffect; }
+	ID3DX11EffectTechnique* getTechnique(CWUINT index);
+	ID3DX11EffectTechnique* getTechnique(const string& strTechName);
+	ID3DX11EffectPass* getPass(CWUINT techIndex, CWUINT passIndex);
+	ID3DX11EffectPass* getPass(const string& strTechName, const string& strPassName);
+	ID3DX11EffectPass* getPass(CWUINT techIndex, const string& strPassName);
+	ID3DX11EffectPass* getPass(const string& strTechName, CWUINT passIndex);
+
+protected:
+	ID3DX11Effect* m_pEffect;
+	vector<ID3DX11EffectTechnique*> m_vecTech;
+	unordered_map<string, ID3DX11EffectTechnique*> m_mapTech;
+
+	unordered_map<ID3DX11EffectTechnique*, vector<ID3DX11EffectPass*> > m_mapIndexPass;
+	unordered_map<ID3DX11EffectTechnique*, unordered_map<string, ID3DX11EffectPass*> > m_mapNamePass;
+
+	unordered_map<string, ID3DX11EffectVariable*> m_mapVariable;
 
 };
 

@@ -49,6 +49,8 @@ public:
 	virtual void setVariableFloatArray(const string& strVariable, CWFLOAT* pData, CWUINT count) = 0;
 	virtual void setVariableTexture(const string& strVariable, cwTexture* pTexture) = 0;
 
+	virtual void apply(CWUINT techIndex, CWUINT passIndex) = 0;
+
 protected:
 	std::unordered_map<std::string, ShaderVarible> m_nMapShaderVarible;
 
