@@ -19,17 +19,18 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include <windows.h>
 #include <windowsx.h>
-#include "cwWinMain.h"
-#include "cwTimer.h"
 #include <assert.h>
 #include <sstream>
 #include <algorithm>
 #include <iostream>
-#include "cwEffectManager.h"
-#include "cwLayoutsManager.h"
-#include "cwD3D11Device.h"
+
+#include "cwWinMain.h"
+#include "Timer/cwTimer.h"
+#include "Shader/cwShaderManager.h"
+#include "Layouts/cwLayoutsManager.h"
+#include "Device/cwDevice.h"
 #include "cwStringConvert.h"
-#include "cwAutoReleasePool.h"
+#include "Ref/cwAutoReleasePool.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -186,8 +187,8 @@ void cwWinMain::onResize()
 
 void cwWinMain::showFPS()
 {
-	cwRepertory::getInstance().refreshWindowTitle(cwStringConvert::createFPSString(wstring(m_wpcWinName), 
-																				   m_pTimer->fps()).c_str());
+	//cwRepertory::getInstance().refreshWindowTitle(cwStringConvert::createFPSString(wstring(m_wpcWinName), 
+	//																			   m_pTimer->fps()).c_str());
 }
 
 LRESULT cwWinMain::msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)

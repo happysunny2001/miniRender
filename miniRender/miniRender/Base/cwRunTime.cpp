@@ -17,10 +17,10 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwTimer.h"
 #include "cwRunTime.h"
+#include "Timer/cwTimer.h"
 #include "cwStringConvert.h"
-#include "cwRepertory.h"
+#include "Repertory/cwRepertory.h"
 
 NS_MINI_BEGIN
 
@@ -56,7 +56,7 @@ void cwRunTime::setWindowTitle(const CWWSTRING& strTitle)
 
 void cwRunTime::showFPS()
 {
-	cwRepertory::getInstance().refreshWindowTitle(cwStringConvert::createFPSString(m_strWinTitle, m_pTimer->fps()).c_str());
+//	cwRepertory::getInstance().refreshWindowTitle(cwStringConvert::createFPSString(m_strWinTitle, m_pTimer->fps()).c_str());
 }
 
 NS_MINI_END

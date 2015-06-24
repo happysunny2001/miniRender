@@ -23,7 +23,7 @@ NS_MINI_BEGIN
 
 cwBuffer* cwBuffer::create(
 	CWUINT uSize,
-	CW_BUFFER_USAGE usage,
+	eBufferUsage usage,
 	CWUINT bindFlag,
 	CWUINT uCpuFlag,
 	CWUINT miscFlag,
@@ -47,12 +47,12 @@ m_pDRenderBuffer(nullptr)
 
 cwBuffer::~cwBuffer()
 {
-	CW_RELEASE_COM(m_pDRenderBuffer);
+	
 }
 
 bool cwBuffer::init(
 	CWUINT uSize,
-	CW_BUFFER_USAGE usage,
+	eBufferUsage usage,
 	CWUINT bindFlag,
 	CWUINT uCpuFlag,
 	CWUINT miscFlag,

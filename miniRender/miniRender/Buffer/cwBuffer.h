@@ -22,18 +22,18 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
-#include "cwRef.h"
+#include "Ref/cwRef.h"
 
 NS_MINI_BEGIN
 
-class cwRenderDevice;
+class cwDevice;
 
 class CW_DLL cwBuffer : public cwRef
 {
 public:
 	static cwBuffer* create(
 		CWUINT uSize,
-		CW_BUFFER_USAGE usage,
+		eBufferUsage usage,
 		CWUINT bindFlag,
 		CWUINT uCpuFlag,
 		CWUINT miscFlag,
@@ -44,22 +44,32 @@ public:
 
 	virtual bool init(
 		CWUINT uSize,
-		CW_BUFFER_USAGE usage,
+		eBufferUsage usage,
 		CWUINT bindFlag,
 		CWUINT uCpuFlag,
 		CWUINT miscFlag,
 		CWUINT structureByteStride);
 
 	inline CW_BUFFER_DESC& getBufferDesc() { return m_nBuffDesc; }
-	inline CW_BUFFER* getBuffer() { return m_pDRenderBuffer; }
-	inline void setBuffer(CW_BUFFER* pBuffer) { m_pDRenderBuffer = pBuffer; }
+	inline CWVOID* getBuffer() { return m_pDRenderBuffer; }
+	inline void setBuffer(CWVOID* pBuffer) { m_pDRenderBuffer = pBuffer; }
 
-	virtual void set(cwRenderDevice* pDevice) {}
+	virtual void set(cwDevice* pDevice) {}
 	CWUINT getSize() { return m_nBuffDesc.ByteWidth; }
+
+	inline void setStride(CWUINT uStride) { m_nStride = uStride; }
+	inline CWUINT getStride() const { return m_nStride; }
+	inline CWUINT getOffset() const { return m_nOffset; }
+
+	const CWUINT getIndexCount() const { return m_iIndexCnt; }
 
 protected:
 	CW_BUFFER_DESC m_nBuffDesc;
-	CW_BUFFER* m_pDRenderBuffer;
+	CWVOID* m_pDRenderBuffer;
+
+	CWUINT m_nStride;
+	CWUINT m_nOffset;
+	CWUINT m_iIndexCnt;
 
 };
 

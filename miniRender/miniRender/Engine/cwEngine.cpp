@@ -18,7 +18,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwEngine.h"
-#include "cwScene.h"
+#include "Entity/cwScene.h"
 
 NS_MINI_BEGIN
 

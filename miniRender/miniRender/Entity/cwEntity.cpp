@@ -18,12 +18,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwEntity.h"
-#include "cwRenderObject.h"
-#include "cwRenderDevice.h"
-#include "cwRepertory.h"
-#include "cwMaterial.h"
-#include "cwLight.h"
-#include "cwEffects.h"
+#include "RenderObject/cwRenderObject.h"
+#include "Device/cwDevice.h"
+#include "Repertory/cwRepertory.h"
+#include "Material/cwMaterial.h"
+#include "Light/cwLight.h"
+#include "Shader/cwShader.h"
 
 NS_MINI_BEGIN
 
@@ -181,22 +181,22 @@ void cwEntity::transform()
 
 void cwEntity::renderSelf()
 {
-	cwMaterial* pMaterial = this->getMaterial();
-	if (pMaterial) {
-		pMaterial->configEffect();
+	//cwMaterial* pMaterial = this->getMaterial();
+	//if (pMaterial) {
+	//	pMaterial->configEffect();
 
-		cwEffects *pEffect = pMaterial->getEffect();
-		if (pEffect) {
-			this->transform();
-			cwRepertory::getInstance().getDevice()->setEffectWorldTrans(pEffect, this->getWorldTrans(), pCamera);
+	//	cwEffects *pEffect = pMaterial->getEffect();
+	//	if (pEffect) {
+	//		this->transform();
+	//		cwRepertory::getInstance().getDevice()->setEffectWorldTrans(pEffect, this->getWorldTrans(), pCamera);
 
-			const cwMatrix4X4& matDiffTrans = this->getDiffuseTrans();
-			cwRepertory::getInstance().getDevice()->setDiffuseTrans(pEffect, matDiffTrans);
+	//		const cwMatrix4X4& matDiffTrans = this->getDiffuseTrans();
+	//		cwRepertory::getInstance().getDevice()->setDiffuseTrans(pEffect, matDiffTrans);
 
-			cwRenderObject* pRenderObj = this->getRenderObj();
-			cwRepertory::getInstance().getDevice()->draw(pEffect, pMaterial->getTechName(), pRenderObj);
-		}
-	}
+	//		cwRenderObject* pRenderObj = this->getRenderObj();
+	//		cwRepertory::getInstance().getDevice()->draw(pEffect, pMaterial->getTechName(), pRenderObj);
+	//	}
+	//}
 }
 
 // void cwEntity::setLights(vector<cwLight*>& vecLights)

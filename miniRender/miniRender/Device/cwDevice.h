@@ -27,7 +27,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 NS_MINI_BEGIN
 
 class cwLayouts;
-class cwEffects;
+class cwShader;
 class cwVertexBuffer;
 class cwIndexBuffer;
 class cwBuffer;
@@ -67,10 +67,10 @@ public:
 	virtual CWVOID* getDevice() = 0;
 	virtual CWVOID* getDeviceContext() = 0;
 
-	virtual cwEffects* createEffect(const string& strName) = 0;
-	virtual cwVertexBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) = 0;
-	virtual cwVertexBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, D3D11_USAGE usage, CWUINT cpuFlag) = 0;
-	virtual cwIndexBuffer* createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) = 0;
+	virtual cwShader* createShader(const string& strName) = 0;
+	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) = 0;
+	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, eBufferUsage usage, CWUINT cpuFlag) = 0;
+	virtual cwBuffer* createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) = 0;
 	virtual cwBlend* createBlend(
 		bool bEnable, eBlendFactor srcBlend, eBlendFactor dstBlend, eBlendOp blendOp,
 		eBlendFactor srcBlendAlpha, eBlendFactor dstBlendAlpha, eBlendOp blendOpAlpha,
@@ -81,8 +81,8 @@ public:
 		eStencilOp frontFailOp, eStencilOp frontDepthFailOp, eStencilOp frontPassOp, eComparison frontFunc,
 		eStencilOp backFailOp, eStencilOp backDepthFailOp, eStencilOp backPassOp, eComparison backFunc) = 0;
 
-	virtual void setVertexBuffer(cwVertexBuffer* pVertexBuffer) = 0;
-	virtual void setIndexBuffer(cwIndexBuffer* pIndexBuffer) = 0;
+	virtual void setVertexBuffer(cwBuffer* pVertexBuffer) = 0;
+	virtual void setIndexBuffer(cwBuffer* pIndexBuffer) = 0;
 	//set blend state, nullptr for restore blend state
 	virtual void setBlend(const cwBlend* pBlendOper) = 0;
 	//set stencil state, nullptr for restore stencil state
@@ -93,12 +93,12 @@ public:
 
 	virtual cwTexture* createTexture(const string& strFileName) = 0;
 
-	virtual void render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwEffects* pEffect, cwCamera* pCamera) = 0;
+	virtual void render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) = 0;
 	virtual void render(cwEntity* pEntity, cwCamera* pCamera) = 0;
 
-	virtual void setEffectWorldTrans(cwEffects* pEffect, const cwMatrix4X4& trans, cwCamera* pCamera) = 0;
-	virtual void setDiffuseTrans(cwEffects* pEffect, const cwMatrix4X4& trans) = 0;
-	virtual void draw(cwEffects* pEffect, const string& strTech, cwRenderObject* pRenderObj) = 0;
+	virtual void setEffectWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) = 0;
+	virtual void setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans) = 0;
+	virtual void draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) = 0;
 
 protected:
 	HWND m_hWnd;

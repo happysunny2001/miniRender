@@ -20,6 +20,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifndef _CW_UTILS_H_
 #define _CW_UTILS_H_
 
+#ifdef _CW_D3D11_
+
 #pragma warning(disable:4005)
 #include <d3d11.h>
 #include <d3dx11effect.h>
@@ -33,6 +35,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 using namespace std;
 
 #include "cwMacros.h"
+#include "cwBasicType.h"
 
 NS_MINI_BEGIN
 
@@ -120,6 +123,29 @@ typedef enum {
 }ePrimitiveType;
 
 typedef enum {
+	eBufferUsageDefault   = D3D11_USAGE::D3D11_USAGE_DEFAULT,
+	eBufferUsageImmutable = D3D11_USAGE::D3D11_USAGE_IMMUTABLE,
+	eBufferUsageDynamic   = D3D11_USAGE::D3D11_USAGE_DYNAMIC,
+	eBufferUsageStaging   = D3D11_USAGE::D3D11_USAGE_STAGING,
+}eBufferUsage;
+
+typedef enum {
+	eBufferBindVertex          = D3D11_BIND_FLAG::D3D11_BIND_VERTEX_BUFFER,
+	eBufferBindIndex           = D3D11_BIND_FLAG::D3D11_BIND_INDEX_BUFFER,
+	eBufferBindConstant        = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER,
+	eBufferBindShader          = D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE,
+	eBufferBindSteam           = D3D11_BIND_FLAG::D3D11_BIND_STREAM_OUTPUT,
+	eBufferBindRenderTarget    = D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET,
+	eBufferBindDepthStencil    = D3D11_BIND_FLAG::D3D11_BIND_DEPTH_STENCIL,
+	eBufferBindUnorderedAccess = D3D11_BIND_FLAG::D3D11_BIND_UNORDERED_ACCESS,
+}eBufferBindFlag;
+
+typedef enum {
+	eAccessFlagRead  = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_READ,
+	eAccessFlagWrite = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE,
+}eAccessFlag;
+
+typedef enum {
 	eColorWriteEnableNone  = 0,
 	eColorWriteEnableRed   = 1,
 	eColorWriteEnableGreen = 2,
@@ -183,10 +209,19 @@ typedef enum {
 	eDepthWriteMaskAll  = D3D11_DEPTH_WRITE_MASK_ALL,
 }eDepthWriteMask;
 
-typedef D3D11_PRIMITIVE_TOPOLOGY CW_PRIMITIVE_TOPOLOGY;
-typedef D3D11_BUFFER_DESC CW_BUFFER_DESC;
-typedef ID3D11Buffer      CW_BUFFER;
-typedef D3D11_USAGE       CW_BUFFER_USAGE;
+typedef struct CW_BUFFER_DESC{
+	CWUINT ByteWidth;
+	eBufferUsage Usage;
+	CWUINT BindFlags;
+	CWUINT CPUAccessFlags;
+	CWUINT MiscFlags;
+	CWUINT StructureByteStride;
+}CW_BUFFER_DESC;
+
+//typedef D3D11_PRIMITIVE_TOPOLOGY CW_PRIMITIVE_TOPOLOGY;
+//typedef D3D11_BUFFER_DESC CW_BUFFER_DESC;
+//typedef ID3D11Buffer      CW_BUFFER;
+//typedef D3D11_USAGE       CW_BUFFER_USAGE;
 
 #define CW_CONTROL MK_CONTROL
 #define CW_LBUTTON MK_LBUTTON
@@ -196,5 +231,7 @@ typedef D3D11_USAGE       CW_BUFFER_USAGE;
 #define CW_UINT_MAX 0xFFFFFFFF
 
 NS_MINI_END
+
+#endif
 
 #endif

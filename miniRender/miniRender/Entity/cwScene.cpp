@@ -18,9 +18,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwScene.h"
-#include "cwMacros.h"
+#include "Base/cwMacros.h"
 
-NS_CW_BEGIN
+NS_MINI_BEGIN
 
 cwScene* cwScene::create()
 {
@@ -67,4 +67,4 @@ const cwVector<cwLight*>& cwScene::getLights() const
 	return m_nVecLights;
 }
 
-NS_CW_END
+NS_MINI_END

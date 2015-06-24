@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwMacros.h"
 #include "cwBasicType.h"
+#include <assert.h>
 #include <vector>
 #include <functional>
 #include <algorithm>
@@ -128,7 +129,7 @@ public:
 	}
 
 	T at(CWUINT64 index) const {
-		CWAssert(index<m_nData.size(), "index out of range in at.");
+		assert(index<m_nData.size());
 		return m_nData[index];
 	}
 
@@ -154,7 +155,7 @@ public:
 	}
 
 	void pushBack(T object) {
-		CWAssert(object!=nullptr, "push object should not be nullptr.");
+		assert(object != nullptr);
 		m_nData.push_back(object);
 		object->retain();
 	}
@@ -167,8 +168,8 @@ public:
 	}
 
 	void insert(CWUINT64 index, T object) {
-		CWAssert(index <= m_nData.size(), "index out of range in at.");
-		CWAssert(object != nullptr, "insert object should not be nullptr.");
+		assert(index <= m_nData.size());
+		assert(object != nullptr);
 		m_nData.insert(std::begin(m_nData) + index, object);
 	}
 
@@ -180,7 +181,7 @@ public:
 	}
 
 	void erase(T object, bool bRemoveAll = false) {
-		CWAssert(object != nullptr, "Erase object should not be nullptr.");
+		assert(object != nullptr);
 		if (bRemoveAll) {
 			for (auto it = m_nData.begin(); it != m_nData.end(); ++it) {
 				if ((*it) == object) {
@@ -202,7 +203,7 @@ public:
 	}
 
 	iterator erase(iterator pos) {
-		CWAssert(pos>=m_nData.begin() && pos < m_nData.end(), "Invalid iterator position.");
+		assert(pos >= m_nData.begin() && pos < m_nData.end());
 		(*pos)->release();
 		return m_nData.erase(pos);
 	}
@@ -215,20 +216,20 @@ public:
 	}
 
 	iterator erase(CWUINT64 index) {
-		CWAssert(index < m_nData.size(), "Invalid index.");
+		assert(index < m_nData.size());
 		auto it = std::next(m_nData.begin(), index);
 		(*it)->release();
 		return m_nData.erase(it);
 	}
 
 	void swap(CWUINT64 index1, CWUINT64 index2) {
-		CWAssert(index1 < m_nData.size() && index2 < m_nData.size(), "Invalid index.");
+		assert(index1 < m_nData.size() && index2 < m_nData.size());
 		std::swap(m_nData[index1], m_nData[index2]);
 	}
 
 	void replace(T object, CWUINT64 index) {
-		CWAssert(index < m_nData.size(), "Invalid index.");
-		CWAssert(object != nullptr, "Replace object should not be nullptr.");
+		assert(index < m_nData.size());
+		assert(object != nullptr);
 		m_nData[index]->release();
 		m_nData[index] = object;
 		object->retain();
