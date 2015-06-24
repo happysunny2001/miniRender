@@ -103,6 +103,9 @@
     <Filter Include="源文件\Platform\D3D\D3D11\Shader">
       <UniqueIdentifier>{0d5dcff2-243e-4093-a17e-1c19cc398a5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Platform\D3D\D3D11\Repertory">
+      <UniqueIdentifier>{4e272658-c60c-49ee-886e-84bb0586cede}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\cwVector.h">
@@ -180,12 +183,6 @@
     <ClInclude Include="Platform\D3D11\Blend\cwD3D11Blend.h">
       <Filter>源文件\Platform\D3D\D3D11\Blend</Filter>
     </ClInclude>
-    <ClInclude Include="Platform\D3D11\Buffer\cwD3D11IndexBuffer.h">
-      <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="Platform\D3D11\Buffer\cwD3D11VertexBuffer.h">
-      <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
-    </ClInclude>
     <ClInclude Include="Camera\cwCamera.h">
       <Filter>源文件\Camera</Filter>
     </ClInclude>
@@ -215,9 +212,6 @@
     </ClInclude>
     <ClInclude Include="Generator\cwGeometryGenerator.h">
       <Filter>源文件\Generator</Filter>
-    </ClInclude>
-    <ClInclude Include="Layouts\cwInputElementDescManager.h">
-      <Filter>源文件\Layouts</Filter>
     </ClInclude>
     <ClInclude Include="Layouts\cwLayouts.h">
       <Filter>源文件\Layouts</Filter>
@@ -294,6 +288,24 @@
     <ClInclude Include="Shader\cwShaderManager.h">
       <Filter>源文件\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="Entity\cwRenderNode.h">
+      <Filter>源文件\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Layouts\cwD3D11LayoutsManager.h">
+      <Filter>源文件\Platform\D3D\D3D11\Layouts</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Layouts\cwInputElementDescManager.h">
+      <Filter>源文件\Platform\D3D\D3D11\Layouts</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Repertory\cwD3D11Repertory.h">
+      <Filter>源文件\Platform\D3D\D3D11\Repertory</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11IndexBuffer.h">
+      <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11VertexBuffer.h">
+      <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -347,12 +359,6 @@
     <ClCompile Include="Platform\D3D11\Blend\cwD3D11Blend.cpp">
       <Filter>源文件\Platform\D3D\D3D11\Blend</Filter>
     </ClCompile>
-    <ClCompile Include="Platform\D3D11\Buffer\cwD3D11IndexBuffer.cpp">
-      <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform\D3D11\Buffer\cwD3D11VertexBuffer.cpp">
-      <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
-    </ClCompile>
     <ClCompile Include="Camera\cwCamera.cpp">
       <Filter>源文件\Camera</Filter>
     </ClCompile>
@@ -379,9 +385,6 @@
     </ClCompile>
     <ClCompile Include="Generator\cwGeometryGenerator.cpp">
       <Filter>源文件\Generator</Filter>
-    </ClCompile>
-    <ClCompile Include="Layouts\cwInputElementDescManager.cpp">
-      <Filter>源文件\Layouts</Filter>
     </ClCompile>
     <ClCompile Include="Layouts\cwLayouts.cpp">
       <Filter>源文件\Layouts</Filter>
@@ -451,6 +454,24 @@
     </ClCompile>
     <ClCompile Include="Shader\cwShaderManager.cpp">
       <Filter>源文件\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\cwRenderNode.cpp">
+      <Filter>源文件\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Layouts\cwD3D11LayoutsManager.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Layouts</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Layouts\cwInputElementDescManager.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Layouts</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Repertory\cwD3D11Repertory.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Repertory</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11IndexBuffer.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11VertexBuffer.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
