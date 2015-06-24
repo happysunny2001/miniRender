@@ -18,7 +18,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwD3D11Stencil.h"
-#include "cwRepertory.h"
+#include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
 #include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
 

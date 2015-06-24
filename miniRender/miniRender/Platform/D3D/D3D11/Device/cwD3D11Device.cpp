@@ -17,25 +17,27 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#ifdef _CW_D3D11_
+
 #include "cwD3D11Device.h"
 #include "Base/cwColor.h"
-#include "cwEffects.h"
+#include "Shader/cwShader.h"
+#include "Platform/D3D/D3D11/Shader/cwD3D11Shader.h"
+#include "Shader/cwShaderConstant.h"
 #include "Layouts/cwLayouts.h"
-#include "Layouts/cwD3D11Layouts.h"
 #include "Buffer/cwBuffer.h"
-#include "cwVertexBuffer.h"
-#include "cwIndexBuffer.h"
-#include "cwRenderObject.h"
-#include "cwShaderConstant.h"
-#include "cwCamera.h"
-#include "cwEntity.h"
-#include "cwMaterial.h"
-#include "cwCommon.h"
-#include "cwTexture.h"
-#include "cwD3D11Texture.h"
-#include "cwD3D11Blend.h"
-#include "cwStencil.h"
-#include "cwD3D11Stencil.h"
+#include "Platform/D3D/D3D11/Layouts/cwD3D11Layouts.h"
+#include "Platform/D3D/D3D11/Buffer/cwD3D11VertexBuffer.h"
+#include "Platform/D3D/D3D11/Buffer/cwD3D11IndexBuffer.h"
+#include "RenderObject/cwRenderObject.h"
+#include "Camera/cwCamera.h"
+#include "Entity/cwEntity.h"
+#include "Material/cwMaterial.h"
+#include "Texture/cwTexture.h"
+#include "Platform/D3D/D3D11/Texture/cwD3D11Texture.h"
+#include "Platform/D3D/D3D11/Blend/cwD3D11Blend.h"
+#include "Stencil/cwStencil.h"
+#include "Platform/D3D/D3D11/Stencil/cwD3D11Stencil.h"
 
 #include <assert.h>
 #include <xnamath.h>
@@ -43,7 +45,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 NS_MINI_BEGIN
 
 cwD3D11Device::cwD3D11Device(HWND hWnd, CWUINT width, CWUINT height) :
-cwRenderDevice(hWnd, width, height),
+cwDevice(hWnd, width, height),
 m_pD3D11Device(NULL),
 m_pD3D11DeviceContext(NULL),
 m_pDxgiSwapChain(NULL),
@@ -328,26 +330,28 @@ void cwD3D11Device::DrawIndexed(CWUINT indexCnt, CWUINT startIndex, CWINT baseVe
 	m_pD3D11DeviceContext->DrawIndexed(indexCnt, startIndex, baseVertex);
 }
 
-cwEffects* cwD3D11Device::createEffect(const string& strName)
+cwShader* cwD3D11Device::createShader(const string& strFileName)
 {
-	return cwEffects::create(strName, this);
+	return cwD3D11Shader::create(strFileName);
 }
 
-cwVertexBuffer* cwD3D11Device::createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt)
+cwBuffer* cwD3D11Device::createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt)
 {
-	cwVertexBuffer* pVertexBuffer = cwVertexBuffer::create(uStride*uCnt);
+	cwD3D11VertexBuffer* pVertexBuffer = cwD3D11VertexBuffer::create(uStride*uCnt);
 	if (!pVertexBuffer) return NULL;
 
 	CW_BUFFER_DESC& desc = pVertexBuffer->getBufferDesc();
-	CW_BUFFER* pBuffer = pVertexBuffer->getBuffer();
+	D3D11_BUFFER_DESC d3dDesc;
+	memcpy(&d3dDesc, &desc, sizeof(CW_BUFFER_DESC));
+	ID3D11Buffer* pBuffer = static_cast<ID3D11Buffer*>(pVertexBuffer->getBuffer());
 
 	if (pData) {
 		D3D11_SUBRESOURCE_DATA subData;
 		subData.pSysMem = pData;
-		CW_HR(m_pD3D11Device->CreateBuffer(&desc, &subData, &pBuffer));
+		CW_HR(m_pD3D11Device->CreateBuffer(&d3dDesc, &subData, &pBuffer));
 	}
 	else {
-		CW_HR(m_pD3D11Device->CreateBuffer(&desc, 0, &pBuffer));
+		CW_HR(m_pD3D11Device->CreateBuffer(&d3dDesc, 0, &pBuffer));
 	}
 
 	pVertexBuffer->setBuffer(pBuffer);
@@ -356,21 +360,23 @@ cwVertexBuffer* cwD3D11Device::createVertexBuffer(CWVOID* pData, CWUINT uStride,
 	return pVertexBuffer;
 }
 
-cwVertexBuffer* cwD3D11Device::createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, D3D11_USAGE usage, CWUINT cpuFlag)
+cwBuffer* cwD3D11Device::createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, eBufferUsage usage, CWUINT cpuFlag)
 {
-	cwVertexBuffer* pVertexBuffer = cwVertexBuffer::create(uStride*uCnt, usage, cpuFlag);
+	cwD3D11VertexBuffer* pVertexBuffer = cwD3D11VertexBuffer::create(uStride*uCnt, usage, cpuFlag);
 	if (!pVertexBuffer) return NULL;
 	
 	CW_BUFFER_DESC& desc = pVertexBuffer->getBufferDesc();
-	CW_BUFFER* pBuffer = pVertexBuffer->getBuffer();
+	D3D11_BUFFER_DESC d3dDesc;
+	memcpy(&d3dDesc, &desc, sizeof(CW_BUFFER_DESC));
+	ID3D11Buffer* pBuffer = static_cast<ID3D11Buffer*>(pVertexBuffer->getBuffer());
 
 	if (pData) {
 		D3D11_SUBRESOURCE_DATA subData;
 		subData.pSysMem = pData;
-		CW_HR(m_pD3D11Device->CreateBuffer(&desc, &subData, &pBuffer));
+		CW_HR(m_pD3D11Device->CreateBuffer(&d3dDesc, &subData, &pBuffer));
 	}
 	else {
-		CW_HR(m_pD3D11Device->CreateBuffer(&desc, 0, &pBuffer));
+		CW_HR(m_pD3D11Device->CreateBuffer(&d3dDesc, 0, &pBuffer));
 	}
 
 	pVertexBuffer->setBuffer(pBuffer);
@@ -379,21 +385,23 @@ cwVertexBuffer* cwD3D11Device::createVertexBuffer(CWVOID* pData, CWUINT uStride,
 	return pVertexBuffer;
 }
 
-cwIndexBuffer* cwD3D11Device::createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt)
+cwBuffer* cwD3D11Device::createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt)
 {
-	cwIndexBuffer* pIndexBuffer = cwIndexBuffer::create(uStride*uCnt);
+	cwD3D11IndexBuffer* pIndexBuffer = cwD3D11IndexBuffer::create(uStride*uCnt);
 	if (!pIndexBuffer) return NULL;
 	
 	CW_BUFFER_DESC& desc = pIndexBuffer->getBufferDesc();
-	CW_BUFFER* pBuffer = pIndexBuffer->getBuffer();
+	D3D11_BUFFER_DESC d3dDesc;
+	memcpy(&d3dDesc, &desc, sizeof(CW_BUFFER_DESC));
+	ID3D11Buffer* pBuffer = static_cast<ID3D11Buffer*>(pIndexBuffer->getBuffer());
 
 	if (pData) {
 		D3D11_SUBRESOURCE_DATA subData;
 		subData.pSysMem = pData;
-		CW_HR(m_pD3D11Device->CreateBuffer(&desc, &subData, &pBuffer));
+		CW_HR(m_pD3D11Device->CreateBuffer(&d3dDesc, &subData, &pBuffer));
 	}
 	else {
-		CW_HR(m_pD3D11Device->CreateBuffer(&desc, 0, &pBuffer));
+		CW_HR(m_pD3D11Device->CreateBuffer(&d3dDesc, 0, &pBuffer));
 	}
 
 	pIndexBuffer->setBuffer(pBuffer);
@@ -427,20 +435,20 @@ cwStencil* cwD3D11Device::createStencil(
 	return pStencil;
 }
 
-void cwD3D11Device::setVertexBuffer(cwVertexBuffer* pVertexBuffer)
+void cwD3D11Device::setVertexBuffer(cwBuffer* pVertexBuffer)
 {
 	if (pVertexBuffer) {
 		CWUINT stride = pVertexBuffer->getStride();
 		CWUINT offset = pVertexBuffer->getOffset();
-		CW_BUFFER* pBuffer = pVertexBuffer->getBuffer();
+		ID3D11Buffer* pBuffer = static_cast<ID3D11Buffer*>(pVertexBuffer->getBuffer());
 		m_pD3D11DeviceContext->IASetVertexBuffers(0, 1, &pBuffer, &stride, &offset);
 	}
 }
 
-void cwD3D11Device::setIndexBuffer(cwIndexBuffer* pIndexBuffer)
+void cwD3D11Device::setIndexBuffer(cwBuffer* pIndexBuffer)
 {
 	if (pIndexBuffer) {
-		m_pD3D11DeviceContext->IASetIndexBuffer(pIndexBuffer->getBuffer(), DXGI_FORMAT_R32_UINT, 0);
+		m_pD3D11DeviceContext->IASetIndexBuffer(static_cast<ID3D11Buffer*>(pIndexBuffer->getBuffer()), DXGI_FORMAT_R32_UINT, 0);
 	}
 }
 
@@ -488,7 +496,8 @@ void cwD3D11Device::setStencil(const cwStencil* pStencil)
 CW_RES_LOCK_DATA cwD3D11Device::lockBuffer(cwBuffer* pBuffer)
 {
 	D3D11_MAPPED_SUBRESOURCE mappedData;
-	CW_HR(m_pD3D11DeviceContext->Map(pBuffer->getBuffer(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
+	ID3D11Buffer* pD3D11Buffer = static_cast<ID3D11Buffer*>(pBuffer->getBuffer());
+	CW_HR(m_pD3D11DeviceContext->Map(pD3D11Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
 
 	CW_RES_LOCK_DATA lockData;
 	lockData.pData = mappedData.pData;
@@ -500,46 +509,45 @@ CW_RES_LOCK_DATA cwD3D11Device::lockBuffer(cwBuffer* pBuffer)
 
 void cwD3D11Device::unlockBuffer(cwBuffer* pBuffer)
 {
-	m_pD3D11DeviceContext->Unmap(pBuffer->getBuffer(), 0);
+	ID3D11Buffer* pD3D11Buffer = static_cast<ID3D11Buffer*>(pBuffer->getBuffer());
+	m_pD3D11DeviceContext->Unmap(pD3D11Buffer, 0);
 }
 
 cwTexture* cwD3D11Device::createTexture(const string& strFileName)
 {
 	cwTexture* pTexture = cwD3D11Texture::create(strFileName);
-	CWAssert(pTexture != nullptr, "create texture error!");
-
 	return pTexture;
 }
 
-void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwEffects* pEffect, cwCamera* pCamera)
+void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera)
 {
-	if (!pRenderObj || !pEffect || !pCamera) return;
+	if (!pRenderObj || !pShader || !pCamera) return;
 
 	cwMatrix4X4 matWorld;
 	matWorld.setTranslation(worldPos);
 
-	if (pEffect->hasVariable(CW_EFFECT_MAT_WORLD)) {
-		pEffect->setVariableMatrix(CW_EFFECT_MAT_WORLD, reinterpret_cast<float*>(&matWorld));
+	if (pShader->hasVariable(CW_SHADER_MAT_WORLD)) {
+		pShader->setVariableMatrix(CW_SHADER_MAT_WORLD, reinterpret_cast<float*>(&matWorld));
 	}
 
-	if (pEffect->hasVariable(CW_EFFECT_MAT_WORLD_INV_TRANS)) {
+	if (pShader->hasVariable(CW_SHADER_MAT_WORLD_INV_TRANS)) {
 		cwMatrix4X4 matWorldInvTrans = matWorld.inverse().transpose();
-		pEffect->setVariableMatrix(CW_EFFECT_MAT_WORLD_INV_TRANS, reinterpret_cast<float*>(&matWorldInvTrans));
+		pShader->setVariableMatrix(CW_SHADER_MAT_WORLD_INV_TRANS, reinterpret_cast<float*>(&matWorldInvTrans));
 	}
 
-	if (pEffect->hasVariable(CW_EFFECT_MATERIAL)) {
-		pEffect->setVariableData(CW_EFFECT_MATERIAL, m_pMaterialDefault->getColorData(), 0, m_pMaterialDefault->getColorDataSize());
+	if (pShader->hasVariable(CW_SHADER_MATERIAL)) {
+		pShader->setVariableData(CW_SHADER_MATERIAL, m_pMaterialDefault->getColorData(), 0, m_pMaterialDefault->getColorDataSize());
 	}
 
-	if (pEffect->hasVariable(CW_EFFECT_EYE_POSW)) {
+	if (pShader->hasVariable(CW_SHADER_EYE_POSW)) {
 		const cwVector3D& pos = pCamera->getPos();
-		pEffect->setVariableData(CW_EFFECT_EYE_POSW, (CWVOID*)&pos, 0, sizeof(cwVector3D));
+		pShader->setVariableData(CW_SHADER_EYE_POSW, (CWVOID*)&pos, 0, sizeof(cwVector3D));
 	}
 
-	if (pEffect->hasVariable(CW_EFFECT_MAT_WORLDVIEWPROJ)) {
+	if (pShader->hasVariable(CW_SHADER_MAT_WORLDVIEWPROJ)) {
 		cwMatrix4X4 matViewProj = pCamera->getViewProjMatrix();
 		cwMatrix4X4 worldViewProj = matWorld*matViewProj;
-		pEffect->setVariableMatrix(CW_EFFECT_MAT_WORLDVIEWPROJ, reinterpret_cast<CWFLOAT*>(worldViewProj.getBuffer()));
+		pShader->setVariableMatrix(CW_SHADER_MAT_WORLDVIEWPROJ, reinterpret_cast<CWFLOAT*>(worldViewProj.getBuffer()));
 	}
 
 	this->setInputLayout(pRenderObj->getInputLayout());
@@ -549,7 +557,7 @@ void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPo
 	pRenderObj->getVertexBuffer()->set(this);
 	pRenderObj->getIndexBuffer()->set(this);
 
-	pEffect->apply(0, 0);
+	pShader->apply(0, 0);
 	this->DrawIndexed(pRenderObj->getIndexBuffer()->getIndexCount(), 0, 0);
 }
 
@@ -558,64 +566,64 @@ void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
 	if (!pEntity || !pCamera) return;
 
 	cwMaterial* pMaterial = pEntity->getMaterial();
-	CWAssert(pMaterial != nullptr, "get material from entity error!");
+	assert(pMaterial != nullptr);
 	pMaterial->configEffect();
 
-	cwEffects* pEffect = pMaterial->getEffect();
-	CWAssert(pEffect != nullptr, "get effect from material error!");
+	cwShader* pShader = pMaterial->getShader();
+	assert(pShader != nullptr);
 
 	pEntity->transform();
-	setEffectWorldTrans(pEffect, pEntity->getWorldTrans(), pCamera);
+	setEffectWorldTrans(pShader, pEntity->getWorldTrans(), pCamera);
 	const cwMatrix4X4& diffuseTrans = pEntity->getDiffuseTrans();
-	if (pEffect->hasVariable(CW_EFFECT_DIFF_TEX_TRANS)) {
-		pEffect->setVariableMatrix(CW_EFFECT_DIFF_TEX_TRANS, (CWFLOAT*)(&diffuseTrans));
+	if (pShader->hasVariable(CW_SHADER_DIFF_TEX_TRANS)) {
+		pShader->setVariableMatrix(CW_SHADER_DIFF_TEX_TRANS, (CWFLOAT*)(&diffuseTrans));
 	}
 
 	cwRenderObject* pRenderObj = pEntity->getRenderObj();
-	CWAssert(pRenderObj != nullptr, "get render object from entity error!");
+	assert(pRenderObj != nullptr);
 
-	draw(pEffect, pMaterial->getTechName(), pRenderObj);
+	draw(pShader, pMaterial->getTechName(), pRenderObj);
 }
 
-void cwD3D11Device::setEffectWorldTrans(cwEffects* pEffect, const cwMatrix4X4& trans, cwCamera* pCamera)
+void cwD3D11Device::setEffectWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera)
 {
-	if (!pEffect) return;
+	if (!pShader) return;
 
-	if (pEffect->hasVariable(CW_EFFECT_MAT_WORLD)) {
-		pEffect->setVariableMatrix(CW_EFFECT_MAT_WORLD, (CWFLOAT*)(&trans));
+	if (pShader->hasVariable(CW_SHADER_MAT_WORLD)) {
+		pShader->setVariableMatrix(CW_SHADER_MAT_WORLD, (CWFLOAT*)(&trans));
 	}
 
-	if (pEffect->hasVariable(CW_EFFECT_MAT_WORLD_INV_TRANS)) {
+	if (pShader->hasVariable(CW_SHADER_MAT_WORLD_INV_TRANS)) {
 		if (trans.inverseExist()) {
 			cwMatrix4X4 matWorldInvTrans = trans.inverse().transpose();
-			pEffect->setVariableMatrix(CW_EFFECT_MAT_WORLD_INV_TRANS, reinterpret_cast<CWFLOAT*>(&matWorldInvTrans));
+			pShader->setVariableMatrix(CW_SHADER_MAT_WORLD_INV_TRANS, reinterpret_cast<CWFLOAT*>(&matWorldInvTrans));
 		}
 		else {
 			cwMatrix4X4& M = cwMatrix4X4::identityMatrix;
-			pEffect->setVariableMatrix(CW_EFFECT_MAT_WORLD_INV_TRANS, reinterpret_cast<CWFLOAT*>(&M));
+			pShader->setVariableMatrix(CW_SHADER_MAT_WORLD_INV_TRANS, reinterpret_cast<CWFLOAT*>(&M));
 		}
 	}
 
-	if (pEffect->hasVariable(CW_EFFECT_MAT_WORLDVIEWPROJ)) {
+	if (pShader->hasVariable(CW_SHADER_MAT_WORLDVIEWPROJ)) {
 		cwMatrix4X4 matViewProj = pCamera->getViewProjMatrix();
 		cwMatrix4X4 worldViewProj = trans*matViewProj;
-		pEffect->setVariableMatrix(CW_EFFECT_MAT_WORLDVIEWPROJ, reinterpret_cast<CWFLOAT*>(&worldViewProj));
+		pShader->setVariableMatrix(CW_SHADER_MAT_WORLDVIEWPROJ, reinterpret_cast<CWFLOAT*>(&worldViewProj));
 	}
 
-	if (pEffect->hasVariable(CW_EFFECT_EYE_POSW)) {
+	if (pShader->hasVariable(CW_SHADER_EYE_POSW)) {
 		cwVector3D pos = pCamera->getPos();
-		pEffect->setVariableData(CW_EFFECT_EYE_POSW, (CWVOID*)&pos, 0, sizeof(cwVector3D));
+		pShader->setVariableData(CW_SHADER_EYE_POSW, (CWVOID*)&pos, 0, sizeof(cwVector3D));
 	}
 }
 
-void cwD3D11Device::setDiffuseTrans(cwEffects* pEffect, const cwMatrix4X4& trans)
+void cwD3D11Device::setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans)
 {
-	if (pEffect && pEffect->hasVariable(CW_EFFECT_DIFF_TEX_TRANS)) {
-		pEffect->setVariableMatrix(CW_EFFECT_DIFF_TEX_TRANS, (CWFLOAT*)(&trans));
+	if (pShader && pShader->hasVariable(CW_SHADER_DIFF_TEX_TRANS)) {
+		pShader->setVariableMatrix(CW_SHADER_DIFF_TEX_TRANS, (CWFLOAT*)(&trans));
 	}
 }
 
-void cwD3D11Device::draw(cwEffects* pEffect, const string& strTech, cwRenderObject* pRenderObj)
+void cwD3D11Device::draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj)
 {
 	this->setInputLayout(pRenderObj->getInputLayout());
 	this->setPrimitiveTopology(pRenderObj->getPrimitiveTopology());
@@ -625,11 +633,13 @@ void cwD3D11Device::draw(cwEffects* pEffect, const string& strTech, cwRenderObje
 	D3DX11_TECHNIQUE_DESC techDesc;
 	ID3DX11EffectTechnique* pTech = nullptr;
 
+	cwD3D11Shader* pD3D11Shader = static_cast<cwD3D11Shader*>(pShader);
+
 	if (strTech.empty()) {
-		pTech = pEffect->getTechnique(0);
+		pTech = pD3D11Shader->getTechnique(0);
 	}
 	else {
-		pTech = pEffect->getTechnique(strTech);
+		pTech = pD3D11Shader->getTechnique(strTech);
 	}
 
 	if (!pTech) return;
@@ -645,3 +655,5 @@ void cwD3D11Device::draw(cwEffects* pEffect, const string& strTech, cwRenderObje
 }
 
 NS_MINI_END
+
+#endif

@@ -18,7 +18,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwInputElementDescManager.h"
-#include "cwShaderConstant.h"
+#include "Shader/cwShaderConstant.h"
 
 NS_MINI_BEGIN
 
@@ -57,6 +57,18 @@ bool cwInputElementDesc::init(int iElementCnt)
 void cwInputElementDesc::addElementDesc(const CWCHAR* name, DXGI_FORMAT format, CWUINT offset, int index)
 {
 	m_pElementList[index] = { name, 0, format, 0, offset, D3D11_INPUT_PER_VERTEX_DATA, 0 };
+}
+
+cwInputElementDescManager*cwInputElementDescManager::create()
+{
+	cwInputElementDescManager* pManager = new cwInputElementDescManager();
+	if (pManager) {
+		pManager->buildDescMap();
+		pManager->autorelease();
+		return pManager;
+	}
+
+	return nullptr;
 }
 
 cwInputElementDescManager::cwInputElementDescManager()

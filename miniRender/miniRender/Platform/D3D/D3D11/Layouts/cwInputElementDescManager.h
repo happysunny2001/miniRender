@@ -22,7 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
-#include "cwRef.h"
+#include "Ref/cwRef.h"
 #include "Base/cwMap.h"
 
 NS_MINI_BEGIN
@@ -48,23 +48,18 @@ public:
 
 };
 
-class cwInputElementDescManager
+class cwInputElementDescManager :public cwRef
 {
 public:
-	static cwInputElementDescManager& getInstance() {
-		static cwInputElementDescManager manager;
-		return manager;
-	}
+	static cwInputElementDescManager* create();
+
+	cwInputElementDescManager();
+	virtual ~cwInputElementDescManager();
 
 	cwInputElementDesc* getElement(ceElementDesc e);
 
-private:
-	cwInputElementDescManager();
-	cwInputElementDescManager(cwInputElementDescManager const&) {}
-	cwInputElementDescManager& operator=(cwInputElementDescManager const&) {}
-	~cwInputElementDescManager();
-
-	void buildDescMap();
+protected:
+	virtual void buildDescMap();
 
 private:
 	cwMap<ceElementDesc, cwInputElementDesc*> m_mapDesc;

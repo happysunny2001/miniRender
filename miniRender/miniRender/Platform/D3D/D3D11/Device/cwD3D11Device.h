@@ -20,15 +20,17 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifndef _cwD3D11Device_h_
 #define _cwD3D11Device_h_
 
+#ifdef _CW_D3D11_
+
 #include "Base/cwUtils.h"
 #include "Device/cwDevice.h"
 
 NS_MINI_BEGIN
 
 class cwLayouts;
-class cwEffects;
-class cwVertexBuffer;
-class cwIndexBuffer;
+class cwShader;
+class cwD3D11VertexBuffer;
+class cwD3D11IndexBuffer;
 class cwBuffer;
 class cwMaterial;
 
@@ -61,10 +63,10 @@ public:
  	virtual CWVOID* getDevice() { return m_pD3D11Device; }
  	virtual CWVOID* getDeviceContext() { return m_pD3D11DeviceContext; }
 
-	virtual cwEffects* createEffect(const string& strName);
-	virtual cwVertexBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt);
-	virtual cwVertexBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, D3D11_USAGE usage, CWUINT cpuFlag);
-	virtual cwIndexBuffer* createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt);
+	virtual cwShader* createShader(const string& strFileName) override;
+	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) override;
+	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, eBufferUsage usage, CWUINT cpuFlag) override;
+	virtual cwBuffer* createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) override;
 	virtual cwBlend* createBlend(
 		bool bEnable, eBlendFactor srcBlend, eBlendFactor dstBlend, eBlendOp blendOp,
 		eBlendFactor srcBlendAlpha, eBlendFactor dstBlendAlpha, eBlendOp blendOpAlpha,
@@ -75,8 +77,8 @@ public:
 		eStencilOp frontFailOp, eStencilOp frontDepthFailOp, eStencilOp frontPassOp, eComparison frontFunc,
 		eStencilOp backFailOp, eStencilOp backDepthFailOp, eStencilOp backPassOp, eComparison backFunc);
 
-	virtual void setVertexBuffer(cwVertexBuffer* pVertexBuffer);
-	virtual void setIndexBuffer(cwIndexBuffer* pIndexBuffer);
+	virtual void setVertexBuffer(cwBuffer* pVertexBuffer) override;
+	virtual void setIndexBuffer(cwBuffer* pIndexBuffer) override;
 	virtual void setBlend(const cwBlend* pBlendOper);
 	virtual void setStencil(const cwStencil* pStencil);
 
@@ -85,12 +87,12 @@ public:
 
 	virtual cwTexture* createTexture(const string& strFileName);
 
-	virtual void render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwEffects* pEffect, cwCamera* pCamera);
-	virtual void render(cwEntity* pEntity, cwCamera* pCamera);
+	virtual void render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) override;
+	virtual void render(cwEntity* pEntity, cwCamera* pCamera) override;
 
-	virtual void setEffectWorldTrans(cwEffects* pEffect, const cwMatrix4X4& trans, cwCamera* pCamera) override;
-	virtual void setDiffuseTrans(cwEffects* pEffect, const cwMatrix4X4& trans) override;
-	virtual void draw(cwEffects* pEffect, const string& strTech, cwRenderObject* pRenderObj) override;
+	virtual void setEffectWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) override;
+	virtual void setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans) override;
+	virtual void draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) override;
 
 protected:
 	ID3D11Device* m_pD3D11Device;
@@ -111,5 +113,7 @@ protected:
 };
 
 NS_MINI_END
+
+#endif
 
 #endif

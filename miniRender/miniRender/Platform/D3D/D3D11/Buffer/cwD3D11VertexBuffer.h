@@ -31,7 +31,7 @@ class cwD3D11VertexBuffer : public cwBuffer
 public:
 	static cwD3D11VertexBuffer* create(
 		CWUINT uSize, 
-		CW_BUFFER_USAGE usage = D3D11_USAGE_IMMUTABLE,
+		eBufferUsage usage = eBufferUsageImmutable,
 		CWUINT uCpuFlag = 0, 
 		CWUINT miscFlag = 0, 
 		CWUINT structureByteStride = 0);
@@ -41,21 +41,15 @@ public:
 
 	virtual bool init(
 		CWUINT uSize,
-		CW_BUFFER_USAGE usage,
+		eBufferUsage usage,
 		CWUINT bindFlag,
 		CWUINT uCpuFlag,
 		CWUINT miscFlag,
 		CWUINT structureByteStride) override;
 
-	inline void setStride(CWUINT uStride) { m_nStride = uStride; }
-	inline CWUINT getStride() { return m_nStride; }
-	inline CWUINT getOffset() { return m_nOffset; }
-
-	virtual void set(cwRenderDevice* pDevice);
+	virtual void set(cwDevice* pDevice) override;
 
 protected:
-	CWUINT m_nStride;
-	CWUINT m_nOffset;
 
 };
 

@@ -18,48 +18,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwLayoutsManager.h"
-#include "cwEffectManager.h"
-#include "cwRepertory.h"
-#include "cwD3D11Layouts.h"
+#include "Shader/cwShaderManager.h"
+#include "Repertory/cwRepertory.h"
 
 NS_MINI_BEGIN
-
-cwLayoutsManager::~cwLayoutsManager()
-{
-}
-
-void cwLayoutsManager::init()
-{
-	{
-		cwLayouts* pLayout = cwD3D11Layouts::create(
-				cwInputElementDescManager::getInstance().getElement(ceEleDescPosColor),
-				cwRepertory::getInstance().getEffectManager()->getEffect("effect/color.fx")
-			);
-		if (pLayout) {
-			m_mapLayouts.insert(ceEleDescPosColor, pLayout);
-		}
-	}
-
-	{
-		cwLayouts* pLayout = cwD3D11Layouts::create(
-			cwInputElementDescManager::getInstance().getElement(ceEleDescPosNormal),
-			cwRepertory::getInstance().getEffectManager()->getEffect("effect/lighting.fx")
-			);
-		if (pLayout) {
-			m_mapLayouts.insert(ceEleDescPosNormal, pLayout);
-		}
-	}
-
-	{
-		cwLayouts* pLayout = cwD3D11Layouts::create(
-			cwInputElementDescManager::getInstance().getElement(ceEleDescPosNormalTex),
-			cwRepertory::getInstance().getEffectManager()->getEffect("effect/lightingTex.fx")
-			);
-		if (pLayout) {
-			m_mapLayouts.insert(ceEleDescPosNormalTex, pLayout);
-		}
-	}
-}
 
 cwLayouts* cwLayoutsManager::getLayouts(ceElementDesc eType)
 {

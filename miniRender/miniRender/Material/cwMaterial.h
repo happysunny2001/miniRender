@@ -23,11 +23,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
 #include "Math/cwMath.h"
-#include "cwRef.h"
+#include "Ref/cwRef.h"
 
 NS_MINI_BEGIN
 
-class cwEffects;
+class cwShader;
 class cwTexture;
 class cwBlend;
 
@@ -47,7 +47,7 @@ public:
 		const cwVector4D& diffuse,
 		const cwVector4D& specular,
 		const cwVector4D& reflect,
-		const string& strEffect);
+		const string& strShader);
 
 	static cwMaterial* create(
 		const cwVector4D& ambient,
@@ -64,7 +64,7 @@ public:
 		const cwVector4D& diffuse,
 		const cwVector4D& specular,
 		const cwVector4D& reflect,
-		const string& strEffect);
+		const string& strShader);
 
 	virtual bool init(
 		const cwVector4D& ambient,
@@ -84,8 +84,8 @@ public:
 	virtual void setReflect(const cwVector4D& color);
 	inline const cwVector4D& getReflect() { return m_nMatData.m_nReflect; }
 
-	virtual void setEffect(const string& strEffect);
-	inline cwEffects* getEffect() { return m_pEffect; }
+	virtual void setShader(const string& strShader);
+	inline cwShader* getShader() { return m_pShader; }
 
 	virtual void setDiffuseTexture(cwTexture* pTexture);
 	virtual void setDiffuseTexture(const string& strTexName);
@@ -104,7 +104,7 @@ public:
 
 public:
 	matColor m_nMatData;
-	cwEffects* m_pEffect;
+	cwShader* m_pShader;
 	string m_strTechName;         //the name of technique for render 
 	cwTexture* m_pDiffuseTexture;
 	cwBlend* m_pBlendOp;          //blend object

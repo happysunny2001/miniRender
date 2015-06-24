@@ -18,19 +18,19 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwD3D11VertexBuffer.h"
-#include "cwRenderDevice.h"
+#include "Device/cwDevice.h"
 
 NS_MINI_BEGIN
 
 cwD3D11VertexBuffer* cwD3D11VertexBuffer::create(
 	CWUINT uSize,
-	D3D11_USAGE usage,
+	eBufferUsage usage,
 	CWUINT uCpuFlag,
 	CWUINT miscFlag,
 	CWUINT structureByteStride)
 {
 	cwD3D11VertexBuffer* pBuffer = new cwD3D11VertexBuffer();
-	if (pBuffer && pBuffer->init(uSize, usage, D3D11_BIND_VERTEX_BUFFER, uCpuFlag, miscFlag, structureByteStride)) {
+	if (pBuffer && pBuffer->init(uSize, usage, eBufferBindVertex, uCpuFlag, miscFlag, structureByteStride)) {
 		pBuffer->autorelease();
 		return pBuffer;
 	}
@@ -39,19 +39,22 @@ cwD3D11VertexBuffer* cwD3D11VertexBuffer::create(
 	return nullptr;
 }
 
-cwD3D11VertexBuffer::cwD3D11VertexBuffer() :
-m_nStride(0),
-m_nOffset(0)
+cwD3D11VertexBuffer::cwD3D11VertexBuffer()
 {
+	m_nStride = 0;
+	m_nOffset = 0;
 }
 
 cwD3D11VertexBuffer::~cwD3D11VertexBuffer()
 {
+	ID3D11Buffer* pD3D11Buffer = static_cast<ID3D11Buffer*>(m_pDRenderBuffer);
+	CW_RELEASE_COM(pD3D11Buffer);
+	m_pDRenderBuffer = nullptr;
 }
 
 bool cwD3D11VertexBuffer::init(
 	CWUINT uSize,
-	D3D11_USAGE usage,
+	eBufferUsage usage,
 	CWUINT bindFlag,
 	CWUINT uCpuFlag,
 	CWUINT miscFlag,
@@ -62,7 +65,7 @@ bool cwD3D11VertexBuffer::init(
 	return true;
 }
 
-void cwD3D11VertexBuffer::set(cwRenderDevice* pDevice)
+void cwD3D11VertexBuffer::set(cwDevice* pDevice)
 {
 	if (pDevice) {
 		pDevice->setVertexBuffer(this);

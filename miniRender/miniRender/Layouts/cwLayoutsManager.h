@@ -22,7 +22,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMap.h"
 #include "cwLayouts.h"
-#include "cwInputElementDescManager.h"
 
 NS_MINI_BEGIN
 
@@ -30,11 +29,9 @@ class CW_DLL cwLayoutsManager
 {
 public:
 	cwLayoutsManager() {}
-	cwLayoutsManager(cwLayoutsManager const&) {}
-	cwLayoutsManager& operator=(cwLayoutsManager const&) {}
-	~cwLayoutsManager();
+	virtual ~cwLayoutsManager() {}
 
-	void init();
+	virtual bool init() = 0;
 	cwLayouts* getLayouts(ceElementDesc eType);
 
 protected:

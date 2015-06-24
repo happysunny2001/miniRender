@@ -17,6 +17,9 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#ifndef __CW_D3D11_SHADER_H__
+#define __CW_D3D11_SHADER_H__
+
 #include "Base/cwMacros.h"
 #include "Shader/cwShader.h"
 
@@ -44,11 +47,6 @@ public:
 
 	virtual void apply(CWUINT techIndex, CWUINT passIndex) override;
 
-protected:
-	bool saveTech();
-	bool savePass(ID3DX11EffectTechnique* pTech);
-	bool saveVariable();
-
 	ID3DX11Effect* getEffect() { return m_pEffect; }
 	ID3DX11EffectTechnique* getTechnique(CWUINT index);
 	ID3DX11EffectTechnique* getTechnique(const string& strTechName);
@@ -56,6 +54,11 @@ protected:
 	ID3DX11EffectPass* getPass(const string& strTechName, const string& strPassName);
 	ID3DX11EffectPass* getPass(CWUINT techIndex, const string& strPassName);
 	ID3DX11EffectPass* getPass(const string& strTechName, CWUINT passIndex);
+
+protected:
+	bool saveTech();
+	bool savePass(ID3DX11EffectTechnique* pTech);
+	bool saveVariable();
 
 protected:
 	ID3DX11Effect* m_pEffect;
@@ -70,5 +73,7 @@ protected:
 };
 
 NS_MINI_END
+
+#endif
 
 #endif

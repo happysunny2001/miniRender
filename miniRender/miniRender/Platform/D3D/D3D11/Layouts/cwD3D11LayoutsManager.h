@@ -17,42 +17,32 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _cwIndexBuffer_h_
-#define _cwIndexBuffer_h_
+#ifndef __CW_D3D11_LAYOUTS_MANAGER_H__
+#define __CW_D3D11_LAYOUTS_MANAGER_H__
 
-#include "Base/cwUtils.h"
-#include "Base/cwBasicType.h"
-#include "Buffer/cwBuffer.h"
+#ifdef _CW_D3D11_
+
+#include "Base/cwMacros.h"
+#include "Layouts/cwLayoutsManager.h"
+#include "cwInputElementDescManager.h"
 
 NS_MINI_BEGIN
 
-class cwD3D11IndexBuffer : public cwBuffer
+class cwD3D11LayoutsManager :public cwLayoutsManager
 {
 public:
-	static cwD3D11IndexBuffer* create(
-		CWUINT uSize,
-		eBufferUsage usage = eBufferUsageImmutable,
-		CWUINT uCpuFlag = 0,
-		CWUINT miscFlag = 0,
-		CWUINT structureByteStride = 0);
+	cwD3D11LayoutsManager();
+	virtual ~cwD3D11LayoutsManager();
 
-	cwD3D11IndexBuffer();
-	virtual ~cwD3D11IndexBuffer();
+	virtual bool init() override;
 
-	virtual bool init(
-		CWUINT uSize,
-		eBufferUsage usage,
-		CWUINT bindFlag,
-		CWUINT uCpuFlag,
-		CWUINT miscFlag,
-		CWUINT structureByteStride) override;
-
-	virtual void set(cwDevice* pDevice);
-	
 protected:
+	cwInputElementDescManager* m_pElementDescManager;
 
 };
 
 NS_MINI_END
+
+#endif
 
 #endif

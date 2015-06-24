@@ -17,38 +17,24 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _cwIndexBuffer_h_
-#define _cwIndexBuffer_h_
+#ifndef __CW_D3DREPERTORY_H__
+#define __CW_D3DREPERTORY_H__
 
-#include "Base/cwUtils.h"
-#include "Base/cwBasicType.h"
-#include "Buffer/cwBuffer.h"
+#include "Base/cwMacros.h"
+#include "Repertory/cwRepertory.h"
 
 NS_MINI_BEGIN
 
-class cwD3D11IndexBuffer : public cwBuffer
+class cwD3D11Repertory : public cwRepertory
 {
 public:
-	static cwD3D11IndexBuffer* create(
-		CWUINT uSize,
-		eBufferUsage usage = eBufferUsageImmutable,
-		CWUINT uCpuFlag = 0,
-		CWUINT miscFlag = 0,
-		CWUINT structureByteStride = 0);
+	cwD3D11Repertory();
+	virtual ~cwD3D11Repertory();
 
-	cwD3D11IndexBuffer();
-	virtual ~cwD3D11IndexBuffer();
+	virtual void initAll();
 
-	virtual bool init(
-		CWUINT uSize,
-		eBufferUsage usage,
-		CWUINT bindFlag,
-		CWUINT uCpuFlag,
-		CWUINT miscFlag,
-		CWUINT structureByteStride) override;
+	virtual void refreshWindowTitle(const CWSTRING& strTitle) override;
 
-	virtual void set(cwDevice* pDevice);
-	
 protected:
 
 };

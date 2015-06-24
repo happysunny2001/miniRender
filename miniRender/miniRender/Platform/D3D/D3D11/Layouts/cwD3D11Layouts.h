@@ -20,23 +20,25 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifndef __CW_D3D11_LAYOUTS_H__
 #define __CW_D3D11_LAYOUTS_H__
 
+#ifdef _CW_D3D11_
+
 #include "Base/cwUtils.h"
 #include "Layouts/cwLayouts.h"
+#include "Platform/D3D/D3D11/Shader/cwD3D11Shader.h"
 
 NS_MINI_BEGIN
 
 class cwInputElementDesc;
-class cwEffects;
 
 class cwD3D11Layouts : public cwLayouts
 {
 public:
-	static cwD3D11Layouts* create(cwInputElementDesc* pElementDesc, cwEffects* pEffect);
+	static cwD3D11Layouts* create(cwInputElementDesc* pElementDesc, cwD3D11Shader* pShader);
 
 	cwD3D11Layouts();
 	virtual ~cwD3D11Layouts();
 
-	virtual bool init(cwInputElementDesc* pElementDesc, cwEffects* pEffect) override;
+	virtual bool init(cwInputElementDesc* pElementDesc, cwD3D11Shader* pShader);
 	virtual CWHANDLE getHandle() override { return m_pInputLayout; }
 
 private:
@@ -45,6 +47,8 @@ private:
 };
 
 NS_MINI_END
+
+#endif
 
 #endif
 

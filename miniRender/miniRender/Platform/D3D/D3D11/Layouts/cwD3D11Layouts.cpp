@@ -17,16 +17,18 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#ifdef _CW_D3D11_
+
 #include "cwD3D11Layouts.h"
-#include "cwEffects.h"
-#include "Layouts/cwInputElementDescManager.h"
+#include "Shader/cwShader.h"
+#include "cwInputElementDescManager.h"
 
 NS_MINI_BEGIN
 
-cwD3D11Layouts* cwD3D11Layouts::create(cwInputElementDesc* pElementDesc, cwEffects* pEffect)
+cwD3D11Layouts* cwD3D11Layouts::create(cwInputElementDesc* pElementDesc, cwD3D11Shader* pShader)
 {
 	cwD3D11Layouts* pLayout = new cwD3D11Layouts();
-	if (pLayout && pLayout->init(pElementDesc, pEffect)) {
+	if (pLayout && pLayout->init(pElementDesc, pShader)) {
 		pLayout->autorelease();
 		return pLayout;
 	}
@@ -45,14 +47,14 @@ cwD3D11Layouts::~cwD3D11Layouts()
 	CW_RELEASE_COM(m_pInputLayout);
 }
 
-bool cwD3D11Layouts::init(cwInputElementDesc* pElementDesc, cwEffects* pEffect)
+bool cwD3D11Layouts::init(cwInputElementDesc* pElementDesc, cwD3D11Shader* pShader)
 {
-	if (!pElementDesc || !pEffect) return false;
+	if (!pElementDesc || !pShader) return false;
 	D3DX11_PASS_DESC passDesc;
-	pEffect->getPass(0, 0)->GetDesc(&passDesc);
+	pShader->getPass(0, 0)->GetDesc(&passDesc);
 
 	ID3D11Device* pDevice = NULL;
-	pEffect->getEffect()->GetDevice(&pDevice);
+	pShader->getEffect()->GetDevice(&pDevice);
 	CW_HR(pDevice->CreateInputLayout(
 		pElementDesc->getElementDesc(),
 		pElementDesc->getDescCnt(),
@@ -64,5 +66,7 @@ bool cwD3D11Layouts::init(cwInputElementDesc* pElementDesc, cwEffects* pEffect)
 }
 
 NS_MINI_END
+
+#endif
 
 

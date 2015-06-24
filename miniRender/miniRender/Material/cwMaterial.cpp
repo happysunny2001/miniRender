@@ -18,16 +18,16 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "Material/cwMaterial.h"
-#include "cwRepertory.h"
-#include "cwEffectManager.h"
+#include "Repertory/cwRepertory.h"
+#include "Shader/cwShaderManager.h"
+#include "Shader/cwShaderConstant.h"
+#include "Shader/cwShader.h"
 #include "Blend/cwBlend.h"
-#include "cwCommon.h"
-#include "cwShaderConstant.h"
-#include "cwEffects.h"
-#include "cwRepertory.h"
 #include "Device/cwDevice.h"
-#include "cwTexture.h"
-#include "cwTextureManager.h"
+#include "Texture/cwTexture.h"
+#include "Texture/cwTextureManager.h"
+
+#include <assert.h>
 
 NS_MINI_BEGIN
 
@@ -36,10 +36,10 @@ cwMaterial* cwMaterial::create(
 	const cwVector4D& diffuse,
 	const cwVector4D& specular,
 	const cwVector4D& reflect,
-	const string& strEffect)
+	const string& strShader)
 {
 	cwMaterial* pMaterial = new cwMaterial();
-	if (pMaterial && pMaterial->init(ambient, diffuse, specular, reflect, strEffect)) {
+	if (pMaterial && pMaterial->init(ambient, diffuse, specular, reflect, strShader)) {
 		pMaterial->autorelease();
 		return pMaterial;
 	}
@@ -65,7 +65,7 @@ cwMaterial* cwMaterial::create(
 }
 
 cwMaterial::cwMaterial():
-m_pEffect(nullptr),
+m_pShader(nullptr),
 m_pDiffuseTexture(nullptr),
 m_pBlendOp(nullptr)
 {
@@ -78,7 +78,7 @@ m_pBlendOp(nullptr)
 
 cwMaterial::~cwMaterial()
 {
-	CW_SAFE_RELEASE_NULL(m_pEffect);
+	CW_SAFE_RELEASE_NULL(m_pShader);
 	CW_SAFE_RELEASE_NULL(m_pBlendOp);
 	CW_SAFE_RELEASE_NULL(m_pDiffuseTexture);
 }
@@ -88,13 +88,13 @@ bool cwMaterial::init(
 	const cwVector4D& diffuse,
 	const cwVector4D& specular,
 	const cwVector4D& reflect,
-	const string& strEffect)
+	const string& strShader)
 {
 	this->m_nMatData.m_nAmbient = ambient;
 	this->m_nMatData.m_nDiffuse = diffuse;
 	this->m_nMatData.m_nSpecular = specular;
 	this->m_nMatData.m_nReflect = reflect;
-	this->setEffect(strEffect);
+	this->setShader(strShader);
 	return true;
 }
 
@@ -131,11 +131,11 @@ void cwMaterial::setReflect(const cwVector4D& color)
 	m_nMatData.m_nReflect = color;
 }
 
-void cwMaterial::setEffect(const string& strEffect)
+void cwMaterial::setShader(const string& strShader)
 {
-	m_pEffect = cwRepertory::getInstance().getEffectManager()->getEffect(strEffect);
-	CWAssert(m_pEffect != nullptr, "get effect error!");
-	CW_SAFE_RETAIN(m_pEffect);
+	m_pShader = cwRepertory::getInstance().getShaderManager()->getShader(strShader);
+	assert(m_pShader != nullptr);
+	CW_SAFE_RETAIN(m_pShader);
 }
 
 void cwMaterial::setDiffuseTexture(cwTexture* pTexture)
@@ -162,12 +162,12 @@ void cwMaterial::setBlend(cwBlend* pBlendOp)
 
 void cwMaterial::configEffect()
 {
-	if (!m_pEffect) return;
+	if (!m_pShader) return;
 
-	m_pEffect->setVariableData(CW_EFFECT_MATERIAL, this->getColorData(), 0, this->getColorDataSize());
+	m_pShader->setVariableData(CW_SHADER_MATERIAL, this->getColorData(), 0, this->getColorDataSize());
 
-	if (m_pEffect->hasVariable(CW_EFFECT_DIFFUSE_TEXTURE)) {
-		m_pEffect->setVariableTexture(CW_EFFECT_DIFFUSE_TEXTURE, this->getDiffuseTexture());
+	if (m_pShader->hasVariable(CW_SHADER_DIFFUSE_TEXTURE)) {
+		m_pShader->setVariableTexture(CW_SHADER_DIFFUSE_TEXTURE, this->getDiffuseTexture());
 	}
 
 	cwRepertory::getInstance().getDevice()->setBlend(this->getBlend());

@@ -22,12 +22,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
-#include "cwRef.h"
+#include "Ref/cwRef.h"
 
 NS_MINI_BEGIN
 
 class cwInputElementDesc;
-class cwEffects;
+class cwShader;
 
 class CW_DLL cwLayouts : public cwRef
 {
@@ -35,7 +35,6 @@ public:
 	cwLayouts() {}
 	virtual ~cwLayouts() {}
 
-	virtual bool init(cwInputElementDesc* pElementDesc, cwEffects* pEffect) { return false; }
 	virtual CWHANDLE getHandle() { return nullptr;  }
 
 protected:
