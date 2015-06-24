@@ -29,8 +29,7 @@ using namespace std;
 NS_MINI_BEGIN
 
 class cwDevice;
-class cwLog;
-class cwEffectManager;
+class cwShaderManager;
 class cwLayoutsManager;
 class cwAutoReleasePool;
 class cwCamera;
@@ -47,12 +46,12 @@ public:
 	CWVOID* getPtr(const string& strName);
 
 	virtual cwDevice* getDevice();
-	virtual cwLog* getLog();
-	virtual cwEffectManager* getEffectManager();
+//	virtual cwLog* getLog();
+	virtual cwShaderManager* getShaderManager();
 	virtual cwLayoutsManager* getLayoutManager();
 	virtual cwAutoReleasePool* getAutoReleasePool();
 
-	virtual void refreshWindowTitle(const CWWCHAR* pcTitle) {}
+	virtual void refreshWindowTitle(const CWSTRING& strTitle) {}
 
 	cwCamera* getCurrentCamera() { return m_pCurrentCamera; }
 	void setCurrentCamera(cwCamera* pCam);
@@ -65,10 +64,10 @@ protected:
 	
 protected:
 	cwDevice* m_pDevice;
-	cwEffectManager* m_pEffectManager;
+	cwShaderManager* m_pShaderManager;
 	cwLayoutsManager* m_pLayoutManager;
 	cwAutoReleasePool* m_pAutoReleasePool;
-	cwLog* m_pLog;
+//	cwLog* m_pLog;
 	cwCamera* m_pCurrentCamera;
 
 	unordered_map<string, cwValueMap> m_mapData;

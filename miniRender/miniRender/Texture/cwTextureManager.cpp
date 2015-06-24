@@ -19,16 +19,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwTextureManager.h"
 #include "cwTexture.h"
-#include "cwRepertory.h"
+#include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
 
 NS_MINI_BEGIN
-
-cwTextureManager& cwTextureManager::getInstance()
-{
-	static cwTextureManager gTexManager;
-	return gTexManager;
-}
 
 cwTextureManager::~cwTextureManager()
 {
@@ -45,8 +39,6 @@ cwTexture* cwTextureManager::getTexture(const string& strName)
 		m_mapTexture.insert(strName, pTex);
 		return pTex;
 	}
-
-	CWAssert(true, "get texture error!");
 
 	return nullptr;
 }

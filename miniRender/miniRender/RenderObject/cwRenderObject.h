@@ -26,8 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINI_BEGIN
 
-class cwVertexBuffer;
-class cwIndexBuffer;
+class cwBuffer;
 class cwLayouts;
 class cwCamera;
 
@@ -47,12 +46,12 @@ public:
 	cwLayouts* getInputLayout() { return m_pLayout; }
 	ePrimitiveType getPrimitiveTopology() { return m_nTopology; }
 
-	cwVertexBuffer* getVertexBuffer() { return m_pVertexBuffer; }
-	cwIndexBuffer* getIndexBuffer() { return m_pIndexBuffer; }
+	cwBuffer* getVertexBuffer() { return m_pVertexBuffer; }
+	cwBuffer* getIndexBuffer() { return m_pIndexBuffer; }
 
 protected:
-	cwVertexBuffer* m_pVertexBuffer;
-	cwIndexBuffer* m_pIndexBuffer;
+	cwBuffer* m_pVertexBuffer;
+	cwBuffer* m_pIndexBuffer;
 	cwLayouts* m_pLayout;
 	ePrimitiveType m_nTopology;
 

@@ -48,6 +48,8 @@ bool cwRenderCommand::init(cwMaterial* pMaterial, const cwRenderCommandCallback&
 {
 	m_pMaterial = pMaterial;
 	m_fnRenderFunc = callback;
+
+	return true;
 }
 
 NS_MINI_END

@@ -18,12 +18,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwStaticRenderObject.h"
-#include "cwVertexBuffer.h"
+#include "Buffer/cwBuffer.h"
 #include "Base/cwMacros.h"
 #include "Device/cwDevice.h"
-#include "cwEffectManager.h"
 #include "Layouts/cwLayoutsManager.h"
-#include "cwRepertory.h"
+#include "Repertory/cwRepertory.h"
 
 NS_MINI_BEGIN
 

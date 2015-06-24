@@ -20,23 +20,22 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwMacros.h"
 #include "Base/cwMap.h"
 #include "cwShader.h"
+#include "Ref/cwRef.h"
 
 NS_MINI_BEGIN
 
-class CW_DLL cwShaderManager
+class CW_DLL cwShaderManager : public cwRef
 {
 public:
-	static cwShaderManager& getInstance();
+	static cwShaderManager* create();
 
+	cwShaderManager();
 	~cwShaderManager();
 
-	void init();
+	virtual bool init();
 
 	cwShader* loadShader(const CWSTRING& strFile);
 	cwShader* getShader(const CWSTRING& strFile);
-
-private:
-	cwShaderManager();
 
 protected:
 	cwMap<CWSTRING, cwShader*> m_nMapShader;

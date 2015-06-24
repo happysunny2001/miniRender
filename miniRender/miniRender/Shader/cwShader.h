@@ -33,8 +33,6 @@ class cwTexture;
 class cwShader : public cwRef
 {
 public:
-	static cwShader* create(const CWSTRING& strShaderFile);
-
 	cwShader();
 	virtual ~cwShader();
 

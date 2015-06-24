@@ -18,15 +18,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwRenderObject.h"
-#include "cwVertexBuffer.h"
-#include "cwIndexBuffer.h"
+#include "Buffer/cwBuffer.h"
 #include "Layouts/cwLayouts.h"
 #include "Device/cwDevice.h"
-#include "cwEffectManager.h"
 #include "Layouts/cwLayoutsManager.h"
-#include "cwCamera.h"
-#include "cwShaderConstant.h"
-#include "cwRepertory.h"
+#include "Repertory/cwRepertory.h"
 
 NS_MINI_BEGIN
 

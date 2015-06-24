@@ -21,18 +21,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINI_BEGIN
 
-cwShader* cwShader::create(const std::string& strShaderFile)
-{
-	cwShader* pShader = new cwShader();
-	if (pShader && pShader->init(strShaderFile)) {
-		pShader->autorelease();
-		return pShader;
-	}
-
-	CW_SAFE_DELETE(pShader);
-	return nullptr;
-}
-
 cwShader::cwShader()
 {
 

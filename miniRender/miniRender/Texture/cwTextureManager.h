@@ -30,16 +30,11 @@ class cwTexture;
 class cwTextureManager
 {
 public:
-	static cwTextureManager& getInstance();
+	cwTextureManager() {}
+	virtual ~cwTextureManager();
 
 	cwTexture* getTexture(const string& strName);
 	void removeTexture(const string& strName);
-
-private:
-	cwTextureManager() {}
-	cwTextureManager(cwTextureManager const&) {}
-	cwTextureManager& operator=(cwTextureManager const&) {}
-	virtual ~cwTextureManager();
 
 private:
 	cwMap<string, cwTexture*> m_mapTexture;

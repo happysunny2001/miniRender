@@ -18,8 +18,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwRef.h"
-#include "cwRepertory.h"
 #include "cwAutoReleasePool.h"
+#include "Repertory/cwRepertory.h"
 
 #include <assert.h>
 

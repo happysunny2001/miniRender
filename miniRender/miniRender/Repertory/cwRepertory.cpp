@@ -19,14 +19,14 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwRepertory.h"
 #include "Device/cwDevice.h"
-#include "cwEffectManager.h"
+#include "Shader/cwShaderManager.h"
 #include "Layouts/cwLayoutsManager.h"
-#include "cwLog.h"
+//#include "cwLog.h"
 #include "Ref/cwAutoReleasePool.h"
 #include "Camera/cwCamera.h"
 
 #ifdef _CW_D3D11_
-#include "cwD3DRepertory.h"
+#include "Platform/D3D/D3D11/Repertory/cwD3D11Repertory.h"
 #endif
 
 NS_MINI_BEGIN
@@ -34,15 +34,15 @@ NS_MINI_BEGIN
 cwRepertory& cwRepertory::getInstance()
 {
 #ifdef _CW_D3D11_
-	static cwD3DRepertory rep;
+	static cwD3D11Repertory rep;
 #endif
 	return rep;
 }
 
 cwRepertory::cwRepertory():
 m_pDevice(nullptr),
-m_pLog(nullptr),
-m_pEffectManager(nullptr),
+//m_pLog(nullptr),
+m_pShaderManager(nullptr),
 m_pLayoutManager(nullptr),
 m_pAutoReleasePool(nullptr),
 m_pCurrentCamera(nullptr)
@@ -52,10 +52,10 @@ m_pCurrentCamera(nullptr)
 
 cwRepertory::~cwRepertory()
 {
-	CW_SAFE_DELETE(m_pEffectManager);
+	CW_SAFE_RELEASE_NULL(m_pShaderManager);
 	CW_SAFE_DELETE(m_pLayoutManager);
 	CW_SAFE_DELETE(m_pDevice);
-	CW_SAFE_DELETE(m_pLog);
+	//CW_SAFE_DELETE(m_pLog);
 	CW_SAFE_DELETE(m_pAutoReleasePool);
 	CW_SAFE_RELEASE_NULL(m_pCurrentCamera);
 }
@@ -65,14 +65,14 @@ cwDevice* cwRepertory::getDevice()
 	return m_pDevice;
 }
 
-cwLog* cwRepertory::getLog()
-{
-	return m_pLog;
-}
+//cwLog* cwRepertory::getLog()
+//{
+//	return m_pLog;
+//}
 
-cwEffectManager* cwRepertory::getEffectManager()
+cwShaderManager* cwRepertory::getShaderManager()
 {
-	return m_pEffectManager;
+	return m_pShaderManager;
 }
 
 cwLayoutsManager* cwRepertory::getLayoutManager()
@@ -87,8 +87,11 @@ cwAutoReleasePool* cwRepertory::getAutoReleasePool()
 
 void cwRepertory::initAll()
 {
-	m_pLog = new cwLog();
+//	m_pLog = new cwLog();
 	m_pAutoReleasePool = new cwAutoReleasePool();
+
+	m_pShaderManager = cwShaderManager::create();
+	CW_SAFE_RETAIN(m_pShaderManager);
 }
 
 void cwRepertory::addValue(const string& strName, const cwValueMap& value)

@@ -18,13 +18,21 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwShaderManager.h"
+#include "Repertory/cwRepertory.h"
+#include "Device/cwDevice.h"
 
 NS_MINI_BEGIN
 
-cwShaderManager& cwShaderManager::getInstance()
+cwShaderManager* cwShaderManager::create()
 {
-	static cwShaderManager shaderManager;
-	return shaderManager;
+	cwShaderManager* pManager = new cwShaderManager();
+	if (pManager && pManager->init()) {
+		pManager->autorelease();
+		return pManager;
+	}
+
+	CW_SAFE_DELETE(pManager);
+	return nullptr;
 }
 
 cwShaderManager::cwShaderManager()
@@ -42,7 +50,7 @@ cwShader* cwShaderManager::loadShader(const CWSTRING& strFile)
 	auto itFind = m_nMapShader.find(strFile);
 	if (itFind != m_nMapShader.end()) return itFind->second;
 
-	cwShader* pShader = cwShader::create(strFile);
+	cwShader* pShader = cwRepertory::getInstance().getDevice()->createShader(strFile);
 	if (pShader) {
 		m_nMapShader.insert(strFile, pShader);
 		return pShader;
@@ -58,9 +66,14 @@ cwShader* cwShaderManager::getShader(const CWSTRING& strFile)
 	return nullptr;
 }
 
-void cwShaderManager::init()
+bool cwShaderManager::init()
 {
+	//init d3d shader first
+	this->loadShader("effect/D3D11/color.fx");
+	this->loadShader("effect/D3D11/lighting.fx");
+	this->loadShader("effect/D3D11/lightingTex.fx");
 
+	return true;
 }
 
 NS_MINI_END

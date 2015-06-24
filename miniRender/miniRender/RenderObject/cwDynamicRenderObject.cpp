@@ -19,9 +19,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwDynamicRenderObject.h"
 #include "Device/cwDevice.h"
-#include "cwVertexBuffer.h"
-#include "cwCamera.h"
-#include "cwRepertory.h"
+#include "Camera/cwCamera.h"
+#include "Buffer/cwBuffer.h"
+#include "Repertory/cwRepertory.h"
 
 NS_MINI_BEGIN
 
@@ -62,8 +62,8 @@ bool cwDynamicRenderObject::init(
 		pVertexData, uVertexStride, uVertexCnt,
 		pIndexData, uIndexCnt, eLayout)) return false;
 
-	cwRenderDevice* pDevice = cwRepertory::getInstance().getDevice();
-	m_pVertexBuffer = pDevice->createVertexBuffer(NULL, uVertexStride, uVertexCnt, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
+	cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+	m_pVertexBuffer = pDevice->createVertexBuffer(NULL, uVertexStride, uVertexCnt, eBufferUsageDynamic, eAccessFlagWrite);
 	CW_SAFE_RETAIN(m_pVertexBuffer);
 	if (!m_pVertexBuffer) return false;
 
