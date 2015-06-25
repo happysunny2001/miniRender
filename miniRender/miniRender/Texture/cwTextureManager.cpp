@@ -18,11 +18,21 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwTextureManager.h"
-#include "cwTexture.h"
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
 
 NS_MINI_BEGIN
+
+cwTextureManager* cwTextureManager::create()
+{
+	cwTextureManager* pManager = new cwTextureManager();
+	if (pManager) {
+		pManager->autorelease();
+		return pManager;
+	}
+
+	return nullptr;
+}
 
 cwTextureManager::~cwTextureManager()
 {

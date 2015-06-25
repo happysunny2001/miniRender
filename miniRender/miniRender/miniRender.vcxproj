@@ -59,7 +59,7 @@
     <ClInclude Include="Math\cwVector3D.h" />
     <ClInclude Include="Math\cwVector4D.h" />
     <ClInclude Include="Platform\cwPlatform.h" />
-    <ClInclude Include="Platform\D3D11\Blend\cwD3D11Blend.h" />
+    <ClInclude Include="Platform\D3D\D3D11\Blend\cwD3D11Blend.h" />
     <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11IndexBuffer.h" />
     <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11VertexBuffer.h" />
     <ClInclude Include="Platform\D3D\D3D11\Device\cwD3D11Device.h" />
@@ -117,7 +117,7 @@
     <ClCompile Include="Math\cwVector2D.cpp" />
     <ClCompile Include="Math\cwVector3D.cpp" />
     <ClCompile Include="Math\cwVector4D.cpp" />
-    <ClCompile Include="Platform\D3D11\Blend\cwD3D11Blend.cpp" />
+    <ClCompile Include="Platform\D3D\D3D11\Blend\cwD3D11Blend.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11IndexBuffer.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11VertexBuffer.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Device\cwD3D11Device.cpp" />

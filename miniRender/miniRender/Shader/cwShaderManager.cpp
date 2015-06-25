@@ -69,9 +69,9 @@ cwShader* cwShaderManager::getShader(const CWSTRING& strFile)
 bool cwShaderManager::init()
 {
 	//init d3d shader first
-	this->loadShader("effect/D3D11/color.fx");
-	this->loadShader("effect/D3D11/lighting.fx");
-	this->loadShader("effect/D3D11/lightingTex.fx");
+	this->loadShader("F:\\Git\\miniRender\\miniRender\\x64\\Debug\\effect\\D3D11\\color.fx");
+	this->loadShader("F:\\Git\\miniRender\\miniRender\\x64\\Debug\\effect\\D3D11\\lighting.fx");
+	this->loadShader("F:\\Git\\miniRender\\miniRender\\x64\\Debug\\effect\\D3D11\\lightingTex.fx");
 
 	return true;
 }

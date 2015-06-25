@@ -22,14 +22,16 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwUtils.h"
 #include "Base/cwMap.h"
+#include "Ref/cwRef.h"
+#include "cwTexture.h"
 
 NS_MINI_BEGIN
 
-class cwTexture;
-
-class cwTextureManager
+class CW_DLL cwTextureManager : public cwRef
 {
 public:
+	static cwTextureManager* create();
+
 	cwTextureManager() {}
 	virtual ~cwTextureManager();
 

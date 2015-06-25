@@ -183,11 +183,7 @@ void cwRenderNode::transform()
 	m_nTrans = matScale * matRot * matTranslate;
 
 	if (m_pParent) {
-		m_nTrans *= m_pParent->getTransformMatrix();
-	}
-
-	for (auto it = m_nVecChildren.begin(); it != m_nVecChildren.end(); ++it) {
-		(*it)->transform();
+		m_nTrans = m_pParent->getTransformMatrix() * m_nTrans;
 	}
 }
 

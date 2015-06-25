@@ -20,14 +20,14 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifndef __CW_D3D11_SHADER_H__
 #define __CW_D3D11_SHADER_H__
 
+#ifdef _CW_D3D11_
+
 #include "Base/cwMacros.h"
 #include "Shader/cwShader.h"
 
-#ifdef _CW_D3D11_
-
 NS_MINI_BEGIN
 
-class cwD3D11Shader : public cwShader
+class CW_DLL cwD3D11Shader : public cwShader
 {
 public:
 	static cwD3D11Shader* create(const CWSTRING& strShaderFile);
@@ -37,6 +37,7 @@ public:
 
 	virtual bool init(const CWSTRING& strShaderFile) override;
 
+	virtual bool hasVariable(const string& strVariable) override;
 	virtual void setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize) override;
 	virtual void setVariableData(const string& strVariable, CWUINT index, void* pData, CWUINT offset, CWUINT iSize) override;
 	virtual void setVariableMatrix(const string& strVariable, CWFLOAT* pData) override;

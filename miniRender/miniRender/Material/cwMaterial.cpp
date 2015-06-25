@@ -133,13 +133,17 @@ void cwMaterial::setReflect(const cwVector4D& color)
 
 void cwMaterial::setShader(const string& strShader)
 {
-	m_pShader = cwRepertory::getInstance().getShaderManager()->getShader(strShader);
-	assert(m_pShader != nullptr);
+	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getShader(strShader);
+	if (m_pShader == pShader) return;
+
+	CW_SAFE_RELEASE_NULL(m_pShader);
+	m_pShader = pShader;
 	CW_SAFE_RETAIN(m_pShader);
 }
 
 void cwMaterial::setDiffuseTexture(cwTexture* pTexture)
 {
+	if (m_pDiffuseTexture == pTexture) return;
 	CW_SAFE_RELEASE_NULL(m_pDiffuseTexture);
 	m_pDiffuseTexture = pTexture;
 	CW_SAFE_RETAIN(m_pDiffuseTexture);
@@ -147,7 +151,8 @@ void cwMaterial::setDiffuseTexture(cwTexture* pTexture)
 
 void cwMaterial::setDiffuseTexture(const string& strTexName)
 {
-	cwTexture* pTexture = cwTextureManager::getInstance().getTexture(strTexName);
+	cwTexture* pTexture = cwRepertory::getInstance().getTextureManager()->getTexture(strTexName);
+	if (m_pDiffuseTexture == pTexture) return;
 	CW_SAFE_RELEASE_NULL(m_pDiffuseTexture);
 	m_pDiffuseTexture = pTexture;
 	CW_SAFE_RETAIN(m_pDiffuseTexture);
@@ -155,6 +160,7 @@ void cwMaterial::setDiffuseTexture(const string& strTexName)
 
 void cwMaterial::setBlend(cwBlend* pBlendOp)
 {
+	if (m_pBlendOp == pBlendOp) return;
 	CW_SAFE_RELEASE_NULL(m_pBlendOp);
 	m_pBlendOp = pBlendOp;
 	CW_SAFE_RETAIN(m_pBlendOp);

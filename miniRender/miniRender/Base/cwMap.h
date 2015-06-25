@@ -27,7 +27,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 NS_MINI_BEGIN
 
 template<class K, class V>
-class CW_DLL cwMap
+class cwMap
 {
 public:
 	typedef std::unordered_map<K, V> RefMap;

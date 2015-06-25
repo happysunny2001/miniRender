@@ -30,7 +30,7 @@ NS_MINI_BEGIN
 
 class cwTexture;
 
-class cwShader : public cwRef
+class CW_DLL cwShader : public cwRef
 {
 public:
 	cwShader();
@@ -38,7 +38,7 @@ public:
 
 	virtual bool init(const CWSTRING& strShaderFile) = 0;
 
-	virtual bool hasVariable(const string& strVariable);
+	virtual bool hasVariable(const string& strVariable) = 0;
 	virtual void setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize) = 0;
 	virtual void setVariableData(const string& strVariable, CWUINT index, void* pData, CWUINT offset, CWUINT iSize) = 0;
 	virtual void setVariableMatrix(const string& strVariable, CWFLOAT* pData) = 0;
@@ -50,7 +50,6 @@ public:
 	virtual void apply(CWUINT techIndex, CWUINT passIndex) = 0;
 
 protected:
-	std::unordered_map<std::string, ShaderVarible> m_nMapShaderVarible;
 
 };
 

@@ -26,7 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINI_BEGIN
 
-class cwD3D11IndexBuffer : public cwBuffer
+class CW_DLL cwD3D11IndexBuffer : public cwBuffer
 {
 public:
 	static cwD3D11IndexBuffer* create(

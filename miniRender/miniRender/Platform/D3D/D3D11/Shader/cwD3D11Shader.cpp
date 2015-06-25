@@ -51,6 +51,9 @@ cwD3D11Shader::~cwD3D11Shader()
 
 bool cwD3D11Shader::init(const std::string& strShaderFile)
 {
+	TCHAR szPath[MAX_PATH];
+	GetModuleFileName(NULL, szPath, MAX_PATH);
+
 	UINT compileFlag = 0;
 #if defined(CW_DEBUG)
 	compileFlag |= D3D10_SHADER_DEBUG;
@@ -167,6 +170,12 @@ bool cwD3D11Shader::saveVariable()
 	}
 
 	return true;
+}
+
+bool cwD3D11Shader::hasVariable(const string& strVariable)
+{
+	if (m_mapVariable.find(strVariable) != m_mapVariable.end()) return true;
+	return false;
 }
 
 void cwD3D11Shader::setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize)

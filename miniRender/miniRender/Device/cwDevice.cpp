@@ -22,10 +22,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINI_BEGIN
 
-cwDevice::cwDevice(HWND hWnd, CWUINT width, CWUINT height) :
-m_hWnd(hWnd),
-m_uiClientWidth(width),
-m_uiClientHeight(height),
+cwDevice::cwDevice(/*HWND hWnd, CWUINT width, CWUINT height*/) :
+//m_hWnd(hWnd),
+//m_uiClientWidth(width),
+//m_uiClientHeight(height),
 m_fvClearColor(cwColor::black),
 m_eRenderState(eRenderStateSolid),
 m_bEnableMsaa4x(true),

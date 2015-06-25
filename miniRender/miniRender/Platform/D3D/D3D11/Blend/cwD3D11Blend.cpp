@@ -18,9 +18,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwD3D11Blend.h"
-#include "cwRepertory.h"
-#include "cwRenderDevice.h"
-#include "cwD3D11Device.h"
+#include "Repertory/cwRepertory.h"
+#include "Device/cwDevice.h"
 
 NS_MINI_BEGIN
 

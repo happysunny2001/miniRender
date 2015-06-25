@@ -38,14 +38,16 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/D3D/D3D11/Blend/cwD3D11Blend.h"
 #include "Stencil/cwStencil.h"
 #include "Platform/D3D/D3D11/Stencil/cwD3D11Stencil.h"
+#include "Repertory/cwRepertory.h"
+#include "Base/cwValueMap.h"
 
 #include <assert.h>
 #include <xnamath.h>
 
 NS_MINI_BEGIN
 
-cwD3D11Device::cwD3D11Device(HWND hWnd, CWUINT width, CWUINT height) :
-cwDevice(hWnd, width, height),
+cwD3D11Device::cwD3D11Device(/*HWND hWnd, CWUINT width, CWUINT height*/) :
+//cwDevice(hWnd, width, height),
 m_pD3D11Device(NULL),
 m_pD3D11DeviceContext(NULL),
 m_pDxgiSwapChain(NULL),
@@ -105,10 +107,14 @@ bool cwD3D11Device::initDevice()
 	CW_HR(m_pD3D11Device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m_uiM4xMsaaQuality));
 	assert(m_uiM4xMsaaQuality > 0);
 
+	CWUINT winWidth  = cwRepertory::getInstance().getUInt(gValueWinWidth);
+	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
+	HWND hWnd = static_cast<HWND>(cwRepertory::getInstance().getPtr(gValueWinHandle));
+
 	//create swap buffer
 	DXGI_SWAP_CHAIN_DESC sd;
-	sd.BufferDesc.Width  = m_uiClientWidth;
-	sd.BufferDesc.Height = m_uiClientHeight;
+	sd.BufferDesc.Width = winWidth;
+	sd.BufferDesc.Height = winHeight;
 	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	sd.BufferDesc.RefreshRate.Numerator   = 60;
 	sd.BufferDesc.RefreshRate.Denominator = 1;
@@ -126,7 +132,7 @@ bool cwD3D11Device::initDevice()
 
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	sd.BufferCount = 1;
-	sd.OutputWindow = m_hWnd;
+	sd.OutputWindow = hWnd;
 	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	sd.Flags = 0;
 
@@ -147,7 +153,7 @@ bool cwD3D11Device::initDevice()
 
 	createRenderState();
 
-	resize(m_uiClientWidth, m_uiClientHeight);
+	resize(winWidth, winHeight);
 
 	m_pMaterialDefault = cwMaterial::create(
 		cwVector4D(1.0f, 1.0f, 1.0f, 1.0f),
@@ -169,9 +175,12 @@ void cwD3D11Device::createRenderTarget()
 
 void cwD3D11Device::createDepthStencil()
 {
+	CWUINT winWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
+	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
+
 	D3D11_TEXTURE2D_DESC texDesc;
-	texDesc.Width  = m_uiClientWidth;
-	texDesc.Height = m_uiClientHeight;
+	texDesc.Width = winWidth;
+	texDesc.Height = winHeight;
 	texDesc.MipLevels = 1;
 	texDesc.ArraySize = 1;
 	texDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -197,10 +206,10 @@ void cwD3D11Device::resize(CWUINT width, CWUINT height)
 	CW_RELEASE_COM(m_pDepthStencilView);
 	CW_RELEASE_COM(m_pDepthStencilBuffer);
 
-	m_uiClientWidth  = width;
-	m_uiClientHeight = height;
+	//m_uiClientWidth  = width;
+	//m_uiClientHeight = height;
 
-	CW_HR(m_pDxgiSwapChain->ResizeBuffers(1, m_uiClientWidth, m_uiClientHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
+	CW_HR(m_pDxgiSwapChain->ResizeBuffers(1, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
 	createRenderTarget();
 	createDepthStencil();
 	m_pD3D11DeviceContext->OMSetRenderTargets(1, &m_pD3D11RenderTarget, m_pDepthStencilView);
@@ -210,14 +219,17 @@ void cwD3D11Device::resize(CWUINT width, CWUINT height)
 
 void cwD3D11Device::resize()
 {
-	resize(m_uiClientWidth, m_uiClientHeight);
+	CWUINT winWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
+	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
+
+	resize(winWidth, winHeight);
 }
 
-void cwD3D11Device::setSize(CWUINT width, CWUINT height)
-{
-	m_uiClientWidth  = width;
-	m_uiClientHeight = height;
-}
+//void cwD3D11Device::setSize(CWUINT width, CWUINT height)
+//{
+//	m_uiClientWidth  = width;
+//	m_uiClientHeight = height;
+//}
 
 void cwD3D11Device::setClearColor(const cwVector4D& fvColor)
 {
@@ -226,11 +238,14 @@ void cwD3D11Device::setClearColor(const cwVector4D& fvColor)
 
 void cwD3D11Device::createViewPort()
 {
+	CWUINT winWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
+	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
+
 	D3D11_VIEWPORT viewPort;
 	viewPort.TopLeftX = 0;
 	viewPort.TopLeftY = 0;
-	viewPort.Width = (float)m_uiClientWidth;
-	viewPort.Height = (float)m_uiClientHeight;
+	viewPort.Width = (float)winWidth;
+	viewPort.Height = (float)winHeight;
 	viewPort.MinDepth = 0;
 	viewPort.MaxDepth = 1.0f;
 	m_pD3D11DeviceContext->RSSetViewports(1, &viewPort);
@@ -561,29 +576,29 @@ void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPo
 	this->DrawIndexed(pRenderObj->getIndexBuffer()->getIndexCount(), 0, 0);
 }
 
-void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
-{
-	if (!pEntity || !pCamera) return;
-
-	cwMaterial* pMaterial = pEntity->getMaterial();
-	assert(pMaterial != nullptr);
-	pMaterial->configEffect();
-
-	cwShader* pShader = pMaterial->getShader();
-	assert(pShader != nullptr);
-
-	pEntity->transform();
-	setEffectWorldTrans(pShader, pEntity->getWorldTrans(), pCamera);
-	const cwMatrix4X4& diffuseTrans = pEntity->getDiffuseTrans();
-	if (pShader->hasVariable(CW_SHADER_DIFF_TEX_TRANS)) {
-		pShader->setVariableMatrix(CW_SHADER_DIFF_TEX_TRANS, (CWFLOAT*)(&diffuseTrans));
-	}
-
-	cwRenderObject* pRenderObj = pEntity->getRenderObj();
-	assert(pRenderObj != nullptr);
-
-	draw(pShader, pMaterial->getTechName(), pRenderObj);
-}
+//void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
+//{
+//	if (!pEntity || !pCamera) return;
+//
+//	cwMaterial* pMaterial = pEntity->getMaterial();
+//	assert(pMaterial != nullptr);
+//	pMaterial->configEffect();
+//
+//	cwShader* pShader = pMaterial->getShader();
+//	assert(pShader != nullptr);
+//
+//	pEntity->transform();
+//	setEffectWorldTrans(pShader, pEntity->getWorldTrans(), pCamera);
+//	const cwMatrix4X4& diffuseTrans = pEntity->getDiffuseTrans();
+//	if (pShader->hasVariable(CW_SHADER_DIFF_TEX_TRANS)) {
+//		pShader->setVariableMatrix(CW_SHADER_DIFF_TEX_TRANS, (CWFLOAT*)(&diffuseTrans));
+//	}
+//
+//	cwRenderObject* pRenderObj = pEntity->getRenderObj();
+//	assert(pRenderObj != nullptr);
+//
+//	draw(pShader, pMaterial->getTechName(), pRenderObj);
+//}
 
 void cwD3D11Device::setEffectWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera)
 {

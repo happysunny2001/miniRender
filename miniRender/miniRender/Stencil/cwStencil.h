@@ -26,7 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINI_BEGIN
 
-class cwStencil : public cwRef
+class CW_DLL cwStencil : public cwRef
 {
 public:
 	cwStencil() :m_uStencilRef(0){}

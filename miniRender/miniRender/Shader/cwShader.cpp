@@ -31,12 +31,6 @@ cwShader::~cwShader()
 
 }
 
-bool cwShader::hasVariable(const string& strVariable)
-{
-	if (m_nMapShaderVarible.find(strVariable) != m_nMapShaderVarible.end()) return true;
-	return false;
-}
-
 NS_MINI_END
 
 

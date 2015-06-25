@@ -46,9 +46,6 @@ bool cwEntity::init()
 
 cwEntity::cwEntity():
 m_pRenderObj(nullptr),
-m_nPos(0, 0, 0),
-m_nRot(0, 0, 0),
-m_nScale(1.0f, 1.0f, 1.0f),
 m_pMaterial(nullptr)
 {
 	m_nDiffTextureTrans = cwVector2D(0.0f, 0.0f);
@@ -170,33 +167,23 @@ void cwEntity::updateDiffuseTexture()
 	m_nDiffuseTrans = matScale * matTrans;
 }
 
-void cwEntity::transform()
-{
-	cwMatrix4X4 matTranslate, matScale, matRot;
-	matTranslate.setTranslation(m_nPos);
-	matScale.setScale(m_nScale);
-	matRot.setRotation(m_nRot);
-	m_nTrans = matScale * matRot * matTranslate;
-}
-
 void cwEntity::renderSelf()
 {
-	//cwMaterial* pMaterial = this->getMaterial();
-	//if (pMaterial) {
-	//	pMaterial->configEffect();
+	cwMaterial* pMaterial = this->getMaterial();
+	if (pMaterial) {
+		pMaterial->configEffect();
 
-	//	cwEffects *pEffect = pMaterial->getEffect();
-	//	if (pEffect) {
-	//		this->transform();
-	//		cwRepertory::getInstance().getDevice()->setEffectWorldTrans(pEffect, this->getWorldTrans(), pCamera);
+		cwShader *pShader = pMaterial->getShader();
+		if (pShader) {
+			cwRepertory::getInstance().getDevice()->setEffectWorldTrans(pShader, this->getTransformMatrix(), cwRepertory::getInstance().getCurrentCamera());
 
-	//		const cwMatrix4X4& matDiffTrans = this->getDiffuseTrans();
-	//		cwRepertory::getInstance().getDevice()->setDiffuseTrans(pEffect, matDiffTrans);
+			const cwMatrix4X4& matDiffTrans = this->getDiffuseTrans();
+			cwRepertory::getInstance().getDevice()->setDiffuseTrans(pShader, matDiffTrans);
 
-	//		cwRenderObject* pRenderObj = this->getRenderObj();
-	//		cwRepertory::getInstance().getDevice()->draw(pEffect, pMaterial->getTechName(), pRenderObj);
-	//	}
-	//}
+			cwRenderObject* pRenderObj = this->getRenderObj();
+			cwRepertory::getInstance().getDevice()->draw(pShader, pMaterial->getTechName(), pRenderObj);
+		}
+	}
 }
 
 // void cwEntity::setLights(vector<cwLight*>& vecLights)

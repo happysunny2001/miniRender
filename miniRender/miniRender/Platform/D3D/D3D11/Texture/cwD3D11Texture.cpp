@@ -17,6 +17,8 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#ifdef _CW_D3D11_
+
 #include "cwD3D11Texture.h"
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
@@ -69,3 +71,5 @@ CWHANDLE cwD3D11Texture::getTexturePtr()
 }
 
 NS_MINI_END
+
+#endif

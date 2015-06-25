@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "Shader/cwShaderManager.h"
 #include "Layouts/cwLayoutsManager.h"
+#include "Texture/cwTextureManager.h"
 //#include "cwLog.h"
 #include "Ref/cwAutoReleasePool.h"
 #include "Camera/cwCamera.h"
@@ -45,7 +46,8 @@ m_pDevice(nullptr),
 m_pShaderManager(nullptr),
 m_pLayoutManager(nullptr),
 m_pAutoReleasePool(nullptr),
-m_pCurrentCamera(nullptr)
+m_pCurrentCamera(nullptr),
+m_pTextureManager(nullptr)
 {
 
 }
@@ -53,11 +55,12 @@ m_pCurrentCamera(nullptr)
 cwRepertory::~cwRepertory()
 {
 	CW_SAFE_RELEASE_NULL(m_pShaderManager);
-	CW_SAFE_DELETE(m_pLayoutManager);
+	CW_SAFE_RELEASE_NULL(m_pLayoutManager);
 	CW_SAFE_DELETE(m_pDevice);
 	//CW_SAFE_DELETE(m_pLog);
 	CW_SAFE_DELETE(m_pAutoReleasePool);
 	CW_SAFE_RELEASE_NULL(m_pCurrentCamera);
+	CW_SAFE_RELEASE_NULL(m_pTextureManager);
 }
 
 cwDevice* cwRepertory::getDevice()
@@ -85,13 +88,15 @@ cwAutoReleasePool* cwRepertory::getAutoReleasePool()
 	return m_pAutoReleasePool;
 }
 
+cwTextureManager* cwRepertory::getTextureManager()
+{
+	return m_pTextureManager;
+}
+
 void cwRepertory::initAll()
 {
 //	m_pLog = new cwLog();
 	m_pAutoReleasePool = new cwAutoReleasePool();
-
-	m_pShaderManager = cwShaderManager::create();
-	CW_SAFE_RETAIN(m_pShaderManager);
 }
 
 void cwRepertory::addValue(const string& strName, const cwValueMap& value)

@@ -65,28 +65,18 @@ public:
 	virtual void setMaterial(cwMaterial* pMaterial);
 	inline cwMaterial* getMaterial() { return m_pMaterial; }
 
-	virtual void transform();
-	inline const cwMatrix4X4& getWorldTrans() { return m_nTrans; }
-
 	virtual void setDiffuseTextureTrans(const cwMatrix4X4& trans);
 	virtual void moveDiffuseTexture(CWFLOAT x, CWFLOAT y);
 	virtual void scaleDiffuseTexture(CWFLOAT x, CWFLOAT y);
 	virtual void updateDiffuseTexture();
 	const cwMatrix4X4& getDiffuseTrans() const { return m_nDiffuseTrans; }
 
+	virtual void renderSelf() override;
+
 // 	virtual void setLights(vector<cwLight*>& vecLights) override;
 // 	virtual void render(cwCamera* pCamera) override;
 
 protected:
-	virtual void renderSelf();
-
-protected:
-	cwVector3D m_nPos;
-	//angle of rotation around the x, y, z axis, in radians
-	cwVector3D m_nRot;
-	cwVector3D m_nScale;
-	cwMatrix4X4 m_nTrans;
-
 	cwMaterial* m_pMaterial;
 
 	cwMatrix4X4 m_nDiffuseTrans; //the diffuse texture transform matrix

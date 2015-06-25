@@ -17,9 +17,10 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _CW_D3DBLENDOPER_H_
-#define _CW_D3DBLENDOPER_H_
+#ifndef __CW_D3D11_BLENDOPER_H__
+#define __CW_D3D11_BLENDOPER_H__
 
+#include "Base/cwBasicType.h"
 #include "Base/cwMacros.h"
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
@@ -27,7 +28,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINI_BEGIN
 
-class cwD3D11Blend : public cwBlend
+class CW_DLL cwD3D11Blend : public cwBlend
 {
 public:
 	static cwD3D11Blend* create(

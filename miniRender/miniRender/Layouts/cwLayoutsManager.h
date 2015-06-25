@@ -21,11 +21,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #define _cwLayoutsManager_h_
 
 #include "Base/cwMap.h"
+#include "Ref/cwRef.h"
 #include "cwLayouts.h"
 
 NS_MINI_BEGIN
 
-class CW_DLL cwLayoutsManager
+class CW_DLL cwLayoutsManager : public cwRef
 {
 public:
 	cwLayoutsManager() {}

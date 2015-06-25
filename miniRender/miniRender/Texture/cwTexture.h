@@ -26,7 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINI_BEGIN
 
-class cwTexture : public cwRef
+class CW_DLL cwTexture : public cwRef
 {
 public:
 	cwTexture() {}

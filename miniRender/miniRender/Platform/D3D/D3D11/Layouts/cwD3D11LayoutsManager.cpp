@@ -27,6 +27,18 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINI_BEGIN
 
+cwD3D11LayoutsManager* cwD3D11LayoutsManager::create()
+{
+	cwD3D11LayoutsManager* pManager = new cwD3D11LayoutsManager();
+	if (pManager && pManager->init()) {
+		pManager->autorelease();
+		return pManager;
+	}
+
+	CW_SAFE_DELETE(pManager);
+	return nullptr;
+}
+
 cwD3D11LayoutsManager::cwD3D11LayoutsManager():
 m_pElementDescManager(nullptr)
 {

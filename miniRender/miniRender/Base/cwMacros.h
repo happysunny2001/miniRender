@@ -23,7 +23,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include <functional>
 #include "Platform/cwPlatform.h"
 
-#define CW_DLL 
+#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
+
+#define CW_DLL //__declspec(dllexport)
+
+#endif
 
 #define NS_MINI_BEGIN namespace minir {
 #define NS_MINI_END };

@@ -180,9 +180,6 @@
     <ClInclude Include="Buffer\cwBuffer.h">
       <Filter>源文件\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="Platform\D3D11\Blend\cwD3D11Blend.h">
-      <Filter>源文件\Platform\D3D\D3D11\Blend</Filter>
-    </ClInclude>
     <ClInclude Include="Camera\cwCamera.h">
       <Filter>源文件\Camera</Filter>
     </ClInclude>
@@ -306,6 +303,9 @@
     <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11VertexBuffer.h">
       <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Blend\cwD3D11Blend.h">
+      <Filter>源文件\Platform\D3D\D3D11\Blend</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -355,9 +355,6 @@
     </ClCompile>
     <ClCompile Include="Buffer\cwBuffer.cpp">
       <Filter>源文件\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform\D3D11\Blend\cwD3D11Blend.cpp">
-      <Filter>源文件\Platform\D3D\D3D11\Blend</Filter>
     </ClCompile>
     <ClCompile Include="Camera\cwCamera.cpp">
       <Filter>源文件\Camera</Filter>
@@ -472,6 +469,9 @@
     </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11VertexBuffer.cpp">
       <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Blend\cwD3D11Blend.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Blend</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

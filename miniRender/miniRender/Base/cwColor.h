@@ -17,10 +17,11 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _cwColor_h_
-#define _cwColor_h_
+#ifndef __CW_COLOR_H__
+#define __CW_COLOR_H__
 
-#include "Math/cwMath.h"
+#include "cwBasicType.h"
+#include "../Math/cwMath.h"
 
 NS_MINI_BEGIN
 

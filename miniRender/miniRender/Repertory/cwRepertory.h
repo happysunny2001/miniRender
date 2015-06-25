@@ -32,6 +32,7 @@ class cwDevice;
 class cwShaderManager;
 class cwLayoutsManager;
 class cwAutoReleasePool;
+class cwTextureManager;
 class cwCamera;
 
 class CW_DLL cwRepertory
@@ -45,11 +46,12 @@ public:
 	CWUINT  getUInt(const string& strName);
 	CWVOID* getPtr(const string& strName);
 
-	virtual cwDevice* getDevice();
+	cwDevice* getDevice();
 //	virtual cwLog* getLog();
-	virtual cwShaderManager* getShaderManager();
-	virtual cwLayoutsManager* getLayoutManager();
-	virtual cwAutoReleasePool* getAutoReleasePool();
+	cwShaderManager* getShaderManager();
+	cwLayoutsManager* getLayoutManager();
+	cwAutoReleasePool* getAutoReleasePool();
+	cwTextureManager* getTextureManager();
 
 	virtual void refreshWindowTitle(const CWSTRING& strTitle) {}
 
@@ -67,6 +69,7 @@ protected:
 	cwShaderManager* m_pShaderManager;
 	cwLayoutsManager* m_pLayoutManager;
 	cwAutoReleasePool* m_pAutoReleasePool;
+	cwTextureManager* m_pTextureManager;
 //	cwLog* m_pLog;
 	cwCamera* m_pCurrentCamera;
 

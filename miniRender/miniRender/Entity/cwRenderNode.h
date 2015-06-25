@@ -68,12 +68,13 @@ public:
 	const cwMatrix4X4& getTransformMatrix() const { return m_nTrans; }
 
 	virtual void update(CWFLOAT dt);
-	virtual void render();
+	
 	virtual void renderChildren();
+	virtual void render();
+	virtual void renderSelf();
 
 protected:
 	void clearChildren();
-	virtual void renderSelf();
 	
 protected:
 	bool m_bVisible;

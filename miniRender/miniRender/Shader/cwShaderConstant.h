@@ -49,17 +49,6 @@ NS_MINI_BEGIN
 #define CW_SHADER_FOG_RANGE           "gFogRange"
 #define CW_SHADER_FOG_COLOR           "gFogColor"
 
-#ifdef _CW_D3D11_
-
-struct ShaderVarible
-{
-	ID3DX11EffectVariable* pVarible;
-
-	ShaderVarible() : pVarible(nullptr) {}
-};
-
-#endif
-
 NS_MINI_END
 
 #endif

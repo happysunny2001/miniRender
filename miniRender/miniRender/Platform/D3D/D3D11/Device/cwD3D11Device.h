@@ -34,17 +34,17 @@ class cwD3D11IndexBuffer;
 class cwBuffer;
 class cwMaterial;
 
-class cwD3D11Device : public cwDevice
+class CW_DLL cwD3D11Device : public cwDevice
 {
 public:
-	cwD3D11Device(HWND hWnd, CWUINT width, CWUINT height);
+	cwD3D11Device(/*HWND hWnd, CWUINT width, CWUINT height*/);
 	virtual ~cwD3D11Device();
 
-	virtual bool initDevice();
-	virtual void resize(CWUINT width, CWUINT height);
-	virtual void resize();
+	virtual bool initDevice() override;
+	virtual void resize(CWUINT width, CWUINT height) override;
+	virtual void resize() override;
 
-	virtual void setSize(CWUINT width, CWUINT height);
+//	virtual void setSize(CWUINT width, CWUINT height);
 	
 	virtual void createRenderTarget();
 	virtual void createDepthStencil();
@@ -88,7 +88,7 @@ public:
 	virtual cwTexture* createTexture(const string& strFileName);
 
 	virtual void render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) override;
-	virtual void render(cwEntity* pEntity, cwCamera* pCamera) override;
+//	virtual void render(cwEntity* pEntity, cwCamera* pCamera) override;
 
 	virtual void setEffectWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) override;
 	virtual void setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans) override;

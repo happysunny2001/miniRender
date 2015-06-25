@@ -20,13 +20,15 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifndef __CW_D3D11TEXTURE_H__
 #define __CW_D3D11TEXTURE_H__
 
+#ifdef _CW_D3D11_
+
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
 #include "Texture/cwTexture.h"
 
 NS_MINI_BEGIN
 
-class cwD3D11Texture : public cwTexture
+class CW_DLL cwD3D11Texture : public cwTexture
 {
 public:
 	static cwD3D11Texture* create(const string& strFileName);
@@ -43,5 +45,7 @@ protected:
 };
 
 NS_MINI_END
+
+#endif
 
 #endif

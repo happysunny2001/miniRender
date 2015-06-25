@@ -22,7 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINI_BEGIN
 
-class cwD3D11Stencil : public cwStencil
+class CW_DLL cwD3D11Stencil : public cwStencil
 {
 public:
 	static cwD3D11Stencil* create(

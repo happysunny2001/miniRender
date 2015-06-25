@@ -48,7 +48,7 @@ public:
 
 };
 
-class cwInputElementDescManager :public cwRef
+class CW_DLL cwInputElementDescManager :public cwRef
 {
 public:
 	static cwInputElementDescManager* create();
