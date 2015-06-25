@@ -26,7 +26,7 @@ NS_MINI_BEGIN
 cwLayouts* cwLayoutsManager::getLayouts(ceElementDesc eType)
 {
 	auto it = m_mapLayouts.find(eType);
-	if (it == m_mapLayouts.end()) return NULL;
+	if (it == m_mapLayouts.end()) return nullptr;
 	return it->second;
 }
 

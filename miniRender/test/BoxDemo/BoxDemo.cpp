@@ -21,19 +21,46 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 
 BoxDemo::BoxDemo(HINSTANCE hInstance, int iShowCmd):
-cwWinMain(hInstance, iShowCmd)
+cwWinMain(hInstance, iShowCmd),
+m_pRenderObj(nullptr)
 {
 
 }
 
 BoxDemo::~BoxDemo()
 {
-
+	CW_SAFE_RELEASE_NULL(m_pRenderObj);
 }
 
 void BoxDemo::initAll()
 {
 	cwWinMain::initAll();
-
 	cwRepertory::getInstance().setCurrentCamera(m_pCamera);
+
+	buildEntity();
+}
+
+void BoxDemo::buildEntity()
+{
+	cwGeometryGenerator::cwMeshData mesh;
+	cwGeometryGenerator::getInstance().generateBox(mesh);
+
+	vector<cwVertexPosColor> vecVertex(mesh.nVertex.size());
+	for (int i = 0; i < mesh.nVertex.size(); ++i) {
+		vecVertex[i].pos = mesh.nVertex[i].pos;
+		vecVertex[i].color = cwVector4D(1.0f, 1.0f, 1.0f, 1.0f);
+	}
+
+	m_pRenderObj = cwStaticRenderObject::create(
+		ePrimitiveTypeTriangleList,
+		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
+		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosColor);
+	CW_SAFE_RETAIN(m_pRenderObj);
+
+	m_pShader = cwRepertory::getInstance().getShaderManager()->getShader("G:\\Source\\Git\\miniRender\\miniRender\\x64\\Debug\\effect\\D3D11\\color.fx");
+}
+
+void BoxDemo::draw()
+{
+	cwRepertory::getInstance().getDevice()->render(m_pRenderObj, cwVector3D::ZERO, m_pShader, m_pCamera);
 }

@@ -7,3 +7,6 @@ miniRender/miniRender/x64/Debug/miniRender.tlog/unsuccessfulbuild
 *.tlog
 *.obj
 *.tlog
+*.exe
+miniRender/x64/Debug/BoxDemo.exe
+*.log

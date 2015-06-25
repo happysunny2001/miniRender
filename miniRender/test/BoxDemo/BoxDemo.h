@@ -31,10 +31,15 @@ public:
 	BoxDemo(HINSTANCE hInstance, int iShowCmd);
 	virtual ~BoxDemo();
 
-protected:
-	virtual void initAll() override;
+	virtual void draw() override;
 
 protected:
+	virtual void initAll() override;
+	void buildEntity();
+
+protected:
+	cwRenderObject* m_pRenderObj;
+	cwShader* m_pShader;
 
 };
 
