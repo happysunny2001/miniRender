@@ -106,6 +106,9 @@
     <Filter Include="源文件\Platform\D3D\D3D11\Repertory">
       <UniqueIdentifier>{4e272658-c60c-49ee-886e-84bb0586cede}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Platform\Windows">
+      <UniqueIdentifier>{26673d61-5cbb-4567-87e5-e15cc5bccf9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\cwVector.h">
@@ -306,6 +309,12 @@
     <ClInclude Include="Platform\D3D\D3D11\Blend\cwD3D11Blend.h">
       <Filter>源文件\Platform\D3D\D3D11\Blend</Filter>
     </ClInclude>
+    <ClInclude Include="Platform\cwFileSystem.h">
+      <Filter>源文件\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Windows\cwWinFileSystem.h">
+      <Filter>源文件\Platform\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -472,6 +481,12 @@
     </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Blend\cwD3D11Blend.cpp">
       <Filter>源文件\Platform\D3D\D3D11\Blend</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\cwFileSystem.cpp">
+      <Filter>源文件\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\cwWinFileSystem.cpp">
+      <Filter>源文件\Platform\Windows</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -58,6 +58,7 @@
     <ClInclude Include="Math\cwVector2D.h" />
     <ClInclude Include="Math\cwVector3D.h" />
     <ClInclude Include="Math\cwVector4D.h" />
+    <ClInclude Include="Platform\cwFileSystem.h" />
     <ClInclude Include="Platform\cwPlatform.h" />
     <ClInclude Include="Platform\D3D\D3D11\Blend\cwD3D11Blend.h" />
     <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11IndexBuffer.h" />
@@ -70,6 +71,7 @@
     <ClInclude Include="Platform\D3D\D3D11\Shader\cwD3D11Shader.h" />
     <ClInclude Include="Platform\D3D\D3D11\Stencil\cwD3D11Stencil.h" />
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11Texture.h" />
+    <ClInclude Include="Platform\Windows\cwWinFileSystem.h" />
     <ClInclude Include="Ref\cwAutoReleasePool.h" />
     <ClInclude Include="Ref\cwRef.h" />
     <ClInclude Include="RenderObject\cwDynamicRenderObject.h" />
@@ -117,6 +119,7 @@
     <ClCompile Include="Math\cwVector2D.cpp" />
     <ClCompile Include="Math\cwVector3D.cpp" />
     <ClCompile Include="Math\cwVector4D.cpp" />
+    <ClCompile Include="Platform\cwFileSystem.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Blend\cwD3D11Blend.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11IndexBuffer.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11VertexBuffer.cpp" />
@@ -128,6 +131,7 @@
     <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11Shader.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Stencil\cwD3D11Stencil.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11Texture.cpp" />
+    <ClCompile Include="Platform\Windows\cwWinFileSystem.cpp" />
     <ClCompile Include="Ref\cwAutoReleasePool.cpp" />
     <ClCompile Include="Ref\cwRef.cpp" />
     <ClCompile Include="RenderObject\cwDynamicRenderObject.cpp" />

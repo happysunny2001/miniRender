@@ -57,7 +57,7 @@ void BoxDemo::buildEntity()
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosColor);
 	CW_SAFE_RETAIN(m_pRenderObj);
 
-	m_pShader = cwRepertory::getInstance().getShaderManager()->getShader("G:\\Source\\Git\\miniRender\\miniRender\\x64\\Debug\\effect\\D3D11\\color.fx");
+	m_pShader = cwRepertory::getInstance().getShaderManager()->getShader("F:/Git/miniRender/miniRender/x64/Debug/effect/D3D11/color.fx");
 }
 
 void BoxDemo::draw()

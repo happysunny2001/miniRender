@@ -10,3 +10,4 @@ miniRender/miniRender/x64/Debug/miniRender.tlog/unsuccessfulbuild
 *.exe
 miniRender/x64/Debug/BoxDemo.exe
 *.log
+*.ilk
