@@ -17,7 +17,9 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include <windows.h>
 #include "cwWinFileSystem.h"
+#include "Base/cwStringConvert.h"
 
 NS_MINI_BEGIN
 
@@ -45,13 +47,31 @@ cwWinFileSystem::~cwWinFileSystem()
 
 bool cwWinFileSystem::init()
 {
-	m_strWorkingPath = getModulePath();
+	buildModulePath();
 	return true;
 }
 
-CWSTRING cwWinFileSystem::getModulePath()
+void cwWinFileSystem::buildModulePath()
 {
+	TCHAR szBuffer[MAX_PATH];
+	GetModuleFileName(NULL, szBuffer, MAX_PATH);
+	TCHAR* pLastSlash = wcsrchr(szBuffer, L'\\');
+	if (pLastSlash) {
+		*pLastSlash = L'\0';
+	}
 
+	replaceWindowsStyleSlash(szBuffer);
+	m_strWorkingPath = cwStringConvert::convertToMultiByte(szBuffer);
+}
+
+void cwWinFileSystem::replaceWindowsStyleSlash(TCHAR* pszChar)
+{
+	int index = 0;
+	while (pszChar[index] != L'\0') {
+		if (pszChar[index] == L'\\')
+			pszChar[index] = L'/';
+		index++;
+	}
 }
 
 NS_MINI_END

@@ -19,6 +19,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwGeometryGenerator.h"
 #include "Math/cwMath.h"
+#include "Base/cwStruct.h"
+#include "RenderObject/cwStaticRenderObject.h"
+#include "Material/cwMaterial.h"
+#include "Entity/cwEntity.h"
+#include "Repertory/cwRepertory.h"
+#include "Shader/cwShader.h"
+#include "Shader/cwShaderManager.h"
 
 #include <fstream>
 #include <iostream>
@@ -354,6 +361,98 @@ void cwGeometryGenerator::generateGeoSphere(CWFLOAT radius, CWUINT divideTimes, 
 		mesh.nVertex[i].tangentU = tangent;
 
 	}
+}
+
+void cwGeometryGenerator::generateCoordinateAxis(CWFLOAT scale, cwMeshData& mesh)
+{
+	cwMeshData meshAxis;
+	CWUINT iIndexStart = 0;
+
+	//x axis
+	generateBox(meshAxis);
+	for (auto it = meshAxis.nVertex.begin(); it != meshAxis.nVertex.end(); ++it) {
+		cwVertex vertex = *it;
+		vertex.pos.x *= scale;
+		mesh.nVertex.push_back(vertex);
+	}
+	for (auto it = meshAxis.nIndex.begin(); it != meshAxis.nIndex.end(); ++it) {
+		mesh.nIndex.push_back(*it + iIndexStart);
+	}
+
+	iIndexStart = (CWUINT)(mesh.nVertex.size());
+
+	//y axis
+	meshAxis.nVertex.clear();
+	meshAxis.nIndex.clear();
+	generateBox(meshAxis);
+	for (auto it = meshAxis.nVertex.begin(); it != meshAxis.nVertex.end(); ++it) {
+		cwVertex vertex = *it;
+		vertex.pos.y *= scale;
+		mesh.nVertex.push_back(vertex);
+	}
+	for (auto it = meshAxis.nIndex.begin(); it != meshAxis.nIndex.end(); ++it) {
+		mesh.nIndex.push_back(*it + iIndexStart);
+	}
+
+	iIndexStart = (CWUINT)(mesh.nVertex.size());
+
+	//z axis
+	meshAxis.nVertex.clear();
+	meshAxis.nIndex.clear();
+	generateBox(meshAxis);
+	for (auto it = meshAxis.nVertex.begin(); it != meshAxis.nVertex.end(); ++it) {
+		cwVertex vertex = *it;
+		vertex.pos.z *= scale;
+		mesh.nVertex.push_back(vertex);
+	}
+	for (auto it = meshAxis.nIndex.begin(); it != meshAxis.nIndex.end(); ++it) {
+		mesh.nIndex.push_back(*it + iIndexStart);
+	}
+}
+
+cwRenderObject* cwGeometryGenerator::generateCoordinateAxisRenderObject(CWFLOAT scale)
+{
+	cwMeshData mesh;
+	generateCoordinateAxis(scale, mesh);
+
+	vector<cwVertexPosColor> vecVertex(mesh.nVertex.size());
+
+	//x axis is red
+	for (int i = 0; i < 24; ++i) {
+		vecVertex[i].pos = mesh.nVertex[i].pos;
+		vecVertex[i].color = cwVector4D(1.0f, 0.0f, 0.0f, 1.0f);
+	}
+
+	//y axis is green
+	for (int i = 24; i < 48; ++i) {
+		vecVertex[i].pos = mesh.nVertex[i].pos;
+		vecVertex[i].color = cwVector4D(0.0f, 1.0f, 0.0f, 1.0f);
+	}
+
+	//z axis is blue
+	for (int i = 48; i < 72; ++i) {
+		vecVertex[i].pos = mesh.nVertex[i].pos;
+		vecVertex[i].color = cwVector4D(0.0f, 0.0f, 1.0f, 1.0f);
+	}
+
+	return cwStaticRenderObject::create(
+		ePrimitiveTypeTriangleList,
+		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
+		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosColor);
+}
+
+cwEntity* cwGeometryGenerator::generateCoordinateAxisEntity(CWFLOAT scale)
+{
+	cwRenderObject* pRenderObject = generateCoordinateAxisRenderObject(scale);
+	cwMaterial* pMaterial = cwMaterial::create();
+	pMaterial->setShader(cwRepertory::getInstance().getShaderManager()->getDefShader(CW_SHADER_DEF_COLOR));
+
+	cwEntity* pEntity = cwEntity::create();
+	pEntity->setMaterial(pMaterial);
+	pEntity->setRenderObject(pRenderObject);
+	pEntity->setPosition(cwVector3D::ZERO);
+
+	return pEntity;
 }
 
 void cwGeometryGenerator::subDivide(cwMeshData& mesh)

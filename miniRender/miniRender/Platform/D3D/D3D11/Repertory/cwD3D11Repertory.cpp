@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwD3D11Repertory.h"
 #include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
-#include "Shader/cwShaderManager.h"
+#include "Platform/D3D/D3D11/Shader/cwD3D11ShaderManager.h"
 #include "Platform/D3D/D3D11/Layouts/cwD3D11LayoutsManager.h"
 #include "Texture/cwTextureManager.h"
 //#include "cwWinMain.h"
@@ -41,12 +41,12 @@ void cwD3D11Repertory::initAll()
 {
 	cwRepertory::initAll();
 
-	m_pDevice = new cwD3D11Device();//(reinterpret_cast<HWND>(phWnd), iWinWidth, iWinHeight);
+	m_pDevice = new cwD3D11Device();
 	assert(m_pDevice != nullptr);
 	bool b = m_pDevice->initDevice();
 	assert(b);
 
-	m_pShaderManager = cwShaderManager::create();
+	m_pShaderManager = cwD3D11ShaderManager::create();
 	CW_SAFE_RETAIN(m_pShaderManager);
 
 	m_pLayoutManager = cwD3D11LayoutsManager::create();
@@ -55,16 +55,6 @@ void cwD3D11Repertory::initAll()
 
 	m_pTextureManager = cwTextureManager::create();
 	CW_SAFE_RETAIN(m_pTextureManager);
-
-	
-
-	//CWVOID* phWnd     = this->getPtr(gValueWinHandle);
-	//CWUINT iWinWidth  = this->getUInt(gValueWinWidth);
-	//CWUINT iWinHeight = this->getUInt(gValueWinHeight);
-
-	//assert(phWnd != nullptr);
-	//assert(iWinWidth != CW_UINT_MAX);
-	//assert(iWinHeight != CW_UINT_MAX);
 }
 
 void cwD3D11Repertory::refreshWindowTitle(const CWSTRING& strTitle)

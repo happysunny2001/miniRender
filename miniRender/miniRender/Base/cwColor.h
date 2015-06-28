@@ -40,7 +40,6 @@ public:
 	static cwVector4D yellow;
 	static cwVector4D sliver;
 
-
 };
 
 NS_MINI_END

@@ -20,6 +20,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwShaderManager.h"
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
+#include "Platform/cwFileSystem.h"
 
 NS_MINI_BEGIN
 
@@ -66,13 +67,15 @@ cwShader* cwShaderManager::getShader(const CWSTRING& strFile)
 	return nullptr;
 }
 
+cwShader* cwShaderManager::getDefShader(CWUINT iKey)
+{
+	auto itFind = m_nMapDefShader.find(iKey);
+	if (itFind != m_nMapDefShader.end()) return itFind->second;
+	return nullptr;
+}
+
 bool cwShaderManager::init()
 {
-	//init d3d shader first
-	this->loadShader("F:/Git/miniRender/miniRender/x64/Debug/effect/D3D11/color.fx");
-	this->loadShader("F:/Git/miniRender/miniRender/x64/Debug/effect/D3D11/lighting.fx");
-	this->loadShader("F:/Git/miniRender/miniRender/x64/Debug/effect/D3D11/lightingTex.fx");
-
 	return true;
 }
 

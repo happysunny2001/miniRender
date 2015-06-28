@@ -36,10 +36,13 @@ public:
 protected:
 	virtual void initAll() override;
 	void buildEntity();
+	void buildAxis();
+	void buildScene();
 
 protected:
-	cwRenderObject* m_pRenderObj;
-	cwShader* m_pShader;
+	cwEntity* m_pEntity;
+	cwEntity* m_pEntityAxis;
+	cwScene* m_pScene;
 
 };
 

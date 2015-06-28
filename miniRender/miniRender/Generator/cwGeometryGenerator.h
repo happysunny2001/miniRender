@@ -27,6 +27,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINI_BEGIN
 
+class cwRenderObject;
+class cwEntity;
+
 class CW_DLL cwGeometryGenerator
 {
 public:
@@ -64,6 +67,10 @@ public:
 		cwMeshData& mesh);
 	void generateSphere(CWFLOAT radius, CWUINT sliceCount, CWUINT stackCount, cwMeshData& mesh);
 	void generateGeoSphere(CWFLOAT radius, CWUINT divideTimes, cwMeshData& mesh);
+
+	void generateCoordinateAxis(CWFLOAT scale, cwMeshData& mesh);
+	cwRenderObject* generateCoordinateAxisRenderObject(CWFLOAT scale);
+	cwEntity* generateCoordinateAxisEntity(CWFLOAT scale);
 
 	void loadTxt(const std::string& strFile, cwMeshData& mesh);
 

@@ -11,3 +11,5 @@ miniRender/miniRender/x64/Debug/miniRender.tlog/unsuccessfulbuild
 miniRender/x64/Debug/BoxDemo.exe
 *.log
 *.ilk
+*.sdf
+miniRender/miniRender.sdf

@@ -19,55 +19,48 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #ifdef _CW_D3D11_
 
-#include "cwD3D11Texture.h"
+#include "cwD3D11ShaderManager.h"
 #include "Repertory/cwRepertory.h"
-#include "Device/cwDevice.h"
-#include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
-#include "Base/cwStringConvert.h"
+#include "Platform/cwFileSystem.h"
 
 NS_MINI_BEGIN
 
-cwD3D11Texture* cwD3D11Texture::create(const string& strFileName)
+cwD3D11ShaderManager* cwD3D11ShaderManager::create()
 {
-	cwD3D11Texture* pTexture = new cwD3D11Texture();
-	if (pTexture && pTexture->init(strFileName)) {
-		pTexture->autorelease();
-		return pTexture;
+	cwD3D11ShaderManager* pManager = new cwD3D11ShaderManager();
+	if (pManager && pManager->init()) {
+		pManager->autorelease();
+		return pManager;
 	}
 
-	CW_SAFE_DELETE(pTexture);
+	CW_SAFE_DELETE(pManager);
 	return nullptr;
 }
 
-cwD3D11Texture::cwD3D11Texture() :
-m_pShaderResource(nullptr)
+cwD3D11ShaderManager::cwD3D11ShaderManager()
 {
 
 }
 
-cwD3D11Texture::~cwD3D11Texture()
+cwD3D11ShaderManager::~cwD3D11ShaderManager()
 {
-	CW_RELEASE_COM(m_pShaderResource);
+
 }
 
-bool cwD3D11Texture::init(const string& strFileName)
+bool cwD3D11ShaderManager::init()
 {
-	CWVOID* pDevice = cwRepertory::getInstance().getDevice()->getDevice();
-	wstring wstrName = cwStringConvert::convertToWideChar(strFileName);
+	//init d3d shader first
+	auto fileSystem = cwRepertory::getInstance().getFileSystem();
 
-	CW_HR(D3DX11CreateShaderResourceViewFromFile(
-		reinterpret_cast<ID3D11Device*>(pDevice),
-		wstrName.c_str(),
-		NULL,
-		NULL, 
-		&m_pShaderResource, 
-		NULL));
+	this->loadShader(fileSystem->getFullFilePath("effect/D3D11/color.fx"));
+	this->loadShader(fileSystem->getFullFilePath("effect/D3D11/lighting.fx"));
+	this->loadShader(fileSystem->getFullFilePath("effect/D3D11/lightingTex.fx"));
+
+	m_nMapDefShader.insert(CW_SHADER_DEF_COLOR, getShader(fileSystem->getFullFilePath("effect/D3D11/color.fx")));
+	m_nMapDefShader.insert(CW_SHADER_DEF_LIGHTING, getShader(fileSystem->getFullFilePath("effect/D3D11/lighting.fx")));
+	m_nMapDefShader.insert(CW_SHADER_DEF_LIGHTINGTEX, getShader(fileSystem->getFullFilePath("effect/D3D11/lightingTex.fx")));
+
 	return true;
-}
-
-CWHANDLE cwD3D11Texture::getTexturePtr()
-{
-	return (CWHANDLE)m_pShaderResource;
 }
 
 NS_MINI_END

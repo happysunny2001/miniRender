@@ -315,6 +315,9 @@
     <ClInclude Include="Platform\Windows\cwWinFileSystem.h">
       <Filter>源文件\Platform\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderManager.h">
+      <Filter>源文件\Platform\D3D\D3D11\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -372,9 +375,6 @@
       <Filter>源文件\Base</Filter>
     </ClCompile>
     <ClCompile Include="Base\cwRunTime.cpp">
-      <Filter>源文件\Base</Filter>
-    </ClCompile>
-    <ClCompile Include="Base\cwStringConvert.cpp">
       <Filter>源文件\Base</Filter>
     </ClCompile>
     <ClCompile Include="Device\cwDevice.cpp">
@@ -487,6 +487,12 @@
     </ClCompile>
     <ClCompile Include="Platform\Windows\cwWinFileSystem.cpp">
       <Filter>源文件\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\cwWinStringConvert.cpp">
+      <Filter>源文件\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderManager.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Shader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

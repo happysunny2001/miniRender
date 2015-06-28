@@ -31,6 +31,18 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINI_BEGIN
 
+cwMaterial* cwMaterial::create()
+{
+	cwMaterial* pMaterial = new cwMaterial();
+	if (pMaterial && pMaterial->init()) {
+		pMaterial->autorelease();
+		return pMaterial;
+	}
+
+	CW_SAFE_DELETE(pMaterial);
+	return nullptr;
+}
+
 cwMaterial* cwMaterial::create(
 	const cwVector4D& ambient,
 	const cwVector4D& diffuse,
@@ -81,6 +93,11 @@ cwMaterial::~cwMaterial()
 	CW_SAFE_RELEASE_NULL(m_pShader);
 	CW_SAFE_RELEASE_NULL(m_pBlendOp);
 	CW_SAFE_RELEASE_NULL(m_pDiffuseTexture);
+}
+
+bool cwMaterial::init()
+{
+	return true;
 }
 
 bool cwMaterial::init(
@@ -134,6 +151,15 @@ void cwMaterial::setReflect(const cwVector4D& color)
 void cwMaterial::setShader(const string& strShader)
 {
 	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getShader(strShader);
+	if (m_pShader == pShader) return;
+
+	CW_SAFE_RELEASE_NULL(m_pShader);
+	m_pShader = pShader;
+	CW_SAFE_RETAIN(m_pShader);
+}
+
+void cwMaterial::setShader(cwShader* pShader)
+{
 	if (m_pShader == pShader) return;
 
 	CW_SAFE_RELEASE_NULL(m_pShader);

@@ -17,28 +17,32 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwStringConvert.h"
-#include <windows.h>
-#include <sstream>
-using namespace std;
+#ifndef __CW_D3D11_SHADER_MANAGER_H__
+#define __CW_D3D11_SHADER_MANAGER_H__
+
+#include "Base/cwMacros.h"
+#include "Shader/cwShaderManager.h"
+
+#ifdef _CW_D3D11_
 
 NS_MINI_BEGIN
 
-CWWSTRING cwStringConvert::convert(const string& str)
+class cwD3D11ShaderManager : public cwShaderManager
 {
-	int iSize = MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, NULL, 0);
-	wchar_t* wpcStr = new wchar_t[iSize];
-	MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, wpcStr, iSize);
-	CWWSTRING wstr(wpcStr);
-	delete[] wpcStr;
-	return wstr;
-}
+public:
+	static cwD3D11ShaderManager* create();
 
-CWWSTRING cwStringConvert::createFPSString(const CWWSTRING& title, CWUINT iFPS)
-{
-	std::wostringstream outs;
-	outs << title << L" FPS:" << iFPS;
-	return outs.str();
-}
+	cwD3D11ShaderManager();
+	virtual ~cwD3D11ShaderManager();
+
+	virtual bool init() override;
+
+protected:
+
+};
 
 NS_MINI_END
+
+#endif
+
+#endif

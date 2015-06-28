@@ -17,57 +17,43 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifdef _CW_D3D11_
-
-#include "cwD3D11Texture.h"
-#include "Repertory/cwRepertory.h"
-#include "Device/cwDevice.h"
-#include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
 #include "Base/cwStringConvert.h"
+#include "Platform/cwPlatform.h"
+
+#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
+
+#include <windows.h>
+#include <sstream>
+using namespace std;
 
 NS_MINI_BEGIN
 
-cwD3D11Texture* cwD3D11Texture::create(const string& strFileName)
+CWWSTRING cwStringConvert::convertToWideChar(const string& str)
 {
-	cwD3D11Texture* pTexture = new cwD3D11Texture();
-	if (pTexture && pTexture->init(strFileName)) {
-		pTexture->autorelease();
-		return pTexture;
-	}
-
-	CW_SAFE_DELETE(pTexture);
-	return nullptr;
+	int iSize = MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, NULL, 0);
+	wchar_t* wpcStr = new wchar_t[iSize];
+	MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, wpcStr, iSize);
+	CWWSTRING wstr(wpcStr);
+	CW_SAFE_DELETE_ARRAY(wpcStr);
+	return wstr;
 }
 
-cwD3D11Texture::cwD3D11Texture() :
-m_pShaderResource(nullptr)
+CWWSTRING cwStringConvert::createFPSString(const CWWSTRING& title, CWUINT iFPS)
 {
-
+	std::wostringstream outs;
+	outs << title << L" FPS:" << iFPS;
+	return outs.str();
 }
 
-cwD3D11Texture::~cwD3D11Texture()
+CWSTRING cwStringConvert::convertToMultiByte(const CWWSTRING& str)
 {
-	CW_RELEASE_COM(m_pShaderResource);
-}
-
-bool cwD3D11Texture::init(const string& strFileName)
-{
-	CWVOID* pDevice = cwRepertory::getInstance().getDevice()->getDevice();
-	wstring wstrName = cwStringConvert::convertToWideChar(strFileName);
-
-	CW_HR(D3DX11CreateShaderResourceViewFromFile(
-		reinterpret_cast<ID3D11Device*>(pDevice),
-		wstrName.c_str(),
-		NULL,
-		NULL, 
-		&m_pShaderResource, 
-		NULL));
-	return true;
-}
-
-CWHANDLE cwD3D11Texture::getTexturePtr()
-{
-	return (CWHANDLE)m_pShaderResource;
+	int iSize = WideCharToMultiByte(CP_ACP, 0, str.c_str(), -1, NULL, 0, NULL, NULL);
+	CWCHAR* pChar = new CWCHAR[iSize+1];
+	memset(pChar, 0, iSize + 1);
+	WideCharToMultiByte(CP_ACP, 0, str.c_str(), -1, pChar, iSize, NULL, NULL);
+	CWSTRING retStr(pChar);
+	CW_SAFE_DELETE_ARRAY(pChar);
+	return retStr;
 }
 
 NS_MINI_END

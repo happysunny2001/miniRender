@@ -69,6 +69,7 @@
     <ClInclude Include="Platform\D3D\D3D11\Layouts\cwInputElementDescManager.h" />
     <ClInclude Include="Platform\D3D\D3D11\Repertory\cwD3D11Repertory.h" />
     <ClInclude Include="Platform\D3D\D3D11\Shader\cwD3D11Shader.h" />
+    <ClInclude Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderManager.h" />
     <ClInclude Include="Platform\D3D\D3D11\Stencil\cwD3D11Stencil.h" />
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11Texture.h" />
     <ClInclude Include="Platform\Windows\cwWinFileSystem.h" />
@@ -91,7 +92,6 @@
   <ItemGroup>
     <ClCompile Include="Base\cwColor.cpp" />
     <ClCompile Include="Base\cwRunTime.cpp" />
-    <ClCompile Include="Base\cwStringConvert.cpp" />
     <ClCompile Include="Base\cwWinMain.cpp" />
     <ClCompile Include="Blend\cwBlend.cpp" />
     <ClCompile Include="Buffer\cwBuffer.cpp" />
@@ -129,9 +129,11 @@
     <ClCompile Include="Platform\D3D\D3D11\Layouts\cwInputElementDescManager.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Repertory\cwD3D11Repertory.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11Shader.cpp" />
+    <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderManager.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Stencil\cwD3D11Stencil.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11Texture.cpp" />
     <ClCompile Include="Platform\Windows\cwWinFileSystem.cpp" />
+    <ClCompile Include="Platform\Windows\cwWinStringConvert.cpp" />
     <ClCompile Include="Ref\cwAutoReleasePool.cpp" />
     <ClCompile Include="Ref\cwRef.cpp" />
     <ClCompile Include="RenderObject\cwDynamicRenderObject.cpp" />

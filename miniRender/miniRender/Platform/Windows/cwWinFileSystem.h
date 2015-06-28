@@ -34,7 +34,8 @@ public:
 	virtual bool init() override;
 
 protected:
-	CWSTRING getModulePath();
+	void buildModulePath();
+	void replaceWindowsStyleSlash(TCHAR* pszChar);
 
 protected:
 

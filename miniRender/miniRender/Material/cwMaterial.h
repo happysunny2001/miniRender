@@ -42,6 +42,8 @@ public:
 	};
 
 public:
+	static cwMaterial* create();
+
 	static cwMaterial* create(
 		const cwVector4D& ambient,
 		const cwVector4D& diffuse,
@@ -58,6 +60,8 @@ public:
 
 	cwMaterial();
 	virtual ~cwMaterial();
+
+	virtual bool init();
 
 	virtual bool init(
 		const cwVector4D& ambient,
@@ -85,6 +89,7 @@ public:
 	inline const cwVector4D& getReflect() { return m_nMatData.m_nReflect; }
 
 	virtual void setShader(const string& strShader);
+	virtual void setShader(cwShader* pShader);
 	inline cwShader* getShader() { return m_pShader; }
 
 	virtual void setDiffuseTexture(cwTexture* pTexture);

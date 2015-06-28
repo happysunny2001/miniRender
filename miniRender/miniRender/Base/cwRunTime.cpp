@@ -46,7 +46,7 @@ void cwRunTime::init()
 	m_pTimer = new cwTimer();
 	m_pTimer->reset();
 
-	m_strWinTitle = cwStringConvert::convert("Apoca ");
+	m_strWinTitle = cwStringConvert::convertToWideChar("mini render ");
 }
 
 void cwRunTime::setWindowTitle(const CWWSTRING& strTitle)

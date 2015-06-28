@@ -34,5 +34,10 @@ cwFileSystem* cwFileSystem::create()
 	return nullptr;
 }
 
+CWSTRING cwFileSystem::getFullFilePath(const CWSTRING& strFileName) const
+{
+	return m_strWorkingPath + "/" + strFileName;
+}
+
 NS_MINI_END
 

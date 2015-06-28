@@ -25,6 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 //#include "cwLog.h"
 #include "Ref/cwAutoReleasePool.h"
 #include "Camera/cwCamera.h"
+#include "Platform/cwFileSystem.h"
 
 #ifdef _CW_D3D11_
 #include "Platform/D3D/D3D11/Repertory/cwD3D11Repertory.h"
@@ -45,11 +46,11 @@ m_pDevice(nullptr),
 //m_pLog(nullptr),
 m_pShaderManager(nullptr),
 m_pLayoutManager(nullptr),
-m_pAutoReleasePool(nullptr),
 m_pCurrentCamera(nullptr),
-m_pTextureManager(nullptr)
+m_pTextureManager(nullptr),
+m_pFileSystem(nullptr)
 {
-
+	m_pAutoReleasePool = new cwAutoReleasePool();
 }
 
 cwRepertory::~cwRepertory()
@@ -61,6 +62,7 @@ cwRepertory::~cwRepertory()
 	CW_SAFE_DELETE(m_pAutoReleasePool);
 	CW_SAFE_RELEASE_NULL(m_pCurrentCamera);
 	CW_SAFE_RELEASE_NULL(m_pTextureManager);
+	CW_SAFE_RELEASE_NULL(m_pFileSystem);
 }
 
 cwDevice* cwRepertory::getDevice()
@@ -93,10 +95,16 @@ cwTextureManager* cwRepertory::getTextureManager()
 	return m_pTextureManager;
 }
 
+cwFileSystem* cwRepertory::getFileSystem()
+{
+	return m_pFileSystem;
+}
+
 void cwRepertory::initAll()
 {
 //	m_pLog = new cwLog();
-	m_pAutoReleasePool = new cwAutoReleasePool();
+	m_pFileSystem = cwFileSystem::create();
+	CW_SAFE_RETAIN(m_pFileSystem);
 }
 
 void cwRepertory::addValue(const string& strName, const cwValueMap& value)

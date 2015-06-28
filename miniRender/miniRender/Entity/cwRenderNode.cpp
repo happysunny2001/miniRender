@@ -34,7 +34,10 @@ cwRenderNode* cwRenderNode::create()
 
 cwRenderNode::cwRenderNode() :
 m_pParent(nullptr),
-m_bVisible(true)
+m_bVisible(true),
+m_nPos(cwVector3D::ZERO),
+m_nRot(cwVector3D::ZERO),
+m_nScale(1.0f, 1.0f ,1.0f)
 {
 
 }

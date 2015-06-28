@@ -33,15 +33,17 @@ public:
 	static cwShaderManager* create();
 
 	cwShaderManager();
-	~cwShaderManager();
+	virtual ~cwShaderManager();
 
 	virtual bool init();
 
 	cwShader* loadShader(const CWSTRING& strFile);
 	cwShader* getShader(const CWSTRING& strFile);
+	cwShader* getDefShader(CWUINT iKey);
 
 protected:
 	cwMap<CWSTRING, cwShader*> m_nMapShader;
+	cwMap<CWUINT, cwShader*> m_nMapDefShader;
 
 };
 

@@ -30,8 +30,9 @@ NS_MINI_BEGIN
 class CW_DLL cwStringConvert
 {
 public:
-	static CWWSTRING convert(const string& str);
+	static CWWSTRING convertToWideChar(const CWSTRING& str);
 	static CWWSTRING createFPSString(const CWWSTRING& title, CWUINT iFPS);
+	static CWSTRING convertToMultiByte(const CWWSTRING& str);
 
 protected:
 };

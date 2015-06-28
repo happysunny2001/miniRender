@@ -60,7 +60,7 @@ bool cwD3D11Shader::init(const std::string& strShaderFile)
 	compileFlag |= D3D10_SHADER_SKIP_OPTIMIZATION;
 #endif
 
-	CWWSTRING wstrFileName = cwStringConvert::convert(strShaderFile);
+	CWWSTRING wstrFileName = cwStringConvert::convertToWideChar(strShaderFile);
 	ID3D10Blob* compiledShader = NULL;
 	ID3D10Blob* compiledMsg = NULL;
 	HRESULT hr = D3DX11CompileFromFile(

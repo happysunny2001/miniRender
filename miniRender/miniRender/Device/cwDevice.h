@@ -94,16 +94,13 @@ public:
 	virtual cwTexture* createTexture(const string& strFileName) = 0;
 
 	virtual void render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) = 0;
-//	virtual void render(cwEntity* pEntity, cwCamera* pCamera) = 0;
+	virtual void render(cwEntity* pEntity, cwCamera* pCamera) = 0;
 
 	virtual void setEffectWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) = 0;
 	virtual void setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans) = 0;
 	virtual void draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) = 0;
 
 protected:
-//	HWND m_hWnd;
-//	CWUINT m_uiClientWidth;
-//	CWUINT m_uiClientHeight;
 	cwVector4D m_fvClearColor;
 	eRenderState m_eRenderState;
 	cwBlend* m_pBlendState; //current blend state, just for record

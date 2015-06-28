@@ -38,6 +38,8 @@ typedef char             CWCHAR;
 
 #if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
 typedef wstring          CWWSTRING;
+#else
+typedef std::string      CWWSTRING;
 #endif
 
 typedef std::string      CWSTRING;

@@ -576,29 +576,28 @@ void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPo
 	this->DrawIndexed(pRenderObj->getIndexBuffer()->getIndexCount(), 0, 0);
 }
 
-//void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
-//{
-//	if (!pEntity || !pCamera) return;
-//
-//	cwMaterial* pMaterial = pEntity->getMaterial();
-//	assert(pMaterial != nullptr);
-//	pMaterial->configEffect();
-//
-//	cwShader* pShader = pMaterial->getShader();
-//	assert(pShader != nullptr);
-//
-//	pEntity->transform();
-//	setEffectWorldTrans(pShader, pEntity->getWorldTrans(), pCamera);
-//	const cwMatrix4X4& diffuseTrans = pEntity->getDiffuseTrans();
-//	if (pShader->hasVariable(CW_SHADER_DIFF_TEX_TRANS)) {
-//		pShader->setVariableMatrix(CW_SHADER_DIFF_TEX_TRANS, (CWFLOAT*)(&diffuseTrans));
-//	}
-//
-//	cwRenderObject* pRenderObj = pEntity->getRenderObj();
-//	assert(pRenderObj != nullptr);
-//
-//	draw(pShader, pMaterial->getTechName(), pRenderObj);
-//}
+void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
+{
+	if (!pEntity || !pCamera) return;
+
+	cwMaterial* pMaterial = pEntity->getMaterial();
+	assert(pMaterial != nullptr);
+	pMaterial->configEffect();
+
+	cwShader* pShader = pMaterial->getShader();
+	assert(pShader != nullptr);
+
+	setEffectWorldTrans(pShader, pEntity->getTransformMatrix(), pCamera);
+	const cwMatrix4X4& diffuseTrans = pEntity->getDiffuseTrans();
+	if (pShader->hasVariable(CW_SHADER_DIFF_TEX_TRANS)) {
+		pShader->setVariableMatrix(CW_SHADER_DIFF_TEX_TRANS, (CWFLOAT*)(&diffuseTrans));
+	}
+
+	cwRenderObject* pRenderObj = pEntity->getRenderObj();
+	assert(pRenderObj != nullptr);
+
+	draw(pShader, pMaterial->getTechName(), pRenderObj);
+}
 
 void cwD3D11Device::setEffectWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera)
 {

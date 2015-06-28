@@ -133,6 +133,8 @@ void cwEntity::scale(const cwVector3D& v)
 
 void cwEntity::setMaterial(cwMaterial* pMaterial)
 {
+	if (pMaterial == m_pMaterial) return;
+
 	CW_SAFE_RELEASE_NULL(m_pMaterial);
 	m_pMaterial = pMaterial;
 	CW_SAFE_RETAIN(m_pMaterial);
@@ -169,20 +171,10 @@ void cwEntity::updateDiffuseTexture()
 
 void cwEntity::renderSelf()
 {
-	cwMaterial* pMaterial = this->getMaterial();
-	if (pMaterial) {
-		pMaterial->configEffect();
+	auto camera = cwRepertory::getInstance().getCurrentCamera();
 
-		cwShader *pShader = pMaterial->getShader();
-		if (pShader) {
-			cwRepertory::getInstance().getDevice()->setEffectWorldTrans(pShader, this->getTransformMatrix(), cwRepertory::getInstance().getCurrentCamera());
-
-			const cwMatrix4X4& matDiffTrans = this->getDiffuseTrans();
-			cwRepertory::getInstance().getDevice()->setDiffuseTrans(pShader, matDiffTrans);
-
-			cwRenderObject* pRenderObj = this->getRenderObj();
-			cwRepertory::getInstance().getDevice()->draw(pShader, pMaterial->getTechName(), pRenderObj);
-		}
+	if (camera) {
+		cwRepertory::getInstance().getDevice()->render(this, camera);
 	}
 }
 

@@ -22,14 +22,18 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 BoxDemo::BoxDemo(HINSTANCE hInstance, int iShowCmd):
 cwWinMain(hInstance, iShowCmd),
-m_pRenderObj(nullptr)
+m_pEntityAxis(nullptr),
+m_pEntity(nullptr),
+m_pScene(nullptr)
 {
 
 }
 
 BoxDemo::~BoxDemo()
 {
-	CW_SAFE_RELEASE_NULL(m_pRenderObj);
+	CW_SAFE_RELEASE_NULL(m_pEntityAxis);
+	CW_SAFE_RELEASE_NULL(m_pEntity);
+	CW_SAFE_RELEASE_NULL(m_pScene);
 }
 
 void BoxDemo::initAll()
@@ -37,7 +41,7 @@ void BoxDemo::initAll()
 	cwWinMain::initAll();
 	cwRepertory::getInstance().setCurrentCamera(m_pCamera);
 
-	buildEntity();
+	buildScene();
 }
 
 void BoxDemo::buildEntity()
@@ -51,16 +55,43 @@ void BoxDemo::buildEntity()
 		vecVertex[i].color = cwVector4D(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 
-	m_pRenderObj = cwStaticRenderObject::create(
+	cwRenderObject *pRenderObj = cwStaticRenderObject::create(
 		ePrimitiveTypeTriangleList,
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosColor);
-	CW_SAFE_RETAIN(m_pRenderObj);
 
-	m_pShader = cwRepertory::getInstance().getShaderManager()->getShader("F:/Git/miniRender/miniRender/x64/Debug/effect/D3D11/color.fx");
+	cwRepertory& repertory = cwRepertory::getInstance();
+	cwShader* pShader = repertory.getShaderManager()->getDefShader(CW_SHADER_DEF_COLOR);
+
+	cwMaterial* pMaterial = cwMaterial::create();
+	pMaterial->setShader(pShader);
+
+	m_pEntity = cwEntity::create();
+	m_pEntity->setMaterial(pMaterial);
+	m_pEntity->setRenderObject(pRenderObj);
+	m_pEntity->setPosition(cwVector3D(2.0f, 1.0f, 0.0f));
+	CW_SAFE_RETAIN(m_pEntity);
 }
 
 void BoxDemo::draw()
 {
-	cwRepertory::getInstance().getDevice()->render(m_pRenderObj, cwVector3D::ZERO, m_pShader, m_pCamera);
+	m_pScene->render();
+}
+
+void BoxDemo::buildAxis()
+{
+	m_pEntityAxis = cwGeometryGenerator::getInstance().generateCoordinateAxisEntity(10.0f);
+	CW_SAFE_RETAIN(m_pEntityAxis);
+}
+
+void BoxDemo::buildScene()
+{
+	buildEntity();
+	buildAxis();
+
+	m_pScene = cwScene::create();
+	CW_SAFE_RETAIN(m_pScene);
+
+	m_pScene->addChild(m_pEntity);
+	m_pScene->addChild(m_pEntityAxis);
 }

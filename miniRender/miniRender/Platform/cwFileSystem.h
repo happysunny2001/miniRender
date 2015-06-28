@@ -37,6 +37,7 @@ public:
 	virtual bool init() = 0;
 
 	const CWSTRING& getWokringPath() const { return m_strWorkingPath; }
+	CWSTRING getFullFilePath(const CWSTRING& strFileName) const;
 
 protected:
 	CWSTRING m_strWorkingPath;

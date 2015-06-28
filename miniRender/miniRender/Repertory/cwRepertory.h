@@ -33,6 +33,7 @@ class cwShaderManager;
 class cwLayoutsManager;
 class cwAutoReleasePool;
 class cwTextureManager;
+class cwFileSystem;
 class cwCamera;
 
 class CW_DLL cwRepertory
@@ -52,6 +53,7 @@ public:
 	cwLayoutsManager* getLayoutManager();
 	cwAutoReleasePool* getAutoReleasePool();
 	cwTextureManager* getTextureManager();
+	cwFileSystem* getFileSystem();
 
 	virtual void refreshWindowTitle(const CWSTRING& strTitle) {}
 
@@ -70,6 +72,7 @@ protected:
 	cwLayoutsManager* m_pLayoutManager;
 	cwAutoReleasePool* m_pAutoReleasePool;
 	cwTextureManager* m_pTextureManager;
+	cwFileSystem* m_pFileSystem;
 //	cwLog* m_pLog;
 	cwCamera* m_pCurrentCamera;
 
