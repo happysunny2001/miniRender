@@ -23,7 +23,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 BoxDemo::BoxDemo(HINSTANCE hInstance, int iShowCmd):
 cwWinMain(hInstance, iShowCmd),
 m_pEntityAxis(nullptr),
-m_pEntity(nullptr),
+m_pEntityBox01(nullptr),
+m_pEntityBox02(nullptr),
 m_pScene(nullptr)
 {
 
@@ -32,7 +33,8 @@ m_pScene(nullptr)
 BoxDemo::~BoxDemo()
 {
 	CW_SAFE_RELEASE_NULL(m_pEntityAxis);
-	CW_SAFE_RELEASE_NULL(m_pEntity);
+	CW_SAFE_RELEASE_NULL(m_pEntityBox01);
+	CW_SAFE_RELEASE_NULL(m_pEntityBox02);
 	CW_SAFE_RELEASE_NULL(m_pScene);
 }
 
@@ -66,11 +68,17 @@ void BoxDemo::buildEntity()
 	cwMaterial* pMaterial = cwMaterial::create();
 	pMaterial->setShader(pShader);
 
-	m_pEntity = cwEntity::create();
-	m_pEntity->setMaterial(pMaterial);
-	m_pEntity->setRenderObject(pRenderObj);
-	m_pEntity->setPosition(cwVector3D(2.0f, 1.0f, 0.0f));
-	CW_SAFE_RETAIN(m_pEntity);
+	m_pEntityBox01 = cwEntity::create();
+	m_pEntityBox01->setMaterial(pMaterial);
+	m_pEntityBox01->setRenderObject(pRenderObj);
+	m_pEntityBox01->setPosition(cwVector3D(2.0f, 1.0f, 0.0f));
+	CW_SAFE_RETAIN(m_pEntityBox01);
+
+	m_pEntityBox02 = cwEntity::create();
+	m_pEntityBox02->setMaterial(pMaterial);
+	m_pEntityBox02->setRenderObject(pRenderObj);
+	m_pEntityBox02->setPosition(cwVector3D(-2.0f, 1.0f, -3.0f));
+	CW_SAFE_RETAIN(m_pEntityBox02);
 }
 
 void BoxDemo::draw()
@@ -92,6 +100,8 @@ void BoxDemo::buildScene()
 	m_pScene = cwScene::create();
 	CW_SAFE_RETAIN(m_pScene);
 
-	m_pScene->addChild(m_pEntity);
+	m_pScene->addChild(m_pEntityBox01);
+	m_pEntityBox01->addChild(m_pEntityBox02);
+//	m_pScene->addChild(m_pEntityBox02);
 	m_pScene->addChild(m_pEntityAxis);
 }

@@ -74,6 +74,7 @@ void cwRenderNode::addChild(cwRenderNode* pNode)
 	if (!pNode) return;
 	if (m_nVecChildren.contains(pNode)) return;
 	m_nVecChildren.pushBack(pNode);
+	pNode->setParent(this);
 }
 
 void cwRenderNode::removeChild(cwRenderNode* pNode)

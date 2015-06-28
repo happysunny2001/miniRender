@@ -40,8 +40,10 @@ protected:
 	void buildScene();
 
 protected:
-	cwEntity* m_pEntity;
+	cwEntity* m_pEntityBox01;
+	cwEntity* m_pEntityBox02;
 	cwEntity* m_pEntityAxis;
+	
 	cwScene* m_pScene;
 
 };

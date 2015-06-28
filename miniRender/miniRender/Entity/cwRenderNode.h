@@ -83,7 +83,7 @@ protected:
 	//angle of rotation around the x, y, z axis, in radians
 	cwVector3D m_nRot;
 	cwVector3D m_nScale;
-	cwMatrix4X4 m_nTrans;
+	cwMatrix4X4 m_nTrans; 
 
 	cwVector<cwRenderNode*> m_nVecChildren;
 	cwRenderNode* m_pParent;

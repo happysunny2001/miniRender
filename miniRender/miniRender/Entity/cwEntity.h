@@ -47,20 +47,20 @@ public:
 	virtual void setRenderObject(cwRenderObject* pRenderObj);
 	inline cwRenderObject* getRenderObj() { return m_pRenderObj; }
 
-	virtual void setPosition(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	virtual void setPosition(const cwVector3D& v);
-	virtual void move(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	virtual void move(const cwVector3D& v);
+	//virtual void setPosition(CWFLOAT x, CWFLOAT y, CWFLOAT z);
+	//virtual void setPosition(const cwVector3D& v);
+	//virtual void move(CWFLOAT x, CWFLOAT y, CWFLOAT z);
+	//virtual void move(const cwVector3D& v);
 
-	virtual void setRotation(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	virtual void setRotation(const cwVector3D& v);
-	virtual void rotate(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	virtual void rotate(const cwVector3D& v);
+	//virtual void setRotation(CWFLOAT x, CWFLOAT y, CWFLOAT z);
+	//virtual void setRotation(const cwVector3D& v);
+	//virtual void rotate(CWFLOAT x, CWFLOAT y, CWFLOAT z);
+	//virtual void rotate(const cwVector3D& v);
 
-	virtual void setScale(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	virtual void setScale(const cwVector3D& v);
-	virtual void scale(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	virtual void scale(const cwVector3D& v);
+	//virtual void setScale(CWFLOAT x, CWFLOAT y, CWFLOAT z);
+	//virtual void setScale(const cwVector3D& v);
+	//virtual void scale(CWFLOAT x, CWFLOAT y, CWFLOAT z);
+	//virtual void scale(const cwVector3D& v);
 
 	virtual void setMaterial(cwMaterial* pMaterial);
 	inline cwMaterial* getMaterial() { return m_pMaterial; }
