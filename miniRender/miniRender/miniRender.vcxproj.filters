@@ -318,6 +318,9 @@
     <ClInclude Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderManager.h">
       <Filter>源文件\Platform\D3D\D3D11\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="Platform\Windows\cwWinApplication.h">
+      <Filter>源文件\Platform\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -493,6 +496,9 @@
     </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderManager.cpp">
       <Filter>源文件\Platform\D3D\D3D11\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\cwWinApplication.cpp">
+      <Filter>源文件\Platform\Windows</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

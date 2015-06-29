@@ -31,8 +31,6 @@ public:
 	BoxDemo(HINSTANCE hInstance, int iShowCmd);
 	virtual ~BoxDemo();
 
-	virtual void draw() override;
-
 protected:
 	virtual void initAll() override;
 	void buildEntity();

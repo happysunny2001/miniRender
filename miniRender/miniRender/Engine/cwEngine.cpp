@@ -19,13 +19,22 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwEngine.h"
 #include "Entity/cwScene.h"
+#include "Camera/cwCamera.h"
+#include "Device/cwDevice.h"
+#include "Ref/cwAutoReleasePool.h"
 
 NS_MINI_BEGIN
 
-cwEngine& cwEngine::getInstance()
+cwEngine* cwEngine::create()
 {
-	static cwEngine engine;
-	return engine;
+	cwEngine* pEngine = new cwEngine();
+	if (pEngine && pEngine->init()) {
+		pEngine->autorelease();
+		return pEngine;
+	}
+
+	CW_SAFE_DELETE(pEngine);
+	return nullptr;
 }
 
 cwEngine::cwEngine():
@@ -39,6 +48,12 @@ cwEngine::~cwEngine()
 	CW_SAFE_RELEASE_NULL(m_pCurrScene);
 }
 
+bool cwEngine::init()
+{
+	buildDefaultCamera();
+	return true;
+}
+
 void cwEngine::setScene(cwScene* pScene)
 {
 	if (pScene == m_pCurrScene) return;
@@ -47,12 +62,43 @@ void cwEngine::setScene(cwScene* pScene)
 	m_pCurrScene = pScene;
 }
 
-void cwEngine::mainLoop(float dt)
+void cwEngine::mainLoop(CWFLOAT dt)
 {
+	render();
+
+	cwRepertory::getInstance().getAutoReleasePool()->clear();
+}
+
+void cwEngine::buildDefaultCamera()
+{
+	m_nVecCameras.pushBack(cwCamera::create());
+}
+
+cwCamera* cwEngine::getDefaultCamera()
+{
+	if (m_nVecCameras.empty()) return nullptr;
+	return m_nVecCameras.at(0);
+}
+
+bool cwEngine::removeCamera(cwCamera* pCamera)
+{
+	if (!pCamera) return false;
+	//last camera can't remove
+	if (m_nVecCameras.size() == 1) return false;
+	m_nVecCameras.erase(pCamera, true);
+	return true;
+}
+
+void cwEngine::render()
+{
+	cwRepertory::getInstance().setCurrentCamera(getDefaultCamera());
+	cwRepertory::getInstance().getDevice()->beginDraw();
+
 	if (m_pCurrScene) {
-		m_pCurrScene->update(dt);
 		m_pCurrScene->render();
 	}
+
+	cwRepertory::getInstance().getDevice()->endDraw();
 }
 
 NS_MINI_END

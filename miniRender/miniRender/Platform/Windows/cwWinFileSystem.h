@@ -23,7 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINI_BEGIN
 
-class cwWinFileSystem : public cwFileSystem
+class CW_DLL cwWinFileSystem : public cwFileSystem
 {
 public:
 	static cwWinFileSystem* create();

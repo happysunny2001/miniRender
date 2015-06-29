@@ -52,19 +52,19 @@ public:
 	const_reverse_iterator rend() const   { return m_nData.crend();   }
 
 	cwVector<T>() : m_nData() {
-		static_assert(std::is_convertible<T, cwRef*>::value, "Invalid Type for apoca::cwVector<K, V>!");
+		static_assert(std::is_convertible<T, cwRef*>::value, "Invalid Type for minir::cwVector<K, V>!");
 	}
 
 	//copy constructor
 	cwVector<T>(const cwVector<T>& V) {
-		static_assert(std::is_convertible<T, cwRef*>::value, "Invalid Type for apoca::cwVector<K, V>!");
+		static_assert(std::is_convertible<T, cwRef*>::value, "Invalid Type for minir::cwVector<K, V>!");
 		m_nData = V.m_nData;
 		addRef();
 	}
 
 	//move constructor
 	cwVector<T>(cwVector<T>&& V) {
-		static_assert(std::is_convertible<T, cwRef*>::value, "Invalid Type for apoca::cwVector<K, V>!");
+		static_assert(std::is_convertible<T, cwRef*>::value, "Invalid Type for minir::cwVector<K, V>!");
 		m_nData = std::move(V.m_nData);
 	}
 

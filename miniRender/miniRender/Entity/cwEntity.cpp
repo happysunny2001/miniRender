@@ -48,8 +48,7 @@ cwEntity::cwEntity():
 m_pRenderObj(nullptr),
 m_pMaterial(nullptr)
 {
-	m_nDiffTextureTrans = cwVector2D(0.0f, 0.0f);
-	m_nDiffTextureScale = cwVector2D(1.0f, 1.0f);
+
 }
 
 cwEntity::~cwEntity()
@@ -65,72 +64,6 @@ void cwEntity::setRenderObject(cwRenderObject* pRenderObj)
 	CW_SAFE_RETAIN(m_pRenderObj);
 }
 
-//void cwEntity::setPosition(CWFLOAT x, CWFLOAT y, CWFLOAT z)
-//{
-//	m_nPos.x = x;
-//	m_nPos.y = y;
-//	m_nPos.z = z;
-//}
-
-//void cwEntity::setPosition(const cwVector3D& v)
-//{
-//	setPosition(v.x, v.y, v.z);
-//}
-
-//void cwEntity::move(CWFLOAT x, CWFLOAT y, CWFLOAT z)
-//{
-//	setPosition(m_nPos.x + x, m_nPos.y + y, m_nPos.z + z);
-//}
-
-//void cwEntity::move(const cwVector3D& v)
-//{
-//	move(v.x, v.y, v.z);
-//}
-
-//void cwEntity::setRotation(CWFLOAT x, CWFLOAT y, CWFLOAT z)
-//{
-//	m_nRot.x = x;
-//	m_nRot.y = y;
-//	m_nRot.z = z;
-//}
-
-//void cwEntity::setRotation(const cwVector3D& v)
-//{
-//	setRotation(v.x, v.y, v.z);
-//}
-//
-//void cwEntity::rotate(CWFLOAT x, CWFLOAT y, CWFLOAT z)
-//{
-//	setRotation(m_nRot.x + x, m_nRot.y + y, m_nRot.z + z);
-//}
-//
-//void cwEntity::rotate(const cwVector3D& v)
-//{
-//	rotate(v.x, v.y, v.z);
-//}
-
-//void cwEntity::setScale(CWFLOAT x, CWFLOAT y, CWFLOAT z)
-//{
-//	m_nScale.x = x;
-//	m_nScale.y = y;
-//	m_nScale.z = z;
-//}
-//
-//void cwEntity::setScale(const cwVector3D& v)
-//{
-//	setScale(v.x, v.y, v.z);
-//}
-//
-//void cwEntity::scale(CWFLOAT x, CWFLOAT y, CWFLOAT z)
-//{
-//	setScale(m_nScale.x + x, m_nScale.y + y, m_nScale.z + z);
-//}
-//
-//void cwEntity::scale(const cwVector3D& v)
-//{
-//	scale(v.x, v.y, v.z);
-//}
-
 void cwEntity::setMaterial(cwMaterial* pMaterial)
 {
 	if (pMaterial == m_pMaterial) return;
@@ -138,35 +71,6 @@ void cwEntity::setMaterial(cwMaterial* pMaterial)
 	CW_SAFE_RELEASE_NULL(m_pMaterial);
 	m_pMaterial = pMaterial;
 	CW_SAFE_RETAIN(m_pMaterial);
-}
-
-void cwEntity::setDiffuseTextureTrans(const cwMatrix4X4& trans)
-{
-	m_nDiffuseTrans = trans;
-}
-
-void cwEntity::moveDiffuseTexture(CWFLOAT x, CWFLOAT y)
-{
-	m_nDiffTextureTrans.x = x;
-	m_nDiffTextureTrans.y = y;
-	updateDiffuseTexture();
-}
-
-void cwEntity::scaleDiffuseTexture(CWFLOAT x, CWFLOAT y)
-{
-	m_nDiffTextureScale.x = x;
-	m_nDiffTextureScale.y = y;
-	updateDiffuseTexture();
-}
-
-void cwEntity::updateDiffuseTexture()
-{
-	cwMatrix4X4 matTrans;
-	cwMatrix4X4 matScale;
-
-	matTrans.setTranslation(m_nDiffTextureTrans.x, m_nDiffTextureTrans.y, 0.0f);
-	matScale.setScale(m_nDiffTextureScale.x, m_nDiffTextureScale.y, 1.0f);;
-	m_nDiffuseTrans = matScale * matTrans;
 }
 
 void cwEntity::renderSelf()

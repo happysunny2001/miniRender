@@ -26,27 +26,39 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Base/cwVector.h"
+#include "Repertory/cwRepertory.h"
+#include "Ref/cwRef.h"
 
 NS_MINI_BEGIN
 
 class cwScene;
+class cwCamera;
 
-class CW_DLL cwEngine
+class CW_DLL cwEngine : public cwRef
 {
 public:
-	static cwEngine& getInstance();
-
-	~cwEngine();
-
 	void setScene(cwScene* pScene);
-	void mainLoop(float dt);
+	void mainLoop(CWFLOAT dt);
 
-private:
-	cwEngine();
+	cwCamera* getDefaultCamera();
+	bool removeCamera(cwCamera* pCamera);
 
 protected:
+	static cwEngine* create();
 
+	cwEngine();
+	virtual ~cwEngine();
+
+	virtual bool init();
+	void buildDefaultCamera();
+
+	virtual void render();
+
+protected:
 	cwScene* m_pCurrScene;
+	cwVector<cwCamera*> m_nVecCameras;
+
+	friend class cwRepertory;
 
 };
 

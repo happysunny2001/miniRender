@@ -31,6 +31,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "cwStringConvert.h"
 #include "Ref/cwAutoReleasePool.h"
+#include "Engine/cwEngine.h"
 #include "Math/cwMath.h"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -49,8 +50,8 @@ m_uLastMouseX(0),
 m_uLastMouseY(0),
 m_fTheta(0.1f),
 m_fPhi(cwMathUtil::cwPIx2/8.0f),
-m_fRadius(10.0f),
-m_pCamera(nullptr)
+m_fRadius(10.0f)
+//m_pCamera(nullptr)
 {
 	g_WinMain = this;
 	createWindow();
@@ -61,7 +62,7 @@ cwWinMain::~cwWinMain()
 	g_WinMain = NULL;
 	CW_SAFE_DELETE_ARRAY(m_wpcWinName);
 	CW_SAFE_DELETE(m_pTimer);
-	CW_SAFE_RELEASE_NULL(m_pCamera);
+	//CW_SAFE_RELEASE_NULL(m_pCamera);
 }
 
 void cwWinMain::setWindowName(const string& strName)
@@ -117,10 +118,6 @@ void cwWinMain::initAll()
 	m_pTimer = new cwTimer();
 	assert(m_pTimer != NULL);
 	m_pTimer->reset();
-
-	m_pCamera = cwCamera::create();
-	CW_SAFE_RETAIN(m_pCamera);
-	m_pCamera->updateViewMatrix(0, 1.0f, -10.0f);
 }
 
 float cwWinMain::aspectRatio() const
@@ -157,10 +154,7 @@ void cwWinMain::loop()
 	showFPS();
 	update(m_pTimer->deltaTime());
 
-	cwRepertory::getInstance().getDevice()->beginDraw();
-	draw();
-	cwRepertory::getInstance().getDevice()->endDraw();
-	cwRepertory::getInstance().getAutoReleasePool()->clear();
+	cwRepertory::getInstance().getEngine()->mainLoop(m_pTimer->deltaTime());
 }
 
 void cwWinMain::update(float dt)
@@ -169,12 +163,7 @@ void cwWinMain::update(float dt)
 	float z = m_fRadius*sinf(m_fPhi)*sinf(m_fTheta);
 	float y = m_fRadius*cosf(m_fPhi);
 
-	m_pCamera->updateViewMatrix(x, y, z);
-}
-
-void cwWinMain::draw()
-{
-
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateViewMatrix(x, y, z);
 }
 
 void cwWinMain::onResize()
@@ -182,8 +171,7 @@ void cwWinMain::onResize()
 	cwRepertory::getInstance().addValue(gValueWinWidth, m_iWindowWidth);
 	cwRepertory::getInstance().addValue(gValueWinHeight, m_iWindowHeight);
 	cwRepertory::getInstance().getDevice()->resize(m_iWindowWidth, m_iWindowHeight);
-
-	m_pCamera->updateProjMatrix(0.25f*3.14159f, aspectRatio(), 1.0f, 1000.0f);
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateProjMatrix(0.25f*3.14159f, aspectRatio(), 1.0f, 1000.0f);
 }
 
 void cwWinMain::showFPS()

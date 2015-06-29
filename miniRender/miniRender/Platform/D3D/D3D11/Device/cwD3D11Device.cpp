@@ -586,20 +586,14 @@ void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
 
 	cwShader* pShader = pMaterial->getShader();
 	assert(pShader != nullptr);
-
-	setEffectWorldTrans(pShader, pEntity->getTransformMatrix(), pCamera);
-	const cwMatrix4X4& diffuseTrans = pEntity->getDiffuseTrans();
-	if (pShader->hasVariable(CW_SHADER_DIFF_TEX_TRANS)) {
-		pShader->setVariableMatrix(CW_SHADER_DIFF_TEX_TRANS, (CWFLOAT*)(&diffuseTrans));
-	}
+	setShaderWorldTrans(pShader, pEntity->getTransformMatrix(), pCamera);
 
 	cwRenderObject* pRenderObj = pEntity->getRenderObj();
 	assert(pRenderObj != nullptr);
-
 	draw(pShader, pMaterial->getTechName(), pRenderObj);
 }
 
-void cwD3D11Device::setEffectWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera)
+void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera)
 {
 	if (!pShader) return;
 

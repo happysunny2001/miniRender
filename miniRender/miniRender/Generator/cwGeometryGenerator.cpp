@@ -33,10 +33,22 @@ using namespace std;
 
 NS_MINI_BEGIN
 
-cwGeometryGenerator& cwGeometryGenerator::getInstance()
+//cwGeometryGenerator& cwGeometryGenerator::getInstance()
+//{
+//	static cwGeometryGenerator gInstance;
+//	return gInstance;
+//}
+
+cwGeometryGenerator* cwGeometryGenerator::create()
 {
-	static cwGeometryGenerator gInstance;
-	return gInstance;
+	cwGeometryGenerator* pGenerator = new cwGeometryGenerator();
+	if (pGenerator) {
+		pGenerator->autorelease();
+		return pGenerator;
+	}
+
+	CW_SAFE_DELETE(pGenerator);
+	return nullptr;
 }
 
 void cwGeometryGenerator::generateGrid(CWFLOAT width, CWFLOAT height, CWUINT m, CWUINT n, cwMeshData& mesh)

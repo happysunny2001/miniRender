@@ -43,6 +43,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Light/cwLight.h"
 #include "Entity/cwEntity.h"
 #include "Entity/cwScene.h"
+#include "Engine/cwEngine.h"
 // #include "cwReflectEntity.h"
 #include "Repertory/cwRepertory.h"
 // #include "cwLog.h"

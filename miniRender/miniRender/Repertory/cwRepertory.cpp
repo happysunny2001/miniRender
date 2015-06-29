@@ -26,6 +26,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Ref/cwAutoReleasePool.h"
 #include "Camera/cwCamera.h"
 #include "Platform/cwFileSystem.h"
+#include "Engine/cwEngine.h"
+#include "Generator/cwGeometryGenerator.h"
 
 #ifdef _CW_D3D11_
 #include "Platform/D3D/D3D11/Repertory/cwD3D11Repertory.h"
@@ -48,7 +50,9 @@ m_pShaderManager(nullptr),
 m_pLayoutManager(nullptr),
 m_pCurrentCamera(nullptr),
 m_pTextureManager(nullptr),
-m_pFileSystem(nullptr)
+m_pFileSystem(nullptr),
+m_pEngine(nullptr),
+m_pGeoGenerator(nullptr)
 {
 	m_pAutoReleasePool = new cwAutoReleasePool();
 }
@@ -63,6 +67,8 @@ cwRepertory::~cwRepertory()
 	CW_SAFE_RELEASE_NULL(m_pCurrentCamera);
 	CW_SAFE_RELEASE_NULL(m_pTextureManager);
 	CW_SAFE_RELEASE_NULL(m_pFileSystem);
+	CW_SAFE_RELEASE_NULL(m_pEngine);
+	CW_SAFE_RELEASE_NULL(m_pGeoGenerator);
 }
 
 cwDevice* cwRepertory::getDevice()
@@ -100,11 +106,42 @@ cwFileSystem* cwRepertory::getFileSystem()
 	return m_pFileSystem;
 }
 
+cwEngine* cwRepertory::getEngine()
+{
+	return m_pEngine;
+}
+
+cwGeometryGenerator* cwRepertory::getGeoGenerator()
+{
+	return m_pGeoGenerator;
+}
+
 void cwRepertory::initAll()
 {
 //	m_pLog = new cwLog();
+
+	addValue(gValueNearZ, cwValueMap(1.0f));
+	addValue(gValueFarZ, cwValueMap(1000.0f));
+	addValue(gValueFov, cwValueMap(0.25f*3.14159f));
+
 	m_pFileSystem = cwFileSystem::create();
 	CW_SAFE_RETAIN(m_pFileSystem);
+
+	m_pGeoGenerator = cwGeometryGenerator::create();
+	CW_SAFE_RETAIN(m_pGeoGenerator);
+
+	specialInit();
+
+	m_pTextureManager = cwTextureManager::create();
+	CW_SAFE_RETAIN(m_pTextureManager);
+
+	m_pEngine = cwEngine::create();
+	CW_SAFE_RETAIN(m_pEngine);
+}
+
+bool cwRepertory::specialInit()
+{
+	return true;
 }
 
 void cwRepertory::addValue(const string& strName, const cwValueMap& value)

@@ -17,34 +17,57 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_FILE_SYSTEM_H__
-#define __CW_FILE_SYSTEM_H__
+#ifndef __CW_WIN_APPLICATION_H__
+#define __CW_WIN_APPLICATION_H__
 
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
-#include "Ref/cwRef.h"
+#include "Platform/cwPlatform.h"
+
+#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
+
+#include <windows.h>
 
 NS_MINI_BEGIN
 
-class CW_DLL cwFileSystem : public cwRef
+class cwApplication
 {
 public:
-	static cwFileSystem* create();
+	cwApplication();
+	virtual ~cwApplication();
 
-	cwFileSystem() {}
-	virtual ~cwFileSystem() {}
+	virtual void gameBegin();
+	virtual void gameEnd();
 
-	virtual bool init() = 0;
+	virtual void gameBeginBackGround();
+	virtual void gameEndBackGround();
 
-	const CWSTRING& getWokringPath() const { return m_strWorkingPath; }
-	CWSTRING getFullFilePath(const CWSTRING& strFileName) const;
+public:
+	CWINT go();
 
-protected:
-	CWSTRING m_strWorkingPath;
+private:
+	void init();
+	void onResize(CWUINT width, CWUINT height);
+	bool buildWindow();
+	void mainLoop();
+
+	HRESULT msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	friend LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+private:
+	CWWSTRING m_nStrWinName;
+
+	CWDOUBLE m_dSecondPerCount;
+	CWINT64 m_iPrevTimeCounter;
+	CWINT64 m_iCurrTimeCounter;
+
+	bool m_bResizing;
 
 };
 
 NS_MINI_END
+
+#endif
 
 #endif
 

@@ -22,6 +22,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/D3D/D3D11/Shader/cwD3D11ShaderManager.h"
 #include "Platform/D3D/D3D11/Layouts/cwD3D11LayoutsManager.h"
 #include "Texture/cwTextureManager.h"
+#include "Engine/cwEngine.h"
+#include "Base/cwValueMap.h"
 //#include "cwWinMain.h"
 
 #include <assert.h>
@@ -37,9 +39,10 @@ cwD3D11Repertory::~cwD3D11Repertory()
 {
 }
 
-void cwD3D11Repertory::initAll()
+bool cwD3D11Repertory::specialInit()
 {
-	cwRepertory::initAll();
+	this->addValue(gValueWinWidth,  cwValueMap(CWUINT(800)));
+	this->addValue(gValueWinHeight, cwValueMap(CWUINT(600)));
 
 	m_pDevice = new cwD3D11Device();
 	assert(m_pDevice != nullptr);
@@ -53,8 +56,7 @@ void cwD3D11Repertory::initAll()
 	assert(m_pLayoutManager != nullptr);
 	CW_SAFE_RETAIN(m_pLayoutManager);
 
-	m_pTextureManager = cwTextureManager::create();
-	CW_SAFE_RETAIN(m_pTextureManager);
+	return true;
 }
 
 void cwD3D11Repertory::refreshWindowTitle(const CWSTRING& strTitle)

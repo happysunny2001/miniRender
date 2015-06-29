@@ -41,15 +41,17 @@ BoxDemo::~BoxDemo()
 void BoxDemo::initAll()
 {
 	cwWinMain::initAll();
-	cwRepertory::getInstance().setCurrentCamera(m_pCamera);
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateViewMatrix(0, 2.0f, -20.0f);
 
 	buildScene();
 }
 
 void BoxDemo::buildEntity()
 {
+	cwRepertory& repertory = cwRepertory::getInstance();
+
 	cwGeometryGenerator::cwMeshData mesh;
-	cwGeometryGenerator::getInstance().generateBox(mesh);
+	repertory.getGeoGenerator()->generateBox(mesh);
 
 	vector<cwVertexPosColor> vecVertex(mesh.nVertex.size());
 	for (int i = 0; i < mesh.nVertex.size(); ++i) {
@@ -62,9 +64,7 @@ void BoxDemo::buildEntity()
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosColor);
 
-	cwRepertory& repertory = cwRepertory::getInstance();
 	cwShader* pShader = repertory.getShaderManager()->getDefShader(CW_SHADER_DEF_COLOR);
-
 	cwMaterial* pMaterial = cwMaterial::create();
 	pMaterial->setShader(pShader);
 
@@ -81,14 +81,9 @@ void BoxDemo::buildEntity()
 	CW_SAFE_RETAIN(m_pEntityBox02);
 }
 
-void BoxDemo::draw()
-{
-	m_pScene->render();
-}
-
 void BoxDemo::buildAxis()
 {
-	m_pEntityAxis = cwGeometryGenerator::getInstance().generateCoordinateAxisEntity(10.0f);
+	m_pEntityAxis = cwRepertory::getInstance().getGeoGenerator()->generateCoordinateAxisEntity(10.0f);
 	CW_SAFE_RETAIN(m_pEntityAxis);
 }
 
@@ -104,4 +99,6 @@ void BoxDemo::buildScene()
 	m_pEntityBox01->addChild(m_pEntityBox02);
 //	m_pScene->addChild(m_pEntityBox02);
 	m_pScene->addChild(m_pEntityAxis);
+
+	cwRepertory::getInstance().getEngine()->setScene(m_pScene);
 }

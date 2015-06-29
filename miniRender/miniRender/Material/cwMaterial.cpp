@@ -86,6 +86,9 @@ m_pBlendOp(nullptr)
 	m_nMatData.m_nSpecular = cwVector4D(1.0f, 1.0f, 1.0f, 1.0f);
 	m_nMatData.m_nReflect  = cwVector4D(1.0f, 1.0f, 1.0f, 1.0f);
 
+	m_nDiffTextureTrans = cwVector2D(0.0f, 0.0f);
+	m_nDiffTextureScale = cwVector2D(1.0f, 1.0f);
+
 }
 
 cwMaterial::~cwMaterial()
@@ -184,6 +187,47 @@ void cwMaterial::setDiffuseTexture(const string& strTexName)
 	CW_SAFE_RETAIN(m_pDiffuseTexture);
 }
 
+void cwMaterial::setDiffuseTextureTrans(const cwMatrix4X4& trans)
+{
+	m_nDiffuseTrans = trans;
+}
+
+void cwMaterial::moveDiffuseTexture(CWFLOAT x, CWFLOAT y)
+{
+	m_nDiffTextureTrans.x = x;
+	m_nDiffTextureTrans.y = y;
+	updateDiffuseTexture();
+}
+
+void cwMaterial::moveDiffuseTexture(const cwVector2D& dir)
+{
+	m_nDiffTextureTrans.x = dir.x;
+	m_nDiffTextureTrans.y = dir.y;
+	updateDiffuseTexture();
+}
+
+void cwMaterial::scaleDiffuseTexture(CWFLOAT x, CWFLOAT y)
+{
+	m_nDiffTextureScale.x = x;
+	m_nDiffTextureScale.y = y;
+	updateDiffuseTexture();
+}
+
+void cwMaterial::scaleDiffuseTexture(const cwVector2D& scale)
+{
+	m_nDiffTextureScale.x = scale.x;
+	m_nDiffTextureScale.y = scale.y;
+	updateDiffuseTexture();
+}
+
+void cwMaterial::updateDiffuseTexture()
+{
+	m_nDiffuseTrans.m11 = m_nDiffTextureScale.x; m_nDiffuseTrans.m12 = 0;                     m_nDiffuseTrans.m13 = 0;    m_nDiffuseTrans.m14 = 0;
+	m_nDiffuseTrans.m21 = 0;                     m_nDiffuseTrans.m22 = m_nDiffTextureScale.y; m_nDiffuseTrans.m23 = 0;    m_nDiffuseTrans.m24 = 0;
+	m_nDiffuseTrans.m31 = 0;                     m_nDiffuseTrans.m32 = 0;                     m_nDiffuseTrans.m33 = 1.0f; m_nDiffuseTrans.m34 = 0;
+	m_nDiffuseTrans.m41 = m_nDiffTextureTrans.x; m_nDiffuseTrans.m42 = m_nDiffTextureTrans.y; m_nDiffuseTrans.m43 = 0;    m_nDiffuseTrans.m44 = 1.0f;
+}
+
 void cwMaterial::setBlend(cwBlend* pBlendOp)
 {
 	if (m_pBlendOp == pBlendOp) return;
@@ -200,6 +244,10 @@ void cwMaterial::configEffect()
 
 	if (m_pShader->hasVariable(CW_SHADER_DIFFUSE_TEXTURE)) {
 		m_pShader->setVariableTexture(CW_SHADER_DIFFUSE_TEXTURE, this->getDiffuseTexture());
+	}
+
+	if (m_pShader->hasVariable(CW_SHADER_DIFF_TEX_TRANS)) {
+		m_pShader->setVariableMatrix(CW_SHADER_DIFF_TEX_TRANS, (CWFLOAT*)(&m_nDiffuseTrans));
 	}
 
 	cwRepertory::getInstance().getDevice()->setBlend(this->getBlend());

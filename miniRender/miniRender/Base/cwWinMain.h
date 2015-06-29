@@ -38,7 +38,6 @@ public:
 	virtual int go();
 	virtual void loop();
 	virtual void update(float dt);
-	virtual void draw();
 	virtual void onResize();
 
 	HWND getHWnd() { return m_hWnd; }
@@ -72,7 +71,6 @@ protected:
 
 	WCHAR* m_wpcWinName;
 
-	cwCamera* m_pCamera;
 	cwTimer* m_pTimer;
 	CWBOOL m_bResizing;
 

@@ -23,6 +23,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
 #include "Math/cwMath.h"
+#include "Repertory/cwRepertory.h"
+#include "Ref/cwRef.h"
 #include <vector>
 
 NS_MINI_BEGIN
@@ -30,10 +32,10 @@ NS_MINI_BEGIN
 class cwRenderObject;
 class cwEntity;
 
-class CW_DLL cwGeometryGenerator
+class CW_DLL cwGeometryGenerator : public cwRef
 {
-public:
-	static cwGeometryGenerator& getInstance();
+//public:
+//	static cwGeometryGenerator& getInstance();
 
 public:
 	struct cwVertex {
@@ -78,6 +80,7 @@ public:
 	cwVector3D getTerrainNormal(CWFLOAT x, CWFLOAT z);
 
 private:
+	static cwGeometryGenerator* create();
 	cwGeometryGenerator(){}
 	cwGeometryGenerator(cwGeometryGenerator const&){}
 	cwGeometryGenerator& operator=(cwGeometryGenerator const&){}
@@ -93,6 +96,7 @@ private:
 
 protected:
 
+	friend class cwRepertory;
 };
 
 NS_MINI_END

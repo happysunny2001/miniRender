@@ -47,29 +47,8 @@ public:
 	virtual void setRenderObject(cwRenderObject* pRenderObj);
 	inline cwRenderObject* getRenderObj() { return m_pRenderObj; }
 
-	//virtual void setPosition(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	//virtual void setPosition(const cwVector3D& v);
-	//virtual void move(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	//virtual void move(const cwVector3D& v);
-
-	//virtual void setRotation(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	//virtual void setRotation(const cwVector3D& v);
-	//virtual void rotate(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	//virtual void rotate(const cwVector3D& v);
-
-	//virtual void setScale(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	//virtual void setScale(const cwVector3D& v);
-	//virtual void scale(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	//virtual void scale(const cwVector3D& v);
-
 	virtual void setMaterial(cwMaterial* pMaterial);
 	inline cwMaterial* getMaterial() { return m_pMaterial; }
-
-	virtual void setDiffuseTextureTrans(const cwMatrix4X4& trans);
-	virtual void moveDiffuseTexture(CWFLOAT x, CWFLOAT y);
-	virtual void scaleDiffuseTexture(CWFLOAT x, CWFLOAT y);
-	virtual void updateDiffuseTexture();
-	const cwMatrix4X4& getDiffuseTrans() const { return m_nDiffuseTrans; }
 
 	virtual void renderSelf() override;
 
@@ -78,11 +57,6 @@ public:
 
 protected:
 	cwMaterial* m_pMaterial;
-
-	cwMatrix4X4 m_nDiffuseTrans; //the diffuse texture transform matrix
-	cwVector2D m_nDiffTextureTrans;
-	cwVector2D m_nDiffTextureScale;
-
 	cwRenderObject* m_pRenderObj;
 
 };

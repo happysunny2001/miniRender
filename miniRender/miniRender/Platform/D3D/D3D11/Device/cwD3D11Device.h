@@ -90,7 +90,7 @@ public:
 	virtual void render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) override;
 	virtual void render(cwEntity* pEntity, cwCamera* pCamera) override;
 
-	virtual void setEffectWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) override;
+	virtual void setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) override;
 	virtual void setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans) override;
 	virtual void draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) override;
 

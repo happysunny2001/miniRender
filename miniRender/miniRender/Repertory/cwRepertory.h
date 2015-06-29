@@ -35,6 +35,8 @@ class cwAutoReleasePool;
 class cwTextureManager;
 class cwFileSystem;
 class cwCamera;
+class cwEngine;
+class cwGeometryGenerator;
 
 class CW_DLL cwRepertory
 {
@@ -54,6 +56,8 @@ public:
 	cwAutoReleasePool* getAutoReleasePool();
 	cwTextureManager* getTextureManager();
 	cwFileSystem* getFileSystem();
+	cwEngine* getEngine();
+	cwGeometryGenerator* getGeoGenerator();
 
 	virtual void refreshWindowTitle(const CWSTRING& strTitle) {}
 
@@ -65,6 +69,8 @@ protected:
 	cwRepertory(cwRepertory const&) {}
 	cwRepertory& operator=(cwRepertory const&) {}
 	virtual ~cwRepertory();
+
+	virtual bool specialInit();
 	
 protected:
 	cwDevice* m_pDevice;
@@ -73,6 +79,8 @@ protected:
 	cwAutoReleasePool* m_pAutoReleasePool;
 	cwTextureManager* m_pTextureManager;
 	cwFileSystem* m_pFileSystem;
+	cwEngine* m_pEngine;
+	cwGeometryGenerator* m_pGeoGenerator;
 //	cwLog* m_pLog;
 	cwCamera* m_pCurrentCamera;
 

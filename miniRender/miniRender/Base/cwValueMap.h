@@ -27,9 +27,12 @@ using namespace std;
 
 NS_MINI_BEGIN
 
-const string gValueWinHandle = "winHandle";
-const string gValueWinWidth  = "winWidth";
-const string gValueWinHeight = "winHeight";
+const CWSTRING gValueWinHandle = "winHandle";
+const CWSTRING gValueWinWidth  = "winWidth";
+const CWSTRING gValueWinHeight = "winHeight";
+const CWSTRING gValueNearZ = "nearZ";
+const CWSTRING gValueFarZ  = "farZ";
+const CWSTRING gValueFov   = "fov";
 
 struct CW_DLL cwValueMap
 {

@@ -92,9 +92,19 @@ public:
 	virtual void setShader(cwShader* pShader);
 	inline cwShader* getShader() { return m_pShader; }
 
+	// set/get diffuse texture
 	virtual void setDiffuseTexture(cwTexture* pTexture);
 	virtual void setDiffuseTexture(const string& strTexName);
 	inline cwTexture* getDiffuseTexture() { return m_pDiffuseTexture; }
+
+	// set/get diffuse texture translate and scale
+	virtual void setDiffuseTextureTrans(const cwMatrix4X4& trans);
+	virtual void moveDiffuseTexture(CWFLOAT x, CWFLOAT y);
+	virtual void moveDiffuseTexture(const cwVector2D& dir);
+	virtual void scaleDiffuseTexture(CWFLOAT x, CWFLOAT y);
+	virtual void scaleDiffuseTexture(const cwVector2D& scale);
+	virtual void updateDiffuseTexture();
+	const cwMatrix4X4& getDiffuseTrans() const { return m_nDiffuseTrans; }
 
 	virtual void setBlend(cwBlend* pBlendOp);
 	inline const cwBlend* getBlend() const { return m_pBlendOp; }
@@ -111,8 +121,14 @@ public:
 	matColor m_nMatData;
 	cwShader* m_pShader;
 	string m_strTechName;         //the name of technique for render 
-	cwTexture* m_pDiffuseTexture;
+	
 	cwBlend* m_pBlendOp;          //blend object
+
+	//the diffuse texture and it's transform matrix
+	cwTexture* m_pDiffuseTexture;
+	cwMatrix4X4 m_nDiffuseTrans; //the diffuse texture transform matrix
+	cwVector2D m_nDiffTextureTrans;
+	cwVector2D m_nDiffTextureScale;
 	
 };
 
