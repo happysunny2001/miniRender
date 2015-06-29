@@ -57,4 +57,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Math/cwMath.h"
 
+#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
+#include "Platform/Windows/cwWinApplication.h"
+#endif
+
 #endif

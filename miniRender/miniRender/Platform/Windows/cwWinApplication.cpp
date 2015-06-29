@@ -26,19 +26,20 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwValueMap.h"
 #include "Repertory/cwRepertory.h"
 #include "Engine/cwEngine.h"
+#include "Device/cwDevice.h"
+#include "Camera/cwCamera.h"
+
+static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 NS_MINI_BEGIN
 
 static cwApplication* g_pApplication = nullptr;
-
-static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 cwApplication::cwApplication():
 m_bResizing(false)
 {
 	g_pApplication = this;
 	buildWindow();
-	init();
 }
 
 cwApplication::~cwApplication()
@@ -120,6 +121,8 @@ void cwApplication::mainLoop()
 
 CWINT cwApplication::go()
 {
+	init();
+
 	MSG msg = { 0 };
 
 	cwRepertory& repertory = cwRepertory::getInstance();
@@ -141,32 +144,86 @@ CWINT cwApplication::go()
 	return (int)msg.wParam;
 }
 
+//void cwApplication::gameBegin()
+//{
+//
+//}
+//
+//void cwApplication::gameEnd()
+//{
+//
+//}
+//
+//void cwApplication::gameBeginBackGround()
+//{
+//
+//}
+//
+//void cwApplication::gameEndBackGround()
+//{
+//
+//}
+
 void cwApplication::onResize(CWUINT width, CWUINT height)
+{
+	if (m_bResizing) return;
+	cwRepertory& repertory = cwRepertory::getInstance();
+
+	repertory.addValue(gValueWinWidth, cwValueMap(width));
+	repertory.addValue(gValueWinHeight, cwValueMap(height));
+	repertory.getDevice()->resize(width, height);
+
+	CWFLOAT fov = repertory.getFloat(gValueFov);
+	CWFLOAT nearZ = repertory.getFloat(gValueNearZ);
+	CWFLOAT farZ = repertory.getFloat(gValueFarZ);
+	CWFLOAT aspect = (CWFLOAT)width / (CWFLOAT)height;
+
+	repertory.getEngine()->getDefaultCamera()->updateProjMatrix(fov, aspect, nearZ, farZ);
+}
+
+void cwApplication::onResize()
+{
+	m_bResizing = false;
+
+	cwRepertory& repertory = cwRepertory::getInstance();
+	onResize(repertory.getUInt(gValueWinWidth), repertory.getUInt(gValueWinHeight));
+}
+
+void cwApplication::onMouseDown(CWUINT keyState, CWINT x, CWINT y)
 {
 
 }
 
-HRESULT cwApplication::msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+void cwApplication::onMouseUp(CWUINT keyState, CWINT x, CWINT y)
+{
+
+}
+
+void cwApplication::onMouseMove(CWUINT keyState, CWINT x, CWINT y)
+{
+
+}
+
+void cwApplication::OnMouseWheel(CWUINT keyState, CWINT delta, CWINT x, CWINT y)
+{
+
+}
+
+LRESULT cwApplication::msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
 	case WM_DESTROY:
+		gameEnd();
 		PostQuitMessage(0);
 		return 0;
 	case WM_SIZE:
-		CWUINT iWindowWidth = LOWORD(lParam);
-		CWUINT iWindowHeight = HIWORD(lParam);
-
-		if (!m_bResizing) {
-			onResize(iWindowWidth, iWindowHeight);
-		}
-
+		onResize(LOWORD(lParam), HIWORD(lParam));
 		return 0;
 	case WM_ENTERSIZEMOVE:
 		m_bResizing = true;
 		return 0;
 	case WM_EXITSIZEMOVE:
-		m_bResizing = false;
 		onResize();
 		return 0;
 	case WM_LBUTTONDOWN:
@@ -196,11 +253,11 @@ HRESULT cwApplication::msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
+NS_MINI_END
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	g_pApplication->msgProc(hWnd, msg, wParam, lParam);
+	return minir::g_pApplication->msgProc(hWnd, msg, wParam, lParam);
 }
-
-NS_MINI_END
 
 #endif

@@ -30,29 +30,37 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINI_BEGIN
 
-class cwApplication
+class CW_DLL cwApplication
 {
 public:
 	cwApplication();
 	virtual ~cwApplication();
 
-	virtual void gameBegin();
-	virtual void gameEnd();
+	virtual void gameBegin() = 0;
+	virtual void gameEnd() = 0;
 
-	virtual void gameBeginBackGround();
-	virtual void gameEndBackGround();
+	virtual void gameBeginBackGround() = 0;
+	virtual void gameEndBackGround() = 0;
 
 public:
 	CWINT go();
 
+	LRESULT msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 private:
 	void init();
+	void onResize();
 	void onResize(CWUINT width, CWUINT height);
 	bool buildWindow();
 	void mainLoop();
 
-	HRESULT msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-	friend LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	
+//	friend LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+	void onMouseDown(CWUINT keyState, CWINT x, CWINT y);
+	void onMouseUp(CWUINT keyState, CWINT x, CWINT y);
+	void onMouseMove(CWUINT keyState, CWINT x, CWINT y);
+	void OnMouseWheel(CWUINT keyState, CWINT delta, CWINT x, CWINT y);
 
 private:
 	CWWSTRING m_nStrWinName;

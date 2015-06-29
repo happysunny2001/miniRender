@@ -20,8 +20,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "BoxDemo.h"
 
 
-BoxDemo::BoxDemo(HINSTANCE hInstance, int iShowCmd):
-cwWinMain(hInstance, iShowCmd),
+BoxDemo::BoxDemo(/*HINSTANCE hInstance, int iShowCmd*/):
+//cwWinMain(hInstance, iShowCmd),
 m_pEntityAxis(nullptr),
 m_pEntityBox01(nullptr),
 m_pEntityBox02(nullptr),
@@ -38,13 +38,34 @@ BoxDemo::~BoxDemo()
 	CW_SAFE_RELEASE_NULL(m_pScene);
 }
 
-void BoxDemo::initAll()
+void BoxDemo::gameBegin()
 {
-	cwWinMain::initAll();
 	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateViewMatrix(0, 2.0f, -20.0f);
-
 	buildScene();
 }
+
+void BoxDemo::gameEnd()
+{
+
+}
+
+void BoxDemo::gameBeginBackGround()
+{
+
+}
+
+void BoxDemo::gameEndBackGround()
+{
+
+}
+
+//void BoxDemo::initAll()
+//{
+//	cwWinMain::initAll();
+//	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateViewMatrix(0, 2.0f, -20.0f);
+//
+//	buildScene();
+//}
 
 void BoxDemo::buildEntity()
 {
