@@ -22,11 +22,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, __in LPSTR lpCmdLine, __in int nShowCmd)
 {
-	//BoxDemo mWindow(hInstance, nShowCmd);
-
-	//mWindow.setWindowName("BoxDemo");
-	//return mWindow.go();
-
 	BoxDemo demo;
 	demo.go();
 }

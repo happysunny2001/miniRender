@@ -26,7 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Layouts/cwLayouts.h"
 #include "Platform/D3D/D3D11/Shader/cwD3D11Shader.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 class CW_DLL cwInputElementDesc;
 
@@ -46,7 +46,7 @@ private:
 
 };
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif
 

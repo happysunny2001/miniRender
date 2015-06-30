@@ -25,7 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwVector.h"
 #include "Light/cwLight.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 class CW_DLL cwScene : public cwRenderNode
 {
@@ -46,6 +46,6 @@ protected:
 
 };
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif

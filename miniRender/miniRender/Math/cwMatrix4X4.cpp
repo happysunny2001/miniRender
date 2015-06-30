@@ -31,7 +31,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include <sstream>
 using namespace std;
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwMatrix4X4 cwMatrix4X4::identityMatrix(1.0f, 0.0f, 0.0f, 0.0f,
                                         0.0f, 1.0f, 0.0f, 0.0f,
@@ -439,7 +439,7 @@ cwMatrix4X4& operator *= (cwMatrix4X4& a, const cwMatrix4X4& b)
     return a;
 }
 
-NS_MINI_END
+NS_MINIR_END
 
 
 

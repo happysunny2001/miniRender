@@ -24,7 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwVector3D.h"
 #include "../Base/cwMacros.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 //plane notation
 //p.n + d = 0
@@ -50,6 +50,6 @@ public:
     
 };
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif /* defined(__testGL31__cwPlane__) */

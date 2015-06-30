@@ -25,7 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Math/cwMath.h"
 #include "Ref/cwRef.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 class CW_DLL cwCamera : public cwRef
 {
@@ -39,7 +39,8 @@ public:
 	virtual bool init();
 	virtual bool init(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ);
 
-	virtual void updateViewMatrix(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ);
+	virtual void updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ);
+	//virtual void updateViewMatrix(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ);
 	virtual void updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ);
 
 	const cwMatrix4X4& getViewMatrix() { return m_nViewMatrix; }
@@ -49,7 +50,7 @@ public:
 	const cwVector3D& getPos() { return m_nPos; }
 
 protected:
-	void storeViewMatrix();
+	void updateViewMatrix();
 
 protected:
 	cwMatrix4X4 m_nViewMatrix;
@@ -66,6 +67,6 @@ protected:
 
 };
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif

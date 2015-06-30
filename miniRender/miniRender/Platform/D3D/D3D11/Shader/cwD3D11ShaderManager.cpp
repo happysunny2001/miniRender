@@ -23,7 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Platform/cwFileSystem.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwD3D11ShaderManager* cwD3D11ShaderManager::create()
 {
@@ -63,6 +63,6 @@ bool cwD3D11ShaderManager::init()
 	return true;
 }
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif

@@ -25,7 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Light/cwLight.h"
 #include "Shader/cwShader.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwEntity* cwEntity::create()
 {
@@ -112,4 +112,4 @@ void cwEntity::renderSelf()
 // 	}
 // }
 
-NS_MINI_END
+NS_MINIR_END

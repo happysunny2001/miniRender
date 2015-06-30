@@ -24,7 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwPlane.h"
 #include "cwCircle.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwAABB::cwAABB():
 m_nMin(cwPoint3D::ZERO),
@@ -283,7 +283,7 @@ bool cwAABB::intersection(const cwShape& other) const
     return false;
 }
 
-NS_MINI_END
+NS_MINIR_END
 
 
 

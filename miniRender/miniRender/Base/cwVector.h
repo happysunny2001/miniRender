@@ -27,7 +27,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include <functional>
 #include <algorithm>
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 template<class T>
 class CW_DLL cwVector
@@ -262,6 +262,6 @@ private:
 	std::vector<T> m_nData;
 };
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif

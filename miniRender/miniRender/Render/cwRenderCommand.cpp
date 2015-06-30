@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwRenderCommand.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwRenderCommand* cwRenderCommand::create(cwMaterial* pMaterial, const cwRenderCommandCallback& callback)
 {
@@ -52,4 +52,4 @@ bool cwRenderCommand::init(cwMaterial* pMaterial, const cwRenderCommandCallback&
 	return true;
 }
 
-NS_MINI_END
+NS_MINIR_END

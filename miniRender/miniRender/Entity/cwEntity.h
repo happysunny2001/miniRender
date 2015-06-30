@@ -25,7 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Math/cwMath.h"
 #include "cwRenderNode.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 class cwRenderObject;
 class cwRenderDevice;
@@ -61,6 +61,6 @@ protected:
 
 };
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif

@@ -28,12 +28,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/cwFileSystem.h"
 #include "Engine/cwEngine.h"
 #include "Generator/cwGeometryGenerator.h"
+#include "Event/cwEventManager.h"
 
 #ifdef _CW_D3D11_
 #include "Platform/D3D/D3D11/Repertory/cwD3D11Repertory.h"
 #endif
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwRepertory& cwRepertory::getInstance()
 {
@@ -52,7 +53,8 @@ m_pCurrentCamera(nullptr),
 m_pTextureManager(nullptr),
 m_pFileSystem(nullptr),
 m_pEngine(nullptr),
-m_pGeoGenerator(nullptr)
+m_pGeoGenerator(nullptr),
+m_pEventManager(nullptr)
 {
 	m_pAutoReleasePool = new cwAutoReleasePool();
 }
@@ -69,6 +71,7 @@ cwRepertory::~cwRepertory()
 	CW_SAFE_RELEASE_NULL(m_pFileSystem);
 	CW_SAFE_RELEASE_NULL(m_pEngine);
 	CW_SAFE_RELEASE_NULL(m_pGeoGenerator);
+	CW_SAFE_RELEASE_NULL(m_pEventManager);
 }
 
 cwDevice* cwRepertory::getDevice()
@@ -116,6 +119,11 @@ cwGeometryGenerator* cwRepertory::getGeoGenerator()
 	return m_pGeoGenerator;
 }
 
+cwEventManager* cwRepertory::getEventManager()
+{
+	return m_pEventManager;
+}
+
 void cwRepertory::initAll()
 {
 //	m_pLog = new cwLog();
@@ -123,6 +131,9 @@ void cwRepertory::initAll()
 	addValue(gValueNearZ, cwValueMap(1.0f));
 	addValue(gValueFarZ, cwValueMap(1000.0f));
 	addValue(gValueFov, cwValueMap(0.25f*3.14159f));
+
+	m_pEventManager = cwEventManager::create();
+	CW_SAFE_RETAIN(m_pEventManager);
 
 	m_pFileSystem = cwFileSystem::create();
 	CW_SAFE_RETAIN(m_pFileSystem);
@@ -180,4 +191,4 @@ void cwRepertory::setCurrentCamera(cwCamera* pCam)
 	CW_SAFE_RETAIN(m_pCurrentCamera);
 }
 
-NS_MINI_END
+NS_MINIR_END

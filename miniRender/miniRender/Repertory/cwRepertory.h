@@ -26,7 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include <unordered_map>
 using namespace std;
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 class cwDevice;
 class cwShaderManager;
@@ -37,6 +37,7 @@ class cwFileSystem;
 class cwCamera;
 class cwEngine;
 class cwGeometryGenerator;
+class cwEventManager;
 
 class CW_DLL cwRepertory
 {
@@ -58,6 +59,7 @@ public:
 	cwFileSystem* getFileSystem();
 	cwEngine* getEngine();
 	cwGeometryGenerator* getGeoGenerator();
+	cwEventManager* getEventManager();
 
 	virtual void refreshWindowTitle(const CWSTRING& strTitle) {}
 
@@ -81,6 +83,7 @@ protected:
 	cwFileSystem* m_pFileSystem;
 	cwEngine* m_pEngine;
 	cwGeometryGenerator* m_pGeoGenerator;
+	cwEventManager* m_pEventManager;
 //	cwLog* m_pLog;
 	cwCamera* m_pCurrentCamera;
 
@@ -88,6 +91,6 @@ protected:
 
 };
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif

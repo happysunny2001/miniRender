@@ -21,7 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Shader/cwShaderManager.h"
 #include "Repertory/cwRepertory.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwLayouts* cwLayoutsManager::getLayouts(ceElementDesc eType)
 {
@@ -30,4 +30,4 @@ cwLayouts* cwLayoutsManager::getLayouts(ceElementDesc eType)
 	return it->second;
 }
 
-NS_MINI_END
+NS_MINIR_END

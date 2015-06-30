@@ -24,7 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Layouts/cwLayoutsManager.h"
 #include "Repertory/cwRepertory.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwStaticRenderObject* cwStaticRenderObject::create(
 		ePrimitiveType topology,
@@ -66,4 +66,4 @@ bool cwStaticRenderObject::init(
 	return m_pVertexBuffer ? true : false;
 }
 
-NS_MINI_END
+NS_MINIR_END

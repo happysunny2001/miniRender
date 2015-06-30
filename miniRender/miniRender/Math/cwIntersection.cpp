@@ -24,7 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwAABB.h"
 #include "cwMathUtil.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 bool cwIntersectionRayRay(const cwRay& r1, const cwRay& r2)
 {
@@ -257,7 +257,7 @@ bool cwIntersectionAABBAABB(const cwAABB& a1, const cwAABB& a2)
     return true;
 }
 
-NS_MINI_END
+NS_MINIR_END
 
 
 

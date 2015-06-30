@@ -24,7 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Windows/cwWinFileSystem.h"
 #endif
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwFileSystem* cwFileSystem::create()
 {
@@ -39,5 +39,5 @@ CWSTRING cwFileSystem::getFullFilePath(const CWSTRING& strFileName) const
 	return m_strWorkingPath + "/" + strFileName;
 }
 
-NS_MINI_END
+NS_MINIR_END
 

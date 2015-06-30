@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwBlend.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwBlend::cwBlend()
 {
@@ -42,4 +42,4 @@ void cwBlend::setblendFactor(const CWFLOAT* factors)
 	memcpy(m_fblendFactor, factors, sizeof(CWFLOAT)* 4);
 }
 
-NS_MINI_END
+NS_MINIR_END

@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwLight.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwLight* cwLight::createDirectionalLight(
 const cwVector3D& direction,
@@ -260,4 +260,4 @@ const eLightType cwLight::getType() const
 	return (eLightType)(int)(this->type);
 }
 
-NS_MINI_END
+NS_MINIR_END

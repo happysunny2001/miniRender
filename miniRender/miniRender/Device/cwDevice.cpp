@@ -20,12 +20,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwDevice.h"
 #include "Base/cwColor.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
-cwDevice::cwDevice(/*HWND hWnd, CWUINT width, CWUINT height*/) :
-//m_hWnd(hWnd),
-//m_uiClientWidth(width),
-//m_uiClientHeight(height),
+cwDevice::cwDevice() :
 m_fvClearColor(cwColor::black),
 m_eRenderState(eRenderStateSolid),
 m_bEnableMsaa4x(true),
@@ -39,4 +36,4 @@ cwDevice::~cwDevice()
 	m_pBlendState = nullptr;
 }
 
-NS_MINI_END
+NS_MINIR_END

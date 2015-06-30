@@ -26,7 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include <sstream>
 using namespace std;
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 CWWSTRING cwStringConvert::convertToWideChar(const string& str)
 {
@@ -56,6 +56,6 @@ CWSTRING cwStringConvert::convertToMultiByte(const CWWSTRING& str)
 	return retStr;
 }
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif

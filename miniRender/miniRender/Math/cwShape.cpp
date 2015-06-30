@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwShape.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwShape::cwShape() :
 m_eType(eShapeNone)
@@ -32,4 +32,4 @@ cwShape::~cwShape()
     
 }
 
-NS_MINI_END
+NS_MINIR_END

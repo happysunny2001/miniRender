@@ -37,7 +37,7 @@ using namespace std;
 #include "cwMacros.h"
 #include "cwBasicType.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 typedef enum {
 	eRenderStateSolid,
@@ -218,11 +218,6 @@ typedef struct CW_BUFFER_DESC{
 	CWUINT StructureByteStride;
 }CW_BUFFER_DESC;
 
-//typedef D3D11_PRIMITIVE_TOPOLOGY CW_PRIMITIVE_TOPOLOGY;
-//typedef D3D11_BUFFER_DESC CW_BUFFER_DESC;
-//typedef ID3D11Buffer      CW_BUFFER;
-//typedef D3D11_USAGE       CW_BUFFER_USAGE;
-
 #define CW_CONTROL MK_CONTROL
 #define CW_LBUTTON MK_LBUTTON
 #define CW_MBUTTON MK_MBUTTON
@@ -230,7 +225,7 @@ typedef struct CW_BUFFER_DESC{
 #define CW_SHIFT MK_SHIFT
 #define CW_UINT_MAX 0xFFFFFFFF
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif
 

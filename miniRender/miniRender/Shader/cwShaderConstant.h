@@ -22,14 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 
-#ifdef _CW_D3D11_
-#include <d3d11.h>
-#include <d3dx11effect.h>
-#endif
-
-NS_MINI_BEGIN
-
-#define CW_SHADER_VERSION "fx_5_0"
+NS_MINIR_BEGIN
 
 #define CW_SIG_POSITION "POSITION"
 #define CW_SIG_NORMAL   "NORMAL"
@@ -53,6 +46,6 @@ NS_MINI_BEGIN
 #define CW_SHADER_DEF_LIGHTING    2
 #define CW_SHADER_DEF_LIGHTINGTEX 3
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif

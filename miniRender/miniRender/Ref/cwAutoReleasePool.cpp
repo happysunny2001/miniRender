@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwAutoReleasePool.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwAutoReleasePool::cwAutoReleasePool()
 {
@@ -49,4 +49,4 @@ void cwAutoReleasePool::clear()
 	m_vecRefObject.clear();
 }
 
-NS_MINI_END
+NS_MINIR_END

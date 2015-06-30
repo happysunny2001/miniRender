@@ -21,7 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include <windows.h>
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwTimer::cwTimer():
 m_iPrevTimeCounter(0),
@@ -81,4 +81,4 @@ void cwTimer::tick()
 	}
 }
 
-NS_MINI_END
+NS_MINIR_END

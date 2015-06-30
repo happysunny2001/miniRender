@@ -25,7 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #ifdef _CW_D3D11_
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwD3D11Shader* cwD3D11Shader::create(const std::string& strShaderFile)
 {
@@ -302,7 +302,7 @@ ID3DX11EffectPass* cwD3D11Shader::getPass(const string& strTechName, CWUINT pass
 	return vecPassRef[passIndex];
 }
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif
 

@@ -23,7 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include <assert.h>
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwRef::cwRef() : m_iRef(1)
 {
@@ -54,4 +54,4 @@ void cwRef::autorelease()
 	cwRepertory::getInstance().getAutoReleasePool()->addAutoReleaseRef(this);
 }
 
-NS_MINI_END
+NS_MINIR_END

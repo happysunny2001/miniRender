@@ -20,7 +20,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwScene.h"
 #include "Base/cwMacros.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwScene* cwScene::create()
 {
@@ -67,4 +67,4 @@ const cwVector<cwLight*>& cwScene::getLights() const
 	return m_nVecLights;
 }
 
-NS_MINI_END
+NS_MINIR_END

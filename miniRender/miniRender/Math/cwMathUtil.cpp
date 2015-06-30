@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwMathUtil.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 const CWFLOAT cwMathUtil::cwPI           = 3.14159f;
 const CWFLOAT cwMathUtil::cwFloatEpsilon = 0.00001f;
@@ -55,5 +55,5 @@ CWFLOAT cwMathUtil::angleDegree(CWFLOAT angle)
 	return angle* cwMathUtil::cwPiInv * 180.0f;
 }
 
-NS_MINI_END
+NS_MINIR_END
 

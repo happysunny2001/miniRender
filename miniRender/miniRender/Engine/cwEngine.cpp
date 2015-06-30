@@ -22,8 +22,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Camera/cwCamera.h"
 #include "Device/cwDevice.h"
 #include "Ref/cwAutoReleasePool.h"
+#include "Event/cwEventManager.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwEngine* cwEngine::create()
 {
@@ -64,9 +65,11 @@ void cwEngine::setScene(cwScene* pScene)
 
 void cwEngine::mainLoop(CWFLOAT dt)
 {
-	render();
+	cwRepertory& repertory = cwRepertory::getInstance();
 
-	cwRepertory::getInstance().getAutoReleasePool()->clear();
+	repertory.getEventManager()->dispatchEvent();
+	render();
+	repertory.getAutoReleasePool()->clear();
 }
 
 void cwEngine::buildDefaultCamera()
@@ -101,4 +104,4 @@ void cwEngine::render()
 	cwRepertory::getInstance().getDevice()->endDraw();
 }
 
-NS_MINI_END
+NS_MINIR_END

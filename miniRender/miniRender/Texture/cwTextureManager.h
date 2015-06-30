@@ -25,7 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Ref/cwRef.h"
 #include "cwTexture.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 class CW_DLL cwTextureManager : public cwRef
 {
@@ -43,6 +43,6 @@ private:
 
 };
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif

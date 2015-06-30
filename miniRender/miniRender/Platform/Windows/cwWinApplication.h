@@ -28,7 +28,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include <windows.h>
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 class CW_DLL cwApplication
 {
@@ -45,8 +45,6 @@ public:
 public:
 	CWINT go();
 
-	LRESULT msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
 private:
 	void init();
 	void onResize();
@@ -54,8 +52,8 @@ private:
 	bool buildWindow();
 	void mainLoop();
 
-	
-//	friend LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	LRESULT msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	friend LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 	void onMouseDown(CWUINT keyState, CWINT x, CWINT y);
 	void onMouseUp(CWUINT keyState, CWINT x, CWINT y);
@@ -73,7 +71,7 @@ private:
 
 };
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif
 

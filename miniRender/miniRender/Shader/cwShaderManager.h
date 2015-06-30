@@ -22,10 +22,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Base/cwMap.h"
-#include "cwShader.h"
 #include "Ref/cwRef.h"
+#include "cwShader.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 class CW_DLL cwShaderManager : public cwRef
 {
@@ -47,6 +47,6 @@ protected:
 
 };
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif

@@ -23,7 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwVector3D.h"
 #include "../Base/cwMacros.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 class CW_DLL cwVector4D : public cwVector3D
 {
@@ -162,6 +162,6 @@ inline cwVector4D operator * (float f, const cwVector4D& v)
     return cwVector4D(f*v.x, f*v.y, f*v.z);
 }
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif /* defined(__CWVECTOR4D_H__) */

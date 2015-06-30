@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwColor.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwVector4D cwColor::black( 0.0f, 0.0f, 0.0f, 1.0f );
 cwVector4D cwColor::white( 1.0f, 1.0f, 1.0f, 1.0f );
@@ -37,4 +37,4 @@ cwColor::~cwColor()
 {
 }
 
-NS_MINI_END
+NS_MINIR_END

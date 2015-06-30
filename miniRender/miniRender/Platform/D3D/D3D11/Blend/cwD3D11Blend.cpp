@@ -21,7 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwD3D11Blend* cwD3D11Blend::create(
 bool bEnable, eBlendFactor srcBlend, eBlendFactor dstBlend, eBlendOp blendOp,
@@ -73,4 +73,4 @@ bool cwD3D11Blend::init(
 	return true;
 }
 
-NS_MINI_END
+NS_MINIR_END

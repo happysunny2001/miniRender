@@ -29,7 +29,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include <assert.h>
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwMaterial* cwMaterial::create()
 {
@@ -253,4 +253,4 @@ void cwMaterial::configEffect()
 	cwRepertory::getInstance().getDevice()->setBlend(this->getBlend());
 }
 
-NS_MINI_END
+NS_MINIR_END

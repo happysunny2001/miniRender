@@ -28,11 +28,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Engine/cwEngine.h"
 #include "Device/cwDevice.h"
 #include "Camera/cwCamera.h"
+#include "Event/cwEvent.h"
+#include "Event/cwTouchEvent.h"
+#include "Event/cwEventManager.h"
+
+NS_MINIR_BEGIN
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-
-NS_MINI_BEGIN
-
 static cwApplication* g_pApplication = nullptr;
 
 cwApplication::cwApplication():
@@ -144,26 +146,6 @@ CWINT cwApplication::go()
 	return (int)msg.wParam;
 }
 
-//void cwApplication::gameBegin()
-//{
-//
-//}
-//
-//void cwApplication::gameEnd()
-//{
-//
-//}
-//
-//void cwApplication::gameBeginBackGround()
-//{
-//
-//}
-//
-//void cwApplication::gameEndBackGround()
-//{
-//
-//}
-
 void cwApplication::onResize(CWUINT width, CWUINT height)
 {
 	if (m_bResizing) return;
@@ -191,22 +173,22 @@ void cwApplication::onResize()
 
 void cwApplication::onMouseDown(CWUINT keyState, CWINT x, CWINT y)
 {
-
+	cwRepertory::getInstance().getEventManager()->addEvent(cwTouchEvent::create(TouchTypeDown, cwVector2D(x, y)));
 }
 
 void cwApplication::onMouseUp(CWUINT keyState, CWINT x, CWINT y)
 {
-
+	cwRepertory::getInstance().getEventManager()->addEvent(cwTouchEvent::create(TouchTypeUp, cwVector2D(x, y)));
 }
 
 void cwApplication::onMouseMove(CWUINT keyState, CWINT x, CWINT y)
 {
-
+	cwRepertory::getInstance().getEventManager()->addEvent(cwTouchEvent::create(TouchTypeMoving, cwVector2D(x, y)));
 }
 
 void cwApplication::OnMouseWheel(CWUINT keyState, CWINT delta, CWINT x, CWINT y)
 {
-
+	cwRepertory::getInstance().getEventManager()->addEvent(cwTouchEvent::create(TouchTypeWheel, cwVector2D(x, y)));
 }
 
 LRESULT cwApplication::msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -253,11 +235,11 @@ LRESULT cwApplication::msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
-NS_MINI_END
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	return minir::g_pApplication->msgProc(hWnd, msg, wParam, lParam);
 }
+
+NS_MINIR_END
 
 #endif

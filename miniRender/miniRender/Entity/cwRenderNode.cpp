@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwRenderNode.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwRenderNode* cwRenderNode::create()
 {
@@ -217,6 +217,6 @@ void cwRenderNode::renderSelf()
 
 }
 
-NS_MINI_END
+NS_MINIR_END
 
 

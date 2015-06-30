@@ -25,7 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwUtils.h"
 #include "Device/cwDevice.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 class cwLayouts;
 class cwShader;
@@ -37,14 +37,12 @@ class cwMaterial;
 class CW_DLL cwD3D11Device : public cwDevice
 {
 public:
-	cwD3D11Device(/*HWND hWnd, CWUINT width, CWUINT height*/);
+	cwD3D11Device();
 	virtual ~cwD3D11Device();
 
 	virtual bool initDevice() override;
 	virtual void resize(CWUINT width, CWUINT height) override;
 	virtual void resize() override;
-
-//	virtual void setSize(CWUINT width, CWUINT height);
 	
 	virtual void createRenderTarget();
 	virtual void createDepthStencil();
@@ -112,7 +110,7 @@ protected:
 
 };
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif
 

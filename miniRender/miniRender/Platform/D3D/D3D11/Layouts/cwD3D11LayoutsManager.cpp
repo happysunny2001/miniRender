@@ -26,7 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Shader/cwShaderManager.h"
 #include "Platform/cwFileSystem.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwD3D11LayoutsManager* cwD3D11LayoutsManager::create()
 {
@@ -93,6 +93,6 @@ bool cwD3D11LayoutsManager::init()
 	return true;
 }
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif

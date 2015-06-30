@@ -20,7 +20,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwD3D11VertexBuffer.h"
 #include "Device/cwDevice.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwD3D11VertexBuffer* cwD3D11VertexBuffer::create(
 	CWUINT uSize,
@@ -72,4 +72,4 @@ void cwD3D11VertexBuffer::set(cwDevice* pDevice)
 	}
 }
 
-NS_MINI_END
+NS_MINIR_END

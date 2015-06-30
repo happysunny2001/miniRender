@@ -22,7 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwStringConvert.h"
 #include "Repertory/cwRepertory.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwRunTime& cwRunTime::getInstance()
 {
@@ -59,4 +59,4 @@ void cwRunTime::showFPS()
 //	cwRepertory::getInstance().refreshWindowTitle(cwStringConvert::createFPSString(m_strWinTitle, m_pTimer->fps()).c_str());
 }
 
-NS_MINI_END
+NS_MINIR_END

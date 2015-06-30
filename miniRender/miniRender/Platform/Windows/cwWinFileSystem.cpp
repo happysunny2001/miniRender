@@ -21,7 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwWinFileSystem.h"
 #include "Base/cwStringConvert.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwWinFileSystem* cwWinFileSystem::create()
 {
@@ -74,5 +74,5 @@ void cwWinFileSystem::replaceWindowsStyleSlash(TCHAR* pszChar)
 	}
 }
 
-NS_MINI_END
+NS_MINIR_END
 

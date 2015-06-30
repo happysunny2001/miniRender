@@ -23,7 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Buffer/cwBuffer.h"
 #include "Repertory/cwRepertory.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwDynamicRenderObject* cwDynamicRenderObject::create(
 ePrimitiveType topology,
@@ -87,4 +87,4 @@ void cwDynamicRenderObject::updateVertexBuffer()
 	cwRepertory::getInstance().getDevice()->unlockBuffer(m_pVertexBuffer);
 }
 
-NS_MINI_END
+NS_MINIR_END

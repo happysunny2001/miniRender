@@ -29,8 +29,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #endif
 
-#define NS_MINI_BEGIN namespace minir {
-#define NS_MINI_END };
+#define NS_MINIR_BEGIN namespace minir {
+#define NS_MINIR_END };
 #define NS_USING_MINIR using namespace minir
 
 #define CW_DEBUG 1
@@ -106,5 +106,6 @@ do{\
 #endif
 
 #define CW_CALLBACK_0(__selector__, __target__, ...) std::bind(&__selector__, __target__, ##__VA_ARGS__)
+#define CW_CALLBACK_1(__selector__, __target__, ...) std::bind(&__selector__, __target__, std::placeholders::_1, ##__VA_ARGS__)
 
 #endif

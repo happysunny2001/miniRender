@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwCamera.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwCamera* cwCamera::create()
 {
@@ -51,7 +51,7 @@ cwCamera::cwCamera()
 	m_nTarget = cwVector3D(0, 0, 0);
 	m_nUp     = cwVector3D(0, 1.0f, 0);
 
-	this->storeViewMatrix();
+	this->updateViewMatrix();
 }
 
 cwCamera::~cwCamera()
@@ -70,7 +70,7 @@ bool cwCamera::init(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ
 	return true;
 }
 
-void cwCamera::storeViewMatrix()
+void cwCamera::updateViewMatrix()
 {
 	m_nViewMatrix.lookAt(m_nPos, m_nUp, m_nTarget);
 }
@@ -80,10 +80,10 @@ cwMatrix4X4 cwCamera::getViewProjMatrix() const
 	return m_nViewMatrix*m_nProjMatrix;
 }
 
-void cwCamera::updateViewMatrix(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ)
+void cwCamera::updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ)
 {
 	m_nPos = cwVector3D(fPosX, fPosY, fPosZ);
-	storeViewMatrix();
+	updateViewMatrix();
 }
 
 void cwCamera::updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
@@ -96,4 +96,4 @@ void cwCamera::updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, C
 	m_nProjMatrix.perspectiveFov(m_fFov, m_fAspect, m_fNearZ, m_fFarZ);
 }
 
-NS_MINI_END
+NS_MINIR_END

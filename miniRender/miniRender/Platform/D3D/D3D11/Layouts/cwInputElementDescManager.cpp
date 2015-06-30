@@ -20,7 +20,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwInputElementDescManager.h"
 #include "Shader/cwShaderConstant.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwInputElementDesc* cwInputElementDesc::create(int iElementCnt)
 {
@@ -113,4 +113,4 @@ void cwInputElementDescManager::buildDescMap()
 	}
 }
 
-NS_MINI_END
+NS_MINIR_END

@@ -31,13 +31,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include <iostream>
 using namespace std;
 
-NS_MINI_BEGIN
-
-//cwGeometryGenerator& cwGeometryGenerator::getInstance()
-//{
-//	static cwGeometryGenerator gInstance;
-//	return gInstance;
-//}
+NS_MINIR_BEGIN
 
 cwGeometryGenerator* cwGeometryGenerator::create()
 {
@@ -578,4 +572,4 @@ cwVector3D cwGeometryGenerator::getTerrainNormal(CWFLOAT x, CWFLOAT z)
 	return n;
 }
 
-NS_MINI_END
+NS_MINIR_END

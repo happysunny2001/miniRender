@@ -25,7 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
 #include "Base/cwStringConvert.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwD3D11Texture* cwD3D11Texture::create(const string& strFileName)
 {
@@ -70,6 +70,6 @@ CWHANDLE cwD3D11Texture::getTexturePtr()
 	return (CWHANDLE)m_pShaderResource;
 }
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif

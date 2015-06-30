@@ -22,7 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwD3D11Stencil* cwD3D11Stencil::create(
 	bool bDepthEnable, eDepthWriteMask depthWriteMask, eComparison depthFunc,
@@ -85,4 +85,4 @@ bool cwD3D11Stencil::init(
 	return true;
 }
 
-NS_MINI_END
+NS_MINIR_END

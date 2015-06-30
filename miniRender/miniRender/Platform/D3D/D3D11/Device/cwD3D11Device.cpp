@@ -44,7 +44,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include <assert.h>
 #include <xnamath.h>
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 cwD3D11Device::cwD3D11Device(/*HWND hWnd, CWUINT width, CWUINT height*/) :
 //cwDevice(hWnd, width, height),
@@ -662,6 +662,6 @@ void cwD3D11Device::draw(cwShader* pShader, const string& strTech, cwRenderObjec
 	}
 }
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif

@@ -23,13 +23,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwMiniRender.h"
 NS_USING_MINIR;
 
-//#include "Base/cwWinMain.h"
-
-//class BoxDemo : public cwWinMain
 class BoxDemo : public cwApplication
 {
 public:
-	BoxDemo(/*HINSTANCE hInstance, int iShowCmd*/);
+	BoxDemo();
 	virtual ~BoxDemo();
 
 	virtual void gameBegin() override;
@@ -39,8 +36,6 @@ public:
 	virtual void gameEndBackGround() override;
 
 protected:
-//	virtual void initAll() override;
-	
 	void buildEntity();
 	void buildAxis();
 	void buildScene();

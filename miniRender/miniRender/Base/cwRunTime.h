@@ -23,7 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 class cwTimer;
 
@@ -46,6 +46,6 @@ private:
 
 };
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif

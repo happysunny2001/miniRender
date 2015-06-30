@@ -24,7 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include <assert.h>
 #include <unordered_map>
 
-NS_MINI_BEGIN
+NS_MINIR_BEGIN
 
 template<class K, class V>
 class cwMap
@@ -94,6 +94,6 @@ private:
 
 };
 
-NS_MINI_END
+NS_MINIR_END
 
 #endif
