@@ -20,6 +20,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifndef __CW_D3DREPERTORY_H__
 #define __CW_D3DREPERTORY_H__
 
+#ifdef _CW_D3D11_
+
 #include "Base/cwMacros.h"
 #include "Repertory/cwRepertory.h"
 
@@ -41,5 +43,7 @@ protected:
 };
 
 NS_MINIR_END
+
+#endif
 
 #endif

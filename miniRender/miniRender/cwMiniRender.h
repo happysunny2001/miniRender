@@ -44,18 +44,23 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Entity/cwEntity.h"
 #include "Entity/cwScene.h"
 #include "Engine/cwEngine.h"
-// #include "cwReflectEntity.h"
 #include "Repertory/cwRepertory.h"
-// #include "cwLog.h"
 #include "Texture/cwTexture.h"
 #include "Texture/cwTextureManager.h"
 #include "Blend/cwBlend.h"
-// #include "cwFog.h"
 #include "Stencil/cwStencil.h"
 #include "Platform/cwFileSystem.h"
-// #include "cwPlaneShadow.h"
-
 #include "Math/cwMath.h"
+#include "Event/cwEvent.h"
+#include "Event/cwEventDefine.h"
+#include "Event/cwEventListener.h"
+#include "Event/cwEventManager.h"
+#include "Event/cwTouchEvent.h"
+#include "Event/cwTouchEventListener.h"
+
+// #include "cwReflectEntity.h"
+// #include "cwFog.h"
+// #include "cwPlaneShadow.h"
 
 #if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
 #include "Platform/Windows/cwWinApplication.h"

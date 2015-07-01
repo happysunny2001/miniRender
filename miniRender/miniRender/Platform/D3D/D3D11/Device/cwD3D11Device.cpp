@@ -21,30 +21,39 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwD3D11Device.h"
 #include "Base/cwColor.h"
+#include "Base/cwValueMap.h"
+#include "Repertory/cwRepertory.h"
 #include "Shader/cwShader.h"
-#include "Platform/D3D/D3D11/Shader/cwD3D11Shader.h"
 #include "Shader/cwShaderConstant.h"
 #include "Layouts/cwLayouts.h"
 #include "Buffer/cwBuffer.h"
-#include "Platform/D3D/D3D11/Layouts/cwD3D11Layouts.h"
-#include "Platform/D3D/D3D11/Buffer/cwD3D11VertexBuffer.h"
-#include "Platform/D3D/D3D11/Buffer/cwD3D11IndexBuffer.h"
 #include "RenderObject/cwRenderObject.h"
 #include "Camera/cwCamera.h"
 #include "Entity/cwEntity.h"
 #include "Material/cwMaterial.h"
 #include "Texture/cwTexture.h"
+#include "Stencil/cwStencil.h"
+#include "Platform/Windows/cwWinUtils.h"
+#include "Platform/D3D/D3D11/cwD3D11Utils.h"
+#include "Platform/D3D/D3D11/Layouts/cwD3D11Layouts.h"
+#include "Platform/D3D/D3D11/Buffer/cwD3D11VertexBuffer.h"
+#include "Platform/D3D/D3D11/Buffer/cwD3D11IndexBuffer.h"
+#include "Platform/D3D/D3D11/Stencil/cwD3D11Stencil.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11Texture.h"
 #include "Platform/D3D/D3D11/Blend/cwD3D11Blend.h"
-#include "Stencil/cwStencil.h"
-#include "Platform/D3D/D3D11/Stencil/cwD3D11Stencil.h"
-#include "Repertory/cwRepertory.h"
-#include "Base/cwValueMap.h"
+#include "Platform/D3D/D3D11/Shader/cwD3D11Shader.h"
 
 #include <assert.h>
 #include <xnamath.h>
 
 NS_MINIR_BEGIN
+
+CWINT cwD3D11Device::blendFactor[eBlendFactorMaxCount];
+CWINT cwD3D11Device::blendOp[eBlendOpMaxCount];
+
+CWINT cwD3D11Device::stencilOp[eStencilOpMaxCount];
+CWINT cwD3D11Device::comparisonType[eComparisonMaxCount];
+CWINT cwD3D11Device::depthWriteMask[eDepthWriteMaskMaxCount];
 
 cwD3D11Device::cwD3D11Device(/*HWND hWnd, CWUINT width, CWUINT height*/) :
 //cwDevice(hWnd, width, height),
@@ -60,6 +69,8 @@ m_pNoCullRenderState(NULL),
 m_pCullCWRenderState(NULL),
 m_pMaterialDefault(nullptr)
 {
+	initBlendBaseData();
+	initStencilBaseData();
 }
 
 cwD3D11Device::~cwD3D11Device()
@@ -424,31 +435,29 @@ cwBuffer* cwD3D11Device::createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT
 	return pIndexBuffer;
 }
 
-cwBlend* cwD3D11Device::createBlend(
-	bool bEnable, eBlendFactor srcBlend, eBlendFactor dstBlend, eBlendOp blendOp,
-	eBlendFactor srcBlendAlpha, eBlendFactor dstBlendAlpha, eBlendOp blendOpAlpha,
-	eColorWriteEnable renderWriteMask)
+cwBlend* cwD3D11Device::createBlend(const BlendData& blendData)
 {
-	cwD3D11Blend* pBlendOp = cwD3D11Blend::create(
-		bEnable, srcBlend, dstBlend, blendOp, 
-		srcBlendAlpha, dstBlendAlpha, blendOpAlpha, 
-		renderWriteMask);
-	return pBlendOp;
+	return cwD3D11Blend::create(blendData);
 }
 
-cwStencil* cwD3D11Device::createStencil(
-	bool bDepthEnable, eDepthWriteMask depthWriteMask, eComparison depthFunc,
-	bool bStencilEnable, CWBYTE uReadMask, CWBYTE uWriteMask,
-	eStencilOp frontFailOp, eStencilOp frontDepthFailOp, eStencilOp frontPassOp, eComparison frontFunc,
-	eStencilOp backFailOp, eStencilOp backDepthFailOp, eStencilOp backPassOp, eComparison backFunc)
+cwStencil* cwD3D11Device::createStencil(const StencilData& stencliData)
 {
-	cwD3D11Stencil* pStencil = cwD3D11Stencil::create(
-		bDepthEnable, depthWriteMask, depthFunc, 
-		bStencilEnable, uReadMask, uWriteMask,
-		frontFailOp, frontDepthFailOp, frontPassOp, 
-		frontFunc, backFailOp, backDepthFailOp, backPassOp, backFunc);
-	return pStencil;
+	return cwD3D11Stencil::create(stencliData);
 }
+
+//cwStencil* cwD3D11Device::createStencil(
+//	bool bDepthEnable, eDepthWriteMask depthWriteMask, eComparison depthFunc,
+//	bool bStencilEnable, CWBYTE uReadMask, CWBYTE uWriteMask,
+//	eStencilOp frontFailOp, eStencilOp frontDepthFailOp, eStencilOp frontPassOp, eComparison frontFunc,
+//	eStencilOp backFailOp, eStencilOp backDepthFailOp, eStencilOp backPassOp, eComparison backFunc)
+//{
+//	cwD3D11Stencil* pStencil = cwD3D11Stencil::create(
+//		bDepthEnable, depthWriteMask, depthFunc, 
+//		bStencilEnable, uReadMask, uWriteMask,
+//		frontFailOp, frontDepthFailOp, frontPassOp, 
+//		frontFunc, backFailOp, backDepthFailOp, backPassOp, backFunc);
+//	return pStencil;
+//}
 
 void cwD3D11Device::setVertexBuffer(cwBuffer* pVertexBuffer)
 {
@@ -660,6 +669,57 @@ void cwD3D11Device::draw(cwShader* pShader, const string& strTech, cwRenderObjec
 		pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
 		this->DrawIndexed(pRenderObj->getIndexBuffer()->getIndexCount(), 0, 0);
 	}
+}
+
+void cwD3D11Device::initBlendBaseData()
+{
+	blendFactor[eBlendFactorZero]           = D3D11_BLEND_ZERO;
+	blendFactor[eBlendFactorOne]            = D3D11_BLEND_ONE;
+	blendFactor[eBlendFactorSrcColor]       = D3D11_BLEND_SRC_COLOR;
+	blendFactor[eBlendFactorInvSrcColor]    = D3D11_BLEND_INV_SRC_COLOR;
+	blendFactor[eBlendFactorSrcAlpha]       = D3D11_BLEND_SRC_ALPHA;
+	blendFactor[eBlendFactorInvSrcAlpha]    = D3D11_BLEND_INV_SRC_ALPHA;
+	blendFactor[eBlendFactorDestAlpha]      = D3D11_BLEND_DEST_ALPHA;
+	blendFactor[eBlendFactorInvDestAlpha]   = D3D11_BLEND_INV_DEST_ALPHA;
+	blendFactor[eBlendFactorDestColor]      = D3D11_BLEND_DEST_COLOR;
+	blendFactor[eBlendFactorInvDestColor]   = D3D11_BLEND_INV_DEST_COLOR;
+	blendFactor[eBlendFactorSrcAlphaSat]    = D3D11_BLEND_SRC_ALPHA_SAT;
+	blendFactor[eBlendFactorBlendFactor]    = D3D11_BLEND_BLEND_FACTOR;
+	blendFactor[eBlendFactorInvBlendFactor] = D3D11_BLEND_INV_BLEND_FACTOR;
+	blendFactor[eBlendFactorSrc1Color]      = D3D11_BLEND_SRC1_COLOR;
+	blendFactor[eBlendFactorInvSrc1Color]   = D3D11_BLEND_INV_SRC1_COLOR;
+	blendFactor[eBlendFactorSrc1Alpha]      = D3D11_BLEND_SRC1_ALPHA;
+	blendFactor[eBlendFactorInvSrc1Alpha]   = D3D11_BLEND_INV_SRC1_ALPHA;
+
+	blendOp[eBlendOpAdd]         = D3D11_BLEND_OP_ADD;
+	blendOp[eBlendOpSubtract]    = D3D11_BLEND_OP_SUBTRACT;
+	blendOp[eBlendOpRevSubtract] = D3D11_BLEND_OP_REV_SUBTRACT;
+	blendOp[eBlendOpMin]         = D3D11_BLEND_OP_MIN;
+	blendOp[eBlendOpMax]         = D3D11_BLEND_OP_MAX;
+}
+
+void cwD3D11Device::initStencilBaseData()
+{
+	stencilOp[eStencilOpKeep]    = D3D11_STENCIL_OP_KEEP;
+	stencilOp[eStencilOpZero]    = D3D11_STENCIL_OP_ZERO;
+	stencilOp[eStencilOpReplace] = D3D11_STENCIL_OP_REPLACE;
+	stencilOp[eStencilOpIncrSat] = D3D11_STENCIL_OP_INCR_SAT;
+	stencilOp[eStencilOpDecrSat] = D3D11_STENCIL_OP_DECR_SAT;
+	stencilOp[eStencilOpInvert]  = D3D11_STENCIL_OP_INVERT;
+	stencilOp[eStencilOpIncr]    = D3D11_STENCIL_OP_INCR;
+	stencilOp[eStencilOpDecr]    = D3D11_STENCIL_OP_DECR;
+
+	comparisonType[eComparisonNever]        = D3D11_COMPARISON_NEVER;
+	comparisonType[eComparisonLess]         = D3D11_COMPARISON_LESS;
+	comparisonType[eComparisonEqual]        = D3D11_COMPARISON_EQUAL;
+	comparisonType[eComparisonLessEqual]    = D3D11_COMPARISON_LESS_EQUAL;
+	comparisonType[eComparisonGreater]      = D3D11_COMPARISON_GREATER;
+	comparisonType[eComparisonNotEqual]     = D3D11_COMPARISON_NOT_EQUAL;
+	comparisonType[eComparisonGreaterEqual] = D3D11_COMPARISON_GREATER_EQUAL;
+	comparisonType[eComparisonAlways]       = D3D11_COMPARISON_ALWAYS;
+
+	depthWriteMask[eDepthWriteMaskZero] = D3D11_DEPTH_WRITE_MASK_ZERO;
+	depthWriteMask[eDepthWriteMaskAll]  = D3D11_DEPTH_WRITE_MASK_ALL;
 }
 
 NS_MINIR_END

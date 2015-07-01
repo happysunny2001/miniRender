@@ -72,8 +72,12 @@ bool cwApplication::buildWindow()
 	}
 
 	cwRepertory& repertory = cwRepertory::getInstance();
-	repertory.addValue(gValueWinWidth,  cwValueMap(CWUINT(800)));
-	repertory.addValue(gValueWinHeight, cwValueMap(CWUINT(600)));
+
+	m_uWindowWidth = 800;
+	m_uWindowHeight = 600;
+
+	repertory.addValue(gValueWinWidth, cwValueMap(CWUINT(m_uWindowWidth)));
+	repertory.addValue(gValueWinHeight, cwValueMap(CWUINT(m_uWindowHeight)));
 
 	HWND hWnd = CreateWindow(
 		m_nStrWinName.c_str(),
@@ -81,8 +85,8 @@ bool cwApplication::buildWindow()
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
-		repertory.getUInt(gValueWinWidth),
-		repertory.getUInt(gValueWinHeight),
+		m_uWindowWidth,
+		m_uWindowHeight,
 		NULL,
 		NULL,
 		hInstance,
@@ -151,6 +155,9 @@ void cwApplication::onResize(CWUINT width, CWUINT height)
 	if (m_bResizing) return;
 	cwRepertory& repertory = cwRepertory::getInstance();
 
+	m_uWindowWidth  = width;
+	m_uWindowHeight = height;
+
 	repertory.addValue(gValueWinWidth, cwValueMap(width));
 	repertory.addValue(gValueWinHeight, cwValueMap(height));
 	repertory.getDevice()->resize(width, height);
@@ -173,22 +180,34 @@ void cwApplication::onResize()
 
 void cwApplication::onMouseDown(CWUINT keyState, CWINT x, CWINT y)
 {
-	cwRepertory::getInstance().getEventManager()->addEvent(cwTouchEvent::create(TouchTypeDown, cwVector2D(x, y)));
+	CWINT heightY = m_uWindowHeight - y;
+	if (heightY < 0) heightY = 0;
+
+	cwRepertory::getInstance().getEventManager()->addEvent(cwTouchEvent::create(TouchTypeDown, cwVector2D((CWFLOAT)x, (CWFLOAT)heightY)));
 }
 
 void cwApplication::onMouseUp(CWUINT keyState, CWINT x, CWINT y)
 {
-	cwRepertory::getInstance().getEventManager()->addEvent(cwTouchEvent::create(TouchTypeUp, cwVector2D(x, y)));
+	CWINT heightY = m_uWindowHeight - y;
+	if (heightY < 0) heightY = 0;
+
+	cwRepertory::getInstance().getEventManager()->addEvent(cwTouchEvent::create(TouchTypeUp, cwVector2D((CWFLOAT)x, (CWFLOAT)heightY)));
 }
 
 void cwApplication::onMouseMove(CWUINT keyState, CWINT x, CWINT y)
 {
-	cwRepertory::getInstance().getEventManager()->addEvent(cwTouchEvent::create(TouchTypeMoving, cwVector2D(x, y)));
+	CWINT heightY = m_uWindowHeight - y;
+	if (heightY < 0) heightY = 0;
+
+	cwRepertory::getInstance().getEventManager()->addEvent(cwTouchEvent::create(TouchTypeMoving, cwVector2D((CWFLOAT)x, (CWFLOAT)heightY)));
 }
 
 void cwApplication::OnMouseWheel(CWUINT keyState, CWINT delta, CWINT x, CWINT y)
 {
-	cwRepertory::getInstance().getEventManager()->addEvent(cwTouchEvent::create(TouchTypeWheel, cwVector2D(x, y)));
+	CWINT heightY = m_uWindowHeight - y;
+	if (heightY < 0) heightY = 0;
+
+	cwRepertory::getInstance().getEventManager()->addEvent(cwTouchEvent::create(TouchTypeWheel, cwVector2D((CWFLOAT)x, (CWFLOAT)heightY)));
 }
 
 LRESULT cwApplication::msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)

@@ -17,6 +17,11 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#ifndef __CW_D3D11_STENCIL_H__
+#define __CW_D3D11_STENCIL_H__
+
+#ifdef _CW_D3D11_
+
 #include "Base/cwUtils.h"
 #include "Stencil/cwStencil.h"
 
@@ -25,20 +30,12 @@ NS_MINIR_BEGIN
 class CW_DLL cwD3D11Stencil : public cwStencil
 {
 public:
-	static cwD3D11Stencil* create(
-		bool bDepthEnable, eDepthWriteMask depthWriteMask, eComparison depthFunc,
-		bool bStencilEnable, CWBYTE uReadMask, CWBYTE uWriteMask,
-		eStencilOp frontFailOp, eStencilOp frontDepthFailOp, eStencilOp frontPassOp, eComparison frontFunc,
-		eStencilOp backFailOp, eStencilOp backDepthFailOp, eStencilOp backPassOp, eComparison backFunc);
+	static cwD3D11Stencil* create(const StencilData& stencilData);
 
 	cwD3D11Stencil();
 	virtual ~cwD3D11Stencil();
 
-	virtual bool init(
-		bool bDepthEnable, eDepthWriteMask depthWriteMask, eComparison depthFunc,
-		bool bStencilEnable, CWBYTE uReadMask, CWBYTE uWriteMask,
-		eStencilOp frontFailOp, eStencilOp frontDepthFailOp, eStencilOp frontPassOp, eComparison frontFunc,
-		eStencilOp backFailOp, eStencilOp backDepthFailOp, eStencilOp backPassOp, eComparison backFunc);
+	virtual bool init(const StencilData& stencilData) override;
 
 	virtual CWHANDLE getStencilHandlePtr() const { return static_cast<CWHANDLE>(m_pDepthStencilState); }
 
@@ -49,3 +46,7 @@ protected:
 };
 
 NS_MINIR_END
+
+#endif
+
+#endif

@@ -20,7 +20,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifndef __CW_MACROS_H__
 #define __CW_MACROS_H__
 
-#include <functional>
+//#include <functional>
 #include "Platform/cwPlatform.h"
 
 #if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
@@ -64,8 +64,7 @@ if ((o)) { \
 } while (0)
 
 #define CW_SAFE_DELETE(o) \
-do \
-{\
+do {\
 	if ((o)) { \
 		delete (o); \
 		(o) = NULL; \
@@ -73,37 +72,12 @@ do \
 } while (0);
 
 #define CW_SAFE_FREE(o) \
-do \
-{\
+do {\
 	if ((o)) {\
 		free((o)); \
 		(o) = NULL; \
 	}\
 } while (0);
-
-#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
-
-#define CW_RELEASE_COM(o) \
-do{\
-	if ((o)) {\
-		(o)->Release(); \
-		(o) = NULL; \
-	}\
-} while (0)
-
-#ifdef _CW_D3D11_
-
-#define CW_HR(x) \
-do{\
-	HRESULT hr = (x); \
-	if (FAILED(hr)) {\
-		DXTrace(__FILE__, __LINE__, hr, L#x, true); \
-	}\
-} while (0)
-
-#endif
-
-#endif
 
 #define CW_CALLBACK_0(__selector__, __target__, ...) std::bind(&__selector__, __target__, ##__VA_ARGS__)
 #define CW_CALLBACK_1(__selector__, __target__, ...) std::bind(&__selector__, __target__, std::placeholders::_1, ##__VA_ARGS__)

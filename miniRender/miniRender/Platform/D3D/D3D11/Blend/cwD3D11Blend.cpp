@@ -17,19 +17,21 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#ifdef _CW_D3D11_
+
 #include "cwD3D11Blend.h"
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
+#include "Platform/Windows/cwWinUtils.h"
+#include "Platform/D3D/D3D11/cwD3D11Utils.h"
+#include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
 
 NS_MINIR_BEGIN
 
-cwD3D11Blend* cwD3D11Blend::create(
-bool bEnable, eBlendFactor srcBlend, eBlendFactor dstBlend, eBlendOp blendOp,
-eBlendFactor srcBlendAlpha, eBlendFactor dstBlendAlpha, eBlendOp blendOpAlpha,
-eColorWriteEnable renderWriteMask)
+cwD3D11Blend* cwD3D11Blend::create(const BlendData& blendData)
 {
 	cwD3D11Blend* pBlend = new cwD3D11Blend();
-	if (pBlend && pBlend->init(bEnable, srcBlend, dstBlend, blendOp, srcBlendAlpha, dstBlendAlpha, blendOpAlpha, renderWriteMask)) {
+	if (pBlend && pBlend->init(blendData)) {
 		pBlend->autorelease();
 		return pBlend;
 	}
@@ -49,23 +51,20 @@ cwD3D11Blend::~cwD3D11Blend()
 	CW_RELEASE_COM(m_pBlendState);
 }
 
-bool cwD3D11Blend::init(
-	bool bEnable, eBlendFactor srcBlend, eBlendFactor dstBlend, eBlendOp blendOp,
-	eBlendFactor srcBlendAlpha, eBlendFactor dstBlendAlpha, eBlendOp blendOpAlpha,
-	eColorWriteEnable renderWriteMask)
+bool cwD3D11Blend::init(const BlendData& blendData)
 {
 	memset(&m_nBlendDesc, 0, sizeof(m_nBlendDesc));
 
-	m_nBlendDesc.AlphaToCoverageEnable  = FALSE;
+	m_nBlendDesc.AlphaToCoverageEnable = FALSE;
 	m_nBlendDesc.IndependentBlendEnable = FALSE;
-	m_nBlendDesc.RenderTarget[0].BlendEnable           = bEnable;
-	m_nBlendDesc.RenderTarget[0].SrcBlend              = static_cast<D3D11_BLEND>(srcBlend);
-	m_nBlendDesc.RenderTarget[0].DestBlend             = static_cast<D3D11_BLEND>(dstBlend);
-	m_nBlendDesc.RenderTarget[0].BlendOp               = static_cast<D3D11_BLEND_OP>(blendOp);
-	m_nBlendDesc.RenderTarget[0].SrcBlendAlpha         = static_cast<D3D11_BLEND>(srcBlendAlpha);
-	m_nBlendDesc.RenderTarget[0].DestBlendAlpha        = static_cast<D3D11_BLEND>(dstBlendAlpha);
-	m_nBlendDesc.RenderTarget[0].BlendOpAlpha          = static_cast<D3D11_BLEND_OP>(blendOpAlpha);
-	m_nBlendDesc.RenderTarget[0].RenderTargetWriteMask = renderWriteMask;
+	m_nBlendDesc.RenderTarget[0].BlendEnable = TRUE;
+	m_nBlendDesc.RenderTarget[0].SrcBlend = cwD3D11Device::getBlendFactor(blendData.srcBlend);
+	m_nBlendDesc.RenderTarget[0].DestBlend = cwD3D11Device::getBlendFactor(blendData.dstBlend); 
+	m_nBlendDesc.RenderTarget[0].BlendOp = cwD3D11Device::getBlendOp(blendData.blendOp);
+	m_nBlendDesc.RenderTarget[0].SrcBlendAlpha = cwD3D11Device::getBlendFactor(blendData.srcBlendAlpha);
+	m_nBlendDesc.RenderTarget[0].DestBlendAlpha = cwD3D11Device::getBlendFactor(blendData.dstBlendAlpha);
+	m_nBlendDesc.RenderTarget[0].BlendOpAlpha = cwD3D11Device::getBlendOp(blendData.blendOpAlpha); 
+	m_nBlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
 	ID3D11Device* pD3D11Device = static_cast<ID3D11Device*>(cwRepertory::getInstance().getDevice()->getDevice());
 	CW_HR(pD3D11Device->CreateBlendState(&m_nBlendDesc, &m_pBlendState));
@@ -74,3 +73,5 @@ bool cwD3D11Blend::init(
 }
 
 NS_MINIR_END
+
+#endif

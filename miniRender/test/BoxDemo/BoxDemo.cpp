@@ -40,6 +40,8 @@ void BoxDemo::gameBegin()
 {
 	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 2.0f, -20.0f);
 	buildScene();
+
+	
 }
 
 void BoxDemo::gameEnd()
@@ -103,7 +105,7 @@ void BoxDemo::buildScene()
 	buildEntity();
 	buildAxis();
 
-	m_pScene = cwScene::create();
+	m_pScene = BoxDemoScene::create();
 	CW_SAFE_RETAIN(m_pScene);
 
 	m_pScene->addChild(m_pEntityBox01);

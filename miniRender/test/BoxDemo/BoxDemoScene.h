@@ -17,39 +17,36 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_D3D11_BLENDOPER_H__
-#define __CW_D3D11_BLENDOPER_H__
+#ifndef __BOX_DEMO_SCENE_H__
+#define __BOX_DEMO_SCENE_H__
 
-#ifdef _CW_D3D11_
+#include "cwMiniRender.h"
+NS_USING_MINIR;
 
-#include "Base/cwBasicType.h"
-#include "Base/cwMacros.h"
-#include "Base/cwUtils.h"
-#include "Base/cwBasicType.h"
-#include "Blend/cwBlend.h"
-
-NS_MINIR_BEGIN
-
-class CW_DLL cwD3D11Blend : public cwBlend
+class BoxDemoScene : public cwScene
 {
 public:
-	static cwD3D11Blend* create(const BlendData& blendData);
+	static BoxDemoScene* create();
 
-	cwD3D11Blend();
-	virtual ~cwD3D11Blend();
+	BoxDemoScene();
+	virtual ~BoxDemoScene();
 
-	virtual bool init(const BlendData& blendData) override;
+	virtual bool init() override;
 
-	virtual const CWVOID* getBlendHandlePtr() const override { return reinterpret_cast<CWVOID*>(m_pBlendState); }
+	virtual void onTouchDown(cwTouch* pTouch) override;
+	virtual void onTouchUp(cwTouch* pTouch) override;
+	virtual void onTouchMoving(cwTouch* pTouch) override;
 
 protected:
-	D3D11_BLEND_DESC m_nBlendDesc;
-	ID3D11BlendState* m_pBlendState;
+	CWFLOAT m_fLastX;
+	CWFLOAT m_fLastY;
+	CWFLOAT m_fTheta;
+	CWFLOAT m_fPhi;
+	CWFLOAT m_fRadius;
+
+	bool m_bTouchDown;
 
 };
 
-NS_MINIR_END
-
 #endif
 
-#endif

@@ -17,6 +17,8 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#ifdef _CW_D3D11_
+
 #include "cwD3D11Repertory.h"
 #include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
 #include "Platform/D3D/D3D11/Shader/cwD3D11ShaderManager.h"
@@ -24,7 +26,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Texture/cwTextureManager.h"
 #include "Engine/cwEngine.h"
 #include "Base/cwValueMap.h"
-//#include "cwWinMain.h"
 
 #include <assert.h>
 
@@ -71,3 +72,5 @@ void cwD3D11Repertory::refreshWindowTitle(const CWSTRING& strTitle)
 }
 
 NS_MINIR_END
+
+#endif

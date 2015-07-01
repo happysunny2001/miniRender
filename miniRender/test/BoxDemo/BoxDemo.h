@@ -23,6 +23,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwMiniRender.h"
 NS_USING_MINIR;
 
+#include "BoxDemoScene.h"
+
 class BoxDemo : public cwApplication
 {
 public:
@@ -45,7 +47,7 @@ protected:
 	cwEntity* m_pEntityBox02;
 	cwEntity* m_pEntityAxis;
 	
-	cwScene* m_pScene;
+	BoxDemoScene* m_pScene;
 
 };
 

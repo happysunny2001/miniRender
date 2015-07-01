@@ -69,15 +69,9 @@ public:
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) = 0;
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, eBufferUsage usage, CWUINT cpuFlag) = 0;
 	virtual cwBuffer* createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) = 0;
-	virtual cwBlend* createBlend(
-		bool bEnable, eBlendFactor srcBlend, eBlendFactor dstBlend, eBlendOp blendOp,
-		eBlendFactor srcBlendAlpha, eBlendFactor dstBlendAlpha, eBlendOp blendOpAlpha,
-		eColorWriteEnable renderWriteMask) = 0;
-	virtual cwStencil* createStencil(
-		bool bDepthEnable, eDepthWriteMask depthWriteMask, eComparison depthFunc,
-		bool bStencilEnable, CWBYTE uReadMask, CWBYTE uWriteMask,
-		eStencilOp frontFailOp, eStencilOp frontDepthFailOp, eStencilOp frontPassOp, eComparison frontFunc,
-		eStencilOp backFailOp, eStencilOp backDepthFailOp, eStencilOp backPassOp, eComparison backFunc) = 0;
+
+	virtual cwBlend* createBlend(const BlendData& blendData) = 0;
+	virtual cwStencil* createStencil(const StencilData& stencliData) = 0;
 
 	virtual void setVertexBuffer(cwBuffer* pVertexBuffer) = 0;
 	virtual void setIndexBuffer(cwBuffer* pIndexBuffer) = 0;

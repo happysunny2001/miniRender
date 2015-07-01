@@ -69,6 +69,7 @@
     <ClInclude Include="Platform\D3D\D3D11\Blend\cwD3D11Blend.h" />
     <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11IndexBuffer.h" />
     <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11VertexBuffer.h" />
+    <ClInclude Include="Platform\D3D\D3D11\cwD3D11Utils.h" />
     <ClInclude Include="Platform\D3D\D3D11\Device\cwD3D11Device.h" />
     <ClInclude Include="Platform\D3D\D3D11\Layouts\cwD3D11Layouts.h" />
     <ClInclude Include="Platform\D3D\D3D11\Layouts\cwD3D11LayoutsManager.h" />
@@ -80,6 +81,7 @@
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11Texture.h" />
     <ClInclude Include="Platform\Windows\cwWinApplication.h" />
     <ClInclude Include="Platform\Windows\cwWinFileSystem.h" />
+    <ClInclude Include="Platform\Windows\cwWinUtils.h" />
     <ClInclude Include="Ref\cwAutoReleasePool.h" />
     <ClInclude Include="Ref\cwRef.h" />
     <ClInclude Include="RenderObject\cwDynamicRenderObject.h" />

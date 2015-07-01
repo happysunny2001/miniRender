@@ -46,11 +46,6 @@ typedef enum {
 	eRenderStateCW,   //clock wise cull
 }eRenderState;
 
-typedef enum {
-	eBlendStateNone   = 1,
-	eBlendStateActive = 2,
-}eBlendState;
-
 //vertex layout
 typedef enum{
 	ceEleDescPosColor, //position + color
@@ -146,77 +141,64 @@ typedef enum {
 }eAccessFlag;
 
 typedef enum {
-	eColorWriteEnableNone  = 0,
-	eColorWriteEnableRed   = 1,
-	eColorWriteEnableGreen = 2,
-	eColorWriteEnableBlue  = 4,
-	eColorWriteEnableAlpha = 8,
-	eColorWriteEnableAll = (eColorWriteEnableRed | eColorWriteEnableGreen | eColorWriteEnableBlue | eColorWriteEnableAlpha),
-}eColorWriteEnable;
-
-typedef enum {
-	eBlendFactorZero           = D3D11_BLEND_ZERO,
-	eBlendFactorOne            = D3D11_BLEND_ONE,
-	eBlendFactorSrcColor       = D3D11_BLEND_SRC_COLOR,
-	eBlendFactorInvSrcColor    = D3D11_BLEND_INV_SRC_COLOR,
-	eBlendFactorSrcAlpha       = D3D11_BLEND_SRC_ALPHA,
-	eBlendFactorInvSrcAlpha    = D3D11_BLEND_INV_SRC_ALPHA,
-	eBlendFactorDestAlpha      = D3D11_BLEND_DEST_ALPHA,
-	eBlendFactorInvDestAlpha   = D3D11_BLEND_INV_DEST_ALPHA,
-	eBlendFactorDestColor      = D3D11_BLEND_DEST_COLOR,
-	eBlendFactorInvDestColor   = D3D11_BLEND_INV_DEST_COLOR,
-	eBlendFactorSrcAlphaSat    = D3D11_BLEND_SRC_ALPHA_SAT,
-	eBlendFactorBlendFactor    = D3D11_BLEND_BLEND_FACTOR,
-	eBlendFactorInvBlendFactor = D3D11_BLEND_INV_BLEND_FACTOR,
-	eBlendFactorSrc1Color      = D3D11_BLEND_SRC1_COLOR,
-	eBlendFactorInvSrc1Color   = D3D11_BLEND_INV_SRC1_COLOR,
-	eBlendFactorSrc1Alpha      = D3D11_BLEND_SRC1_ALPHA,
-	eBlendFactorInvSrc1Alpha   = D3D11_BLEND_INV_SRC1_ALPHA,
+	eBlendFactorZero = 0,
+	eBlendFactorOne,
+	eBlendFactorSrcColor,
+	eBlendFactorInvSrcColor,
+	eBlendFactorSrcAlpha,
+	eBlendFactorInvSrcAlpha,
+	eBlendFactorDestAlpha,
+	eBlendFactorInvDestAlpha,
+	eBlendFactorDestColor,
+	eBlendFactorInvDestColor,
+	eBlendFactorSrcAlphaSat,
+	eBlendFactorBlendFactor,
+	eBlendFactorInvBlendFactor,
+	eBlendFactorSrc1Color,
+	eBlendFactorInvSrc1Color,
+	eBlendFactorSrc1Alpha,
+	eBlendFactorInvSrc1Alpha,
+	eBlendFactorMaxCount,
 }eBlendFactor;
 
 typedef enum {
-	eBlendOpAdd         = D3D11_BLEND_OP_ADD,
-	eBlendOpSubtract    = D3D11_BLEND_OP_SUBTRACT,
-	eBlendOpRevSubtract = D3D11_BLEND_OP_REV_SUBTRACT,
-	eBlendOpMin         = D3D11_BLEND_OP_MIN,
-	eBlendOpMax         = D3D11_BLEND_OP_MAX,
+	eBlendOpAdd = 0,
+	eBlendOpSubtract,
+	eBlendOpRevSubtract,
+	eBlendOpMin,
+	eBlendOpMax,
+	eBlendOpMaxCount
 }eBlendOp;
 
 typedef enum {
-	eStencilOpKeep    = D3D11_STENCIL_OP_KEEP,
-	eStencilOpZero    = D3D11_STENCIL_OP_ZERO,
-	eStencilOpReplace = D3D11_STENCIL_OP_REPLACE,
-	eStencilOpIncrSat = D3D11_STENCIL_OP_INCR_SAT,
-	eStencilOpDecrSat = D3D11_STENCIL_OP_DECR_SAT,
-	eStencilOpInvert  = D3D11_STENCIL_OP_INVERT,
-	eStencilOpIncr    = D3D11_STENCIL_OP_INCR,
-	eStencilOpDecr    = D3D11_STENCIL_OP_DECR,
+	eStencilOpKeep = 0,
+	eStencilOpZero,
+	eStencilOpReplace,
+	eStencilOpIncrSat,
+	eStencilOpDecrSat,
+	eStencilOpInvert,
+	eStencilOpIncr,
+	eStencilOpDecr,
+	eStencilOpMaxCount,
 }eStencilOp;
 
 typedef enum {
-	eComparisonNever        = D3D11_COMPARISON_NEVER,
-	eComparisonLess         = D3D11_COMPARISON_LESS,
-	eComparisonEqual        = D3D11_COMPARISON_EQUAL,
-	eComparisonLessEqual    = D3D11_COMPARISON_LESS_EQUAL,
-	eComparisonGreater      = D3D11_COMPARISON_GREATER,
-	eComparisonNotEqual     = D3D11_COMPARISON_NOT_EQUAL,
-	eComparisonGreaterEqual = D3D11_COMPARISON_GREATER_EQUAL,
-	eComparisonAlways       = D3D11_COMPARISON_ALWAYS,
+	eComparisonNever = 0,
+	eComparisonLess,
+	eComparisonEqual,
+	eComparisonLessEqual,
+	eComparisonGreater,
+	eComparisonNotEqual,
+	eComparisonGreaterEqual,
+	eComparisonAlways,
+	eComparisonMaxCount,
 }eComparison;
 
 typedef enum {
-	eDepthWriteMaskZero = D3D11_DEPTH_WRITE_MASK_ZERO,
-	eDepthWriteMaskAll  = D3D11_DEPTH_WRITE_MASK_ALL,
+	eDepthWriteMaskZero = 0,
+	eDepthWriteMaskAll,
+	eDepthWriteMaskMaxCount,
 }eDepthWriteMask;
-
-typedef struct CW_BUFFER_DESC{
-	CWUINT ByteWidth;
-	eBufferUsage Usage;
-	CWUINT BindFlags;
-	CWUINT CPUAccessFlags;
-	CWUINT MiscFlags;
-	CWUINT StructureByteStride;
-}CW_BUFFER_DESC;
 
 #define CW_CONTROL MK_CONTROL
 #define CW_LBUTTON MK_LBUTTON

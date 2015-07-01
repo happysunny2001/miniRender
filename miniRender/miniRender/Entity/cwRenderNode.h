@@ -24,10 +24,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Ref/cwRef.h"
 #include "Math/cwMath.h"
 #include "Base/cwVector.h"
+#include "Event/Interface/cwTouchEventInterface.h"
 
 NS_MINIR_BEGIN
 
-class cwRenderNode : public cwRef
+class cwEventListener;
+
+class cwRenderNode : public cwRef, public cwTouchEventInterface
 {
 public:
 	static cwRenderNode* create();
@@ -67,6 +70,10 @@ public:
 	virtual void transform();
 	const cwMatrix4X4& getTransformMatrix() const { return m_nTrans; }
 
+	virtual void addEventListener(cwEventListener* pListener);
+	virtual void addEventListener(cwEventListener* pListener, CWINT iPriority, bool swallow);
+	virtual void removeEventListerner(cwEventListener* pListener, bool bClean=true);
+
 	virtual void update(CWFLOAT dt);
 	
 	virtual void renderChildren();
@@ -75,6 +82,7 @@ public:
 
 protected:
 	void clearChildren();
+	void clearEventListener();
 	
 protected:
 	bool m_bVisible;
@@ -87,6 +95,8 @@ protected:
 
 	cwVector<cwRenderNode*> m_nVecChildren;
 	cwRenderNode* m_pParent;
+
+	cwVector<cwEventListener*> m_nVecEventListener;
 
 };
 

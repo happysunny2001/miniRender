@@ -17,8 +17,11 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#ifdef _CW_D3D11_
+
 #include "cwD3D11VertexBuffer.h"
 #include "Device/cwDevice.h"
+#include "Platform/Windows/cwWinUtils.h"
 
 NS_MINIR_BEGIN
 
@@ -73,3 +76,5 @@ void cwD3D11VertexBuffer::set(cwDevice* pDevice)
 }
 
 NS_MINIR_END
+
+#endif

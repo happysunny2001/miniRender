@@ -35,7 +35,7 @@ cwTouch* cwTouch::create(const cwVector2D& pos)
 
 cwTouch::cwTouch()
 {
-
+	
 }
 
 cwTouch::~cwTouch()
@@ -45,7 +45,7 @@ cwTouch::~cwTouch()
 
 bool cwTouch::init(const cwVector2D& pos)
 {
-	m_nTouchPos = pos;
+	m_nScreenPos = pos;
 	return true;
 }
 
@@ -65,7 +65,7 @@ cwTouchEvent::cwTouchEvent():
 m_eTouchType(TouchTypeNone),
 m_pTouch(nullptr)
 {
-
+	m_eType = EventTypeMouse;
 }
 
 cwTouchEvent::~cwTouchEvent()

@@ -22,6 +22,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
 #include "Texture/cwTexture.h"
+#include "Platform/Windows/cwWinUtils.h"
+#include "Platform/D3D/D3D11/cwD3D11Utils.h"
 
 #ifdef _CW_D3D11_
 

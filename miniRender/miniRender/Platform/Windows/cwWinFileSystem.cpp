@@ -17,6 +17,8 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
+
 #include <windows.h>
 #include "cwWinFileSystem.h"
 #include "Base/cwStringConvert.h"
@@ -75,4 +77,6 @@ void cwWinFileSystem::replaceWindowsStyleSlash(TCHAR* pszChar)
 }
 
 NS_MINIR_END
+
+#endif
 

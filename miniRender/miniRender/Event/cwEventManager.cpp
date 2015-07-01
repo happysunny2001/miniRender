@@ -54,6 +54,8 @@ bool cwEventManager::init()
 void cwEventManager::addEvent(cwEvent* pEvent)
 {
 	if (!pEvent) return;
+
+	std::lock_guard<std::mutex> lg(m_nEventMutex);
 	m_nVecEvent.pushBack(pEvent);
 }
 
@@ -63,16 +65,16 @@ void cwEventManager::removeEvent(cwEvent* pEvent)
 	pEvent->setEventState(EventStateDrop);
 }
 
-void cwEventManager::addListener(cwEventListener* pListener)
+bool cwEventManager::addListener(cwEventListener* pListener)
 {
-	if (!pListener) return;
-	addListener(pListener, CW_EVENT_DEFAULT_PRIORITY, false);
+	if (!pListener) return false;
+	return addListener(pListener, CW_EVENT_DEFAULT_PRIORITY, false);
 }
 
-void cwEventManager::addListener(cwEventListener* pListener, CWINT iPriority, bool swallow)
+bool cwEventManager::addListener(cwEventListener* pListener, CWINT iPriority, bool swallow)
 {
-	if (!pListener) return;
-	if (m_nVecListener.contains(pListener)) return;
+	if (!pListener) return false;
+	if (m_nVecListener.contains(pListener)) return false;
 
 	pListener->setPriority(iPriority);
 	if (swallow)
@@ -80,16 +82,23 @@ void cwEventManager::addListener(cwEventListener* pListener, CWINT iPriority, bo
 	else
 		pListener->setBehaviour(EventListenerBehaviourNormal);
 
-	m_nVecListener.pushBack(pListener);
-
 	m_bDirty = true;
+
+	{
+		std::lock_guard<std::mutex> lg(m_nEventMutex);
+		m_nVecListener.pushBack(pListener);
+	}
+	
+	return true;
 }
 
 void cwEventManager::removeListener(cwEventListener* pListener)
 {
 	if (!pListener) return;
-	pListener->setState(EventListenerStateDrop);
-	m_bDirty = true;
+	if (m_nVecListener.contains(pListener)) {
+		pListener->setState(EventListenerStateDrop);
+		m_bDirty = true;
+	} 
 }
 
 void cwEventManager::dispatchEvent()
@@ -106,8 +115,10 @@ void cwEventManager::dispatchEvent()
 	}
 
 	for (auto itListener = m_nVecListener.begin(); itListener != m_nVecListener.end(); ++itListener) {
-		for (auto itEvent = m_nVecEvent.begin(); itEvent != m_nVecEvent.end(); ++itEvent) {
-			(*itListener)->onEvent(*itEvent);
+		if ((*itListener)->getState() == EventListenerStateAlive) {
+			for (auto itEvent = m_nVecEvent.begin(); itEvent != m_nVecEvent.end(); ++itEvent) {
+				(*itListener)->onEvent(*itEvent);
+			}
 		}
 	}
 
@@ -117,33 +128,29 @@ void cwEventManager::dispatchEvent()
 void cwEventManager::clear()
 {
 	static cwVector<cwEventListener*> tmpVecListener;
-	static cwVector<cwEvent*> tmpVecEvent;
 
 	for (auto it = m_nVecListener.begin(); it != m_nVecListener.end(); ++it) {
 		if ((*it)->getState() == EventListenerStateDrop)
 			tmpVecListener.pushBack(*it);
 	}
 
-	if (!tmpVecListener.empty()) {
-		for (auto it = tmpVecListener.begin(); it != tmpVecListener.end(); ++it) {
-			m_nVecListener.erase(*it);
+	{
+		std::lock_guard<std::mutex> lg(m_nListenerMutex);
+		if (!tmpVecListener.empty()) {
+			for (auto it = tmpVecListener.begin(); it != tmpVecListener.end(); ++it) {
+				m_nVecListener.erase(*it);
+			}
 		}
 	}
 
 	tmpVecListener.clear();
 
-	for (auto it = m_nVecEvent.begin(); it != m_nVecEvent.end(); ++it) {
-		if ((*it)->getEventState() == EventStateDrop)
-			tmpVecEvent.pushBack(*it);
+	{
+		std::lock_guard<std::mutex> lg(m_nEventMutex);
+		for (auto it : m_nVecEvent)
+			it->setEventState(EventStateDrop);
+		m_nVecEvent.clear();
 	}
-
-	if (!tmpVecEvent.empty()) {
-		for (auto it = tmpVecEvent.begin(); it != tmpVecEvent.end(); ++it) {
-			m_nVecEvent.erase(*it);
-		}
-	}
-
-	tmpVecEvent.clear();
 }
 
 NS_MINIR_END

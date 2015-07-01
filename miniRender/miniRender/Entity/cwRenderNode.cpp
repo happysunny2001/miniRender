@@ -18,6 +18,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwRenderNode.h"
+#include "Event/cwEventListener.h"
+#include "Event/cwEventManager.h"
+#include "Event/cwEventDefine.h"
 
 NS_MINIR_BEGIN
 
@@ -46,6 +49,7 @@ cwRenderNode::~cwRenderNode()
 {
 	CW_SAFE_RELEASE_NULL(m_pParent);
 	clearChildren();
+	clearEventListener();
 }
 
 bool cwRenderNode::init()
@@ -178,6 +182,25 @@ void cwRenderNode::setVisible(bool b)
 	m_bVisible = b;
 }
 
+void cwRenderNode::addEventListener(cwEventListener* pListener)
+{
+	addEventListener(pListener, CW_EVENT_DEFAULT_PRIORITY, false);
+}
+
+void cwRenderNode::addEventListener(cwEventListener* pListener, CWINT iPriority, bool swallow)
+{
+	if (cwRepertory::getInstance().getEventManager()->addListener(pListener, iPriority, swallow)) {
+		m_nVecEventListener.pushBack(pListener);
+	}
+}
+
+void cwRenderNode::removeEventListerner(cwEventListener* pListener, bool bClean)
+{
+	cwRepertory::getInstance().getEventManager()->removeListener(pListener);
+	if (bClean)
+		m_nVecEventListener.erase(pListener);
+}
+
 void cwRenderNode::transform()
 {
 	cwMatrix4X4 matTranslate, matScale, matRot;
@@ -215,6 +238,15 @@ void cwRenderNode::renderChildren()
 void cwRenderNode::renderSelf()
 {
 
+}
+
+void cwRenderNode::clearEventListener()
+{
+	for (auto it = m_nVecEventListener.begin(); it != m_nVecEventListener.end(); ++it) {
+		removeEventListerner(*it, false);
+	}
+
+	m_nVecEventListener.clear();
 }
 
 NS_MINIR_END

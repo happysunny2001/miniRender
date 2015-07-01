@@ -20,6 +20,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifndef __CW_VERTEXBUFFER_H__
 #define __CW_VERTEXBUFFER_H__
 
+#ifdef _CW_D3D11_
+
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
 #include "Buffer/cwBuffer.h"
@@ -54,5 +56,7 @@ protected:
 };
 
 NS_MINIR_END
+
+#endif
 
 #endif

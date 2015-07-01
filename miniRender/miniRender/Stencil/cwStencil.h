@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
+#include "Base/cwStruct.h"
 #include "Ref/cwRef.h"
 
 NS_MINIR_BEGIN
@@ -32,11 +33,7 @@ public:
 	cwStencil() :m_uStencilRef(0){}
 	virtual ~cwStencil() {}
 
-	virtual bool init(
-		bool bDepthEnable, eDepthWriteMask depthWriteMask, eComparison depthFunc,
-		bool bStencilEnable, CWBYTE uReadMask, CWBYTE uWriteMask,
-		eStencilOp frontFailOp, eStencilOp frontDepthFailOp, eStencilOp frontPassOp, eComparison frontFunc,
-		eStencilOp backFailOp, eStencilOp backDepthFailOp, eStencilOp backPassOp, eComparison backFunc) = 0;
+	virtual bool init(const StencilData& stencilData) = 0;
 
 	virtual CWHANDLE getStencilHandlePtr() const { return nullptr; }
 	

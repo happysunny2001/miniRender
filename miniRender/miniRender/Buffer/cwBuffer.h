@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
+#include "Base/cwStruct.h"
 #include "Ref/cwRef.h"
 
 NS_MINIR_BEGIN

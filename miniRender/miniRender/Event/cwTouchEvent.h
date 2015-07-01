@@ -38,10 +38,10 @@ public:
 
 	virtual bool init(const cwVector2D& pos);
 
-	const cwVector2D& getTouchPos() const { return m_nTouchPos; }
+	const cwVector2D& getScreenPos() const { return m_nScreenPos; }
 
 protected:
-	cwVector2D m_nTouchPos;
+	cwVector2D m_nScreenPos;
 
 };
 

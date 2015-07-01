@@ -17,8 +17,10 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _cwIndexBuffer_h_
-#define _cwIndexBuffer_h_
+#ifndef __CW_INDEX_BUFFER_H__
+#define __CW_INDEX_BUFFER_H__
+
+#ifdef _CW_D3D11_
 
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
@@ -54,5 +56,7 @@ protected:
 };
 
 NS_MINIR_END
+
+#endif
 
 #endif

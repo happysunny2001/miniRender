@@ -17,9 +17,14 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#ifndef __CW_WIN_FILE_SYSTEM_H__
+#define __CW_WIN_FILE_SYSTEM_H__
+
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
 #include "Platform/cwFileSystem.h"
+
+#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
 
 NS_MINIR_BEGIN
 
@@ -42,3 +47,7 @@ protected:
 };
 
 NS_MINIR_END
+
+#endif
+
+#endif

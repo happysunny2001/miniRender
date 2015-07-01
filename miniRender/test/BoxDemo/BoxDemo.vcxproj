@@ -153,9 +153,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BoxDemo.h" />
+    <ClInclude Include="BoxDemoScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoxDemo.cpp" />
+    <ClCompile Include="BoxDemoScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

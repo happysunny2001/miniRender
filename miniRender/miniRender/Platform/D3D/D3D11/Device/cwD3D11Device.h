@@ -17,8 +17,8 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _cwD3D11Device_h_
-#define _cwD3D11Device_h_
+#ifndef __CW_D3D11_DEVICE_H__
+#define __CW_D3D11_DEVICE_H__
 
 #ifdef _CW_D3D11_
 
@@ -65,15 +65,9 @@ public:
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) override;
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, eBufferUsage usage, CWUINT cpuFlag) override;
 	virtual cwBuffer* createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) override;
-	virtual cwBlend* createBlend(
-		bool bEnable, eBlendFactor srcBlend, eBlendFactor dstBlend, eBlendOp blendOp,
-		eBlendFactor srcBlendAlpha, eBlendFactor dstBlendAlpha, eBlendOp blendOpAlpha,
-		eColorWriteEnable renderWriteMask);
-	virtual cwStencil* createStencil(
-		bool bDepthEnable, eDepthWriteMask depthWriteMask, eComparison depthFunc,
-		bool bStencilEnable, CWBYTE uReadMask, CWBYTE uWriteMask,
-		eStencilOp frontFailOp, eStencilOp frontDepthFailOp, eStencilOp frontPassOp, eComparison frontFunc,
-		eStencilOp backFailOp, eStencilOp backDepthFailOp, eStencilOp backPassOp, eComparison backFunc);
+
+	virtual cwBlend* createBlend(const BlendData& blendData) override;
+	virtual cwStencil* createStencil(const StencilData& stencliData) override;
 
 	virtual void setVertexBuffer(cwBuffer* pVertexBuffer) override;
 	virtual void setIndexBuffer(cwBuffer* pIndexBuffer) override;
@@ -92,6 +86,10 @@ public:
 	virtual void setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans) override;
 	virtual void draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) override;
 
+private:
+	void initBlendBaseData();
+	void initStencilBaseData();
+
 protected:
 	ID3D11Device* m_pD3D11Device;
 	ID3D11DeviceContext* m_pD3D11DeviceContext;
@@ -107,6 +105,20 @@ protected:
 	ID3D11RasterizerState* m_pCullCWRenderState; // render state for clock wise cull mode
 
 	cwMaterial* m_pMaterialDefault;
+
+public:
+	static CWINT blendFactor[eBlendFactorMaxCount];
+	static CWINT blendOp[eBlendOpMaxCount];
+	static CWINT stencilOp[eStencilOpMaxCount];
+	static CWINT comparisonType[eComparisonMaxCount];
+	static CWINT depthWriteMask[eDepthWriteMaskMaxCount];
+
+	static inline D3D11_BLEND getBlendFactor(eBlendFactor index) { return static_cast<D3D11_BLEND>(blendFactor[index]); }
+	static inline D3D11_BLEND_OP getBlendOp(eBlendOp index) { return static_cast<D3D11_BLEND_OP>(blendOp[index]); }
+
+	static inline D3D11_STENCIL_OP getStencilOp(eStencilOp index) { return static_cast<D3D11_STENCIL_OP>(stencilOp[index]); }
+	static inline D3D11_COMPARISON_FUNC getComparison(eComparison index) { return static_cast<D3D11_COMPARISON_FUNC>(comparisonType[index]); }
+	static inline D3D11_DEPTH_WRITE_MASK getDepthWriteMask(eDepthWriteMask index) { return static_cast<D3D11_DEPTH_WRITE_MASK>(depthWriteMask[index]); }
 
 };
 

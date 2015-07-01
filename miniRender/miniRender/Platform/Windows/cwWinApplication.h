@@ -67,6 +67,9 @@ private:
 	CWINT64 m_iPrevTimeCounter;
 	CWINT64 m_iCurrTimeCounter;
 
+	CWUINT m_uWindowWidth;
+	CWUINT m_uWindowHeight;
+
 	bool m_bResizing;
 
 };

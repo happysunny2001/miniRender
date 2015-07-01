@@ -25,6 +25,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Base/cwVector.h"
 
+#include <mutex>
+
 NS_MINIR_BEGIN
 
 class cwEventListener;
@@ -36,8 +38,8 @@ public:
 	void addEvent(cwEvent* pEvent);
 	void removeEvent(cwEvent* pEvent);
 
-	void addListener(cwEventListener* pListener);
-	void addListener(cwEventListener* pListener, CWINT iPriority, bool swallow);
+	bool addListener(cwEventListener* pListener);
+	bool addListener(cwEventListener* pListener, CWINT iPriority, bool swallow);
 	void removeListener(cwEventListener* pListener);
 
 	void dispatchEvent();
@@ -56,6 +58,8 @@ protected:
 	cwVector<cwEvent*> m_nVecEvent;
 
 	bool m_bDirty;
+	std::mutex m_nEventMutex;
+	std::mutex m_nListenerMutex;
 	
 	friend class cwRepertory;
 };

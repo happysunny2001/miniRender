@@ -345,6 +345,12 @@
     <ClInclude Include="Event\Interface\cwTouchEventInterface.h">
       <Filter>源文件\Event\Interface</Filter>
     </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\cwD3D11Utils.h">
+      <Filter>源文件\Platform\D3D\D3D11</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\Windows\cwWinUtils.h">
+      <Filter>源文件\Platform\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">

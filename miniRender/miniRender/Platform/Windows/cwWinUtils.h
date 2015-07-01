@@ -17,39 +17,22 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_D3D11_BLENDOPER_H__
-#define __CW_D3D11_BLENDOPER_H__
+#ifndef __CW_WIN_UTILS_H__
+#define __CW_WIN_UTILS_H__
 
-#ifdef _CW_D3D11_
+#include "Platform/cwPlatform.h"
 
-#include "Base/cwBasicType.h"
-#include "Base/cwMacros.h"
-#include "Base/cwUtils.h"
-#include "Base/cwBasicType.h"
-#include "Blend/cwBlend.h"
+#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
 
-NS_MINIR_BEGIN
-
-class CW_DLL cwD3D11Blend : public cwBlend
-{
-public:
-	static cwD3D11Blend* create(const BlendData& blendData);
-
-	cwD3D11Blend();
-	virtual ~cwD3D11Blend();
-
-	virtual bool init(const BlendData& blendData) override;
-
-	virtual const CWVOID* getBlendHandlePtr() const override { return reinterpret_cast<CWVOID*>(m_pBlendState); }
-
-protected:
-	D3D11_BLEND_DESC m_nBlendDesc;
-	ID3D11BlendState* m_pBlendState;
-
-};
-
-NS_MINIR_END
+#define CW_RELEASE_COM(o) \
+do{\
+	if ((o)) {\
+		(o)->Release(); \
+		(o) = NULL; \
+	}\
+} while (0)
 
 #endif
 
 #endif
+

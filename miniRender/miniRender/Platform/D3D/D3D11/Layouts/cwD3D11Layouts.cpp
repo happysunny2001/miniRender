@@ -19,9 +19,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #ifdef _CW_D3D11_
 
+#include "cwInputElementDescManager.h"
 #include "cwD3D11Layouts.h"
 #include "Shader/cwShader.h"
-#include "cwInputElementDescManager.h"
+#include "Platform/Windows/cwWinUtils.h"
+#include "Platform/D3D/D3D11/cwD3D11Utils.h"
 
 NS_MINIR_BEGIN
 
