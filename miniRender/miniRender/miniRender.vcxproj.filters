@@ -115,6 +115,9 @@
     <Filter Include="源文件\Event\Interface">
       <UniqueIdentifier>{e5f0bac2-63b9-472f-a9cb-a4b6c69d7511}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Scheduler">
+      <UniqueIdentifier>{05b04a04-ef1e-4134-9469-8e6a3086598d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\cwVector.h">
@@ -351,6 +354,12 @@
     <ClInclude Include="Platform\Windows\cwWinUtils.h">
       <Filter>源文件\Platform\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="Base\cwFuncNode.h">
+      <Filter>源文件\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Scheduler\cwSchedulerManager.h">
+      <Filter>源文件\Scheduler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -541,6 +550,9 @@
     </ClCompile>
     <ClCompile Include="Event\cwTouchEventListener.cpp">
       <Filter>源文件\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="Scheduler\cwSchedulerManager.cpp">
+      <Filter>源文件\Scheduler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

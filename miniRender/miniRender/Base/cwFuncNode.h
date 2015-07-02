@@ -17,55 +17,41 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_EVENT_MANAGER_H__
-#define __CW_EVENT_MANAGER_H__
+#ifndef __CW_FUNC_NODE_H__
+#define __CW_FUNC_NODE_H__
 
-#include "Base/cwMacros.h"
-#include "Ref/cwRef.h"
-#include "Repertory/cwRepertory.h"
-#include "Base/cwVector.h"
-
-#include <mutex>
+#include "cwMacros.h"
+#include <functional>
 
 NS_MINIR_BEGIN
 
-class cwEventListener;
-class cwEvent;
-
-class cwEventManager : public cwRef
+template<typename M, typename F, typename R, typename... Args>
+class cwFuncNode
 {
 public:
-	void addEvent(cwEvent* pEvent);
-	void removeEvent(cwEvent* pEvent);
+	cwFuncNode(std::function<R(Args...)> func, void* caller, F funcPtr)
+	{
+		_func = func;
+		_calller = caller;
+		_funcPtr = funcPtr;
+	}
 
-	bool addListener(cwEventListener* pListener);
-	bool addListener(cwEventListener* pListener, CWINT iPriority, bool swallow);
-	void removeListener(cwEventListener* pListener);
+	R operator()(Args... args)
+	{
+		return _func(args...);
+	}
 
-	void dispatchEvent();
+	inline void* caller() { return _calller; }
+	inline F& funcPtr() { return _funcPtr; }
+	inline M& data() { return _data; }
 
-protected:
-	static cwEventManager* create();
+	inline void setData(const M& d) { _data = d; }
 
-	cwEventManager();
-	virtual ~cwEventManager();
-
-	bool init();
-	void clear();
-	void append();
-
-	friend class cwRepertory;
-
-protected:
-	cwVector<cwEventListener*> m_nVecListener;
-	cwVector<cwEvent*> m_nVecEvent;
-
-	cwVector<cwEventListener*> m_nVecAppendListener;
-	cwVector<cwEvent*> m_nVecAppendEvent;
-
-	bool m_bDirty;
-	std::mutex m_nEventMutex;
-	std::mutex m_nListenerMutex;
+private:
+	std::function<R(Args...)> _func;
+	void* _calller;
+	F _funcPtr;
+	M _data;
 
 };
 

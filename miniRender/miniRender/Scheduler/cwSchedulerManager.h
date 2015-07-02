@@ -17,58 +17,7 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_EVENT_MANAGER_H__
-#define __CW_EVENT_MANAGER_H__
-
-#include "Base/cwMacros.h"
-#include "Ref/cwRef.h"
-#include "Repertory/cwRepertory.h"
-#include "Base/cwVector.h"
-
-#include <mutex>
-
-NS_MINIR_BEGIN
-
-class cwEventListener;
-class cwEvent;
-
-class cwEventManager : public cwRef
-{
-public:
-	void addEvent(cwEvent* pEvent);
-	void removeEvent(cwEvent* pEvent);
-
-	bool addListener(cwEventListener* pListener);
-	bool addListener(cwEventListener* pListener, CWINT iPriority, bool swallow);
-	void removeListener(cwEventListener* pListener);
-
-	void dispatchEvent();
-
-protected:
-	static cwEventManager* create();
-
-	cwEventManager();
-	virtual ~cwEventManager();
-
-	bool init();
-	void clear();
-	void append();
-
-	friend class cwRepertory;
-
-protected:
-	cwVector<cwEventListener*> m_nVecListener;
-	cwVector<cwEvent*> m_nVecEvent;
-
-	cwVector<cwEventListener*> m_nVecAppendListener;
-	cwVector<cwEvent*> m_nVecAppendEvent;
-
-	bool m_bDirty;
-	std::mutex m_nEventMutex;
-	std::mutex m_nListenerMutex;
-
-};
-
-NS_MINIR_END
+#ifndef __CW_SCHEDULER_MANAGER_H__
+#define __CW_SCHEDULER_MANAGER_H__
 
 #endif

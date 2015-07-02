@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="Base\cwBasicType.h" />
     <ClInclude Include="Base\cwColor.h" />
+    <ClInclude Include="Base\cwFuncNode.h" />
     <ClInclude Include="Base\cwMacros.h" />
     <ClInclude Include="Base\cwMap.h" />
     <ClInclude Include="Base\cwRunTime.h" />
@@ -90,6 +91,7 @@
     <ClInclude Include="Render\cwRenderCommand.h" />
     <ClInclude Include="Render\cwRenderQueue.h" />
     <ClInclude Include="Repertory\cwRepertory.h" />
+    <ClInclude Include="Scheduler\cwSchedulerManager.h" />
     <ClInclude Include="Shader\cwShader.h" />
     <ClInclude Include="Shader\cwShaderConstant.h" />
     <ClInclude Include="Shader\cwShaderManager.h" />
@@ -156,6 +158,7 @@
     <ClCompile Include="Render\cwRenderCommand.cpp" />
     <ClCompile Include="Render\cwRenderQueue.cpp" />
     <ClCompile Include="Repertory\cwRepertory.cpp" />
+    <ClCompile Include="Scheduler\cwSchedulerManager.cpp" />
     <ClCompile Include="Shader\cwShader.cpp" />
     <ClCompile Include="Shader\cwShaderManager.cpp" />
     <ClCompile Include="Stencil\cwStencil.cpp" />
@@ -218,7 +221,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)external\platform\windows\directx11\include;$(SolutionDir)miniRender;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)external\uthash\include;$(SolutionDir)external\platform\windows\directx11\include;$(SolutionDir)miniRender;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)external\platform\windows\directx11\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

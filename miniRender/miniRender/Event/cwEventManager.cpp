@@ -21,7 +21,14 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwEvent.h"
 #include "cwEventListener.h"
 
+#include <algorithm>
+
 NS_MINIR_BEGIN
+
+static bool eventListenerComp(cwEventListener* left, cwEventListener* right)
+{
+	return left->getPriority() < right->getPriority();
+}
 
 cwEventManager* cwEventManager::create()
 {
@@ -35,7 +42,7 @@ cwEventManager* cwEventManager::create()
 	return nullptr;
 }
 
-cwEventManager::cwEventManager()
+cwEventManager::cwEventManager() 
 {
 
 }
@@ -56,7 +63,7 @@ void cwEventManager::addEvent(cwEvent* pEvent)
 	if (!pEvent) return;
 
 	std::lock_guard<std::mutex> lg(m_nEventMutex);
-	m_nVecEvent.pushBack(pEvent);
+	m_nVecAppendEvent.pushBack(pEvent);
 }
 
 void cwEventManager::removeEvent(cwEvent* pEvent)
@@ -85,8 +92,8 @@ bool cwEventManager::addListener(cwEventListener* pListener, CWINT iPriority, bo
 	m_bDirty = true;
 
 	{
-		std::lock_guard<std::mutex> lg(m_nEventMutex);
-		m_nVecListener.pushBack(pListener);
+		std::lock_guard<std::mutex> lg(m_nListenerMutex);
+		m_nVecAppendListener.pushBack(pListener);
 	}
 	
 	return true;
@@ -105,12 +112,13 @@ void cwEventManager::dispatchEvent()
 {
 	if (m_nVecEvent.empty() || m_nVecListener.empty()) {
 		clear();
+		append();
 		return;
 	}
 
 	if (m_bDirty) {
 		//sort listener
-
+		std::sort(m_nVecListener.begin(), m_nVecListener.end(), eventListenerComp);
 		m_bDirty = false;
 	}
 
@@ -123,33 +131,42 @@ void cwEventManager::dispatchEvent()
 	}
 
 	clear();
+	append();
 }
 
 void cwEventManager::clear()
 {
-	static cwVector<cwEventListener*> tmpVecListener;
+	cwVector<cwEventListener*> tmpVecListener;
 
 	for (auto it = m_nVecListener.begin(); it != m_nVecListener.end(); ++it) {
 		if ((*it)->getState() == EventListenerStateDrop)
 			tmpVecListener.pushBack(*it);
 	}
 
-	{
-		std::lock_guard<std::mutex> lg(m_nListenerMutex);
-		if (!tmpVecListener.empty()) {
-			for (auto it = tmpVecListener.begin(); it != tmpVecListener.end(); ++it) {
-				m_nVecListener.erase(*it);
-			}
+	if (!tmpVecListener.empty()) {
+		for (auto it = tmpVecListener.begin(); it != tmpVecListener.end(); ++it) {
+			m_nVecListener.erase(*it);
 		}
 	}
 
 	tmpVecListener.clear();
+	m_nVecEvent.clear();
+}
 
-	{
+void cwEventManager::append()
+{
+	if (true) {
 		std::lock_guard<std::mutex> lg(m_nEventMutex);
-		for (auto it : m_nVecEvent)
-			it->setEventState(EventStateDrop);
-		m_nVecEvent.clear();
+		if (!m_nVecAppendEvent.empty())
+			m_nVecEvent.pushBack(m_nVecAppendEvent);
+		m_nVecAppendEvent.clear();
+	}
+
+	if (true) {
+		std::lock_guard<std::mutex> lg(m_nListenerMutex);
+		if (!m_nVecAppendListener.empty())
+			m_nVecListener.pushBack(m_nVecAppendListener);
+		m_nVecAppendListener.clear();
 	}
 }
 
