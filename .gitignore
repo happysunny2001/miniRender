@@ -8,6 +8,7 @@ miniRender/miniRender/x64/Debug/miniRender.tlog/unsuccessfulbuild
 *.tlog
 *.exe
 miniRender/x64/Debug/BoxDemo.exe
+miniRender/x64/Debug/miniRender.lib
 *.log
 *.ilk
 *.sdf
