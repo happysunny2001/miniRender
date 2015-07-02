@@ -55,8 +55,13 @@ CWINT cwD3D11Device::stencilOp[eStencilOpMaxCount];
 CWINT cwD3D11Device::comparisonType[eComparisonMaxCount];
 CWINT cwD3D11Device::depthWriteMask[eDepthWriteMaskMaxCount];
 
-cwD3D11Device::cwD3D11Device(/*HWND hWnd, CWUINT width, CWUINT height*/) :
-//cwDevice(hWnd, width, height),
+CWUINT cwD3D11Device::accessFlag[eAccessFlagMaxCount];
+CWUINT cwD3D11Device::bufferBindFlag[eBufferBindMaxCount];
+CWUINT cwD3D11Device::bufferUsage[eBufferUsageMaxCount];
+
+CWUINT cwD3D11Device::primitiveType[ePrimitiveTypeMaxCount];
+
+cwD3D11Device::cwD3D11Device() :
 m_pD3D11Device(NULL),
 m_pD3D11DeviceContext(NULL),
 m_pDxgiSwapChain(NULL),
@@ -71,6 +76,10 @@ m_pMaterialDefault(nullptr)
 {
 	initBlendBaseData();
 	initStencilBaseData();
+	initAccessFlagData();
+	initBufferBindFlagData();
+	initBufferUsageData();
+	initPrimitiveTypeData();
 }
 
 cwD3D11Device::~cwD3D11Device()
@@ -333,7 +342,7 @@ void cwD3D11Device::setInputLayout(cwLayouts* pInputLayout)
 
 void cwD3D11Device::setPrimitiveTopology(ePrimitiveType topology)
 {
-	m_pD3D11DeviceContext->IASetPrimitiveTopology(static_cast<D3D11_PRIMITIVE_TOPOLOGY>(topology));
+	m_pD3D11DeviceContext->IASetPrimitiveTopology(cwD3D11Device::getPrimitiveType(topology));
 }
 
 void cwD3D11Device::setRenderState(eRenderState e)
@@ -444,20 +453,6 @@ cwStencil* cwD3D11Device::createStencil(const StencilData& stencliData)
 {
 	return cwD3D11Stencil::create(stencliData);
 }
-
-//cwStencil* cwD3D11Device::createStencil(
-//	bool bDepthEnable, eDepthWriteMask depthWriteMask, eComparison depthFunc,
-//	bool bStencilEnable, CWBYTE uReadMask, CWBYTE uWriteMask,
-//	eStencilOp frontFailOp, eStencilOp frontDepthFailOp, eStencilOp frontPassOp, eComparison frontFunc,
-//	eStencilOp backFailOp, eStencilOp backDepthFailOp, eStencilOp backPassOp, eComparison backFunc)
-//{
-//	cwD3D11Stencil* pStencil = cwD3D11Stencil::create(
-//		bDepthEnable, depthWriteMask, depthFunc, 
-//		bStencilEnable, uReadMask, uWriteMask,
-//		frontFailOp, frontDepthFailOp, frontPassOp, 
-//		frontFunc, backFailOp, backDepthFailOp, backPassOp, backFunc);
-//	return pStencil;
-//}
 
 void cwD3D11Device::setVertexBuffer(cwBuffer* pVertexBuffer)
 {
@@ -574,12 +569,12 @@ void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPo
 		pShader->setVariableMatrix(CW_SHADER_MAT_WORLDVIEWPROJ, reinterpret_cast<CWFLOAT*>(worldViewProj.getBuffer()));
 	}
 
+	pRenderObj->preRender();
+
 	this->setInputLayout(pRenderObj->getInputLayout());
 	this->setPrimitiveTopology(pRenderObj->getPrimitiveTopology());
-
-	pRenderObj->preRender();
-	pRenderObj->getVertexBuffer()->set(this);
-	pRenderObj->getIndexBuffer()->set(this);
+	this->setVertexBuffer(pRenderObj->getVertexBuffer());
+	this->setIndexBuffer(pRenderObj->getIndexBuffer());
 
 	pShader->apply(0, 0);
 	this->DrawIndexed(pRenderObj->getIndexBuffer()->getIndexCount(), 0, 0);
@@ -720,6 +715,78 @@ void cwD3D11Device::initStencilBaseData()
 
 	depthWriteMask[eDepthWriteMaskZero] = D3D11_DEPTH_WRITE_MASK_ZERO;
 	depthWriteMask[eDepthWriteMaskAll]  = D3D11_DEPTH_WRITE_MASK_ALL;
+}
+
+void cwD3D11Device::initAccessFlagData()
+{
+	accessFlag[eAccessFlagNone] = 0;
+	accessFlag[eAccessFlagRead] = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_READ;
+	accessFlag[eAccessFlagWrite] = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
+}
+
+void cwD3D11Device::initBufferBindFlagData()
+{
+	bufferBindFlag[eBufferBindVertex] = D3D11_BIND_FLAG::D3D11_BIND_VERTEX_BUFFER;
+	bufferBindFlag[eBufferBindIndex] = D3D11_BIND_FLAG::D3D11_BIND_INDEX_BUFFER;
+	bufferBindFlag[eBufferBindConstant] = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
+	bufferBindFlag[eBufferBindShader] = D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE;
+	bufferBindFlag[eBufferBindSteam] = D3D11_BIND_FLAG::D3D11_BIND_STREAM_OUTPUT;
+	bufferBindFlag[eBufferBindRenderTarget] = D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET;
+	bufferBindFlag[eBufferBindDepthStencil] = D3D11_BIND_FLAG::D3D11_BIND_DEPTH_STENCIL;
+	bufferBindFlag[eBufferBindUnorderedAccess] = D3D11_BIND_FLAG::D3D11_BIND_UNORDERED_ACCESS;
+}
+
+void cwD3D11Device::initBufferUsageData()
+{
+	bufferUsage[eBufferUsageDefault] = D3D11_USAGE::D3D11_USAGE_DEFAULT;
+	bufferUsage[eBufferUsageImmutable] = D3D11_USAGE::D3D11_USAGE_IMMUTABLE;
+	bufferUsage[eBufferUsageDynamic] = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
+	bufferUsage[eBufferUsageStaging] = D3D11_USAGE::D3D11_USAGE_STAGING;
+}
+
+void cwD3D11Device::initPrimitiveTypeData()
+{
+	primitiveType[ePrimitiveTypePointList] = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
+	primitiveType[ePrimitiveTypeLineList] = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+	primitiveType[ePrimitiveTypeLineStrip] = D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
+	primitiveType[ePrimitiveTypeTriangleList] = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	primitiveType[ePrimitiveTypeTriangleStrip] = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+	primitiveType[ePrimitiveTypeLineListAdj] = D3D11_PRIMITIVE_TOPOLOGY_LINELIST_ADJ;
+	primitiveType[ePrimitiveTypeLineStripAdj] = D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP_ADJ;
+	primitiveType[ePrimitiveTypeTriangleListAdj] = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST_ADJ;
+	primitiveType[ePrimitiveTypeTriangleStripAdj] = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP_ADJ;
+	primitiveType[ePrimitiveTypePatchList1] = D3D11_PRIMITIVE_TOPOLOGY_1_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList2] = D3D11_PRIMITIVE_TOPOLOGY_2_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList3] = D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList4] = D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList5] = D3D11_PRIMITIVE_TOPOLOGY_5_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList6] = D3D11_PRIMITIVE_TOPOLOGY_6_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList7] = D3D11_PRIMITIVE_TOPOLOGY_7_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList8] = D3D11_PRIMITIVE_TOPOLOGY_8_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList9] = D3D11_PRIMITIVE_TOPOLOGY_9_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList10] = D3D11_PRIMITIVE_TOPOLOGY_10_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList11] = D3D11_PRIMITIVE_TOPOLOGY_11_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList12] = D3D11_PRIMITIVE_TOPOLOGY_12_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList13] = D3D11_PRIMITIVE_TOPOLOGY_13_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList14] = D3D11_PRIMITIVE_TOPOLOGY_14_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList15] = D3D11_PRIMITIVE_TOPOLOGY_15_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList16] = D3D11_PRIMITIVE_TOPOLOGY_16_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList17] = D3D11_PRIMITIVE_TOPOLOGY_17_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList18] = D3D11_PRIMITIVE_TOPOLOGY_18_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList19] = D3D11_PRIMITIVE_TOPOLOGY_19_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList20] = D3D11_PRIMITIVE_TOPOLOGY_20_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList21] = D3D11_PRIMITIVE_TOPOLOGY_21_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList22] = D3D11_PRIMITIVE_TOPOLOGY_22_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList23] = D3D11_PRIMITIVE_TOPOLOGY_23_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList24] = D3D11_PRIMITIVE_TOPOLOGY_24_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList25] = D3D11_PRIMITIVE_TOPOLOGY_25_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList26] = D3D11_PRIMITIVE_TOPOLOGY_26_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList27] = D3D11_PRIMITIVE_TOPOLOGY_27_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList28] = D3D11_PRIMITIVE_TOPOLOGY_28_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList29] = D3D11_PRIMITIVE_TOPOLOGY_29_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList30] = D3D11_PRIMITIVE_TOPOLOGY_30_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList31] = D3D11_PRIMITIVE_TOPOLOGY_31_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList32] = D3D11_PRIMITIVE_TOPOLOGY_32_CONTROL_POINT_PATCHLIST;
 }
 
 NS_MINIR_END

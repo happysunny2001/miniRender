@@ -42,6 +42,7 @@ public:
 
 	cwCamera* getDefaultCamera();
 	bool removeCamera(cwCamera* pCamera);
+	cwCamera* getCurrentCamera();
 
 protected:
 	static cwEngine* create();
@@ -54,11 +55,12 @@ protected:
 
 	virtual void render();
 
+	friend class cwRepertory;
+
 protected:
 	cwScene* m_pCurrScene;
+	cwCamera* m_pCurrCamera;
 	cwVector<cwCamera*> m_nVecCameras;
-
-	friend class cwRepertory;
 
 };
 

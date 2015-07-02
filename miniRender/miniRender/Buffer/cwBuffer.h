@@ -34,7 +34,7 @@ class CW_DLL cwBuffer : public cwRef
 public:
 	static cwBuffer* create(
 		CWUINT uSize,
-		eBufferUsage usage,
+		CWUINT usage,
 		CWUINT bindFlag,
 		CWUINT uCpuFlag,
 		CWUINT miscFlag,
@@ -45,7 +45,7 @@ public:
 
 	virtual bool init(
 		CWUINT uSize,
-		eBufferUsage usage,
+		CWUINT usage,
 		CWUINT bindFlag,
 		CWUINT uCpuFlag,
 		CWUINT miscFlag,
@@ -55,7 +55,6 @@ public:
 	inline CWVOID* getBuffer() { return m_pDRenderBuffer; }
 	inline void setBuffer(CWVOID* pBuffer) { m_pDRenderBuffer = pBuffer; }
 
-	virtual void set(cwDevice* pDevice) {}
 	CWUINT getSize() { return m_nBuffDesc.ByteWidth; }
 
 	inline void setStride(CWUINT uStride) { m_nStride = uStride; }

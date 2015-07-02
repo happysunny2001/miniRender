@@ -39,7 +39,8 @@ cwEngine* cwEngine::create()
 }
 
 cwEngine::cwEngine():
-m_pCurrScene(nullptr)
+m_pCurrScene(nullptr),
+m_pCurrCamera(nullptr)
 {
 
 }
@@ -47,6 +48,7 @@ m_pCurrScene(nullptr)
 cwEngine::~cwEngine()
 {
 	CW_SAFE_RELEASE_NULL(m_pCurrScene);
+	m_pCurrCamera = nullptr;
 }
 
 bool cwEngine::init()
@@ -92,9 +94,15 @@ bool cwEngine::removeCamera(cwCamera* pCamera)
 	return true;
 }
 
+cwCamera* cwEngine::getCurrentCamera()
+{
+	return m_pCurrCamera;
+}
+
 void cwEngine::render()
 {
-	cwRepertory::getInstance().setCurrentCamera(getDefaultCamera());
+	m_pCurrCamera = getDefaultCamera();
+//	cwRepertory::getInstance().setCurrentCamera(getDefaultCamera());
 	cwRepertory::getInstance().getDevice()->beginDraw();
 
 	if (m_pCurrScene) {
@@ -102,6 +110,8 @@ void cwEngine::render()
 	}
 
 	cwRepertory::getInstance().getDevice()->endDraw();
+
+	m_pCurrCamera = nullptr;
 }
 
 NS_MINIR_END

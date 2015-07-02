@@ -24,6 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Layouts/cwLayoutsManager.h"
+#include "Platform/D3D/D3D11/Repertory/cwD3D11Repertory.h"
 #include "cwInputElementDescManager.h"
 
 NS_MINIR_BEGIN
@@ -31,12 +32,15 @@ NS_MINIR_BEGIN
 class CW_DLL cwD3D11LayoutsManager :public cwLayoutsManager
 {
 public:
-	static cwD3D11LayoutsManager* create();
-
-	cwD3D11LayoutsManager();
 	virtual ~cwD3D11LayoutsManager();
 
 	virtual bool init() override;
+
+protected:
+	static cwD3D11LayoutsManager* create();
+	cwD3D11LayoutsManager();
+
+	friend class cwD3D11Repertory;
 
 protected:
 	cwInputElementDescManager* m_pElementDescManager;

@@ -24,6 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Material/cwMaterial.h"
 #include "Light/cwLight.h"
 #include "Shader/cwShader.h"
+#include "Engine/cwEngine.h"
 
 NS_MINIR_BEGIN
 
@@ -75,7 +76,8 @@ void cwEntity::setMaterial(cwMaterial* pMaterial)
 
 void cwEntity::renderSelf()
 {
-	auto camera = cwRepertory::getInstance().getCurrentCamera();
+//	auto camera = cwRepertory::getInstance().getCurrentCamera();
+	auto camera = cwRepertory::getInstance().getEngine()->getCurrentCamera();
 
 	if (camera) {
 		cwRepertory::getInstance().getDevice()->render(this, camera);

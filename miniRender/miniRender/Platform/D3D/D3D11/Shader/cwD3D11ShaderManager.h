@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Shader/cwShaderManager.h"
+#include "Platform/D3D/D3D11/Repertory/cwD3D11Repertory.h"
 
 #ifdef _CW_D3D11_
 
@@ -30,12 +31,14 @@ NS_MINIR_BEGIN
 class cwD3D11ShaderManager : public cwShaderManager
 {
 public:
-	static cwD3D11ShaderManager* create();
-
-	cwD3D11ShaderManager();
 	virtual ~cwD3D11ShaderManager();
-
 	virtual bool init() override;
+
+protected:
+	static cwD3D11ShaderManager* create();
+	cwD3D11ShaderManager();
+
+	friend class cwD3D11Repertory;
 
 protected:
 

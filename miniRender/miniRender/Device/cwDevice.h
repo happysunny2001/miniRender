@@ -41,7 +41,6 @@ class cwStencil;
 class CW_DLL cwDevice
 {
 public:
-	cwDevice();
 	virtual ~cwDevice();
 
 	virtual bool initDevice() = 0;
@@ -91,6 +90,9 @@ public:
 	virtual void setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) = 0;
 	virtual void setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans) = 0;
 	virtual void draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) = 0;
+
+protected:
+	cwDevice();
 
 protected:
 	cwVector4D m_fvClearColor;

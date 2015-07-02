@@ -24,6 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwUtils.h"
 #include "Device/cwDevice.h"
+#include "Platform/D3D/D3D11/Repertory/cwD3D11Repertory.h"
 
 NS_MINIR_BEGIN
 
@@ -37,7 +38,6 @@ class cwMaterial;
 class CW_DLL cwD3D11Device : public cwDevice
 {
 public:
-	cwD3D11Device();
 	virtual ~cwD3D11Device();
 
 	virtual bool initDevice() override;
@@ -86,9 +86,18 @@ public:
 	virtual void setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans) override;
 	virtual void draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) override;
 
+protected:
+	cwD3D11Device();
+
+	friend class cwD3D11Repertory;
+
 private:
 	void initBlendBaseData();
 	void initStencilBaseData();
+	void initAccessFlagData();
+	void initBufferBindFlagData();
+	void initBufferUsageData();
+	void initPrimitiveTypeData();
 
 protected:
 	ID3D11Device* m_pD3D11Device;
@@ -112,6 +121,10 @@ public:
 	static CWINT stencilOp[eStencilOpMaxCount];
 	static CWINT comparisonType[eComparisonMaxCount];
 	static CWINT depthWriteMask[eDepthWriteMaskMaxCount];
+	static CWUINT accessFlag[eAccessFlagMaxCount];
+	static CWUINT bufferBindFlag[eBufferBindMaxCount];
+	static CWUINT bufferUsage[eBufferUsageMaxCount];
+	static CWUINT primitiveType[ePrimitiveTypeMaxCount];
 
 	static inline D3D11_BLEND getBlendFactor(eBlendFactor index) { return static_cast<D3D11_BLEND>(blendFactor[index]); }
 	static inline D3D11_BLEND_OP getBlendOp(eBlendOp index) { return static_cast<D3D11_BLEND_OP>(blendOp[index]); }
@@ -119,6 +132,12 @@ public:
 	static inline D3D11_STENCIL_OP getStencilOp(eStencilOp index) { return static_cast<D3D11_STENCIL_OP>(stencilOp[index]); }
 	static inline D3D11_COMPARISON_FUNC getComparison(eComparison index) { return static_cast<D3D11_COMPARISON_FUNC>(comparisonType[index]); }
 	static inline D3D11_DEPTH_WRITE_MASK getDepthWriteMask(eDepthWriteMask index) { return static_cast<D3D11_DEPTH_WRITE_MASK>(depthWriteMask[index]); }
+
+	static inline CWUINT getAccessFlag(eAccessFlag index) { return accessFlag[index]; }
+	static inline D3D11_BIND_FLAG getBufferBindFlag(eBufferBindFlag index) { return static_cast<D3D11_BIND_FLAG>(bufferBindFlag[index]); }
+	static inline D3D11_USAGE getBufferUsage(eBufferUsage index) { return static_cast<D3D11_USAGE>(bufferUsage[index]); }
+
+	static inline D3D11_PRIMITIVE_TOPOLOGY getPrimitiveType(ePrimitiveType index) { return static_cast<D3D11_PRIMITIVE_TOPOLOGY>(primitiveType[index]); }
 
 };
 

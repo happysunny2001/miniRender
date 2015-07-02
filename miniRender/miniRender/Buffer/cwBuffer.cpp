@@ -23,7 +23,7 @@ NS_MINIR_BEGIN
 
 cwBuffer* cwBuffer::create(
 	CWUINT uSize,
-	eBufferUsage usage,
+	CWUINT usage,
 	CWUINT bindFlag,
 	CWUINT uCpuFlag,
 	CWUINT miscFlag,
@@ -52,7 +52,7 @@ cwBuffer::~cwBuffer()
 
 bool cwBuffer::init(
 	CWUINT uSize,
-	eBufferUsage usage,
+	CWUINT usage,
 	CWUINT bindFlag,
 	CWUINT uCpuFlag,
 	CWUINT miscFlag,

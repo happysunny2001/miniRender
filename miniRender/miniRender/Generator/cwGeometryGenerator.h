@@ -34,9 +34,6 @@ class cwEntity;
 
 class CW_DLL cwGeometryGenerator : public cwRef
 {
-//public:
-//	static cwGeometryGenerator& getInstance();
-
 public:
 	struct cwVertex {
 		cwVertex() {}
@@ -94,9 +91,10 @@ private:
 
 	void subDivide(cwMeshData& mesh);
 
+	friend class cwRepertory;
+
 protected:
 
-	friend class cwRepertory;
 };
 
 NS_MINIR_END

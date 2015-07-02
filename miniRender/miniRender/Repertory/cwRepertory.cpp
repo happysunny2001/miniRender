@@ -49,7 +49,6 @@ m_pDevice(nullptr),
 //m_pLog(nullptr),
 m_pShaderManager(nullptr),
 m_pLayoutManager(nullptr),
-m_pCurrentCamera(nullptr),
 m_pTextureManager(nullptr),
 m_pFileSystem(nullptr),
 m_pEngine(nullptr),
@@ -66,7 +65,6 @@ cwRepertory::~cwRepertory()
 	CW_SAFE_DELETE(m_pDevice);
 	//CW_SAFE_DELETE(m_pLog);
 	CW_SAFE_DELETE(m_pAutoReleasePool);
-	CW_SAFE_RELEASE_NULL(m_pCurrentCamera);
 	CW_SAFE_RELEASE_NULL(m_pTextureManager);
 	CW_SAFE_RELEASE_NULL(m_pFileSystem);
 	CW_SAFE_RELEASE_NULL(m_pEngine);
@@ -182,13 +180,6 @@ CWVOID* cwRepertory::getPtr(const string& strName)
 	const cwValueMap& value = m_mapData[strName];
 	if (value.type != eValueTypePtr) return nullptr;
 	return value.pData;
-}
-
-void cwRepertory::setCurrentCamera(cwCamera* pCam)
-{
-	CW_SAFE_RELEASE_NULL(m_pCurrentCamera);
-	m_pCurrentCamera = pCam;
-	CW_SAFE_RETAIN(m_pCurrentCamera);
 }
 
 NS_MINIR_END

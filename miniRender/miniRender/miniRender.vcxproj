@@ -218,8 +218,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)platform\windows\directx11\include;$(SolutionDir)miniRender;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)platform\windows\directx11\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)external\platform\windows\directx11\include;$(SolutionDir)miniRender;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)external\platform\windows\directx11\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

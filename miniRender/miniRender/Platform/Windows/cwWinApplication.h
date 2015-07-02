@@ -42,6 +42,8 @@ public:
 	virtual void gameBeginBackGround() = 0;
 	virtual void gameEndBackGround() = 0;
 
+	virtual void refreshTitle(const CWSTRING& strTitle);
+
 public:
 	CWINT go();
 

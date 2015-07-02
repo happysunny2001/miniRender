@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwMacros.h"
 #include "Base/cwMap.h"
 #include "Ref/cwRef.h"
+#include "Repertory/cwRepertory.h"
 #include "cwShader.h"
 
 NS_MINIR_BEGIN
@@ -30,9 +31,6 @@ NS_MINIR_BEGIN
 class CW_DLL cwShaderManager : public cwRef
 {
 public:
-	static cwShaderManager* create();
-
-	cwShaderManager();
 	virtual ~cwShaderManager();
 
 	virtual bool init();
@@ -40,6 +38,9 @@ public:
 	cwShader* loadShader(const CWSTRING& strFile);
 	cwShader* getShader(const CWSTRING& strFile);
 	cwShader* getDefShader(CWUINT iKey);
+
+protected:
+	cwShaderManager();
 
 protected:
 	cwMap<CWSTRING, cwShader*> m_nMapShader;

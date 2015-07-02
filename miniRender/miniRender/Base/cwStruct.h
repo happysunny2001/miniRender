@@ -64,7 +64,7 @@ typedef struct
 typedef struct CW_BUFFER_DESC
 {
 	CWUINT ByteWidth;
-	eBufferUsage Usage;
+	CWUINT Usage;
 	CWUINT BindFlags;
 	CWUINT CPUAccessFlags;
 	CWUINT MiscFlags;

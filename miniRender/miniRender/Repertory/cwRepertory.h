@@ -63,9 +63,6 @@ public:
 
 	virtual void refreshWindowTitle(const CWSTRING& strTitle) {}
 
-	cwCamera* getCurrentCamera() { return m_pCurrentCamera; }
-	void setCurrentCamera(cwCamera* pCam);
-
 protected:
 	cwRepertory();
 	cwRepertory(cwRepertory const&) {}
@@ -84,8 +81,6 @@ protected:
 	cwEngine* m_pEngine;
 	cwGeometryGenerator* m_pGeoGenerator;
 	cwEventManager* m_pEventManager;
-//	cwLog* m_pLog;
-	cwCamera* m_pCurrentCamera;
 
 	unordered_map<string, cwValueMap> m_mapData;
 

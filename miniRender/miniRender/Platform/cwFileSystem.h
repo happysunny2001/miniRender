@@ -23,21 +23,25 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
 #include "Ref/cwRef.h"
+#include "Repertory/cwRepertory.h"
 
 NS_MINIR_BEGIN
 
 class CW_DLL cwFileSystem : public cwRef
 {
 public:
-	static cwFileSystem* create();
-
-	cwFileSystem() {}
 	virtual ~cwFileSystem() {}
 
 	virtual bool init() = 0;
 
 	const CWSTRING& getWokringPath() const { return m_strWorkingPath; }
 	CWSTRING getFullFilePath(const CWSTRING& strFileName) const;
+
+protected:
+	static cwFileSystem* create();
+	cwFileSystem() {}
+
+	friend class cwRepertory;
 
 protected:
 	CWSTRING m_strWorkingPath;

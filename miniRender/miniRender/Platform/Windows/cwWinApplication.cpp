@@ -24,6 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include <windowsx.h>
 
 #include "Base/cwValueMap.h"
+#include "Base/cwStringConvert.h"
 #include "Repertory/cwRepertory.h"
 #include "Engine/cwEngine.h"
 #include "Device/cwDevice.h"
@@ -252,6 +253,17 @@ LRESULT cwApplication::msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
+}
+
+void cwApplication::refreshTitle(const CWSTRING& strTitle)
+{
+	CWVOID* phWnd = cwRepertory::getInstance().getPtr(gValueWinHandle);
+	if (!phWnd) return;
+
+	HWND hWnd = reinterpret_cast<HWND>(phWnd);
+
+	CWWSTRING wStrTitle = cwStringConvert::convertToWideChar(strTitle);
+	SetWindowText(hWnd, wStrTitle.c_str());
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)

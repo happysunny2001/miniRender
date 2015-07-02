@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwUtils.h"
 #include "Base/cwMap.h"
 #include "Ref/cwRef.h"
+#include "Repertory/cwRepertory.h"
 #include "cwTexture.h"
 
 NS_MINIR_BEGIN
@@ -30,13 +31,16 @@ NS_MINIR_BEGIN
 class CW_DLL cwTextureManager : public cwRef
 {
 public:
-	static cwTextureManager* create();
-
-	cwTextureManager() {}
 	virtual ~cwTextureManager();
 
 	cwTexture* getTexture(const string& strName);
 	void removeTexture(const string& strName);
+
+protected:
+	static cwTextureManager* create();
+	cwTextureManager() {}
+
+	friend class cwRepertory;
 
 private:
 	cwMap<string, cwTexture*> m_mapTexture;

@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
+#include "Repertory/cwRepertory.h"
 #include "cwRef.h"
 
 #include <vector>
@@ -33,11 +34,15 @@ NS_MINIR_BEGIN
 class CW_DLL cwAutoReleasePool
 {
 public:
-	cwAutoReleasePool();
 	~cwAutoReleasePool();
 
 	void addAutoReleaseRef(cwRef* pRef);
 	void clear();
+
+protected:
+	cwAutoReleasePool();
+
+	friend class cwRepertory;
 
 private:
 	vector<cwRef*> m_vecRefObject;

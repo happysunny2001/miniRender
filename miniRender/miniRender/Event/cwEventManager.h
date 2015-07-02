@@ -53,6 +53,8 @@ protected:
 	bool init();
 	void clear();
 
+	friend class cwRepertory;
+
 protected:
 	cwVector<cwEventListener*> m_nVecListener;
 	cwVector<cwEvent*> m_nVecEvent;
@@ -60,8 +62,7 @@ protected:
 	bool m_bDirty;
 	std::mutex m_nEventMutex;
 	std::mutex m_nListenerMutex;
-	
-	friend class cwRepertory;
+
 };
 
 NS_MINIR_END

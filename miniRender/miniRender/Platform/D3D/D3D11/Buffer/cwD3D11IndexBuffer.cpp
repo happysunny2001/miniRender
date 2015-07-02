@@ -22,18 +22,19 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwD3D11IndexBuffer.h"
 #include "Device/cwDevice.h"
 #include "Platform/Windows/cwWinUtils.h"
+#include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
 
 NS_MINIR_BEGIN
 
 cwD3D11IndexBuffer* cwD3D11IndexBuffer::create(
 	CWUINT uSize,
-	eBufferUsage usage,
+	CWUINT usage,
 	CWUINT uCpuFlag,
 	CWUINT miscFlag,
 	CWUINT structureByteStride)
 {
 	cwD3D11IndexBuffer* pBuffer = new cwD3D11IndexBuffer();
-	if (pBuffer && pBuffer->init(uSize, usage, eBufferBindIndex, uCpuFlag, miscFlag, structureByteStride)) {
+	if (pBuffer && pBuffer->init(uSize, usage, cwD3D11Device::getBufferBindFlag(eBufferBindIndex), uCpuFlag, miscFlag, structureByteStride)) {
 		pBuffer->autorelease();
 		return pBuffer;
 	}
@@ -56,24 +57,19 @@ cwD3D11IndexBuffer::~cwD3D11IndexBuffer()
 
 bool cwD3D11IndexBuffer::init(
 	CWUINT uSize,
-	eBufferUsage usage,
+	CWUINT usage,
 	CWUINT bindFlag,
 	CWUINT uCpuFlag,
 	CWUINT miscFlag,
 	CWUINT structureByteStride)
 {
-	if (!cwBuffer::init(uSize, usage, bindFlag, uCpuFlag, miscFlag, structureByteStride)) return false;
+	CWUINT uD3D11CpuFlag = cwD3D11Device::getAccessFlag(static_cast<eAccessFlag>(uCpuFlag));
+	CWUINT uD3D11Usage = cwD3D11Device::getBufferUsage(static_cast<eBufferUsage>(usage));
+	if (!cwBuffer::init(uSize, uD3D11Usage, bindFlag, uD3D11CpuFlag, miscFlag, structureByteStride)) return false;
 
 	m_iIndexCnt = uSize / sizeof(CWUINT);
 
 	return true;
-}
-
-void cwD3D11IndexBuffer::set(cwDevice* pDevice)
-{
-	if (pDevice) {
-		pDevice->setIndexBuffer(this);
-	}
 }
 
 NS_MINIR_END

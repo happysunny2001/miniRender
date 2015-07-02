@@ -33,8 +33,8 @@ class CW_DLL cwD3D11VertexBuffer : public cwBuffer
 public:
 	static cwD3D11VertexBuffer* create(
 		CWUINT uSize, 
-		eBufferUsage usage = eBufferUsageImmutable,
-		CWUINT uCpuFlag = 0, 
+		CWUINT usage = eBufferUsageImmutable,
+		CWUINT uCpuFlag = eAccessFlagNone,
 		CWUINT miscFlag = 0, 
 		CWUINT structureByteStride = 0);
 
@@ -43,13 +43,11 @@ public:
 
 	virtual bool init(
 		CWUINT uSize,
-		eBufferUsage usage,
+		CWUINT usage,
 		CWUINT bindFlag,
 		CWUINT uCpuFlag,
 		CWUINT miscFlag,
 		CWUINT structureByteStride) override;
-
-	virtual void set(cwDevice* pDevice) override;
 
 protected:
 

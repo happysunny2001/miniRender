@@ -31,12 +31,15 @@ NS_MINIR_BEGIN
 class CW_DLL cwWinFileSystem : public cwFileSystem
 {
 public:
-	static cwWinFileSystem* create();
-
-	cwWinFileSystem();
 	virtual ~cwWinFileSystem();
 
 	virtual bool init() override;
+
+protected:
+	static cwWinFileSystem* create();
+	cwWinFileSystem();
+
+	friend class cwFileSystem;
 
 protected:
 	void buildModulePath();

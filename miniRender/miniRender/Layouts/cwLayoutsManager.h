@@ -29,11 +29,13 @@ NS_MINIR_BEGIN
 class CW_DLL cwLayoutsManager : public cwRef
 {
 public:
-	cwLayoutsManager() {}
 	virtual ~cwLayoutsManager() {}
 
 	virtual bool init() = 0;
 	cwLayouts* getLayouts(ceElementDesc eType);
+
+protected:
+	cwLayoutsManager() {}
 
 protected:
 	cwMap<ceElementDesc, cwLayouts*> m_mapLayouts;
