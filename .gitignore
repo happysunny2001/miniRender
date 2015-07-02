@@ -3,7 +3,6 @@
 *.pdb
 miniRender/miniRender/x64/Debug/miniRender.tlog/unsuccessfulbuild
 *.lastbuildstate
-*.lib
 *.tlog
 *.obj
 *.tlog
