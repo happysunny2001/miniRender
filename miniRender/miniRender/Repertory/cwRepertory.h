@@ -38,6 +38,7 @@ class cwCamera;
 class cwEngine;
 class cwGeometryGenerator;
 class cwEventManager;
+class cwSchedulerManager;
 
 class CW_DLL cwRepertory
 {
@@ -60,6 +61,7 @@ public:
 	cwEngine* getEngine();
 	cwGeometryGenerator* getGeoGenerator();
 	cwEventManager* getEventManager();
+	cwSchedulerManager* getSchedulerManager();
 
 	virtual void refreshWindowTitle(const CWSTRING& strTitle) {}
 
@@ -81,6 +83,7 @@ protected:
 	cwEngine* m_pEngine;
 	cwGeometryGenerator* m_pGeoGenerator;
 	cwEventManager* m_pEventManager;
+	cwSchedulerManager* m_pSchedulerManager;
 
 	unordered_map<string, cwValueMap> m_mapData;
 

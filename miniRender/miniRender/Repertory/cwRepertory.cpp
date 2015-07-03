@@ -29,6 +29,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Engine/cwEngine.h"
 #include "Generator/cwGeometryGenerator.h"
 #include "Event/cwEventManager.h"
+#include "Scheduler/cwSchedulerManager.h"
 
 #ifdef _CW_D3D11_
 #include "Platform/D3D/D3D11/Repertory/cwD3D11Repertory.h"
@@ -53,7 +54,8 @@ m_pTextureManager(nullptr),
 m_pFileSystem(nullptr),
 m_pEngine(nullptr),
 m_pGeoGenerator(nullptr),
-m_pEventManager(nullptr)
+m_pEventManager(nullptr),
+m_pSchedulerManager(nullptr)
 {
 	m_pAutoReleasePool = new cwAutoReleasePool();
 }
@@ -70,6 +72,7 @@ cwRepertory::~cwRepertory()
 	CW_SAFE_RELEASE_NULL(m_pEngine);
 	CW_SAFE_RELEASE_NULL(m_pGeoGenerator);
 	CW_SAFE_RELEASE_NULL(m_pEventManager);
+	CW_SAFE_RELEASE_NULL(m_pSchedulerManager);
 }
 
 cwDevice* cwRepertory::getDevice()
@@ -122,6 +125,11 @@ cwEventManager* cwRepertory::getEventManager()
 	return m_pEventManager;
 }
 
+cwSchedulerManager* cwRepertory::getSchedulerManager()
+{
+	return m_pSchedulerManager;
+}
+
 void cwRepertory::initAll()
 {
 //	m_pLog = new cwLog();
@@ -138,6 +146,9 @@ void cwRepertory::initAll()
 
 	m_pGeoGenerator = cwGeometryGenerator::create();
 	CW_SAFE_RETAIN(m_pGeoGenerator);
+
+	m_pSchedulerManager = cwSchedulerManager::create();
+	CW_SAFE_RETAIN(m_pSchedulerManager);
 
 	specialInit();
 

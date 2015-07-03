@@ -47,6 +47,9 @@ typedef void             CWVOID;
 typedef unsigned char    CWBYTE;
 typedef CWVOID*          CWHANDLE;
 
+#define CWTRUE           true
+#define CWFALSE          false
+
 NS_MINIR_END
 
 #endif

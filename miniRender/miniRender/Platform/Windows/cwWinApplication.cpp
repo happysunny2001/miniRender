@@ -122,6 +122,7 @@ void cwApplication::mainLoop()
 	m_iCurrTimeCounter = currCounter;
 	CWDOUBLE dDeltaTime = (m_iCurrTimeCounter - m_iPrevTimeCounter) * m_dSecondPerCount;
 	if (dDeltaTime < 0) dDeltaTime = 0;
+	m_iPrevTimeCounter = m_iCurrTimeCounter;
 
 	cwRepertory::getInstance().getEngine()->mainLoop((CWFLOAT)dDeltaTime);
 }

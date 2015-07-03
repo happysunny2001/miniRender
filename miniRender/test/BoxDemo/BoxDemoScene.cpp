@@ -34,7 +34,9 @@ BoxDemoScene* BoxDemoScene::create()
 }
 
 BoxDemoScene::BoxDemoScene():
-m_bTouchDown(false)
+m_bTouchDown(false),
+m_fTime(0),
+m_iCount(0)
 {
 
 }
@@ -53,6 +55,8 @@ bool BoxDemoScene::init()
 	pTouchListener->onTouchUp     = CW_CALLBACK_1(BoxDemoScene::onTouchUp, this);
 	pTouchListener->onTouchMoving = CW_CALLBACK_1(BoxDemoScene::onTouchMoving, this);
 	this->addEventListener(pTouchListener);
+
+	this->schedulerUpdate();
 
 	m_fTheta = 0.1f;
 	m_fPhi = -cwMathUtil::cwPIx2 / 8.0f;
@@ -97,4 +101,18 @@ void BoxDemoScene::onTouchMoving(cwTouch* pTouch)
 
 	m_fLastX = pTouch->getScreenPos().x;
 	m_fLastY = pTouch->getScreenPos().y;
+}
+
+void BoxDemoScene::update(CWFLOAT dt)
+{
+	m_fTime += dt;
+	if (m_fTime >= 1.0f) {
+		OutputDebugString(L"BoxDemoScene::update\n");
+		m_fTime = 0;
+		m_iCount++;
+
+		if (m_iCount >= 5) {
+			this->clearScheduler();
+		}
+	}
 }

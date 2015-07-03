@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "Ref/cwAutoReleasePool.h"
 #include "Event/cwEventManager.h"
+#include "Scheduler/cwSchedulerManager.h"
 
 NS_MINIR_BEGIN
 
@@ -70,6 +71,7 @@ void cwEngine::mainLoop(CWFLOAT dt)
 	cwRepertory& repertory = cwRepertory::getInstance();
 
 	repertory.getEventManager()->dispatchEvent();
+	repertory.getSchedulerManager()->update(dt);
 	render();
 	repertory.getAutoReleasePool()->clear();
 }

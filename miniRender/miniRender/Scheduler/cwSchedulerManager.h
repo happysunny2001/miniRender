@@ -20,4 +20,54 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifndef __CW_SCHEDULER_MANAGER_H__
 #define __CW_SCHEDULER_MANAGER_H__
 
+#include "Base/cwMacros.h"
+#include "Base/cwBasicType.h"
+#include "Ref/cwRef.h"
+#include "Repertory/cwRepertory.h"
+#include "cwScheduleInterface.h"
+
+NS_MINIR_BEGIN
+
+struct scheduleHashNode;
+
+class cwScheduleProperty
+{
+	CWBOOL bOnce;
+	CWINT iPriority;
+	CWFLOAT fFreq;
+};
+
+class cwSchedulerManager : public cwRef
+{
+public:
+	virtual ~cwSchedulerManager();
+
+	virtual bool init();
+
+	virtual bool schedule(SCHEDULE_UPDATE pFunc, cwScheduleInterface* pCaller, CWINT iPriority, CWFLOAT fFreq, CWFLOAT fWaiting, CWBOOL bOnce);
+	virtual bool remove(SCHEDULE_UPDATE pFunc, cwScheduleInterface* pCaller);
+
+	virtual void update(float dt);
+
+protected:
+	static cwSchedulerManager* create();
+	cwSchedulerManager();
+
+	virtual void clear();
+	virtual void clear(struct scheduleHashNode* s);
+	virtual void appendNode();
+	virtual void clearAll();
+
+	friend class cwRepertory;
+
+protected:
+	struct scheduleHashNode* m_pHashData;
+	std::vector<struct scheduleHashNode*> m_nVecTmpNode;
+
+	bool m_bUpdateLock;
+
+};
+
+NS_MINIR_END
+
 #endif

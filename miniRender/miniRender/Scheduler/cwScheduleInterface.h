@@ -17,41 +17,33 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __BOX_DEMO_SCENE_H__
-#define __BOX_DEMO_SCENE_H__
+#ifndef __CW_SCHEDULE_INTERFACE_H__
+#define __CW_SCHEDULE_INTERFACE_H__
 
-#include "cwMiniRender.h"
-NS_USING_MINIR;
+#include "Base/cwMacros.h"
+#include "Base/cwBasicType.h"
+#include <vector>
 
-class BoxDemoScene : public cwScene
+NS_MINIR_BEGIN
+
+class cwScheduleInterface
 {
 public:
-	static BoxDemoScene* create();
+	cwScheduleInterface();
+	virtual ~cwScheduleInterface();
 
-	BoxDemoScene();
-	virtual ~BoxDemoScene();
+	virtual void update(CWFLOAT dt);
+	virtual void schedulerUpdate();
+	virtual void clearScheduler();
 
-	virtual bool init() override;
-
-	virtual void update(CWFLOAT dt) override;
-
-	virtual void onTouchDown(cwTouch* pTouch) override;
-	virtual void onTouchUp(cwTouch* pTouch) override;
-	virtual void onTouchMoving(cwTouch* pTouch) override;
-
-protected:
-	CWFLOAT m_fLastX;
-	CWFLOAT m_fLastY;
-	CWFLOAT m_fTheta;
-	CWFLOAT m_fPhi;
-	CWFLOAT m_fRadius;
-
-	CWFLOAT m_fTime;
-	CWINT m_iCount;
-
-	bool m_bTouchDown;
+private:
+	CWBOOL m_bScheduled;
 
 };
+
+typedef void(cwScheduleInterface::*SCHEDULE_UPDATE)(CWFLOAT);
+
+NS_MINIR_END
 
 #endif
 

@@ -17,41 +17,39 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __BOX_DEMO_SCENE_H__
-#define __BOX_DEMO_SCENE_H__
+#include "cwScheduleInterface.h"
+#include "Repertory/cwRepertory.h"
+#include "cwSchedulerManager.h"
 
-#include "cwMiniRender.h"
-NS_USING_MINIR;
+NS_MINIR_BEGIN
 
-class BoxDemoScene : public cwScene
+cwScheduleInterface::cwScheduleInterface() :m_bScheduled(CWFALSE)
 {
-public:
-	static BoxDemoScene* create();
 
-	BoxDemoScene();
-	virtual ~BoxDemoScene();
+}
 
-	virtual bool init() override;
+cwScheduleInterface::~cwScheduleInterface()
+{
+	clearScheduler();
+}
 
-	virtual void update(CWFLOAT dt) override;
+void cwScheduleInterface::update(float dt)
+{
 
-	virtual void onTouchDown(cwTouch* pTouch) override;
-	virtual void onTouchUp(cwTouch* pTouch) override;
-	virtual void onTouchMoving(cwTouch* pTouch) override;
+}
 
-protected:
-	CWFLOAT m_fLastX;
-	CWFLOAT m_fLastY;
-	CWFLOAT m_fTheta;
-	CWFLOAT m_fPhi;
-	CWFLOAT m_fRadius;
+void cwScheduleInterface::schedulerUpdate()
+{
+	if (!m_bScheduled)
+		cwRepertory::getInstance().getSchedulerManager()->schedule(&cwScheduleInterface::update, this, 0, -1, -1, false);
+	m_bScheduled = CWTRUE;
+}
 
-	CWFLOAT m_fTime;
-	CWINT m_iCount;
+void cwScheduleInterface::clearScheduler()
+{
+	if (m_bScheduled)
+		cwRepertory::getInstance().getSchedulerManager()->remove(&cwScheduleInterface::update, this);
+	m_bScheduled = CWFALSE;
+}
 
-	bool m_bTouchDown;
-
-};
-
-#endif
-
+NS_MINIR_END
