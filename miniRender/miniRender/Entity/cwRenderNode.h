@@ -39,60 +39,61 @@ public:
 	cwRenderNode();
 	virtual ~cwRenderNode();
 
-	virtual bool init();
+	virtual CWBOOL init();
 
-	virtual void setParent(cwRenderNode* pNode);
+	virtual CWVOID setParent(cwRenderNode* pNode);
 
-	virtual void addChild(cwRenderNode* pNode);
-	virtual void removeChild(cwRenderNode* pNode);
-	virtual void removeChildren();
+	virtual CWVOID addChild(cwRenderNode* pNode);
+	virtual CWVOID removeChild(cwRenderNode* pNode);
+	virtual CWVOID removeChildren();
 
 	const cwVector3D& getPosition() const { return m_nPos; }
-	virtual void setPosition(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	virtual void setPosition(const cwVector3D& v);
-	virtual void move(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	virtual void move(const cwVector3D& v);
+	virtual CWVOID setPosition(CWFLOAT x, CWFLOAT y, CWFLOAT z);
+	virtual CWVOID setPosition(const cwVector3D& v);
+	virtual CWVOID move(CWFLOAT x, CWFLOAT y, CWFLOAT z);
+	virtual CWVOID move(const cwVector3D& v);
 
 	const cwVector3D& getRotation() const { return m_nRot; }
-	virtual void setRotation(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	virtual void setRotation(const cwVector3D& v);
-	virtual void rotate(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	virtual void rotate(const cwVector3D& v);
+	virtual CWVOID setRotation(CWFLOAT x, CWFLOAT y, CWFLOAT z);
+	virtual CWVOID setRotation(const cwVector3D& v);
+	virtual CWVOID rotate(CWFLOAT x, CWFLOAT y, CWFLOAT z);
+	virtual CWVOID rotate(const cwVector3D& v);
 
 	const cwVector3D& getScale() const { return m_nScale; }
-	virtual void setScale(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	virtual void setScale(const cwVector3D& v);
-	virtual void scale(CWFLOAT x, CWFLOAT y, CWFLOAT z);
-	virtual void scale(const cwVector3D& v);
+	virtual CWVOID setScale(CWFLOAT x, CWFLOAT y, CWFLOAT z);
+	virtual CWVOID setScale(const cwVector3D& v);
+	virtual CWVOID scale(CWFLOAT x, CWFLOAT y, CWFLOAT z);
+	virtual CWVOID scale(const cwVector3D& v);
 
-	virtual void setVisible(bool b);
-	bool getVisible() const { return m_bVisible; }
+	virtual CWVOID setVisible(CWBOOL b);
+	CWBOOL getVisible() const { return m_bVisible; }
 
-	virtual void transform();
+	virtual CWVOID transform();
 	const cwMatrix4X4& getTransformMatrix() const { return m_nTrans; }
 
-	virtual void addEventListener(cwEventListener* pListener);
-	virtual void addEventListener(cwEventListener* pListener, CWINT iPriority, bool swallow);
-	virtual void removeEventListerner(cwEventListener* pListener, bool bClean=true);
+	virtual CWVOID addEventListener(cwEventListener* pListener);
+	virtual CWVOID addEventListener(cwEventListener* pListener, CWINT iPriority, CWBOOL swallow);
+	virtual CWVOID removeEventListerner(cwEventListener* pListener, CWBOOL bClean = CWTRUE);
 
-	virtual void update(CWFLOAT dt);
+	virtual CWVOID update(CWFLOAT dt);
 	
-	virtual void renderChildren();
-	virtual void render();
-	virtual void renderSelf();
+	virtual CWVOID renderChildren();
+	virtual CWVOID render();
+	virtual CWVOID renderSelf();
 
 protected:
-	void clearChildren();
-	void clearEventListener();
+	CWVOID clearChildren();
+	CWVOID clearEventListener();
 	
 protected:
-	bool m_bVisible;
+	CWBOOL m_bVisible;
 
 	cwVector3D m_nPos;
 	//angle of rotation around the x, y, z axis, in radians
 	cwVector3D m_nRot;
 	cwVector3D m_nScale;
 	cwMatrix4X4 m_nTrans; 
+	CWBOOL m_bTransDirty;
 
 	cwVector<cwRenderNode*> m_nVecChildren;
 	cwRenderNode* m_pParent;

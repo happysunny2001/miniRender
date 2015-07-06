@@ -29,12 +29,12 @@ NS_MINIR_BEGIN
 class cwTouchEventInterface
 {
 public:
-	virtual void onTouchDown(cwTouch* pTouch) {}
-	virtual void onTouchUp(cwTouch* pTouch) {}
-	virtual void onTouchMoving(cwTouch* pTouch) {}
+	virtual CWVOID onTouchDown(cwTouch* pTouch) {}
+	virtual CWVOID onTouchUp(cwTouch* pTouch) {}
+	virtual CWVOID onTouchMoving(cwTouch* pTouch) {}
 
 #if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
-	virtual void onTouchWheel(cwTouch* pTouch) {}
+	virtual CWVOID onTouchWheel(cwTouch* pTouch) {}
 #endif
 
 };

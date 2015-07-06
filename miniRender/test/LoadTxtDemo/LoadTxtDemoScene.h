@@ -17,54 +17,40 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwShaderManager.h"
-#include "Repertory/cwRepertory.h"
-#include "Device/cwDevice.h"
-#include "Platform/cwFileSystem.h"
+#ifndef __LOAD_TXT_DEMO_SCENE_H__
+#define __LOAD_TXT_DEMO_SCENE_H__
 
-NS_MINIR_BEGIN
+#include "cwMiniRender.h"
+NS_USING_MINIR;
 
-cwShaderManager::cwShaderManager()
+class LoadTxtDemoScene : public cwScene
 {
+public:
+	static LoadTxtDemoScene* create();
 
-}
+	LoadTxtDemoScene();
+	virtual ~LoadTxtDemoScene();
 
-cwShaderManager::~cwShaderManager()
-{
+	virtual CWBOOL init() override;
 
-}
+	virtual CWVOID onTouchDown(cwTouch* pTouch) override;
+	virtual CWVOID onTouchUp(cwTouch* pTouch) override;
+	virtual CWVOID onTouchMoving(cwTouch* pTouch) override;
 
-cwShader* cwShaderManager::loadShader(const CWSTRING& strFile)
-{
-	auto itFind = m_nMapShader.find(strFile);
-	if (itFind != m_nMapShader.end()) return itFind->second;
+protected:
+	CWVOID buildEntity();
+	CWVOID buildLight();
 
-	cwShader* pShader = cwRepertory::getInstance().getDevice()->createShader(strFile);
-	if (pShader) {
-		m_nMapShader.insert(strFile, pShader);
-		return pShader;
-	}
+protected:
+	cwEntity* m_pCar;
 
-	return nullptr;
-}
+	CWFLOAT m_fLastX;
+	CWFLOAT m_fLastY;
+	CWFLOAT m_fTheta;
+	CWFLOAT m_fPhi;
+	CWFLOAT m_fRadius;
+	CWBOOL m_bTouchDown;
 
-cwShader* cwShaderManager::getShader(const CWSTRING& strFile)
-{
-	auto itFind = m_nMapShader.find(strFile);
-	if (itFind != m_nMapShader.end()) return itFind->second;
-	return nullptr;
-}
+};
 
-cwShader* cwShaderManager::getDefShader(CWUINT iKey)
-{
-	auto itFind = m_nMapDefShader.find(iKey);
-	if (itFind != m_nMapDefShader.end()) return itFind->second;
-	return nullptr;
-}
-
-bool cwShaderManager::init()
-{
-	return true;
-}
-
-NS_MINIR_END
+#endif

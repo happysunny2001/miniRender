@@ -33,6 +33,8 @@ NS_MINIR_BEGIN
 
 class cwScene;
 class cwCamera;
+class cwShader;
+class cwEntity;
 
 class CW_DLL cwEngine : public cwRef
 {
@@ -44,6 +46,11 @@ public:
 	bool removeCamera(cwCamera* pCamera);
 	cwCamera* getCurrentCamera();
 
+	virtual void setCurrShader(cwShader* pShader);
+	cwShader* getCurrShader() const;
+
+	virtual void render(cwEntity* pEntity);
+
 protected:
 	static cwEngine* create();
 
@@ -51,7 +58,8 @@ protected:
 	virtual ~cwEngine();
 
 	virtual bool init();
-	void buildDefaultCamera();
+	virtual void buildDefaultCamera();
+	virtual void configShaderLight();
 
 	virtual void render();
 
@@ -60,6 +68,7 @@ protected:
 protected:
 	cwScene* m_pCurrScene;
 	cwCamera* m_pCurrCamera;
+	cwShader*m_pCurrShader;
 	cwVector<cwCamera*> m_nVecCameras;
 
 };

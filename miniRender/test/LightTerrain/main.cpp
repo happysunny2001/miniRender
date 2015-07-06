@@ -17,54 +17,11 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwShaderManager.h"
-#include "Repertory/cwRepertory.h"
-#include "Device/cwDevice.h"
-#include "Platform/cwFileSystem.h"
+#include <windows.h>
+#include "LightTerrainDemo.h"
 
-NS_MINIR_BEGIN
-
-cwShaderManager::cwShaderManager()
+int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, __in LPSTR lpCmdLine, __in int nShowCmd)
 {
-
+	LightTerrainDemo demo;
+	demo.go();
 }
-
-cwShaderManager::~cwShaderManager()
-{
-
-}
-
-cwShader* cwShaderManager::loadShader(const CWSTRING& strFile)
-{
-	auto itFind = m_nMapShader.find(strFile);
-	if (itFind != m_nMapShader.end()) return itFind->second;
-
-	cwShader* pShader = cwRepertory::getInstance().getDevice()->createShader(strFile);
-	if (pShader) {
-		m_nMapShader.insert(strFile, pShader);
-		return pShader;
-	}
-
-	return nullptr;
-}
-
-cwShader* cwShaderManager::getShader(const CWSTRING& strFile)
-{
-	auto itFind = m_nMapShader.find(strFile);
-	if (itFind != m_nMapShader.end()) return itFind->second;
-	return nullptr;
-}
-
-cwShader* cwShaderManager::getDefShader(CWUINT iKey)
-{
-	auto itFind = m_nMapDefShader.find(iKey);
-	if (itFind != m_nMapDefShader.end()) return itFind->second;
-	return nullptr;
-}
-
-bool cwShaderManager::init()
-{
-	return true;
-}
-
-NS_MINIR_END

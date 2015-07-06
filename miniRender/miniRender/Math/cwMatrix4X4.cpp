@@ -238,28 +238,27 @@ bool cwMatrix4X4::inverseExist() const
 
 cwMatrix4X4 cwMatrix4X4::inverse() const
 {
+	cwMatrix4X4 m;
     float det = this->determinant();
-    assert(fabs(det) > 0.000001f);
-    
-    float detInv = 1.0f / det;
-    
-    cwMatrix4X4 m;
-    
-    m.m11 = (m22*m33 - m23*m32) * detInv;
-    m.m12 = (m13*m32 - m12*m33) * detInv;
-    m.m13 = (m12*m23 - m13*m22) * detInv;
-    
-    m.m21 = (m23*m31 - m21*m33) * detInv;
-    m.m22 = (m11*m33 - m13*m31) * detInv;
-    m.m23 = (m13*m21 - m11*m23) * detInv;
-    
-    m.m31 = (m21*m32 - m22*m31) * detInv;
-    m.m32 = (m12*m31 - m11*m32) * detInv;
-    m.m33 = (m11*m22 - m12*m21) * detInv;
-    
-    m.m41 = -(m41*m.m11 + m42*m.m21 + m43*m.m31);
-    m.m42 = -(m41*m.m12 + m42*m.m22 + m43*m.m32);
-    m.m43 = -(m41*m.m13 + m42*m.m23 + m43*m.m33);
+	if (fabs(det) > 0.000001f) {
+		float detInv = 1.0f / det;
+
+		m.m11 = (m22*m33 - m23*m32) * detInv;
+		m.m12 = (m13*m32 - m12*m33) * detInv;
+		m.m13 = (m12*m23 - m13*m22) * detInv;
+
+		m.m21 = (m23*m31 - m21*m33) * detInv;
+		m.m22 = (m11*m33 - m13*m31) * detInv;
+		m.m23 = (m13*m21 - m11*m23) * detInv;
+
+		m.m31 = (m21*m32 - m22*m31) * detInv;
+		m.m32 = (m12*m31 - m11*m32) * detInv;
+		m.m33 = (m11*m22 - m12*m21) * detInv;
+
+		m.m41 = -(m41*m.m11 + m42*m.m21 + m43*m.m31);
+		m.m42 = -(m41*m.m12 + m42*m.m22 + m43*m.m32);
+		m.m43 = -(m41*m.m13 + m42*m.m23 + m43*m.m33);
+	}
     
     return m;
 }

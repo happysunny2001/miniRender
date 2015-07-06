@@ -32,6 +32,7 @@ struct scheduleHashNode;
 
 class cwScheduleProperty
 {
+public:
 	CWBOOL bOnce;
 	CWINT iPriority;
 	CWFLOAT fFreq;

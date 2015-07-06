@@ -34,7 +34,7 @@ class cwCamera;
 class cwMaterial;
 class cwLight;
 
-class CW_DLL cwEntity : public cwRenderNode// public cwRenderInterface, public cwRef
+class CW_DLL cwEntity : public cwRenderNode
 {
 public:
 	static cwEntity* create();
@@ -42,18 +42,15 @@ public:
 	cwEntity();
 	virtual ~cwEntity();
 
-	virtual bool init();
+	virtual CWBOOL init();
 
-	virtual void setRenderObject(cwRenderObject* pRenderObj);
+	virtual CWVOID setRenderObject(cwRenderObject* pRenderObj);
 	inline cwRenderObject* getRenderObj() { return m_pRenderObj; }
 
-	virtual void setMaterial(cwMaterial* pMaterial);
+	virtual CWVOID setMaterial(cwMaterial* pMaterial);
 	inline cwMaterial* getMaterial() { return m_pMaterial; }
 
-	virtual void renderSelf() override;
-
-// 	virtual void setLights(vector<cwLight*>& vecLights) override;
-// 	virtual void render(cwCamera* pCamera) override;
+	virtual CWVOID renderSelf() override;
 
 protected:
 	cwMaterial* m_pMaterial;

@@ -24,7 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-typedef cwFuncNode<cwScheduleProperty, SCHEDULE_UPDATE, void, CWFLOAT> FUNCNODE;
+typedef cwFuncNode<cwScheduleProperty, CWVOID, CWFLOAT> FUNCNODE;
 
 struct scheduleHashNode
 {
@@ -76,9 +76,12 @@ bool cwSchedulerManager::schedule(SCHEDULE_UPDATE pFunc, cwScheduleInterface* pC
 		return true;
 	}
 
-	FUNCNODE* funNode = new FUNCNODE(std::bind(pFunc, pCaller, std::placeholders::_1), pCaller, pFunc);
+	FUNCNODE* funNode = new FUNCNODE(std::bind(pFunc, pCaller, std::placeholders::_1));
 	if (!funNode) return false;
 	cwScheduleProperty property;
+	property.bOnce = bOnce;
+	property.fFreq = fFreq;
+	property.iPriority = iPriority;
 	funNode->setData(property);
 
 	struct scheduleHashNode* hashNode = (struct scheduleHashNode*)malloc(sizeof(struct scheduleHashNode));
@@ -161,6 +164,9 @@ void cwSchedulerManager::update(float dt)
 	HASH_ITER(hh, m_pHashData, s, tmp) {
 		if (s && !s->remove) {
 			(*(s->funNode))(dt);
+			if (s->funNode->data().bOnce) {
+				s->remove = true;
+			}
 		}
 	}
 

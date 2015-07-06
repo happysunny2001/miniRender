@@ -52,7 +52,6 @@ public:
 	CWVOID* getPtr(const string& strName);
 
 	cwDevice* getDevice();
-//	virtual cwLog* getLog();
 	cwShaderManager* getShaderManager();
 	cwLayoutsManager* getLayoutManager();
 	cwAutoReleasePool* getAutoReleasePool();

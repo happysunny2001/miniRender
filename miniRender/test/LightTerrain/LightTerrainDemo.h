@@ -17,54 +17,26 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwShaderManager.h"
-#include "Repertory/cwRepertory.h"
-#include "Device/cwDevice.h"
-#include "Platform/cwFileSystem.h"
+#ifndef __LIGHT_TERRAIN_DEMO_H__
+#define __LIGHT_TERRAIN_DEMO_H__
 
-NS_MINIR_BEGIN
+#include "cwMiniRender.h"
+NS_USING_MINIR;
 
-cwShaderManager::cwShaderManager()
+class LightTerrainDemo : public minir::cwApplication
 {
+public:
+	LightTerrainDemo();
+	virtual ~LightTerrainDemo();
 
-}
+	virtual CWVOID gameBegin() override;
+	virtual CWVOID gameEnd() override;
 
-cwShaderManager::~cwShaderManager()
-{
+	virtual CWVOID gameBeginBackGround() override;
+	virtual CWVOID gameEndBackGround() override;
 
-}
+protected:
 
-cwShader* cwShaderManager::loadShader(const CWSTRING& strFile)
-{
-	auto itFind = m_nMapShader.find(strFile);
-	if (itFind != m_nMapShader.end()) return itFind->second;
+};
 
-	cwShader* pShader = cwRepertory::getInstance().getDevice()->createShader(strFile);
-	if (pShader) {
-		m_nMapShader.insert(strFile, pShader);
-		return pShader;
-	}
-
-	return nullptr;
-}
-
-cwShader* cwShaderManager::getShader(const CWSTRING& strFile)
-{
-	auto itFind = m_nMapShader.find(strFile);
-	if (itFind != m_nMapShader.end()) return itFind->second;
-	return nullptr;
-}
-
-cwShader* cwShaderManager::getDefShader(CWUINT iKey)
-{
-	auto itFind = m_nMapDefShader.find(iKey);
-	if (itFind != m_nMapDefShader.end()) return itFind->second;
-	return nullptr;
-}
-
-bool cwShaderManager::init()
-{
-	return true;
-}
-
-NS_MINIR_END
+#endif

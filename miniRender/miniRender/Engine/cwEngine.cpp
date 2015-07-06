@@ -19,11 +19,14 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwEngine.h"
 #include "Entity/cwScene.h"
+#include "Entity/cwEntity.h"
+#include "Material/cwMaterial.h"
 #include "Camera/cwCamera.h"
 #include "Device/cwDevice.h"
 #include "Ref/cwAutoReleasePool.h"
 #include "Event/cwEventManager.h"
 #include "Scheduler/cwSchedulerManager.h"
+#include "Shader/cwShader.h"
 
 NS_MINIR_BEGIN
 
@@ -41,7 +44,8 @@ cwEngine* cwEngine::create()
 
 cwEngine::cwEngine():
 m_pCurrScene(nullptr),
-m_pCurrCamera(nullptr)
+m_pCurrCamera(nullptr),
+m_pCurrShader(nullptr)
 {
 
 }
@@ -50,6 +54,7 @@ cwEngine::~cwEngine()
 {
 	CW_SAFE_RELEASE_NULL(m_pCurrScene);
 	m_pCurrCamera = nullptr;
+	m_pCurrShader = nullptr;
 }
 
 bool cwEngine::init()
@@ -104,7 +109,6 @@ cwCamera* cwEngine::getCurrentCamera()
 void cwEngine::render()
 {
 	m_pCurrCamera = getDefaultCamera();
-//	cwRepertory::getInstance().setCurrentCamera(getDefaultCamera());
 	cwRepertory::getInstance().getDevice()->beginDraw();
 
 	if (m_pCurrScene) {
@@ -114,6 +118,46 @@ void cwEngine::render()
 	cwRepertory::getInstance().getDevice()->endDraw();
 
 	m_pCurrCamera = nullptr;
+}
+
+void cwEngine::render(cwEntity* pEntity)
+{
+	if (pEntity) {
+		cwMaterial* pMaterial = pEntity->getMaterial();
+		if (pMaterial) {
+			this->setCurrShader(pMaterial->getShader());
+			cwRepertory::getInstance().getDevice()->render(pEntity, m_pCurrCamera);
+		}
+	}
+}
+
+void cwEngine::setCurrShader(cwShader* pShader)
+{
+	if (m_pCurrShader == pShader) return;
+	m_pCurrShader = pShader;
+	configShaderLight();
+}
+
+cwShader* cwEngine::getCurrShader() const
+{
+	return m_pCurrShader;
+}
+
+void cwEngine::configShaderLight()
+{
+	if (!m_pCurrShader) return;
+	if (!m_pCurrScene) return;
+	if (m_pCurrScene->getLights().empty()) return;
+	if (!m_pCurrShader->hasVariable(CW_SHADER_LIGHT) || !m_pCurrShader->hasVariable(CW_SHADER_LIGHT_CNT)) return;
+
+	CWUINT index = 0;
+	const cwVector<cwLight*>& vecLight = m_pCurrScene->getLights();
+	for (auto it = vecLight.begin(); it != vecLight.end(); ++it) {
+		m_pCurrShader->setVariableData(CW_SHADER_LIGHT, index, (*it)->data(), 0, (*it)->size());
+		index++;
+	}
+
+	m_pCurrShader->setVariableInt(CW_SHADER_LIGHT_CNT, (CWINT)(vecLight.size()));
 }
 
 NS_MINIR_END

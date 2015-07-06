@@ -36,31 +36,31 @@ public:
 	cwApplication();
 	virtual ~cwApplication();
 
-	virtual void gameBegin() = 0;
-	virtual void gameEnd() = 0;
+	virtual CWVOID gameBegin() = 0;
+	virtual CWVOID gameEnd() = 0;
 
-	virtual void gameBeginBackGround() = 0;
-	virtual void gameEndBackGround() = 0;
+	virtual CWVOID gameBeginBackGround() = 0;
+	virtual CWVOID gameEndBackGround() = 0;
 
-	virtual void refreshTitle(const CWSTRING& strTitle);
+	virtual CWVOID refreshTitle(const CWSTRING& strTitle);
 
 public:
 	CWINT go();
 
 private:
-	void init();
-	void onResize();
-	void onResize(CWUINT width, CWUINT height);
-	bool buildWindow();
-	void mainLoop();
+	CWVOID init();
+	CWVOID onResize();
+	CWVOID onResize(CWUINT width, CWUINT height);
+	CWBOOL buildWindow();
+	CWVOID mainLoop();
 
 	LRESULT msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	friend LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-	void onMouseDown(CWUINT keyState, CWINT x, CWINT y);
-	void onMouseUp(CWUINT keyState, CWINT x, CWINT y);
-	void onMouseMove(CWUINT keyState, CWINT x, CWINT y);
-	void OnMouseWheel(CWUINT keyState, CWINT delta, CWINT x, CWINT y);
+	CWVOID onMouseDown(CWUINT keyState, CWINT x, CWINT y);
+	CWVOID onMouseUp(CWUINT keyState, CWINT x, CWINT y);
+	CWVOID onMouseMove(CWUINT keyState, CWINT x, CWINT y);
+	CWVOID OnMouseWheel(CWUINT keyState, CWINT delta, CWINT x, CWINT y);
 
 private:
 	CWWSTRING m_nStrWinName;
@@ -72,7 +72,7 @@ private:
 	CWUINT m_uWindowWidth;
 	CWUINT m_uWindowHeight;
 
-	bool m_bResizing;
+	CWBOOL m_bResizing;
 
 };
 

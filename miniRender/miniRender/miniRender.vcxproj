@@ -92,7 +92,6 @@
     <ClInclude Include="Render\cwRenderQueue.h" />
     <ClInclude Include="Repertory\cwRepertory.h" />
     <ClInclude Include="Scheduler\cwScheduleInterface.h" />
-    <ClInclude Include="Scheduler\cwScheduleNode.h" />
     <ClInclude Include="Scheduler\cwSchedulerManager.h" />
     <ClInclude Include="Shader\cwShader.h" />
     <ClInclude Include="Shader\cwShaderConstant.h" />
@@ -161,7 +160,6 @@
     <ClCompile Include="Render\cwRenderQueue.cpp" />
     <ClCompile Include="Repertory\cwRepertory.cpp" />
     <ClCompile Include="Scheduler\cwScheduleInterface.cpp" />
-    <ClCompile Include="Scheduler\cwScheduleNode.cpp" />
     <ClCompile Include="Scheduler\cwSchedulerManager.cpp" />
     <ClCompile Include="Shader\cwShader.cpp" />
     <ClCompile Include="Shader\cwShaderManager.cpp" />

@@ -25,15 +25,15 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-template<typename M, typename F, typename R, typename... Args>
+template<typename M, typename R, typename... Args>
 class cwFuncNode
 {
 public:
-	cwFuncNode(std::function<R(Args...)> func, void* caller, F funcPtr)
+	cwFuncNode(std::function<R(Args...)> func)
 	{
 		_func = func;
-		_calller = caller;
-		_funcPtr = funcPtr;
+		//_calller = caller;
+		//_funcPtr = funcPtr;
 	}
 
 	R operator()(Args... args)
@@ -41,16 +41,16 @@ public:
 		return _func(args...);
 	}
 
-	inline void* caller() { return _calller; }
-	inline F& funcPtr() { return _funcPtr; }
+	//inline void* caller() { return _calller; }
+	//inline F& funcPtr() { return _funcPtr; }
 	inline M& data() { return _data; }
 
 	inline void setData(const M& d) { _data = d; }
 
 private:
 	std::function<R(Args...)> _func;
-	void* _calller;
-	F _funcPtr;
+	//void* _calller;
+	//F _funcPtr;
 	M _data;
 
 };

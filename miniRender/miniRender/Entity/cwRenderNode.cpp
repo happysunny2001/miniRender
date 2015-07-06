@@ -37,10 +37,11 @@ cwRenderNode* cwRenderNode::create()
 
 cwRenderNode::cwRenderNode() :
 m_pParent(nullptr),
-m_bVisible(true),
+m_bVisible(CWTRUE),
 m_nPos(cwVector3D::ZERO),
 m_nRot(cwVector3D::ZERO),
-m_nScale(1.0f, 1.0f ,1.0f)
+m_nScale(1.0f, 1.0f ,1.0f),
+m_bTransDirty(CWTRUE)
 {
 
 }
@@ -52,12 +53,12 @@ cwRenderNode::~cwRenderNode()
 	clearEventListener();
 }
 
-bool cwRenderNode::init()
+CWBOOL cwRenderNode::init()
 {
-	return true;
+	return CWTRUE;
 }
 
-void cwRenderNode::clearChildren()
+CWVOID cwRenderNode::clearChildren()
 {
 	for (auto it = m_nVecChildren.begin(); it != m_nVecChildren.end(); ++it) {
 		(*it)->setParent(nullptr);
@@ -66,14 +67,12 @@ void cwRenderNode::clearChildren()
 	m_nVecChildren.clear();
 }
 
-void cwRenderNode::setParent(cwRenderNode* pNode)
+CWVOID cwRenderNode::setParent(cwRenderNode* pNode)
 {
-	CW_SAFE_RELEASE_NULL(m_pParent);
 	m_pParent = pNode;
-	CW_SAFE_RETAIN(m_pParent);
 }
 
-void cwRenderNode::addChild(cwRenderNode* pNode)
+CWVOID cwRenderNode::addChild(cwRenderNode* pNode)
 {
 	if (!pNode) return;
 	if (m_nVecChildren.contains(pNode)) return;
@@ -81,145 +80,173 @@ void cwRenderNode::addChild(cwRenderNode* pNode)
 	pNode->setParent(this);
 }
 
-void cwRenderNode::removeChild(cwRenderNode* pNode)
+CWVOID cwRenderNode::removeChild(cwRenderNode* pNode)
 {
 	if (!pNode) return;
 	pNode->setParent(nullptr);
 	m_nVecChildren.erase(pNode);
 }
 
-void cwRenderNode::removeChildren()
+CWVOID cwRenderNode::removeChildren()
 {
 	clearChildren();
 }
 
-void cwRenderNode::setPosition(CWFLOAT x, CWFLOAT y, CWFLOAT z)
+CWVOID cwRenderNode::setPosition(CWFLOAT x, CWFLOAT y, CWFLOAT z)
 {
 	m_nPos.x = x;
 	m_nPos.y = y;
 	m_nPos.z = z;
+
+	m_bTransDirty = CWTRUE;
 }
 
-void cwRenderNode::setPosition(const cwVector3D& v)
+CWVOID cwRenderNode::setPosition(const cwVector3D& v)
 {
 	m_nPos.x = v.x;
 	m_nPos.y = v.y;
 	m_nPos.z = v.z;
+
+	m_bTransDirty = CWTRUE;
 }
 
-void cwRenderNode::move(CWFLOAT x, CWFLOAT y, CWFLOAT z)
+CWVOID cwRenderNode::move(CWFLOAT x, CWFLOAT y, CWFLOAT z)
 {
 	m_nPos.x += x;
 	m_nPos.y += y;
 	m_nPos.z += z;
+
+	m_bTransDirty = CWTRUE;
 }
 
-void cwRenderNode::move(const cwVector3D& v)
+CWVOID cwRenderNode::move(const cwVector3D& v)
 {
 	m_nPos.x += v.x;
 	m_nPos.y += v.y;
 	m_nPos.z += v.z;
+
+	m_bTransDirty = CWTRUE;
 }
 
-void cwRenderNode::setRotation(CWFLOAT x, CWFLOAT y, CWFLOAT z)
+CWVOID cwRenderNode::setRotation(CWFLOAT x, CWFLOAT y, CWFLOAT z)
 {
 	m_nRot.x = x;
 	m_nRot.y = y;
 	m_nRot.z = z;
+
+	m_bTransDirty = CWTRUE;
 }
 
-void cwRenderNode::setRotation(const cwVector3D& v)
+CWVOID cwRenderNode::setRotation(const cwVector3D& v)
 {
 	m_nRot.x = v.x;
 	m_nRot.y = v.y;
 	m_nRot.z = v.z;
+
+	m_bTransDirty = CWTRUE;
 }
 
-void cwRenderNode::rotate(CWFLOAT x, CWFLOAT y, CWFLOAT z)
+CWVOID cwRenderNode::rotate(CWFLOAT x, CWFLOAT y, CWFLOAT z)
 {
 	m_nRot.x += x;
 	m_nRot.y += y;
 	m_nRot.z += z;
+
+	m_bTransDirty = CWTRUE;
 }
 
-void cwRenderNode::rotate(const cwVector3D& v)
+CWVOID cwRenderNode::rotate(const cwVector3D& v)
 {
 	m_nRot.x += v.x;
 	m_nRot.y += v.y;
 	m_nRot.z += v.z;
+
+	m_bTransDirty = CWTRUE;
 }
 
-void cwRenderNode::setScale(CWFLOAT x, CWFLOAT y, CWFLOAT z)
+CWVOID cwRenderNode::setScale(CWFLOAT x, CWFLOAT y, CWFLOAT z)
 {
 	m_nScale.x = x;
 	m_nScale.y = y;
 	m_nScale.z = z;
+
+	m_bTransDirty = CWTRUE;
 }
 
-void cwRenderNode::setScale(const cwVector3D& v)
+CWVOID cwRenderNode::setScale(const cwVector3D& v)
 {
 	m_nScale.x = v.x;
 	m_nScale.y = v.y;
 	m_nScale.z = v.z;
+
+	m_bTransDirty = CWTRUE;
 }
 
-void cwRenderNode::scale(CWFLOAT x, CWFLOAT y, CWFLOAT z)
+CWVOID cwRenderNode::scale(CWFLOAT x, CWFLOAT y, CWFLOAT z)
 {
 	m_nScale.x += x;
 	m_nScale.y += y;
 	m_nScale.z += z;
+
+	m_bTransDirty = CWTRUE;
 }
 
-void cwRenderNode::scale(const cwVector3D& v)
+CWVOID cwRenderNode::scale(const cwVector3D& v)
 {
 	m_nScale.x += v.x;
 	m_nScale.y += v.y;
 	m_nScale.z += v.z;
+
+	m_bTransDirty = CWTRUE;
 }
 
-void cwRenderNode::setVisible(bool b)
+CWVOID cwRenderNode::setVisible(bool b)
 {
 	m_bVisible = b;
 }
 
-void cwRenderNode::addEventListener(cwEventListener* pListener)
+CWVOID cwRenderNode::addEventListener(cwEventListener* pListener)
 {
-	addEventListener(pListener, CW_EVENT_DEFAULT_PRIORITY, false);
+	addEventListener(pListener, CW_EVENT_DEFAULT_PRIORITY, CWFALSE);
 }
 
-void cwRenderNode::addEventListener(cwEventListener* pListener, CWINT iPriority, bool swallow)
+CWVOID cwRenderNode::addEventListener(cwEventListener* pListener, CWINT iPriority, CWBOOL swallow)
 {
 	if (cwRepertory::getInstance().getEventManager()->addListener(pListener, iPriority, swallow)) {
 		m_nVecEventListener.pushBack(pListener);
 	}
 }
 
-void cwRenderNode::removeEventListerner(cwEventListener* pListener, bool bClean)
+CWVOID cwRenderNode::removeEventListerner(cwEventListener* pListener, CWBOOL bClean)
 {
 	cwRepertory::getInstance().getEventManager()->removeListener(pListener);
 	if (bClean)
 		m_nVecEventListener.erase(pListener);
 }
 
-void cwRenderNode::transform()
+CWVOID cwRenderNode::transform()
 {
-	cwMatrix4X4 matTranslate, matScale, matRot;
-	matTranslate.setTranslation(m_nPos);
-	matScale.setScale(m_nScale);
-	matRot.setRotation(m_nRot);
-	m_nTrans = matScale * matRot * matTranslate;
+	if (m_bTransDirty) {
+		cwMatrix4X4 matTranslate, matScale, matRot;
+		matTranslate.setTranslation(m_nPos);
+		matScale.setScale(m_nScale);
+		matRot.setRotation(m_nRot);
+		m_nTrans = matScale * matRot * matTranslate;
+
+		m_bTransDirty = CWFALSE;
+	}
 
 	if (m_pParent) {
 		m_nTrans = m_nTrans * m_pParent->getTransformMatrix();
 	}
 }
 
-void cwRenderNode::update(CWFLOAT dt)
+CWVOID cwRenderNode::update(CWFLOAT dt)
 {
 
 }
 
-void cwRenderNode::render()
+CWVOID cwRenderNode::render()
 {
 	if (m_bVisible) {
 		this->transform();
@@ -228,22 +255,22 @@ void cwRenderNode::render()
 	}
 }
 
-void cwRenderNode::renderChildren()
+CWVOID cwRenderNode::renderChildren()
 {
 	for (auto it = m_nVecChildren.begin(); it != m_nVecChildren.end(); ++it) {
 		(*it)->render();
 	}
 }
 
-void cwRenderNode::renderSelf()
+CWVOID cwRenderNode::renderSelf()
 {
 
 }
 
-void cwRenderNode::clearEventListener()
+CWVOID cwRenderNode::clearEventListener()
 {
 	for (auto it = m_nVecEventListener.begin(); it != m_nVecEventListener.end(); ++it) {
-		removeEventListerner(*it, false);
+		removeEventListerner(*it, CWFALSE);
 	}
 
 	m_nVecEventListener.clear();

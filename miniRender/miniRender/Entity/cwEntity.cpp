@@ -42,7 +42,7 @@ cwEntity* cwEntity::create()
 
 bool cwEntity::init()
 {
-	return true;
+	return CWTRUE;
 }
 
 cwEntity::cwEntity():
@@ -58,14 +58,14 @@ cwEntity::~cwEntity()
 	CW_SAFE_RELEASE_NULL(m_pMaterial);
 }
 
-void cwEntity::setRenderObject(cwRenderObject* pRenderObj)
+CWVOID cwEntity::setRenderObject(cwRenderObject* pRenderObj)
 {
 	CW_SAFE_RELEASE_NULL(m_pRenderObj);
 	m_pRenderObj = pRenderObj;
 	CW_SAFE_RETAIN(m_pRenderObj);
 }
 
-void cwEntity::setMaterial(cwMaterial* pMaterial)
+CWVOID cwEntity::setMaterial(cwMaterial* pMaterial)
 {
 	if (pMaterial == m_pMaterial) return;
 
@@ -74,44 +74,9 @@ void cwEntity::setMaterial(cwMaterial* pMaterial)
 	CW_SAFE_RETAIN(m_pMaterial);
 }
 
-void cwEntity::renderSelf()
+CWVOID cwEntity::renderSelf()
 {
-//	auto camera = cwRepertory::getInstance().getCurrentCamera();
-	auto camera = cwRepertory::getInstance().getEngine()->getCurrentCamera();
-
-	if (camera) {
-		cwRepertory::getInstance().getDevice()->render(this, camera);
-	}
+	cwRepertory::getInstance().getEngine()->render(this);
 }
-
-// void cwEntity::setLights(vector<cwLight*>& vecLights)
-// {
-// 	if (m_pMaterial) {
-// 		cwEffects* pEffect = m_pMaterial->getEffect();
-// 		if (pEffect) {
-// 			pEffect->setLights(vecLights);
-// 		}
-// 	}
-// }
-
-// void cwEntity::render(cwCamera* pCamera)
-// {
-// 	cwMaterial* pMaterial = this->getMaterial();
-// 	if (pMaterial) {
-// 		pMaterial->configEffect();
-// 
-// 		cwEffects *pEffect = pMaterial->getEffect();
-// 		if (pEffect) {
-// 			this->transform();
-// 			cwRepertory::getInstance().getDevice()->setEffectWorldTrans(pEffect, this->getWorldTrans(), pCamera);
-// 
-// 			const cwMatrix4X4& matDiffTrans = this->getDiffuseTrans();
-// 			cwRepertory::getInstance().getDevice()->setDiffuseTrans(pEffect, matDiffTrans);
-// 
-// 			cwRenderObject* pRenderObj = this->getRenderObj();
-// 			cwRepertory::getInstance().getDevice()->draw(pEffect, pMaterial->getTechName(), pRenderObj);
-// 		}
-// 	}
-// }
 
 NS_MINIR_END

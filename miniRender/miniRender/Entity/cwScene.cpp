@@ -43,20 +43,20 @@ cwScene::~cwScene()
 
 }
 
-bool cwScene::init()
+CWBOOL cwScene::init()
 {
 	if (!cwRenderNode::init()) return false;
 	return true;
 }
 
-void cwScene::appendLight(cwLight* pLight)
+CWVOID cwScene::addLight(cwLight* pLight)
 {
 	if (!pLight) return;
 	if (m_nVecLights.contains(pLight)) return;
 	m_nVecLights.pushBack(pLight);
 }
 
-void cwScene::removeLight(cwLight* pLight)
+CWVOID cwScene::removeLight(cwLight* pLight)
 {
 	if (!pLight) return;
 	m_nVecLights.erase(pLight);

@@ -35,10 +35,10 @@ public:
 	cwScene();
 	virtual ~cwScene();
 
-	virtual bool init() override;
+	virtual CWBOOL init() override;
 
-	virtual void appendLight(cwLight* pLight);
-	virtual void removeLight(cwLight* pLight);
+	virtual CWVOID addLight(cwLight* pLight);
+	virtual CWVOID removeLight(cwLight* pLight);
 	const cwVector<cwLight*>& getLights() const;
 
 protected:

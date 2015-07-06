@@ -22,7 +22,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Shader/cwShaderManager.h"
 #include "Layouts/cwLayoutsManager.h"
 #include "Texture/cwTextureManager.h"
-//#include "cwLog.h"
 #include "Ref/cwAutoReleasePool.h"
 #include "Camera/cwCamera.h"
 #include "Platform/cwFileSystem.h"
@@ -47,7 +46,6 @@ cwRepertory& cwRepertory::getInstance()
 
 cwRepertory::cwRepertory():
 m_pDevice(nullptr),
-//m_pLog(nullptr),
 m_pShaderManager(nullptr),
 m_pLayoutManager(nullptr),
 m_pTextureManager(nullptr),
@@ -65,7 +63,6 @@ cwRepertory::~cwRepertory()
 	CW_SAFE_RELEASE_NULL(m_pShaderManager);
 	CW_SAFE_RELEASE_NULL(m_pLayoutManager);
 	CW_SAFE_DELETE(m_pDevice);
-	//CW_SAFE_DELETE(m_pLog);
 	CW_SAFE_DELETE(m_pAutoReleasePool);
 	CW_SAFE_RELEASE_NULL(m_pTextureManager);
 	CW_SAFE_RELEASE_NULL(m_pFileSystem);
@@ -79,11 +76,6 @@ cwDevice* cwRepertory::getDevice()
 {
 	return m_pDevice;
 }
-
-//cwLog* cwRepertory::getLog()
-//{
-//	return m_pLog;
-//}
 
 cwShaderManager* cwRepertory::getShaderManager()
 {

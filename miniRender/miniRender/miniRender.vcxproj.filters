@@ -360,9 +360,6 @@
     <ClInclude Include="Scheduler\cwSchedulerManager.h">
       <Filter>源文件\Scheduler</Filter>
     </ClInclude>
-    <ClInclude Include="Scheduler\cwScheduleNode.h">
-      <Filter>源文件\Scheduler</Filter>
-    </ClInclude>
     <ClInclude Include="Scheduler\cwScheduleInterface.h">
       <Filter>源文件\Scheduler</Filter>
     </ClInclude>
@@ -558,9 +555,6 @@
       <Filter>源文件\Event</Filter>
     </ClCompile>
     <ClCompile Include="Scheduler\cwSchedulerManager.cpp">
-      <Filter>源文件\Scheduler</Filter>
-    </ClCompile>
-    <ClCompile Include="Scheduler\cwScheduleNode.cpp">
       <Filter>源文件\Scheduler</Filter>
     </ClCompile>
     <ClCompile Include="Scheduler\cwScheduleInterface.cpp">
