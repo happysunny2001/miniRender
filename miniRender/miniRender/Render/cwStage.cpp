@@ -17,4 +17,37 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include "cwStage.h"
+#include "Camera/cwCamera.h"
 
+NS_MINIR_BEGIN
+
+cwStage* cwStage::create(tinyxml2::XMLElement* pStageData)
+{
+	cwStage* pStage = new cwStage();
+	if (pStage && pStage->init(pStageData)) {
+		pStage->autorelease();
+		return pStage;
+	}
+
+	CW_SAFE_DELETE(pStage);
+	return nullptr;
+}
+
+cwStage::cwStage() : 
+m_pCamera(nullptr)
+{
+
+}
+
+cwStage::~cwStage()
+{
+	CW_SAFE_RELEASE_NULL(m_pCamera);
+}
+
+bool cwStage::init(tinyxml2::XMLElement* pStageData)
+{
+	return true;
+}
+
+NS_MINIR_END

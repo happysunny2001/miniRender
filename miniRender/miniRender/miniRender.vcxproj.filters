@@ -118,6 +118,12 @@
     <Filter Include="源文件\Scheduler">
       <UniqueIdentifier>{05b04a04-ef1e-4134-9469-8e6a3086598d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\External">
+      <UniqueIdentifier>{15d62473-62fe-40dd-ba4e-73b5748b5218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\External\tinyxml2">
+      <UniqueIdentifier>{51ef478f-d7ef-4a9a-903e-48aca7877c1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\cwVector.h">
@@ -363,6 +369,21 @@
     <ClInclude Include="Scheduler\cwScheduleInterface.h">
       <Filter>源文件\Scheduler</Filter>
     </ClInclude>
+    <ClInclude Include="..\external\tinyxml2\tinyxml2.h">
+      <Filter>源文件\External\tinyxml2</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\cwStage.h">
+      <Filter>源文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\cwRenderTexture.h">
+      <Filter>源文件\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTexture.h">
+      <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTarget.h">
+      <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -559,6 +580,21 @@
     </ClCompile>
     <ClCompile Include="Scheduler\cwScheduleInterface.cpp">
       <Filter>源文件\Scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\tinyxml2\tinyxml2.cpp">
+      <Filter>源文件\External\tinyxml2</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\cwStage.cpp">
+      <Filter>源文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\cwRenderTexture.cpp">
+      <Filter>源文件\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTexture.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTarget.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

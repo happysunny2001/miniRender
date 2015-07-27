@@ -86,6 +86,11 @@ public:
 	virtual void setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans) override;
 	virtual void draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) override;
 
+public:
+	IDXGISwapChain* getSwapChain() { return m_pDxgiSwapChain; }
+	ID3D11Device* getD3D11Device() { return m_pD3D11Device; }
+	ID3D11DeviceContext* getD3D11DeviceContext() { return m_pD3D11DeviceContext; }
+
 protected:
 	cwD3D11Device();
 

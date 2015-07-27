@@ -74,6 +74,11 @@ typedef enum {
 }eLogType;
 
 typedef enum {
+	eStageTypeNormal = 1,
+	eStageTypeSpecific,
+}eStageType;
+
+typedef enum {
 	ePrimitiveTypePointList = 0,
 	ePrimitiveTypeLineList,
 	ePrimitiveTypeLineStrip,
@@ -204,6 +209,12 @@ typedef enum {
 	eDepthWriteMaskAll,
 	eDepthWriteMaskMaxCount,
 }eDepthWriteMask;
+
+typedef enum {
+	eRenderTextureTarget = 1,
+	eRenderTextureShader = 2,
+	eRenderTextureMultiThread = 4,
+}eRenderTextureType;
 
 #define CW_CONTROL MK_CONTROL
 #define CW_LBUTTON MK_LBUTTON

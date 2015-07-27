@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\external\tinyxml2\tinyxml2.h" />
     <ClInclude Include="Base\cwBasicType.h" />
     <ClInclude Include="Base\cwColor.h" />
     <ClInclude Include="Base\cwFuncNode.h" />
@@ -79,6 +80,8 @@
     <ClInclude Include="Platform\D3D\D3D11\Shader\cwD3D11Shader.h" />
     <ClInclude Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderManager.h" />
     <ClInclude Include="Platform\D3D\D3D11\Stencil\cwD3D11Stencil.h" />
+    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTarget.h" />
+    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTexture.h" />
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11Texture.h" />
     <ClInclude Include="Platform\Windows\cwWinApplication.h" />
     <ClInclude Include="Platform\Windows\cwWinFileSystem.h" />
@@ -90,6 +93,7 @@
     <ClInclude Include="RenderObject\cwStaticRenderObject.h" />
     <ClInclude Include="Render\cwRenderCommand.h" />
     <ClInclude Include="Render\cwRenderQueue.h" />
+    <ClInclude Include="Render\cwStage.h" />
     <ClInclude Include="Repertory\cwRepertory.h" />
     <ClInclude Include="Scheduler\cwScheduleInterface.h" />
     <ClInclude Include="Scheduler\cwSchedulerManager.h" />
@@ -97,11 +101,13 @@
     <ClInclude Include="Shader\cwShaderConstant.h" />
     <ClInclude Include="Shader\cwShaderManager.h" />
     <ClInclude Include="Stencil\cwStencil.h" />
+    <ClInclude Include="Texture\cwRenderTexture.h" />
     <ClInclude Include="Texture\cwTexture.h" />
     <ClInclude Include="Texture\cwTextureManager.h" />
     <ClInclude Include="Timer\cwTimer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\external\tinyxml2\tinyxml2.cpp" />
     <ClCompile Include="Base\cwColor.cpp" />
     <ClCompile Include="Base\cwRunTime.cpp" />
     <ClCompile Include="Blend\cwBlend.cpp" />
@@ -147,6 +153,8 @@
     <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11Shader.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderManager.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Stencil\cwD3D11Stencil.cpp" />
+    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTarget.cpp" />
+    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTexture.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11Texture.cpp" />
     <ClCompile Include="Platform\Windows\cwWinApplication.cpp" />
     <ClCompile Include="Platform\Windows\cwWinFileSystem.cpp" />
@@ -158,12 +166,14 @@
     <ClCompile Include="RenderObject\cwStaticRenderObject.cpp" />
     <ClCompile Include="Render\cwRenderCommand.cpp" />
     <ClCompile Include="Render\cwRenderQueue.cpp" />
+    <ClCompile Include="Render\cwStage.cpp" />
     <ClCompile Include="Repertory\cwRepertory.cpp" />
     <ClCompile Include="Scheduler\cwScheduleInterface.cpp" />
     <ClCompile Include="Scheduler\cwSchedulerManager.cpp" />
     <ClCompile Include="Shader\cwShader.cpp" />
     <ClCompile Include="Shader\cwShaderManager.cpp" />
     <ClCompile Include="Stencil\cwStencil.cpp" />
+    <ClCompile Include="Texture\cwRenderTexture.cpp" />
     <ClCompile Include="Texture\cwTexture.cpp" />
     <ClCompile Include="Texture\cwTextureManager.cpp" />
     <ClCompile Include="Timer\cwTimer.cpp" />
@@ -223,7 +233,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)external\uthash\include;$(SolutionDir)external\platform\windows\directx11\include;$(SolutionDir)miniRender;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)external\tinyxml2;$(SolutionDir)external\uthash\include;$(SolutionDir)external\platform\windows\directx11\include;$(SolutionDir)miniRender;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)external\platform\windows\directx11\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
