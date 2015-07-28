@@ -77,7 +77,8 @@ public:
 	virtual CW_RES_LOCK_DATA lockBuffer(cwBuffer* pBuffer);
 	virtual void unlockBuffer(cwBuffer* pBuffer);
 
-	virtual cwTexture* createTexture(const string& strFileName);
+	virtual cwTexture* createTexture(const string& strFileName) override;
+	virtual cwRenderTexture* createRenderTexture(float fWidth, float fHeight, eRenderTextureType eType = eRenderTextureShader) override;
 
 	virtual void render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) override;
 	virtual void render(cwEntity* pEntity, cwCamera* pCamera) override;
@@ -90,6 +91,7 @@ public:
 	IDXGISwapChain* getSwapChain() { return m_pDxgiSwapChain; }
 	ID3D11Device* getD3D11Device() { return m_pD3D11Device; }
 	ID3D11DeviceContext* getD3D11DeviceContext() { return m_pD3D11DeviceContext; }
+	inline CWUINT getM4xMassQuality() const { return m_uiM4xMsaaQuality; }
 
 protected:
 	cwD3D11Device();
@@ -108,9 +110,6 @@ protected:
 	ID3D11Device* m_pD3D11Device;
 	ID3D11DeviceContext* m_pD3D11DeviceContext;
 	IDXGISwapChain* m_pDxgiSwapChain;
-	ID3D11RenderTargetView* m_pD3D11RenderTarget;
-	ID3D11Texture2D* m_pDepthStencilBuffer;
-	ID3D11DepthStencilView* m_pDepthStencilView;
 	CWUINT m_uiM4xMsaaQuality;
 
 	ID3D11RasterizerState* m_pSolidRenderState;

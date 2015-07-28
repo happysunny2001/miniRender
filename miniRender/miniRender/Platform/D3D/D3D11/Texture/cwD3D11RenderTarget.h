@@ -30,13 +30,19 @@ NS_MINIR_BEGIN
 class cwD3D11RenderTarget : public cwRenderTexture
 {
 public:
-	static cwD3D11RenderTarget* create(CWUINT iWidth, CWUINT iHeight);
+	static cwD3D11RenderTarget* create();
 
 	cwD3D11RenderTarget();
 	virtual ~cwD3D11RenderTarget();
 
-	virtual bool init(CWUINT iWidth, CWUINT iHeight) override;
-	virtual bool onResize(CWUINT iWidth, CWUINT iHeight) override;
+	virtual bool init(CWFLOAT fWidth, CWFLOAT fHeight) override;
+
+	virtual void beginResize() override;
+	virtual bool onResize(bool bForce=false) override;
+
+	virtual CWHANDLE getRenderTargetPtr() override;
+	virtual CWHANDLE getResourcePtr() override;
+	virtual CWHANDLE getResourceMultiThreadPtr() override;
 
 protected:
 	ID3D11RenderTargetView* m_pRenderTarget;

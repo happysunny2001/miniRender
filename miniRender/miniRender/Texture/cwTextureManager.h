@@ -21,10 +21,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #define __CW_TEXTURE_MANAGER_H__
 
 #include "Base/cwUtils.h"
+#include "Base/cwVector.h"
 #include "Base/cwMap.h"
 #include "Ref/cwRef.h"
 #include "Repertory/cwRepertory.h"
 #include "cwTexture.h"
+#include "cwRenderTexture.h"
 
 NS_MINIR_BEGIN
 
@@ -36,6 +38,12 @@ public:
 	cwTexture* getTexture(const string& strName);
 	void removeTexture(const string& strName);
 
+	cwRenderTexture* createRenderTexture(float fWidth, float fHeight, eRenderTextureType eType=eRenderTextureShader);
+	void removeRenderTexture(cwRenderTexture* pTex);
+
+	void beginResize();
+	void onResize();
+
 protected:
 	static cwTextureManager* create();
 	cwTextureManager() {}
@@ -43,7 +51,8 @@ protected:
 	friend class cwRepertory;
 
 private:
-	cwMap<string, cwTexture*> m_mapTexture;
+	cwMap<CWSTRING, cwTexture*> m_mapTexture;
+	cwVector<cwRenderTexture*> m_vecRenderTexture;
 
 };
 

@@ -17,51 +17,38 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwDevice.h"
-#include "Base/cwColor.h"
+#ifndef __CW_D3D11_RENDER_TEXTURE_MULTI_THREAD_H__
+#define __CW_D3D11_RENDER_TEXTURE_MULTI_THREAD_H__
+
+#ifdef _CW_D3D11_
+
 #include "Base/cwMacros.h"
-#include "Texture/cwRenderTexture.h"
+#include "cwD3D11RenderTexture.h"
 
 NS_MINIR_BEGIN
 
-cwDevice::cwDevice() :
-m_fvClearColor(cwColor::black),
-m_eRenderState(eRenderStateSolid),
-m_bEnableMsaa4x(true),
-m_pBlendState(nullptr),
-m_pRenderTargetBkBuffer(nullptr),
-m_pCurrRenderTarget(nullptr),
-m_pDepthStencil(nullptr),
-m_bRefreshRenderTarget(true)
+class cwD3D11RenderTextureMultiThread : public cwD3D11RenderTexture
 {
+public:
+	static cwD3D11RenderTextureMultiThread* create(CWFLOAT fWidth, CWFLOAT fHeight);
 
-}
+	cwD3D11RenderTextureMultiThread();
+	virtual ~cwD3D11RenderTextureMultiThread();
 
-cwDevice::~cwDevice()
-{
-	m_pBlendState = nullptr;
-}
+	virtual bool init(CWFLOAT fWidth, CWFLOAT fHeight) override;
+	virtual bool onResize(bool bForce = false) override;
 
-void cwDevice::setRenderTarget(cwRenderTexture* pRenderTexture)
-{
-	if (m_pCurrRenderTarget == pRenderTexture) return;
+	virtual CWHANDLE getResourceMultiThreadPtr() override;
 
-	CW_SAFE_RETAIN(pRenderTexture);
-	CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
-	m_pCurrRenderTarget = pRenderTexture;
+protected:
+	ID3D11UnorderedAccessView* m_pUnorderedAccessView;
 
-	m_bRefreshRenderTarget = true;
-}
-
-void cwDevice::setDepthStentil(cwRenderTexture* pDepthStencil)
-{
-	if (m_pDepthStencil == pDepthStencil) return;
-
-	CW_SAFE_RETAIN(pDepthStencil);
-	CW_SAFE_RELEASE_NULL(m_pDepthStencil);
-	m_pDepthStencil = pDepthStencil;
-
-	m_bRefreshRenderTarget = true;
-}
+};
 
 NS_MINIR_END
+
+#endif //_CW_D3D11_
+
+#endif //__CW_D3D11_RENDER_TEXTURE_MULTI_THREAD_H__
+
+

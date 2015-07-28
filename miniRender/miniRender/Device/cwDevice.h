@@ -37,6 +37,7 @@ class cwEntity;
 class cwTexture;
 class cwBlend;
 class cwStencil;
+class cwRenderTexture;
 
 class CW_DLL cwDevice
 {
@@ -83,6 +84,7 @@ public:
 	virtual void unlockBuffer(cwBuffer* pBuffer) = 0;
 
 	virtual cwTexture* createTexture(const string& strFileName) = 0;
+	virtual cwRenderTexture* createRenderTexture(float fWidth, float fHeight, eRenderTextureType eType=eRenderTextureShader) = 0;
 
 	virtual void render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) = 0;
 	virtual void render(cwEntity* pEntity, cwCamera* pCamera) = 0;
@@ -90,6 +92,11 @@ public:
 	virtual void setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) = 0;
 	virtual void setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans) = 0;
 	virtual void draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) = 0;
+
+	virtual void setRenderTarget(cwRenderTexture* pRenderTexture);
+	virtual void setDepthStentil(cwRenderTexture* pDepthStencil);
+
+	inline bool getEnableMsaa4X() const { return m_bEnableMsaa4x; }
 
 protected:
 	cwDevice();
@@ -99,6 +106,12 @@ protected:
 	eRenderState m_eRenderState;
 	cwBlend* m_pBlendState; //current blend state, just for record
 	bool m_bEnableMsaa4x;
+
+	cwRenderTexture* m_pRenderTargetBkBuffer;
+	cwRenderTexture* m_pCurrRenderTarget;
+	cwRenderTexture* m_pDepthStencil;
+
+	bool m_bRefreshRenderTarget;
 
 };
 

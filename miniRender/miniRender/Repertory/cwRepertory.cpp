@@ -142,10 +142,10 @@ void cwRepertory::initAll()
 	m_pSchedulerManager = cwSchedulerManager::create();
 	CW_SAFE_RETAIN(m_pSchedulerManager);
 
-	specialInit();
-
 	m_pTextureManager = cwTextureManager::create();
 	CW_SAFE_RETAIN(m_pTextureManager);
+
+	specialInit();
 
 	m_pEngine = cwEngine::create();
 	CW_SAFE_RETAIN(m_pEngine);

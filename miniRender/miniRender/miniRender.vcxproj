@@ -80,8 +80,10 @@
     <ClInclude Include="Platform\D3D\D3D11\Shader\cwD3D11Shader.h" />
     <ClInclude Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderManager.h" />
     <ClInclude Include="Platform\D3D\D3D11\Stencil\cwD3D11Stencil.h" />
+    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11DepthStencil.h" />
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTarget.h" />
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTexture.h" />
+    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureMultiThread.h" />
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11Texture.h" />
     <ClInclude Include="Platform\Windows\cwWinApplication.h" />
     <ClInclude Include="Platform\Windows\cwWinFileSystem.h" />
@@ -153,8 +155,10 @@
     <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11Shader.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderManager.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Stencil\cwD3D11Stencil.cpp" />
+    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11DepthStencil.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTarget.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTexture.cpp" />
+    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureMultiThread.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11Texture.cpp" />
     <ClCompile Include="Platform\Windows\cwWinApplication.cpp" />
     <ClCompile Include="Platform\Windows\cwWinFileSystem.cpp" />

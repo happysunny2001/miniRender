@@ -162,7 +162,7 @@ CWVOID cwApplication::onResize(CWUINT width, CWUINT height)
 
 	repertory.addValue(gValueWinWidth, cwValueMap(width));
 	repertory.addValue(gValueWinHeight, cwValueMap(height));
-	repertory.getDevice()->resize(width, height);
+	repertory.getDevice()->resize();
 
 	CWFLOAT fov = repertory.getFloat(gValueFov);
 	CWFLOAT nearZ = repertory.getFloat(gValueNearZ);

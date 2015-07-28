@@ -384,6 +384,12 @@
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTarget.h">
       <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureMultiThread.h">
+      <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11DepthStencil.h">
+      <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -594,6 +600,12 @@
       <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
     </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTarget.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureMultiThread.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11DepthStencil.cpp">
       <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
     </ClCompile>
   </ItemGroup>

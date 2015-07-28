@@ -36,7 +36,7 @@ cwTextureManager* cwTextureManager::create()
 
 cwTextureManager::~cwTextureManager()
 {
-
+	m_vecRenderTexture.clear();
 }
 
 cwTexture* cwTextureManager::getTexture(const string& strName)
@@ -56,6 +56,36 @@ cwTexture* cwTextureManager::getTexture(const string& strName)
 void cwTextureManager::removeTexture(const string& strName)
 {
 	m_mapTexture.erase(strName);
+}
+
+cwRenderTexture* cwTextureManager::createRenderTexture(float fWidth, float fHeight, eRenderTextureType eType)
+{
+	cwRenderTexture* pRenderTex = cwRepertory::getInstance().getDevice()->createRenderTexture(fWidth, fHeight, eType);
+	if (pRenderTex) {
+		m_vecRenderTexture.pushBack(pRenderTex);
+	}
+
+	return pRenderTex;
+}
+
+void cwTextureManager::removeRenderTexture(cwRenderTexture* pTex)
+{
+	if (!pTex) return;
+	m_vecRenderTexture.erase(pTex);
+}
+
+void cwTextureManager::beginResize()
+{
+	for (auto pRenderTex : m_vecRenderTexture) {
+		pRenderTex->beginResize();
+	}
+}
+
+void cwTextureManager::onResize()
+{
+	for (auto pRenderTex : m_vecRenderTexture) {
+		pRenderTex->onResize();
+	}
 }
 
 NS_MINIR_END

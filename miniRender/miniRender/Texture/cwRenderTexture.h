@@ -24,20 +24,29 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwBasicType.h"
 #include "Base/cwUtils.h"
 #include "Ref/cwRef.h"
+#include "Math/cwMath.h"
 
 NS_MINIR_BEGIN
 
 class cwRenderTexture : public cwRef
 {
 public:
-	virtual bool init(CWUINT iWidth, CWUINT iHeight) = 0;
-	virtual bool onResize(CWUINT iWidth, CWUINT iHeight);
-	virtual bool binding();
-	virtual bool clear(const cwVector4D& color);
+	virtual bool init(CWFLOAT fWidth, CWFLOAT fHeight);
+
+	virtual void beginResize();
+	virtual bool onResize(bool bForce=false);
+	
+	virtual CWHANDLE getRenderTargetPtr();
+	virtual CWHANDLE getResourcePtr();
+	virtual CWHANDLE getResourceMultiThreadPtr();
+
+	inline eRenderTextureType getType() const { return m_eType; }
 
 protected:
-	int m_iWidth;
-	int m_iHeight;
+	CWFLOAT m_fWidth;
+	CWFLOAT m_fHeight;
+
+	eRenderTextureType m_eType;
 
 };
 

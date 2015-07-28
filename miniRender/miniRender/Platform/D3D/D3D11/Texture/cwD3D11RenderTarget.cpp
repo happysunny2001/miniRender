@@ -17,16 +17,20 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#ifdef _CW_D3D11_
+
 #include "cwD3D11RenderTarget.h"
+#include "Repertory/cwRepertory.h"
 #include "Platform/Windows/cwWinUtils.h"
 #include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
+#include "Platform/D3D/D3D11/cwD3D11Utils.h"
 
 NS_MINIR_BEGIN
 
-cwD3D11RenderTarget* cwD3D11RenderTarget::create(CWUINT iWidth, CWUINT iHeight)
+cwD3D11RenderTarget* cwD3D11RenderTarget::create()
 {
 	cwD3D11RenderTarget* pRenderTarget = new cwD3D11RenderTarget();
-	if (pRenderTarget && pRenderTarget->init(iWidth, iHeight)) {
+	if (pRenderTarget && pRenderTarget->init(1.0f, 1.0f)) {
 		pRenderTarget->autorelease();
 		return pRenderTarget;
 	}
@@ -38,7 +42,7 @@ cwD3D11RenderTarget* cwD3D11RenderTarget::create(CWUINT iWidth, CWUINT iHeight)
 cwD3D11RenderTarget::cwD3D11RenderTarget():
 m_pRenderTarget(nullptr)
 {
-
+	m_eType = eRenderTextureTarget;
 }
 
 cwD3D11RenderTarget::~cwD3D11RenderTarget()
@@ -46,18 +50,46 @@ cwD3D11RenderTarget::~cwD3D11RenderTarget()
 	CW_RELEASE_COM(m_pRenderTarget);
 }
 
-bool cwD3D11RenderTarget::init(CWUINT iWidth, CWUINT iHeight)
+bool cwD3D11RenderTarget::init(CWFLOAT fWidth, CWFLOAT fHeight)
 {
-	return onResize(iWidth, iHeight);
+	return cwRenderTexture::init(fWidth, fHeight);
 }
 
-bool cwD3D11RenderTarget::onResize(CWUINT iWidth, CWUINT iHeight)
+void cwD3D11RenderTarget::beginResize()
 {
+	CW_RELEASE_COM(m_pRenderTarget);
+}
+
+bool cwD3D11RenderTarget::onResize(bool bForce)
+{
+	CW_RELEASE_COM(m_pRenderTarget);
+
+	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+	if (!pDevice) return false;
 
 	ID3D11Texture2D* backBuffer = NULL;
-	CW_HR(m_pDxgiSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBuffer));
-	CW_HR(m_pD3D11Device->CreateRenderTargetView(backBuffer, NULL, &m_pRenderTarget));
+	CW_HR(pDevice->getSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBuffer));
+	CW_HR(pDevice->getD3D11Device()->CreateRenderTargetView(backBuffer, NULL, &m_pRenderTarget));
 	CW_RELEASE_COM(backBuffer);
+
+	return true;
+}
+
+CWHANDLE cwD3D11RenderTarget::getRenderTargetPtr()
+{
+	return static_cast<CWHANDLE>(m_pRenderTarget);
+}
+
+CWHANDLE cwD3D11RenderTarget::getResourcePtr()
+{
+	return NULL;
+}
+
+CWHANDLE cwD3D11RenderTarget::getResourceMultiThreadPtr()
+{
+	return NULL;
 }
 
 NS_MINIR_END
+
+#endif

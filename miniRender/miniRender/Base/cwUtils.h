@@ -211,9 +211,11 @@ typedef enum {
 }eDepthWriteMask;
 
 typedef enum {
+	eRenderTextureNone = 0,
 	eRenderTextureTarget = 1,
 	eRenderTextureShader = 2,
-	eRenderTextureMultiThread = 4,
+	eRenderTextureMultiThread = 3,
+	eRenderTextureDepthStencil = 4,
 }eRenderTextureType;
 
 #define CW_CONTROL MK_CONTROL

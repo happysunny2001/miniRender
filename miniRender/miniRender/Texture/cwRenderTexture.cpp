@@ -16,3 +16,42 @@ PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS B
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
+#include "cwRenderTexture.h"
+
+NS_MINIR_BEGIN
+
+bool cwRenderTexture::init(CWFLOAT fWidth, CWFLOAT fHeight)
+{
+	m_fWidth = fWidth;
+	m_fHeight = fHeight;
+
+	return onResize(true);
+}
+
+bool cwRenderTexture::onResize(bool bForce)
+{
+	return true;
+}
+
+CWHANDLE cwRenderTexture::getRenderTargetPtr()
+{
+	return NULL;
+}
+
+CWHANDLE cwRenderTexture::getResourcePtr()
+{
+	return NULL;
+}
+
+CWHANDLE cwRenderTexture::getResourceMultiThreadPtr()
+{
+	return NULL;
+}
+
+void cwRenderTexture::beginResize()
+{
+
+}
+
+NS_MINIR_END

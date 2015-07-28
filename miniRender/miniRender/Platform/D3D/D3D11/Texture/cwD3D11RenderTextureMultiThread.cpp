@@ -19,52 +19,47 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #ifdef _CW_D3D11_
 
-#include "cwD3D11RenderTexture.h"
+#include "cwD3D11RenderTextureMultiThread.h"
+#include "Repertory/cwRepertory.h"
 #include "Platform/Windows/cwWinUtils.h"
-#include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
 #include "Platform/D3D/D3D11/cwD3D11Utils.h"
+#include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
 
 NS_MINIR_BEGIN
 
-cwD3D11RenderTexture* cwD3D11RenderTexture::create(CWFLOAT fWidth, CWFLOAT fHeight)
+cwD3D11RenderTextureMultiThread* cwD3D11RenderTextureMultiThread::create(CWFLOAT fWidth, CWFLOAT fHeight)
 {
-	cwD3D11RenderTexture* pRenderTex = new cwD3D11RenderTexture();
-	if (pRenderTex && pRenderTex->init(fWidth, fHeight)) {
-		pRenderTex->autorelease();
-		return pRenderTex;
+	cwD3D11RenderTextureMultiThread* pRenderTexture = new cwD3D11RenderTextureMultiThread();
+	if (pRenderTexture && pRenderTexture->init(fWidth, fHeight)) {
+		pRenderTexture->autorelease();
+		return pRenderTexture;
 	}
 
-	CW_SAFE_DELETE(pRenderTex);
+	CW_SAFE_DELETE(pRenderTexture);
 	return nullptr;
 }
 
-cwD3D11RenderTexture::cwD3D11RenderTexture():
-m_pShaderResource(NULL),
-m_pRenderTarget(NULL)
+cwD3D11RenderTextureMultiThread::cwD3D11RenderTextureMultiThread() :
+m_pUnorderedAccessView(nullptr)
 {
-	m_eType = eRenderTextureShader;
+	m_eType = eRenderTextureMultiThread;
 }
 
-cwD3D11RenderTexture::~cwD3D11RenderTexture()
+cwD3D11RenderTextureMultiThread::~cwD3D11RenderTextureMultiThread()
 {
-	CW_RELEASE_COM(m_pShaderResource);
-	CW_RELEASE_COM(m_pRenderTarget);
+	CW_RELEASE_COM(m_pUnorderedAccessView);
 }
 
-bool cwD3D11RenderTexture::init(CWFLOAT fWidth, CWFLOAT fHeight)
+bool cwD3D11RenderTextureMultiThread::init(CWFLOAT fWidth, CWFLOAT fHeight)
 {
-	return cwRenderTexture::init(fWidth, fHeight);
+	return cwD3D11RenderTexture::init(fWidth, fHeight);
 }
 
-void cwD3D11RenderTexture::beginResize()
-{
-
-}
-
-bool cwD3D11RenderTexture::onResize(bool bForce)
+bool cwD3D11RenderTextureMultiThread::onResize(bool bForce)
 {
 	if (!bForce && m_fWidth > 1.0f) return true;
 
+	CW_RELEASE_COM(m_pUnorderedAccessView);
 	CW_RELEASE_COM(m_pShaderResource);
 	CW_RELEASE_COM(m_pRenderTarget);
 
@@ -72,7 +67,7 @@ bool cwD3D11RenderTexture::onResize(bool bForce)
 	CWUINT texHeight = 0;
 
 	if (m_fWidth > 1.0f) {
-		texWidth  = static_cast<CWUINT>(m_fWidth);
+		texWidth = static_cast<CWUINT>(m_fWidth);
 		texHeight = static_cast<CWUINT>(m_fHeight);
 	}
 	else {
@@ -93,38 +88,31 @@ bool cwD3D11RenderTexture::onResize(bool bForce)
 	texDesc.SampleDesc.Count = 1;
 	texDesc.SampleDesc.Quality = 0;
 	texDesc.Usage = D3D11_USAGE_DEFAULT;
-	texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
 	texDesc.CPUAccessFlags = 0;
 	texDesc.MiscFlags = 0;
 
 	ID3D11Texture2D* pTex = NULL;
-	ID3D11Device* pD3D11Device = static_cast<ID3D11Device*>(cwRepertory::getInstance().getDevice()->getDevice());
-	if (!pD3D11Device) return false;
+	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+	if (!pDevice) return false;
 
-	CW_HR(pD3D11Device->CreateTexture2D(&texDesc, NULL, &pTex));
-	CW_HR(pD3D11Device->CreateShaderResourceView(pTex, NULL, &m_pShaderResource));
-	CW_HR(pD3D11Device->CreateRenderTargetView(pTex, NULL, &m_pRenderTarget));
+	CW_HR(pDevice->getD3D11Device()->CreateTexture2D(&texDesc, NULL, &pTex));
+	CW_HR(pDevice->getD3D11Device()->CreateShaderResourceView(pTex, NULL, &m_pShaderResource));
+	CW_HR(pDevice->getD3D11Device()->CreateRenderTargetView(pTex, NULL, &m_pRenderTarget));
+	CW_HR(pDevice->getD3D11Device()->CreateUnorderedAccessView(pTex, NULL, &m_pUnorderedAccessView));
 
 	CW_RELEASE_COM(pTex);
 
 	return true;
 }
 
-CWHANDLE cwD3D11RenderTexture::getRenderTargetPtr()
+CWHANDLE cwD3D11RenderTextureMultiThread::getResourceMultiThreadPtr()
 {
-	return static_cast<CWHANDLE>(m_pRenderTarget);
-}
-
-CWHANDLE cwD3D11RenderTexture::getResourcePtr()
-{
-	return static_cast<CWHANDLE>(m_pShaderResource);
-}
-
-CWHANDLE cwD3D11RenderTexture::getResourceMultiThreadPtr()
-{
-	return NULL;
+	return static_cast<CWHANDLE>(m_pUnorderedAccessView);
 }
 
 NS_MINIR_END
 
 #endif
+
+
