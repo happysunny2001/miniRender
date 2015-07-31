@@ -109,13 +109,14 @@ cwCamera* cwEngine::getCurrentCamera()
 void cwEngine::render()
 {
 	m_pCurrCamera = getDefaultCamera();
-	cwRepertory::getInstance().getDevice()->beginDraw();
+	//cwRepertory::getInstance().getDevice()->beginDraw();
 
 	if (m_pCurrScene) {
 		m_pCurrScene->render();
 	}
 
-	cwRepertory::getInstance().getDevice()->endDraw();
+	//cwRepertory::getInstance().getDevice()->endDraw();
+	//cwRepertory::getInstance().getDevice()->swap();
 
 	m_pCurrCamera = nullptr;
 }

@@ -62,7 +62,6 @@ cwRepertory::~cwRepertory()
 {
 	CW_SAFE_RELEASE_NULL(m_pShaderManager);
 	CW_SAFE_RELEASE_NULL(m_pLayoutManager);
-	CW_SAFE_DELETE(m_pDevice);
 	CW_SAFE_DELETE(m_pAutoReleasePool);
 	CW_SAFE_RELEASE_NULL(m_pTextureManager);
 	CW_SAFE_RELEASE_NULL(m_pFileSystem);
@@ -70,6 +69,7 @@ cwRepertory::~cwRepertory()
 	CW_SAFE_RELEASE_NULL(m_pGeoGenerator);
 	CW_SAFE_RELEASE_NULL(m_pEventManager);
 	CW_SAFE_RELEASE_NULL(m_pSchedulerManager);
+	CW_SAFE_DELETE(m_pDevice);
 }
 
 cwDevice* cwRepertory::getDevice()

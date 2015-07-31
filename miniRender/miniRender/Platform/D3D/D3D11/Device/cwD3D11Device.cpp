@@ -75,6 +75,7 @@ m_pSolidRenderState(NULL),
 m_pWireRenderState(NULL),
 m_pNoCullRenderState(NULL),
 m_pCullCWRenderState(NULL),
+m_pD3D11Debug(NULL),
 m_pMaterialDefault(nullptr)
 {
 	initBlendBaseData();
@@ -97,6 +98,11 @@ cwD3D11Device::~cwD3D11Device()
 	CW_SAFE_RELEASE_NULL(m_pMaterialDefault);
 	CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
 	CW_SAFE_RELEASE_NULL(m_pDepthStencil);
+
+	if (m_pD3D11Debug) {
+		m_pD3D11Debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+		m_pD3D11Debug = NULL;
+	}
 }
 
 bool cwD3D11Device::initDevice()
@@ -128,6 +134,8 @@ bool cwD3D11Device::initDevice()
 	//check MSAA 4x support
 	CW_HR(m_pD3D11Device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m_uiM4xMsaaQuality));
 	assert(m_uiM4xMsaaQuality > 0);
+
+	CW_HR(m_pD3D11Device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&m_pD3D11Debug)));
 
 	CWUINT winWidth  = cwRepertory::getInstance().getUInt(gValueWinWidth);
 	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
@@ -324,6 +332,11 @@ void cwD3D11Device::beginDraw()
 }
 
 void cwD3D11Device::endDraw()
+{
+	//CW_HR(m_pDxgiSwapChain->Present(0, 0));
+}
+
+void cwD3D11Device::swap()
 {
 	CW_HR(m_pDxgiSwapChain->Present(0, 0));
 }
@@ -526,7 +539,7 @@ void cwD3D11Device::unlockBuffer(cwBuffer* pBuffer)
 	m_pD3D11DeviceContext->Unmap(pD3D11Buffer, 0);
 }
 
-cwTexture* cwD3D11Device::createTexture(const string& strFileName)
+cwTexture* cwD3D11Device::createTexture(const CWSTRING& strFileName)
 {
 	cwTexture* pTexture = cwD3D11Texture::create(strFileName);
 	return pTexture;
@@ -606,6 +619,9 @@ void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
 	cwRenderObject* pRenderObj = pEntity->getRenderObj();
 	assert(pRenderObj != nullptr);
 	draw(pShader, pMaterial->getTechName(), pRenderObj);
+
+	ID3D11ShaderResourceView* pSrvs[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = { 0 };
+	m_pD3D11DeviceContext->PSSetShaderResources(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, pSrvs);
 }
 
 void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera)

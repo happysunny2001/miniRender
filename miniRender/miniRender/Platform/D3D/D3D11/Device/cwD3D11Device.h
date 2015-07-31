@@ -49,8 +49,9 @@ public:
 	virtual void createViewPort();
 	virtual void createRenderState();
 
-	virtual void beginDraw();
-	virtual void endDraw();
+	virtual void beginDraw() override;
+	virtual void endDraw() override;
+	virtual void swap() override;
 
 	virtual void setInputLayout(cwLayouts* pInputLayout);
 	virtual void setPrimitiveTopology(ePrimitiveType topology);
@@ -77,7 +78,7 @@ public:
 	virtual CW_RES_LOCK_DATA lockBuffer(cwBuffer* pBuffer);
 	virtual void unlockBuffer(cwBuffer* pBuffer);
 
-	virtual cwTexture* createTexture(const string& strFileName) override;
+	virtual cwTexture* createTexture(const CWSTRING& strFileName) override;
 	virtual cwRenderTexture* createRenderTexture(float fWidth, float fHeight, eRenderTextureType eType = eRenderTextureShader) override;
 
 	virtual void render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) override;
@@ -110,6 +111,7 @@ protected:
 	ID3D11Device* m_pD3D11Device;
 	ID3D11DeviceContext* m_pD3D11DeviceContext;
 	IDXGISwapChain* m_pDxgiSwapChain;
+	ID3D11Debug* m_pD3D11Debug;
 	CWUINT m_uiM4xMsaaQuality;
 
 	ID3D11RasterizerState* m_pSolidRenderState;

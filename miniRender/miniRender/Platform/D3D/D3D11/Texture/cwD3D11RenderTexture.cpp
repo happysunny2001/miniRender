@@ -39,8 +39,7 @@ cwD3D11RenderTexture* cwD3D11RenderTexture::create(CWFLOAT fWidth, CWFLOAT fHeig
 }
 
 cwD3D11RenderTexture::cwD3D11RenderTexture():
-m_pShaderResource(NULL),
-m_pRenderTarget(NULL)
+m_pShaderResource(NULL)
 {
 	m_eType = eRenderTextureShader;
 }
@@ -48,7 +47,6 @@ m_pRenderTarget(NULL)
 cwD3D11RenderTexture::~cwD3D11RenderTexture()
 {
 	CW_RELEASE_COM(m_pShaderResource);
-	CW_RELEASE_COM(m_pRenderTarget);
 }
 
 bool cwD3D11RenderTexture::init(CWFLOAT fWidth, CWFLOAT fHeight)
@@ -83,6 +81,9 @@ bool cwD3D11RenderTexture::onResize(bool bForce)
 		texHeight = static_cast<CWUINT>(m_fHeight*winHeight);
 	}
 
+	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+	if (!pDevice) return false;
+
 	D3D11_TEXTURE2D_DESC texDesc;
 
 	texDesc.Width = texWidth;
@@ -90,15 +91,25 @@ bool cwD3D11RenderTexture::onResize(bool bForce)
 	texDesc.MipLevels = 1;
 	texDesc.ArraySize = 1;
 	texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+	//if (pDevice->getEnableMsaa4X()) {
+	//	texDesc.SampleDesc.Count = 4;
+	//	texDesc.SampleDesc.Quality = pDevice->getM4xMassQuality() - 1;
+	//}
+	//else {
+	//	texDesc.SampleDesc.Count = 1;
+	//	texDesc.SampleDesc.Quality = 0;
+	//}
+
 	texDesc.SampleDesc.Count = 1;
 	texDesc.SampleDesc.Quality = 0;
 	texDesc.Usage = D3D11_USAGE_DEFAULT;
-	texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
 	texDesc.CPUAccessFlags = 0;
 	texDesc.MiscFlags = 0;
 
 	ID3D11Texture2D* pTex = NULL;
-	ID3D11Device* pD3D11Device = static_cast<ID3D11Device*>(cwRepertory::getInstance().getDevice()->getDevice());
+	ID3D11Device* pD3D11Device = pDevice->getD3D11Device();
 	if (!pD3D11Device) return false;
 
 	CW_HR(pD3D11Device->CreateTexture2D(&texDesc, NULL, &pTex));
@@ -110,17 +121,12 @@ bool cwD3D11RenderTexture::onResize(bool bForce)
 	return true;
 }
 
-CWHANDLE cwD3D11RenderTexture::getRenderTargetPtr()
-{
-	return static_cast<CWHANDLE>(m_pRenderTarget);
-}
-
-CWHANDLE cwD3D11RenderTexture::getResourcePtr()
+CWHANDLE cwD3D11RenderTexture::getTexturePtr()
 {
 	return static_cast<CWHANDLE>(m_pShaderResource);
 }
 
-CWHANDLE cwD3D11RenderTexture::getResourceMultiThreadPtr()
+CWHANDLE cwD3D11RenderTexture::getTextureMultiThreadPtr()
 {
 	return NULL;
 }

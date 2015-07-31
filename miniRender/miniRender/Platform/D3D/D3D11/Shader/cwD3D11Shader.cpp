@@ -241,7 +241,7 @@ void cwD3D11Shader::setVariableTexture(const string& strVariable, cwTexture* pTe
 	ID3D11ShaderResourceView* pShaderRes = reinterpret_cast<ID3D11ShaderResourceView*>(pTexture->getTexturePtr());
 	if (!pShaderRes) return;
 	ID3DX11EffectVariable* pVariable = itVariable->second;
-	pVariable->AsShaderResource()->SetResource(pShaderRes);
+	CW_HR(pVariable->AsShaderResource()->SetResource(pShaderRes));
 }
 
 void cwD3D11Shader::apply(CWUINT techIndex, CWUINT passIndex)

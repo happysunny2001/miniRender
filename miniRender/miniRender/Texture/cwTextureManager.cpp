@@ -20,6 +20,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwTextureManager.h"
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
+#include "Platform/cwFileSystem.h"
 
 NS_MINIR_BEGIN
 
@@ -44,7 +45,9 @@ cwTexture* cwTextureManager::getTexture(const string& strName)
 	auto itFind = m_mapTexture.find(strName);
 	if (itFind != m_mapTexture.end()) return itFind->second;
 
-	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createTexture(strName);
+	CWSTRING strFullPath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strName);
+
+	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createTexture(strFullPath);
 	if (pTex) {
 		m_mapTexture.insert(strName, pTex);
 		return pTex;

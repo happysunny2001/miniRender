@@ -38,7 +38,7 @@ public:
 	virtual bool init(CWFLOAT fWidth, CWFLOAT fHeight) override;
 	virtual bool onResize(bool bForce = false) override;
 
-	virtual CWHANDLE getResourceMultiThreadPtr() override;
+	virtual CWHANDLE getTextureMultiThreadPtr() override;
 
 protected:
 	ID3D11UnorderedAccessView* m_pUnorderedAccessView;

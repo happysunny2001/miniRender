@@ -39,12 +39,12 @@ CWHANDLE cwRenderTexture::getRenderTargetPtr()
 	return NULL;
 }
 
-CWHANDLE cwRenderTexture::getResourcePtr()
+CWHANDLE cwRenderTexture::getTexturePtr()
 {
 	return NULL;
 }
 
-CWHANDLE cwRenderTexture::getResourceMultiThreadPtr()
+CWHANDLE cwRenderTexture::getTextureMultiThreadPtr()
 {
 	return NULL;
 }

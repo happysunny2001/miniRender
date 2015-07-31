@@ -34,10 +34,13 @@ public:
 	virtual bool init() override;
 
 	virtual void update(CWFLOAT dt) override;
+	virtual CWVOID render() override;
 
 	virtual void onTouchDown(cwTouch* pTouch) override;
 	virtual void onTouchUp(cwTouch* pTouch) override;
 	virtual void onTouchMoving(cwTouch* pTouch) override;
+
+	void buildPlane();
 
 protected:
 	CWFLOAT m_fLastX;
@@ -50,6 +53,9 @@ protected:
 	CWINT m_iCount;
 
 	bool m_bTouchDown;
+
+	cwRenderTexture* m_pRenderTex;
+	cwEntity* m_pTerrain;
 
 };
 

@@ -61,21 +61,26 @@ CWVOID LightTerrainDemoScene::buildEntity()
 	cwGeometryGenerator::cwMeshData mesh;
 	repertory.getGeoGenerator()->generateGrid(200.0f, 200.0f, 80, 80, mesh);
 
-	vector<cwVertexPosNormal> vecVertex(mesh.nVertex.size());
+	vector<cwVertexPosNormalTex> vecVertex(mesh.nVertex.size());
 	for (int i = 0; i < mesh.nVertex.size(); ++i) {
 		vecVertex[i].pos = mesh.nVertex[i].pos;
 		vecVertex[i].pos.y = repertory.getGeoGenerator()->getTerrainHeight(vecVertex[i].pos.x, vecVertex[i].pos.z);
 		vecVertex[i].normal = repertory.getGeoGenerator()->getTerrainNormal(vecVertex[i].pos.x, vecVertex[i].pos.z);
+		vecVertex[i].tex = mesh.nVertex[i].tex;
 	}
 
 	cwRenderObject* pRenderObj = cwStaticRenderObject::create(
 		ePrimitiveTypeTriangleList,
-		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormal), static_cast<CWUINT>(mesh.nVertex.size()),
-		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosNormal);
+		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTex), static_cast<CWUINT>(mesh.nVertex.size()),
+		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosNormalTex);
 
-	cwShader* pShader = repertory.getShaderManager()->getDefShader(CW_SHADER_DEF_LIGHTING);
+	cwTexture* pTexTerrain = cwRepertory::getInstance().getTextureManager()->getTexture("Textures/grass.dds");
+	cwShader* pShader = repertory.getShaderManager()->getDefShader(CW_SHADER_DEF_LIGHTINGTEX);
 	cwMaterial* pMaterial = cwMaterial::create();
 	pMaterial->setShader(pShader);
+	if (pTexTerrain) {
+		pMaterial->setDiffuseTexture(pTexTerrain);
+	}
 
 	cwEntity* pTerrain = cwEntity::create();
 	pTerrain->setMaterial(pMaterial);

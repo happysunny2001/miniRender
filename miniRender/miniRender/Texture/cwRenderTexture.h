@@ -25,10 +25,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwUtils.h"
 #include "Ref/cwRef.h"
 #include "Math/cwMath.h"
+#include "cwTexture.h"
 
 NS_MINIR_BEGIN
 
-class cwRenderTexture : public cwRef
+class cwRenderTexture : public cwTexture
 {
 public:
 	virtual bool init(CWFLOAT fWidth, CWFLOAT fHeight);
@@ -37,8 +38,8 @@ public:
 	virtual bool onResize(bool bForce=false);
 	
 	virtual CWHANDLE getRenderTargetPtr();
-	virtual CWHANDLE getResourcePtr();
-	virtual CWHANDLE getResourceMultiThreadPtr();
+	virtual CWHANDLE getTexturePtr() override;
+	virtual CWHANDLE getTextureMultiThreadPtr();
 
 	inline eRenderTextureType getType() const { return m_eType; }
 

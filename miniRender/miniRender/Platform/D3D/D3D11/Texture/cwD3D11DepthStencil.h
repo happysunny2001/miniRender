@@ -41,8 +41,8 @@ public:
 	virtual bool onResize(bool bForce = false) override;
 
 	virtual CWHANDLE getRenderTargetPtr() override;
-	virtual CWHANDLE getResourcePtr() override;
-	virtual CWHANDLE getResourceMultiThreadPtr() override;
+	virtual CWHANDLE getTexturePtr() override;
+	virtual CWHANDLE getTextureMultiThreadPtr() override;
 
 protected:
 	ID3D11Texture2D* m_pDepthStencilBuffer;

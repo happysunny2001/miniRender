@@ -27,7 +27,7 @@ NS_MINIR_BEGIN
 cwDevice::cwDevice() :
 m_fvClearColor(cwColor::black),
 m_eRenderState(eRenderStateSolid),
-m_bEnableMsaa4x(true),
+m_bEnableMsaa4x(false),
 m_pBlendState(nullptr),
 m_pRenderTargetBkBuffer(nullptr),
 m_pCurrRenderTarget(nullptr),
@@ -45,6 +45,10 @@ cwDevice::~cwDevice()
 void cwDevice::setRenderTarget(cwRenderTexture* pRenderTexture)
 {
 	if (m_pCurrRenderTarget == pRenderTexture) return;
+	if (pRenderTexture == nullptr) {
+		if(m_pCurrRenderTarget == m_pRenderTargetBkBuffer) return;
+		pRenderTexture = m_pRenderTargetBkBuffer;
+	}
 
 	CW_SAFE_RETAIN(pRenderTexture);
 	CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
@@ -62,6 +66,11 @@ void cwDevice::setDepthStentil(cwRenderTexture* pDepthStencil)
 	m_pDepthStencil = pDepthStencil;
 
 	m_bRefreshRenderTarget = true;
+}
+
+void cwDevice::setClearColor(const cwVector4D& color)
+{
+	m_fvClearColor = color;
 }
 
 NS_MINIR_END

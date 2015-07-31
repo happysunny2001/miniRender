@@ -103,12 +103,12 @@ CWHANDLE cwD3D11DepthStencil::getRenderTargetPtr()
 	return static_cast<CWHANDLE>(m_pDepthStencilView);
 }
 
-CWHANDLE cwD3D11DepthStencil::getResourcePtr()
+CWHANDLE cwD3D11DepthStencil::getTexturePtr()
 {
 	return NULL;
 }
 
-CWHANDLE cwD3D11DepthStencil::getResourceMultiThreadPtr()
+CWHANDLE cwD3D11DepthStencil::getTextureMultiThreadPtr()
 {
 	return NULL;
 }

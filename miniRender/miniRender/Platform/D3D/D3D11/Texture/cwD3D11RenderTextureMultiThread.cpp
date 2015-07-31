@@ -106,7 +106,7 @@ bool cwD3D11RenderTextureMultiThread::onResize(bool bForce)
 	return true;
 }
 
-CWHANDLE cwD3D11RenderTextureMultiThread::getResourceMultiThreadPtr()
+CWHANDLE cwD3D11RenderTextureMultiThread::getTextureMultiThreadPtr()
 {
 	return static_cast<CWHANDLE>(m_pUnorderedAccessView);
 }

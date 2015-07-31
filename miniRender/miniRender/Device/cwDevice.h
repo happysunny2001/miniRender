@@ -55,6 +55,7 @@ public:
 
 	virtual void beginDraw() = 0;
 	virtual void endDraw() = 0;
+	virtual void swap() = 0;
 
 	virtual void setInputLayout(cwLayouts* pInputLayout) = 0;
 	virtual void setPrimitiveTopology(ePrimitiveType topology) = 0;
@@ -83,7 +84,7 @@ public:
 	virtual CW_RES_LOCK_DATA lockBuffer(cwBuffer* pBuffer) = 0;
 	virtual void unlockBuffer(cwBuffer* pBuffer) = 0;
 
-	virtual cwTexture* createTexture(const string& strFileName) = 0;
+	virtual cwTexture* createTexture(const CWSTRING& strFileName) = 0;
 	virtual cwRenderTexture* createRenderTexture(float fWidth, float fHeight, eRenderTextureType eType=eRenderTextureShader) = 0;
 
 	virtual void render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) = 0;

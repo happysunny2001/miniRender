@@ -23,11 +23,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifdef _CW_D3D11_
 
 #include "Base/cwMacros.h"
-#include "Texture/cwRenderTexture.h"
+#include "cwD3D11RenderTarget.h"
 
 NS_MINIR_BEGIN
 
-class cwD3D11RenderTexture : public cwRenderTexture
+class cwD3D11RenderTexture : public cwD3D11RenderTarget
 {
 public:
 	static cwD3D11RenderTexture* create(CWFLOAT fWidth, CWFLOAT fHeight);
@@ -40,13 +40,11 @@ public:
 	virtual void beginResize() override;
 	virtual bool onResize(bool bForce = false) override;
 
-	virtual CWHANDLE getRenderTargetPtr() override;
-	virtual CWHANDLE getResourcePtr() override;
-	virtual CWHANDLE getResourceMultiThreadPtr() override;
+	virtual CWHANDLE getTexturePtr() override;
+	virtual CWHANDLE getTextureMultiThreadPtr() override;
 
 protected:
 	ID3D11ShaderResourceView* m_pShaderResource;
-	ID3D11RenderTargetView* m_pRenderTarget;
 
 };
 

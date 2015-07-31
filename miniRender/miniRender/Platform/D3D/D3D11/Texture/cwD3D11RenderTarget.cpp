@@ -80,12 +80,12 @@ CWHANDLE cwD3D11RenderTarget::getRenderTargetPtr()
 	return static_cast<CWHANDLE>(m_pRenderTarget);
 }
 
-CWHANDLE cwD3D11RenderTarget::getResourcePtr()
+CWHANDLE cwD3D11RenderTarget::getTexturePtr()
 {
 	return NULL;
 }
 
-CWHANDLE cwD3D11RenderTarget::getResourceMultiThreadPtr()
+CWHANDLE cwD3D11RenderTarget::getTextureMultiThreadPtr()
 {
 	return NULL;
 }
