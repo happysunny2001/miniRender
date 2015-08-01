@@ -41,11 +41,19 @@ public:
 	virtual CWHANDLE getTexturePtr() override;
 	virtual CWHANDLE getTextureMultiThreadPtr();
 
+	virtual CWVOID binding();
+	virtual CWVOID beginDraw();
+	virtual CWVOID endDraw();
+
+	inline CWVOID setClearColor(const cwVector4D& color) { m_nClearColor = color; }
+	inline const cwVector4D& getClearColor() const { return m_nClearColor; }
+
 	inline eRenderTextureType getType() const { return m_eType; }
 
 protected:
 	CWFLOAT m_fWidth;
 	CWFLOAT m_fHeight;
+	cwVector4D m_nClearColor;
 
 	eRenderTextureType m_eType;
 

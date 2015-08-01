@@ -103,6 +103,8 @@ bool cwD3D11RenderTextureMultiThread::onResize(bool bForce)
 
 	CW_RELEASE_COM(pTex);
 
+	buildDepthStencilBuffer(texWidth, texHeight);
+
 	return true;
 }
 

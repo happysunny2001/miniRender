@@ -49,7 +49,6 @@ public:
 	virtual void resize() = 0;
 
 	virtual void createRenderTarget() = 0;
-	virtual void createDepthStencil() = 0;
 	virtual void createViewPort() = 0;
 	virtual void createRenderState() = 0;
 
@@ -95,7 +94,7 @@ public:
 	virtual void draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) = 0;
 
 	virtual void setRenderTarget(cwRenderTexture* pRenderTexture);
-	virtual void setDepthStentil(cwRenderTexture* pDepthStencil);
+	//virtual void setDepthStentil(cwRenderTexture* pDepthStencil);
 
 	inline bool getEnableMsaa4X() const { return m_bEnableMsaa4x; }
 
@@ -110,7 +109,6 @@ protected:
 
 	cwRenderTexture* m_pRenderTargetBkBuffer;
 	cwRenderTexture* m_pCurrRenderTarget;
-	cwRenderTexture* m_pDepthStencil;
 
 	bool m_bRefreshRenderTarget;
 

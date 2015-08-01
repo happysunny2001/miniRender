@@ -215,7 +215,6 @@ typedef enum {
 	eRenderTextureTarget = 1,
 	eRenderTextureShader = 2,
 	eRenderTextureMultiThread = 3,
-	eRenderTextureDepthStencil = 4,
 }eRenderTextureType;
 
 #define CW_CONTROL MK_CONTROL

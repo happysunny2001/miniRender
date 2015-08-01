@@ -45,7 +45,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/D3D/D3D11/Texture/cwD3D11RenderTarget.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11RenderTexture.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11RenderTextureMultiThread.h"
-#include "Platform/D3D/D3D11/Texture/cwD3D11DepthStencil.h"
 #include "Platform/D3D/D3D11/Blend/cwD3D11Blend.h"
 #include "Platform/D3D/D3D11/Shader/cwD3D11Shader.h"
 
@@ -97,7 +96,6 @@ cwD3D11Device::~cwD3D11Device()
 	CW_RELEASE_COM(m_pCullCWRenderState);
 	CW_SAFE_RELEASE_NULL(m_pMaterialDefault);
 	CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
-	CW_SAFE_RELEASE_NULL(m_pDepthStencil);
 
 	if (m_pD3D11Debug) {
 		m_pD3D11Debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
@@ -183,7 +181,6 @@ bool cwD3D11Device::initDevice()
 
 	createRenderState();
 	createRenderTarget();
-	createDepthStencil();
 	createViewPort();
 
 	m_pMaterialDefault = cwMaterial::create(
@@ -200,12 +197,6 @@ void cwD3D11Device::createRenderTarget()
 {
 	m_pRenderTargetBkBuffer = cwRepertory::getInstance().getTextureManager()->createRenderTexture(1.0f, 1.0f, eRenderTextureTarget);
 	this->setRenderTarget(m_pRenderTargetBkBuffer);
-}
-
-void cwD3D11Device::createDepthStencil()
-{
-	cwRenderTexture* pDepthStencil = cwRepertory::getInstance().getTextureManager()->createRenderTexture(1.0f, 1.0f, eRenderTextureDepthStencil);
-	this->setDepthStentil(pDepthStencil);
 }
 
 void cwD3D11Device::resize(CWUINT width, CWUINT height)
@@ -302,38 +293,15 @@ void cwD3D11Device::createRenderState()
 void cwD3D11Device::beginDraw()
 {
 	if (m_bRefreshRenderTarget) {
-		CWUINT iCnt = 0;
-		ID3D11RenderTargetView** pRenderTarget = NULL;
-		ID3D11RenderTargetView* arrTargetView[1] = { NULL };
-		if (m_pCurrRenderTarget) {
-			arrTargetView[0] = static_cast<ID3D11RenderTargetView*>(m_pCurrRenderTarget->getRenderTargetPtr());
-			iCnt = 1;
-			pRenderTarget = arrTargetView;
-		}
-
-		ID3D11DepthStencilView* pDepthStencilView = NULL;
-		if (m_pDepthStencil) {
-			pDepthStencilView = static_cast<ID3D11DepthStencilView*>(m_pDepthStencil->getRenderTargetPtr());
-		}
-
-		m_pD3D11DeviceContext->OMSetRenderTargets(1, pRenderTarget, pDepthStencilView);
-		m_bRefreshRenderTarget = false;
+		m_pCurrRenderTarget->binding();
 	}
 
-	if (m_pCurrRenderTarget) {
-		ID3D11RenderTargetView* pRenderTarget = static_cast<ID3D11RenderTargetView*>(m_pCurrRenderTarget->getRenderTargetPtr());
-		m_pD3D11DeviceContext->ClearRenderTargetView(pRenderTarget, (const CWFLOAT*)&m_fvClearColor);
-	}
-
-	if (m_pDepthStencil) {
-		ID3D11DepthStencilView* pDepthStencilView = static_cast<ID3D11DepthStencilView*>(m_pDepthStencil->getRenderTargetPtr());
-		m_pD3D11DeviceContext->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	}
+	m_pCurrRenderTarget->beginDraw();
 }
 
 void cwD3D11Device::endDraw()
 {
-	//CW_HR(m_pDxgiSwapChain->Present(0, 0));
+	m_pCurrRenderTarget->endDraw();
 }
 
 void cwD3D11Device::swap()
@@ -555,8 +523,6 @@ cwRenderTexture* cwD3D11Device::createRenderTexture(float fWidth, float fHeight,
 		return cwD3D11RenderTexture::create(fWidth, fHeight);
 	case eRenderTextureMultiThread:
 		return cwD3D11RenderTextureMultiThread::create(fWidth, fHeight);
-	case eRenderTextureDepthStencil:
-		return cwD3D11DepthStencil::create();
 	}
 
 	return nullptr;

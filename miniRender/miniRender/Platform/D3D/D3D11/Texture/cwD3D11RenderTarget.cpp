@@ -40,7 +40,9 @@ cwD3D11RenderTarget* cwD3D11RenderTarget::create()
 }
 
 cwD3D11RenderTarget::cwD3D11RenderTarget():
-m_pRenderTarget(nullptr)
+m_pRenderTarget(nullptr),
+m_pDepthStencilBuffer(NULL),
+m_pDepthStencilView(NULL)
 {
 	m_eType = eRenderTextureTarget;
 }
@@ -48,6 +50,8 @@ m_pRenderTarget(nullptr)
 cwD3D11RenderTarget::~cwD3D11RenderTarget()
 {
 	CW_RELEASE_COM(m_pRenderTarget);
+	CW_RELEASE_COM(m_pDepthStencilBuffer);
+	CW_RELEASE_COM(m_pDepthStencilView);
 }
 
 bool cwD3D11RenderTarget::init(CWFLOAT fWidth, CWFLOAT fHeight)
@@ -58,6 +62,8 @@ bool cwD3D11RenderTarget::init(CWFLOAT fWidth, CWFLOAT fHeight)
 void cwD3D11RenderTarget::beginResize()
 {
 	CW_RELEASE_COM(m_pRenderTarget);
+	CW_RELEASE_COM(m_pDepthStencilBuffer);
+	CW_RELEASE_COM(m_pDepthStencilView);
 }
 
 bool cwD3D11RenderTarget::onResize(bool bForce)
@@ -72,7 +78,42 @@ bool cwD3D11RenderTarget::onResize(bool bForce)
 	CW_HR(pDevice->getD3D11Device()->CreateRenderTargetView(backBuffer, NULL, &m_pRenderTarget));
 	CW_RELEASE_COM(backBuffer);
 
+	CWUINT iWinWidth  = cwRepertory::getInstance().getUInt(gValueWinWidth);
+	CWUINT iWinHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
+
+	buildDepthStencilBuffer(iWinWidth, iWinHeight);
+
 	return true;
+}
+
+CWVOID cwD3D11RenderTarget::buildDepthStencilBuffer(CWUINT iWidth, CWUINT iHeight)
+{
+	CW_RELEASE_COM(m_pDepthStencilBuffer);
+	CW_RELEASE_COM(m_pDepthStencilView);
+
+	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+	if (!pDevice) return;
+
+	D3D11_TEXTURE2D_DESC texDesc;
+	texDesc.Width = iWidth;
+	texDesc.Height = iHeight;
+	texDesc.MipLevels = 1;
+	texDesc.ArraySize = 1;
+	texDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	if (pDevice->getEnableMsaa4X()) {
+		texDesc.SampleDesc.Count = 4;
+		texDesc.SampleDesc.Quality = pDevice->getM4xMassQuality() - 1;
+	}
+	else {
+		texDesc.SampleDesc.Count = 1;
+		texDesc.SampleDesc.Quality = 0;
+	}
+	texDesc.Usage = D3D11_USAGE_DEFAULT;
+	texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	texDesc.CPUAccessFlags = 0;
+	texDesc.MiscFlags = 0;
+	CW_HR(pDevice->getD3D11Device()->CreateTexture2D(&texDesc, NULL, &m_pDepthStencilBuffer));
+	CW_HR(pDevice->getD3D11Device()->CreateDepthStencilView(m_pDepthStencilBuffer, NULL, &m_pDepthStencilView));
 }
 
 CWHANDLE cwD3D11RenderTarget::getRenderTargetPtr()
@@ -88,6 +129,27 @@ CWHANDLE cwD3D11RenderTarget::getTexturePtr()
 CWHANDLE cwD3D11RenderTarget::getTextureMultiThreadPtr()
 {
 	return NULL;
+}
+
+CWVOID cwD3D11RenderTarget::binding()
+{
+	ID3D11RenderTargetView* arrTargetView[1] = { m_pRenderTarget };
+
+	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+	pDevice->getD3D11DeviceContext()->OMSetRenderTargets(1, arrTargetView, m_pDepthStencilView);
+}
+
+CWVOID cwD3D11RenderTarget::beginDraw()
+{
+	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+	pDevice->getD3D11DeviceContext()->ClearRenderTargetView(m_pRenderTarget, (const CWFLOAT*)&m_nClearColor);
+	pDevice->getD3D11DeviceContext()->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+}
+
+CWVOID cwD3D11RenderTarget::endDraw()
+{
+	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+	CW_HR(pDevice->getSwapChain()->Present(0, 0));
 }
 
 NS_MINIR_END

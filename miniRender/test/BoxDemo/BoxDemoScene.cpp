@@ -165,14 +165,10 @@ void BoxDemoScene::buildPlane()
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTex), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosNormalTex);
 
-	//cwTexture* pTexTerrain = cwRepertory::getInstance().getTextureManager()->getTexture("Textures/grass.dds");
 	cwShader* pShader = repertory.getShaderManager()->getDefShader(CW_SHADER_DEF_LIGHTINGTEX);
 	cwMaterial* pMaterial = cwMaterial::create();
 	pMaterial->setShader(pShader);
 	pMaterial->setDiffuseTexture(m_pRenderTex);
-	/*if (pTexTerrain) {
-		pMaterial->setDiffuseTexture(pTexTerrain);
-	}*/
 
 	m_pTerrain = cwEntity::create();
 	m_pTerrain->setMaterial(pMaterial);

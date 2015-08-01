@@ -18,6 +18,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwRenderTexture.h"
+#include "Base/cwColor.h"
 
 NS_MINIR_BEGIN
 
@@ -25,6 +26,7 @@ bool cwRenderTexture::init(CWFLOAT fWidth, CWFLOAT fHeight)
 {
 	m_fWidth = fWidth;
 	m_fHeight = fHeight;
+	m_nClearColor = cwColor::black;
 
 	return onResize(true);
 }
@@ -50,6 +52,21 @@ CWHANDLE cwRenderTexture::getTextureMultiThreadPtr()
 }
 
 void cwRenderTexture::beginResize()
+{
+
+}
+
+CWVOID cwRenderTexture::binding()
+{
+
+}
+
+CWVOID cwRenderTexture::beginDraw()
+{
+
+}
+
+CWVOID cwRenderTexture::endDraw()
 {
 
 }

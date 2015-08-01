@@ -43,6 +43,10 @@ public:
 	virtual CWHANDLE getTexturePtr() override;
 	virtual CWHANDLE getTextureMultiThreadPtr() override;
 
+	virtual CWVOID endDraw() override;
+
+	virtual CWVOID buildDepthStencilBuffer(CWUINT iWidth, CWUINT iHeight) override;
+
 protected:
 	ID3D11ShaderResourceView* m_pShaderResource;
 

@@ -31,7 +31,7 @@ m_bEnableMsaa4x(false),
 m_pBlendState(nullptr),
 m_pRenderTargetBkBuffer(nullptr),
 m_pCurrRenderTarget(nullptr),
-m_pDepthStencil(nullptr),
+//m_pDepthStencil(nullptr),
 m_bRefreshRenderTarget(true)
 {
 
@@ -39,7 +39,7 @@ m_bRefreshRenderTarget(true)
 
 cwDevice::~cwDevice()
 {
-	m_pBlendState = nullptr;
+	//m_pBlendState = nullptr;
 }
 
 void cwDevice::setRenderTarget(cwRenderTexture* pRenderTexture)
@@ -53,17 +53,6 @@ void cwDevice::setRenderTarget(cwRenderTexture* pRenderTexture)
 	CW_SAFE_RETAIN(pRenderTexture);
 	CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
 	m_pCurrRenderTarget = pRenderTexture;
-
-	m_bRefreshRenderTarget = true;
-}
-
-void cwDevice::setDepthStentil(cwRenderTexture* pDepthStencil)
-{
-	if (m_pDepthStencil == pDepthStencil) return;
-
-	CW_SAFE_RETAIN(pDepthStencil);
-	CW_SAFE_RELEASE_NULL(m_pDepthStencil);
-	m_pDepthStencil = pDepthStencil;
 
 	m_bRefreshRenderTarget = true;
 }

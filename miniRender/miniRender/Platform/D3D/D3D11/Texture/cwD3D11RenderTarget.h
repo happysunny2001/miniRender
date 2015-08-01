@@ -44,8 +44,17 @@ public:
 	virtual CWHANDLE getTexturePtr() override;
 	virtual CWHANDLE getTextureMultiThreadPtr() override;
 
+	virtual CWVOID binding() override;
+	virtual CWVOID beginDraw() override;
+	virtual CWVOID endDraw() override;
+
+	virtual CWVOID buildDepthStencilBuffer(CWUINT iWidth, CWUINT iHeight);
+
 protected:
 	ID3D11RenderTargetView* m_pRenderTarget;
+
+	ID3D11Texture2D* m_pDepthStencilBuffer;
+	ID3D11DepthStencilView* m_pDepthStencilView;
 
 };
 

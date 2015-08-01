@@ -45,7 +45,6 @@ public:
 	virtual void resize() override;
 	
 	virtual void createRenderTarget();
-	virtual void createDepthStencil();
 	virtual void createViewPort();
 	virtual void createRenderState();
 
