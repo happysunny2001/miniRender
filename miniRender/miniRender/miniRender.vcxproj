@@ -106,6 +106,7 @@
     <ClInclude Include="Texture\cwTexture.h" />
     <ClInclude Include="Texture\cwTextureManager.h" />
     <ClInclude Include="Timer\cwTimer.h" />
+    <ClInclude Include="ViewPort\cwViewPort.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\external\tinyxml2\tinyxml2.cpp" />
@@ -179,6 +180,7 @@
     <ClCompile Include="Texture\cwTexture.cpp" />
     <ClCompile Include="Texture\cwTextureManager.cpp" />
     <ClCompile Include="Timer\cwTimer.cpp" />
+    <ClCompile Include="ViewPort\cwViewPort.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{84AEC896-7279-4487-BE7A-B703CDB8A8B5}</ProjectGuid>

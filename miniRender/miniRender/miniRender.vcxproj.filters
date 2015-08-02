@@ -124,6 +124,9 @@
     <Filter Include="源文件\External\tinyxml2">
       <UniqueIdentifier>{51ef478f-d7ef-4a9a-903e-48aca7877c1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\ViewPort">
+      <UniqueIdentifier>{146f2bbe-4896-4be6-ac91-ebcdff90eacf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\cwVector.h">
@@ -387,6 +390,9 @@
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureMultiThread.h">
       <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="ViewPort\cwViewPort.h">
+      <Filter>源文件\ViewPort</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -601,6 +607,9 @@
     </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureMultiThread.cpp">
       <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewPort\cwViewPort.cpp">
+      <Filter>源文件\ViewPort</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
