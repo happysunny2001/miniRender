@@ -66,8 +66,8 @@ bool cwD3D11Blend::init(const BlendData& blendData)
 	m_nBlendDesc.RenderTarget[0].BlendOpAlpha = cwD3D11Device::getBlendOp(blendData.blendOpAlpha); 
 	m_nBlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-	ID3D11Device* pD3D11Device = static_cast<ID3D11Device*>(cwRepertory::getInstance().getDevice()->getDevice());
-	CW_HR(pD3D11Device->CreateBlendState(&m_nBlendDesc, &m_pBlendState));
+	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+	CW_HR(pD3D11Device->getD3D11Device()->CreateBlendState(&m_nBlendDesc, &m_pBlendState));
 
 	return true;
 }

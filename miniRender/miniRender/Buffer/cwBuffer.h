@@ -43,7 +43,7 @@ public:
 	cwBuffer();
 	virtual ~cwBuffer();
 
-	virtual bool init(
+	virtual CWBOOL init(
 		CWUINT uSize,
 		CWUINT usage,
 		CWUINT bindFlag,
@@ -53,11 +53,12 @@ public:
 
 	inline CW_BUFFER_DESC& getBufferDesc() { return m_nBuffDesc; }
 	inline CWVOID* getBuffer() { return m_pDRenderBuffer; }
-	inline void setBuffer(CWVOID* pBuffer) { m_pDRenderBuffer = pBuffer; }
+	inline CWVOID setBuffer(CWVOID* pBuffer) { m_pDRenderBuffer = pBuffer; }
+	virtual CWVOID refresh(CWVOID* pData);
 
 	CWUINT getSize() { return m_nBuffDesc.ByteWidth; }
 
-	inline void setStride(CWUINT uStride) { m_nStride = uStride; }
+	inline CWVOID setStride(CWUINT uStride) { m_nStride = uStride; }
 	inline CWUINT getStride() const { return m_nStride; }
 	inline CWUINT getOffset() const { return m_nOffset; }
 

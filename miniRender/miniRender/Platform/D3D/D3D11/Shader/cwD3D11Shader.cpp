@@ -18,12 +18,16 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwD3D11Shader.h"
+#include "Shader/cwShaderManager.h"
 #include "Base/cwStringConvert.h"
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
 #include "Texture/cwTexture.h"
 #include "Platform/Windows/cwWinUtils.h"
 #include "Platform/D3D/D3D11/cwD3D11Utils.h"
+#include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
+
+#include <iostream>
 
 #ifdef _CW_D3D11_
 
@@ -89,13 +93,13 @@ bool cwD3D11Shader::init(const std::string& strShaderFile)
 		return false;
 	}
 
-	cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
 
 	CW_HR(D3DX11CreateEffectFromMemory(
 		compiledShader->GetBufferPointer(),
 		compiledShader->GetBufferSize(),
 		0,
-		static_cast<ID3D11Device*>(pDevice->getDevice()),
+		pD3D11Device->getD3D11Device(),
 		&m_pEffect));
 
 	CW_RELEASE_COM(compiledShader);
@@ -169,6 +173,16 @@ bool cwD3D11Shader::saveVariable()
 		pVariable->GetDesc(&desc);
 
 		m_mapVariable[desc.Name] = pVariable;
+		OutputDebugStringA(desc.Name);
+		OutputDebugStringA("\n");
+	}
+
+	cwShaderManager* pShaderManager = cwRepertory::getInstance().getShaderManager();
+	memset(m_pShaderParam, 0, sizeof(ID3DX11EffectVariable*)*eShaderParamMax);
+	for (int i = (int)eShaderParamWorldViewProj; i < (int)eShaderParamMax; ++i) {
+		if (this->hasVariable(pShaderManager->getShaderParamString((eShaderParamIndex)i))) {
+			m_pShaderParam[i] = m_mapVariable[pShaderManager->getShaderParamString((eShaderParamIndex)i)];
+		}
 	}
 
 	return true;
@@ -180,75 +194,131 @@ bool cwD3D11Shader::hasVariable(const string& strVariable)
 	return false;
 }
 
-void cwD3D11Shader::setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize)
+//void cwD3D11Shader::setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize)
+//{
+//	auto itVariable = m_mapVariable.find(strVariable);
+//	if (itVariable == m_mapVariable.end()) return;
+//	ID3DX11EffectVariable* pVariable = itVariable->second;
+//	pVariable->SetRawValue(pData, offset, iSize);
+//}
+
+//void cwD3D11Shader::setVariableData(const string& strVariable, CWUINT index, void* pData, CWUINT offset, CWUINT iSize)
+//{
+//	auto itVariable = m_mapVariable.find(strVariable);
+//	if (itVariable == m_mapVariable.end()) return;
+//	ID3DX11EffectVariable* pVariable = itVariable->second;
+//
+//	ID3DX11EffectVariable* pVariElement = pVariable->GetElement(index);
+//	if (pVariElement) {
+//		pVariElement->SetRawValue(pData, offset, iSize);
+//	}
+//}
+
+//void cwD3D11Shader::setVariableMatrix(const string& strVariable, CWFLOAT* pData)
+//{
+//	auto itVariable = m_mapVariable.find(strVariable);
+//	if (itVariable == m_mapVariable.end()) return;
+//	ID3DX11EffectVariable* pVariable = itVariable->second;
+//	pVariable->AsMatrix()->SetMatrix(pData);
+//}
+
+//void cwD3D11Shader::setVariableInt(const string& strVariable, CWINT value)
+//{
+//	auto itVariable = m_mapVariable.find(strVariable);
+//	if (itVariable == m_mapVariable.end()) return;
+//	ID3DX11EffectVariable* pVariable = itVariable->second;
+//	CW_HR(pVariable->AsScalar()->SetInt(value));
+//}
+//
+//void cwD3D11Shader::setVariableFloat(const string& strVariable, CWFLOAT value)
+//{
+//	auto itVariable = m_mapVariable.find(strVariable);
+//	if (itVariable == m_mapVariable.end()) return;
+//	ID3DX11EffectVariable* pVariable = itVariable->second;
+//	CW_HR(pVariable->AsScalar()->SetFloat(value));
+//}
+//
+//void cwD3D11Shader::setVariableFloatArray(const string& strVariable, CWFLOAT* pData, CWUINT count)
+//{
+//	auto itVariable = m_mapVariable.find(strVariable);
+//	if (itVariable == m_mapVariable.end()) return;
+//	ID3DX11EffectVariable* pVariable = itVariable->second;
+//	CW_HR(pVariable->AsScalar()->SetFloatArray(pData, 0, count));
+//}
+//
+//void cwD3D11Shader::setVariableTexture(const string& strVariable, cwTexture* pTexture)
+//{
+//	if (!pTexture) return;
+//	auto itVariable = m_mapVariable.find(strVariable);
+//	if (itVariable == m_mapVariable.end()) return;
+//
+//	ID3D11ShaderResourceView* pShaderRes = reinterpret_cast<ID3D11ShaderResourceView*>(pTexture->getTexturePtr());
+//	if (!pShaderRes) return;
+//	ID3DX11EffectVariable* pVariable = itVariable->second;
+//	CW_HR(pVariable->AsShaderResource()->SetResource(pShaderRes));
+//}
+
+CWBOOL cwD3D11Shader::hasVariable(eShaderParamIndex eParam)
 {
-	auto itVariable = m_mapVariable.find(strVariable);
-	if (itVariable == m_mapVariable.end()) return;
-	ID3DX11EffectVariable* pVariable = itVariable->second;
-	pVariable->SetRawValue(pData, offset, iSize);
+	return m_pShaderParam[eParam] != nullptr;
 }
 
-void cwD3D11Shader::setVariableData(const string& strVariable, CWUINT index, void* pData, CWUINT offset, CWUINT iSize)
+CWVOID cwD3D11Shader::setVariableData(eShaderParamIndex eParam, CWVOID* pData, CWUINT offset, CWUINT iSize)
 {
-	auto itVariable = m_mapVariable.find(strVariable);
-	if (itVariable == m_mapVariable.end()) return;
-	ID3DX11EffectVariable* pVariable = itVariable->second;
+	if (m_pShaderParam[eParam])
+		m_pShaderParam[eParam]->SetRawValue(pData, offset, iSize);
+}
 
-	ID3DX11EffectVariable* pVariElement = pVariable->GetElement(index);
-	if (pVariElement) {
-		pVariElement->SetRawValue(pData, offset, iSize);
+CWVOID cwD3D11Shader::setVariableData(eShaderParamIndex eParam, CWUINT index, CWVOID* pData, CWUINT offset, CWUINT iSize)
+{
+	if (m_pShaderParam[eParam]) {
+		ID3DX11EffectVariable* pVariElement = m_pShaderParam[eParam]->GetElement(index);
+		if (pVariElement) {
+			pVariElement->SetRawValue(pData, offset, iSize);
+		}
 	}
 }
 
-void cwD3D11Shader::setVariableMatrix(const string& strVariable, CWFLOAT* pData)
+CWVOID cwD3D11Shader::setVariableMatrix(eShaderParamIndex eParam, CWFLOAT* pData)
 {
-	auto itVariable = m_mapVariable.find(strVariable);
-	if (itVariable == m_mapVariable.end()) return;
-	ID3DX11EffectVariable* pVariable = itVariable->second;
-	pVariable->AsMatrix()->SetMatrix(pData);
+	if (m_pShaderParam[eParam])
+		m_pShaderParam[eParam]->AsMatrix()->SetMatrix(pData);
 }
 
-void cwD3D11Shader::setVariableInt(const string& strVariable, CWINT value)
+CWVOID cwD3D11Shader::setVariableInt(eShaderParamIndex eParam, CWINT value)
 {
-	auto itVariable = m_mapVariable.find(strVariable);
-	if (itVariable == m_mapVariable.end()) return;
-	ID3DX11EffectVariable* pVariable = itVariable->second;
-	CW_HR(pVariable->AsScalar()->SetInt(value));
+	if (m_pShaderParam[eParam])
+		CW_HR(m_pShaderParam[eParam]->AsScalar()->SetInt(value));
 }
 
-void cwD3D11Shader::setVariableFloat(const string& strVariable, CWFLOAT value)
+CWVOID cwD3D11Shader::setVariableFloat(eShaderParamIndex eParam, CWFLOAT value)
 {
-	auto itVariable = m_mapVariable.find(strVariable);
-	if (itVariable == m_mapVariable.end()) return;
-	ID3DX11EffectVariable* pVariable = itVariable->second;
-	CW_HR(pVariable->AsScalar()->SetFloat(value));
+	if (m_pShaderParam[eParam])
+		CW_HR(m_pShaderParam[eParam]->AsScalar()->SetFloat(value));
 }
 
-void cwD3D11Shader::setVariableFloatArray(const string& strVariable, CWFLOAT* pData, CWUINT count)
+CWVOID cwD3D11Shader::setVariableFloatArray(eShaderParamIndex eParam, CWFLOAT* pData, CWUINT count)
 {
-	auto itVariable = m_mapVariable.find(strVariable);
-	if (itVariable == m_mapVariable.end()) return;
-	ID3DX11EffectVariable* pVariable = itVariable->second;
-	CW_HR(pVariable->AsScalar()->SetFloatArray(pData, 0, count));
+	if (m_pShaderParam[eParam])
+		CW_HR(m_pShaderParam[eParam]->AsScalar()->SetFloatArray(pData, 0, count));
 }
 
-void cwD3D11Shader::setVariableTexture(const string& strVariable, cwTexture* pTexture)
+CWVOID cwD3D11Shader::setVariableTexture(eShaderParamIndex eParam, cwTexture* pTexture)
 {
 	if (!pTexture) return;
-	auto itVariable = m_mapVariable.find(strVariable);
-	if (itVariable == m_mapVariable.end()) return;
-
 	ID3D11ShaderResourceView* pShaderRes = reinterpret_cast<ID3D11ShaderResourceView*>(pTexture->getTexturePtr());
 	if (!pShaderRes) return;
-	ID3DX11EffectVariable* pVariable = itVariable->second;
-	CW_HR(pVariable->AsShaderResource()->SetResource(pShaderRes));
+
+	if (m_pShaderParam[eParam])
+		CW_HR(m_pShaderParam[eParam]->AsShaderResource()->SetResource(pShaderRes));
 }
 
 void cwD3D11Shader::apply(CWUINT techIndex, CWUINT passIndex)
 {
 	ID3DX11EffectPass* pPass = getPass(techIndex, passIndex);
 	if (pPass) {
-		pPass->Apply(0, static_cast<ID3D11DeviceContext*>(cwRepertory::getInstance().getDevice()->getDeviceContext()));
+		cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+		pPass->Apply(0, pD3D11Device->getD3D11DeviceContext());
 	}
 }
 

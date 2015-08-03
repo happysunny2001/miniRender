@@ -21,8 +21,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwD3D11IndexBuffer.h"
 #include "Device/cwDevice.h"
+#include "Repertory/cwRepertory.h"
 #include "Platform/Windows/cwWinUtils.h"
 #include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
+#include "Platform/D3D/D3D11/cwD3D11Utils.h"
 
 NS_MINIR_BEGIN
 
@@ -70,6 +72,21 @@ bool cwD3D11IndexBuffer::init(
 	m_iIndexCnt = uSize / sizeof(CWUINT);
 
 	return true;
+}
+
+CWVOID cwD3D11IndexBuffer::refresh(CWVOID* pData)
+{
+	if (!pData) return;
+
+	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+
+	D3D11_MAPPED_SUBRESOURCE mappedData;
+	ID3D11Buffer* pD3D11Buffer = static_cast<ID3D11Buffer*>(m_pDRenderBuffer);
+	CW_HR(pD3D11Device->getD3D11DeviceContext()->Map(pD3D11Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
+
+	memcpy(mappedData.pData, pData, this->getSize());
+
+	pD3D11Device->getD3D11DeviceContext()->Unmap(pD3D11Buffer, 0);
 }
 
 NS_MINIR_END

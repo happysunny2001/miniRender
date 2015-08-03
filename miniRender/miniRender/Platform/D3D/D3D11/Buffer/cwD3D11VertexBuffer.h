@@ -41,13 +41,15 @@ public:
 	cwD3D11VertexBuffer();
 	virtual ~cwD3D11VertexBuffer();
 
-	virtual bool init(
+	virtual CWBOOL init(
 		CWUINT uSize,
 		CWUINT usage,
 		CWUINT bindFlag,
 		CWUINT uCpuFlag,
 		CWUINT miscFlag,
 		CWUINT structureByteStride) override;
+
+	virtual CWVOID refresh(CWVOID* pData) override;
 
 protected:
 

@@ -30,6 +30,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 NS_MINIR_BEGIN
 
 class cwEventListener;
+class cwEffect;
 
 class cwRenderNode : public cwRef, public cwTouchEventInterface, public cwScheduleInterface
 {
@@ -68,6 +69,9 @@ public:
 	virtual CWVOID setVisible(CWBOOL b);
 	CWBOOL getVisible() const { return m_bVisible; }
 
+	virtual CWVOID setEffect(cwEffect* pEffect);
+	inline cwEffect* getEffect() const { return m_pEffect; }
+
 	virtual CWVOID transform();
 	const cwMatrix4X4& getTransformMatrix() const { return m_nTrans; }
 
@@ -94,6 +98,8 @@ protected:
 	cwVector3D m_nScale;
 	cwMatrix4X4 m_nTrans; 
 	CWBOOL m_bTransDirty;
+
+	cwEffect* m_pEffect;
 
 	cwVector<cwRenderNode*> m_nVecChildren;
 	cwRenderNode* m_pParent;

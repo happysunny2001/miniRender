@@ -17,47 +17,45 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_VIEW_PORT_H__
-#define __CW_VIEW_PORT_H__
-
-#include "Base/cwMacros.h"
-#include "Base/cwBasicType.h"
-#include "Ref/cwRef.h"
+#include "cwEffect.h"
 
 NS_MINIR_BEGIN
 
-class cwViewPort : public cwRef
+cwEffect* cwEffect::create()
 {
-public:
-	static cwViewPort* create(
-		CWFLOAT fTopLeftX, CWFLOAT fTopLeftY, 
-		CWFLOAT fWidth, CWFLOAT fHeight, 
-		CWFLOAT fMinDepth, CWFLOAT fMaxDepth);
+	cwEffect* pEffect = new cwEffect();
+	if (pEffect) {
+		pEffect->autorelease();
+		return pEffect;
+	}
 
-	virtual CWBOOL init(
-		CWFLOAT fTopLeftX, CWFLOAT fTopLeftY,
-		CWFLOAT fWidth, CWFLOAT fHeight,
-		CWFLOAT fMinDepth, CWFLOAT fMaxDepth);
+	CW_SAFE_DELETE(pEffect);
+	return nullptr;
+}
 
-	virtual CWVOID binding();
+cwEffect::cwEffect():
+m_pShader(nullptr)
+{
 
-	inline CWFLOAT getTopLeftX() const { return m_fTopLeftX; }
-	inline CWFLOAT getTopLeftY() const { return m_fTopLeftY; }
-	inline CWFLOAT getWidth() const  { return m_fWidth; }
-	inline CWFLOAT getHeight() const { return m_fHeight; }
-	inline CWFLOAT getMinDepth() const { return m_fMinDepth; }
-	inline CWFLOAT getMaxDepth() const { return m_fMaxDepth; }
+}
 
-protected:
-	CWFLOAT m_fTopLeftX;
-	CWFLOAT m_fTopLeftY;
-	CWFLOAT m_fWidth;
-	CWFLOAT m_fHeight;
-	CWFLOAT m_fMinDepth;
-	CWFLOAT m_fMaxDepth;
+cwEffect::~cwEffect()
+{
+	CW_SAFE_RELEASE_NULL(m_pShader);
+}
 
-};
+CWVOID cwEffect::setShader(cwShader* pShader)
+{
+	if (pShader == m_pShader) return;
+	CW_SAFE_RETAIN(pShader);
+	CW_SAFE_RELEASE_NULL(m_pShader);
+	m_pShader = pShader;
+}
+
+CWVOID cwEffect::setTech(const CWSTRING& strTech)
+{
+	m_strTech = strTech;
+}
 
 NS_MINIR_END
 
-#endif

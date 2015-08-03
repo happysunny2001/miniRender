@@ -36,6 +36,7 @@
     <ClInclude Include="Camera\cwCamera.h" />
     <ClInclude Include="cwMiniRender.h" />
     <ClInclude Include="Device\cwDevice.h" />
+    <ClInclude Include="Effect\cwEffect.h" />
     <ClInclude Include="Engine\cwEngine.h" />
     <ClInclude Include="Entity\cwEntity.h" />
     <ClInclude Include="Entity\cwRenderNode.h" />
@@ -84,6 +85,7 @@
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTexture.h" />
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureMultiThread.h" />
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11Texture.h" />
+    <ClInclude Include="Platform\D3D\D3D11\ViewPort\cwD3D11ViewPort.h" />
     <ClInclude Include="Platform\Windows\cwWinApplication.h" />
     <ClInclude Include="Platform\Windows\cwWinFileSystem.h" />
     <ClInclude Include="Platform\Windows\cwWinUtils.h" />
@@ -116,6 +118,7 @@
     <ClCompile Include="Buffer\cwBuffer.cpp" />
     <ClCompile Include="Camera\cwCamera.cpp" />
     <ClCompile Include="Device\cwDevice.cpp" />
+    <ClCompile Include="Effect\cwEffect.cpp" />
     <ClCompile Include="Engine\cwEngine.cpp" />
     <ClCompile Include="Entity\cwEntity.cpp" />
     <ClCompile Include="Entity\cwRenderNode.cpp" />
@@ -159,6 +162,7 @@
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTexture.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureMultiThread.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11Texture.cpp" />
+    <ClCompile Include="Platform\D3D\D3D11\ViewPort\cwD3D11ViewPort.cpp" />
     <ClCompile Include="Platform\Windows\cwWinApplication.cpp" />
     <ClCompile Include="Platform\Windows\cwWinFileSystem.cpp" />
     <ClCompile Include="Platform\Windows\cwWinStringConvert.cpp" />

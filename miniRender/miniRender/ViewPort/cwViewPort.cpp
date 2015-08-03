@@ -51,4 +51,9 @@ CWBOOL cwViewPort::init(
 	return true;
 }
 
+CWVOID cwViewPort::binding()
+{
+
+}
+
 NS_MINIR_END

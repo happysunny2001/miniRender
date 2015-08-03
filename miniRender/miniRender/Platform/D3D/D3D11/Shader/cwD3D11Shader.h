@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifdef _CW_D3D11_
 
 #include "Base/cwMacros.h"
+#include "Base/cwUtils.h"
 #include "Shader/cwShader.h"
 
 NS_MINIR_BEGIN
@@ -37,18 +38,27 @@ public:
 	cwD3D11Shader();
 	virtual ~cwD3D11Shader();
 
-	virtual bool init(const CWSTRING& strShaderFile) override;
+	virtual CWBOOL init(const CWSTRING& strShaderFile) override;
 
-	virtual bool hasVariable(const string& strVariable) override;
-	virtual void setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize) override;
-	virtual void setVariableData(const string& strVariable, CWUINT index, void* pData, CWUINT offset, CWUINT iSize) override;
-	virtual void setVariableMatrix(const string& strVariable, CWFLOAT* pData) override;
-	virtual void setVariableInt(const string& strVariable, CWINT value) override;
-	virtual void setVariableFloat(const string& strVariable, CWFLOAT value) override;
-	virtual void setVariableFloatArray(const string& strVariable, CWFLOAT* pData, CWUINT count) override;
-	virtual void setVariableTexture(const string& strVariable, cwTexture* pTexture) override;
+	virtual CWBOOL hasVariable(const string& strVariable) override;
+	//virtual CWVOID setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize) override;
+	//virtual CWVOID setVariableData(const string& strVariable, CWUINT index, void* pData, CWUINT offset, CWUINT iSize) override;
+	//virtual CWVOID setVariableMatrix(const string& strVariable, CWFLOAT* pData) override;
+	//virtual CWVOID setVariableInt(const string& strVariable, CWINT value) override;
+	//virtual CWVOID setVariableFloat(const string& strVariable, CWFLOAT value) override;
+	//virtual CWVOID setVariableFloatArray(const string& strVariable, CWFLOAT* pData, CWUINT count) override;
+	//virtual CWVOID setVariableTexture(const string& strVariable, cwTexture* pTexture) override;
 
-	virtual void apply(CWUINT techIndex, CWUINT passIndex) override;
+	virtual CWBOOL hasVariable(eShaderParamIndex eParam) override;
+	virtual CWVOID setVariableData(eShaderParamIndex eParam, CWVOID* pData, CWUINT offset, CWUINT iSize) override;
+	virtual CWVOID setVariableData(eShaderParamIndex eParam, CWUINT index, CWVOID* pData, CWUINT offset, CWUINT iSize) override;
+	virtual CWVOID setVariableMatrix(eShaderParamIndex eParam, CWFLOAT* pData) override;
+	virtual CWVOID setVariableInt(eShaderParamIndex eParam, CWINT value) override;
+	virtual CWVOID setVariableFloat(eShaderParamIndex eParam, CWFLOAT value) override;
+	virtual CWVOID setVariableFloatArray(eShaderParamIndex eParam, CWFLOAT* pData, CWUINT count) override;
+	virtual CWVOID setVariableTexture(eShaderParamIndex eParam, cwTexture* pTexture) override;
+
+	virtual CWVOID apply(CWUINT techIndex, CWUINT passIndex) override;
 
 	ID3DX11Effect* getEffect() { return m_pEffect; }
 	ID3DX11EffectTechnique* getTechnique(CWUINT index);
@@ -59,9 +69,9 @@ public:
 	ID3DX11EffectPass* getPass(const string& strTechName, CWUINT passIndex);
 
 protected:
-	bool saveTech();
-	bool savePass(ID3DX11EffectTechnique* pTech);
-	bool saveVariable();
+	CWBOOL saveTech();
+	CWBOOL savePass(ID3DX11EffectTechnique* pTech);
+	CWBOOL saveVariable();
 
 protected:
 	ID3DX11Effect* m_pEffect;
@@ -72,6 +82,8 @@ protected:
 	unordered_map<ID3DX11EffectTechnique*, unordered_map<string, ID3DX11EffectPass*> > m_mapNamePass;
 
 	unordered_map<string, ID3DX11EffectVariable*> m_mapVariable;
+
+	ID3DX11EffectVariable* m_pShaderParam[eShaderParamMax];
 
 };
 

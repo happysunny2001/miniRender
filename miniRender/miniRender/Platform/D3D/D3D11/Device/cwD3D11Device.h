@@ -40,26 +40,22 @@ class CW_DLL cwD3D11Device : public cwDevice
 public:
 	virtual ~cwD3D11Device();
 
-	virtual bool initDevice() override;
-	virtual void resize(CWUINT width, CWUINT height) override;
-	virtual void resize() override;
+	virtual CWBOOL initDevice() override;
+	virtual CWVOID resize(CWUINT width, CWUINT height) override;
+	virtual CWVOID resize() override;
 	
-	virtual void createRenderTarget();
-	virtual void createViewPort();
-	virtual void createRenderState();
+	virtual cwViewPort* createViewPort(CWFLOAT fTopLeftX, CWFLOAT fTopLeftY, CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fMinDepth = 0.0f, CWFLOAT fMaxDepth = 1.0f) override;
+	virtual CWVOID createRenderState() override;
 
-	virtual void beginDraw() override;
-	virtual void endDraw() override;
-	virtual void swap() override;
+	virtual CWVOID beginDraw() override;
+	virtual CWVOID endDraw() override;
+	virtual CWVOID swap() override;
 
-	virtual void setInputLayout(cwLayouts* pInputLayout);
-	virtual void setPrimitiveTopology(ePrimitiveType topology);
-	virtual void setClearColor(const cwVector4D& fvColor);
-	virtual void setRenderState(eRenderState e);
-	virtual void DrawIndexed(CWUINT indexCnt, CWUINT startIndex, CWINT baseVertex);
-
- 	virtual CWVOID* getDevice() { return m_pD3D11Device; }
- 	virtual CWVOID* getDeviceContext() { return m_pD3D11DeviceContext; }
+	virtual CWVOID setInputLayout(cwLayouts* pInputLayout);
+	virtual CWVOID setPrimitiveTopology(ePrimitiveType topology);
+	virtual CWVOID setClearColor(const cwVector4D& fvColor);
+	virtual CWVOID setRenderState(eRenderState e);
+	virtual CWVOID DrawIndexed(CWUINT indexCnt, CWUINT startIndex, CWINT baseVertex);
 
 	virtual cwShader* createShader(const string& strFileName) override;
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) override;
@@ -69,23 +65,20 @@ public:
 	virtual cwBlend* createBlend(const BlendData& blendData) override;
 	virtual cwStencil* createStencil(const StencilData& stencliData) override;
 
-	virtual void setVertexBuffer(cwBuffer* pVertexBuffer) override;
-	virtual void setIndexBuffer(cwBuffer* pIndexBuffer) override;
-	virtual void setBlend(const cwBlend* pBlendOper);
-	virtual void setStencil(const cwStencil* pStencil);
-
-	virtual CW_RES_LOCK_DATA lockBuffer(cwBuffer* pBuffer);
-	virtual void unlockBuffer(cwBuffer* pBuffer);
+	virtual CWVOID setVertexBuffer(cwBuffer* pVertexBuffer) override;
+	virtual CWVOID setIndexBuffer(cwBuffer* pIndexBuffer) override;
+	virtual CWVOID setBlend(const cwBlend* pBlendOper);
+	virtual CWVOID setStencil(const cwStencil* pStencil);
 
 	virtual cwTexture* createTexture(const CWSTRING& strFileName) override;
-	virtual cwRenderTexture* createRenderTexture(float fWidth, float fHeight, eRenderTextureType eType = eRenderTextureShader) override;
+	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) override;
 
-	virtual void render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) override;
-	virtual void render(cwEntity* pEntity, cwCamera* pCamera) override;
+	virtual CWVOID render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) override;
+	virtual CWVOID render(cwEntity* pEntity, cwCamera* pCamera) override;
 
-	virtual void setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) override;
-	virtual void setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans) override;
-	virtual void draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) override;
+	virtual CWVOID setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) override;
+	virtual CWVOID setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans) override;
+	virtual CWVOID draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) override;
 
 public:
 	IDXGISwapChain* getSwapChain() { return m_pDxgiSwapChain; }
@@ -99,12 +92,12 @@ protected:
 	friend class cwD3D11Repertory;
 
 private:
-	void initBlendBaseData();
-	void initStencilBaseData();
-	void initAccessFlagData();
-	void initBufferBindFlagData();
-	void initBufferUsageData();
-	void initPrimitiveTypeData();
+	CWVOID initBlendBaseData();
+	CWVOID initStencilBaseData();
+	CWVOID initAccessFlagData();
+	CWVOID initBufferBindFlagData();
+	CWVOID initBufferUsageData();
+	CWVOID initPrimitiveTypeData();
 
 protected:
 	ID3D11Device* m_pD3D11Device;

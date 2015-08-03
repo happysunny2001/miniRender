@@ -32,7 +32,9 @@ class cwD3D11ShaderManager : public cwShaderManager
 {
 public:
 	virtual ~cwD3D11ShaderManager();
-	virtual bool init() override;
+
+	virtual CWBOOL init() override;
+	virtual CWVOID loadDefaultShader() override;
 
 protected:
 	static cwD3D11ShaderManager* create();

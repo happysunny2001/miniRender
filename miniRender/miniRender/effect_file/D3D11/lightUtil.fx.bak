@@ -1,5 +1,3 @@
-#include "material.fx"
-
 //Light Util
 //support directional light, point light, spot light
 

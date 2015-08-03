@@ -26,6 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "Texture/cwTexture.h"
 #include "Texture/cwTextureManager.h"
+#include "Effect/cwEffect.h"
 
 #include <assert.h>
 
@@ -35,23 +36,6 @@ cwMaterial* cwMaterial::create()
 {
 	cwMaterial* pMaterial = new cwMaterial();
 	if (pMaterial && pMaterial->init()) {
-		pMaterial->autorelease();
-		return pMaterial;
-	}
-
-	CW_SAFE_DELETE(pMaterial);
-	return nullptr;
-}
-
-cwMaterial* cwMaterial::create(
-	const cwVector4D& ambient,
-	const cwVector4D& diffuse,
-	const cwVector4D& specular,
-	const cwVector4D& reflect,
-	const string& strShader)
-{
-	cwMaterial* pMaterial = new cwMaterial();
-	if (pMaterial && pMaterial->init(ambient, diffuse, specular, reflect, strShader)) {
 		pMaterial->autorelease();
 		return pMaterial;
 	}
@@ -77,7 +61,6 @@ cwMaterial* cwMaterial::create(
 }
 
 cwMaterial::cwMaterial():
-m_pShader(nullptr),
 m_pDiffuseTexture(nullptr),
 m_pBlendOp(nullptr)
 {
@@ -93,28 +76,12 @@ m_pBlendOp(nullptr)
 
 cwMaterial::~cwMaterial()
 {
-	CW_SAFE_RELEASE_NULL(m_pShader);
 	CW_SAFE_RELEASE_NULL(m_pBlendOp);
 	CW_SAFE_RELEASE_NULL(m_pDiffuseTexture);
 }
 
 bool cwMaterial::init()
 {
-	return true;
-}
-
-bool cwMaterial::init(
-	const cwVector4D& ambient,
-	const cwVector4D& diffuse,
-	const cwVector4D& specular,
-	const cwVector4D& reflect,
-	const string& strShader)
-{
-	this->m_nMatData.m_nAmbient = ambient;
-	this->m_nMatData.m_nDiffuse = diffuse;
-	this->m_nMatData.m_nSpecular = specular;
-	this->m_nMatData.m_nReflect = reflect;
-	this->setShader(strShader);
 	return true;
 }
 
@@ -149,25 +116,6 @@ void cwMaterial::setSpecular(const cwVector4D& color)
 void cwMaterial::setReflect(const cwVector4D& color)
 {
 	m_nMatData.m_nReflect = color;
-}
-
-void cwMaterial::setShader(const string& strShader)
-{
-	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getShader(strShader);
-	if (m_pShader == pShader) return;
-
-	CW_SAFE_RELEASE_NULL(m_pShader);
-	m_pShader = pShader;
-	CW_SAFE_RETAIN(m_pShader);
-}
-
-void cwMaterial::setShader(cwShader* pShader)
-{
-	if (m_pShader == pShader) return;
-
-	CW_SAFE_RELEASE_NULL(m_pShader);
-	m_pShader = pShader;
-	CW_SAFE_RETAIN(m_pShader);
 }
 
 void cwMaterial::setDiffuseTexture(cwTexture* pTexture)
@@ -231,24 +179,29 @@ void cwMaterial::updateDiffuseTexture()
 void cwMaterial::setBlend(cwBlend* pBlendOp)
 {
 	if (m_pBlendOp == pBlendOp) return;
+	CW_SAFE_RETAIN(pBlendOp);
 	CW_SAFE_RELEASE_NULL(m_pBlendOp);
 	m_pBlendOp = pBlendOp;
-	CW_SAFE_RETAIN(m_pBlendOp);
 }
 
-void cwMaterial::configEffect()
+void cwMaterial::configEffect(cwEffect* pEffect)
 {
-	if (!m_pShader) return;
+	if (!pEffect) return;
+	cwShader* pShader = pEffect->getShader();
+	if (!pShader) return;
 
-	m_pShader->setVariableData(CW_SHADER_MATERIAL, this->getColorData(), 0, this->getColorDataSize());
+	//pShader->setVariableData(CW_SHADER_MATERIAL, this->getColorData(), 0, this->getColorDataSize());
+	pShader->setVariableData(eShaderParamMaterial, this->getColorData(), 0, this->getColorDataSize());
 
-	if (m_pShader->hasVariable(CW_SHADER_DIFFUSE_TEXTURE)) {
-		m_pShader->setVariableTexture(CW_SHADER_DIFFUSE_TEXTURE, this->getDiffuseTexture());
-	}
+	pShader->setVariableTexture(eShaderParamTexture0, this->getDiffuseTexture());
 
-	if (m_pShader->hasVariable(CW_SHADER_DIFF_TEX_TRANS)) {
-		m_pShader->setVariableMatrix(CW_SHADER_DIFF_TEX_TRANS, (CWFLOAT*)(&m_nDiffuseTrans));
-	}
+	//if (pShader->hasVariable(CW_SHADER_DIFFUSE_TEXTURE)) {
+	//	pShader->setVariableTexture(CW_SHADER_DIFFUSE_TEXTURE, this->getDiffuseTexture());
+	//}
+
+	//if (pShader->hasVariable(CW_SHADER_DIFF_TEX_TRANS)) {
+	//	pShader->setVariableMatrix(CW_SHADER_DIFF_TEX_TRANS, (CWFLOAT*)(&m_nDiffuseTrans));
+	//}
 
 	cwRepertory::getInstance().getDevice()->setBlend(this->getBlend());
 }

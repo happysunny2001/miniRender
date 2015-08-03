@@ -1,14 +1,16 @@
+#include "material.fx"
+
 //Light Util
 //support directional light, point light, spot light
 
 //material structure
-struct Material
-{
-	float4 ambient;
-	float4 diffuse;
-	float4 specular; //w:Spec Power
-	float4 reflect;
-};
+//struct Material
+//{
+//	float4 ambient;
+//	float4 diffuse;
+//	float4 specular; //w:Spec Power
+//	float4 reflect;
+//};
 
 //directional light structure
 struct DirectionalLight

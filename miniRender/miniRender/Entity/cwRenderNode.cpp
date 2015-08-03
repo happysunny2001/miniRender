@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Event/cwEventListener.h"
 #include "Event/cwEventManager.h"
 #include "Event/cwEventDefine.h"
+#include "Effect/cwEffect.h"
 
 NS_MINIR_BEGIN
 
@@ -41,7 +42,8 @@ m_bVisible(CWTRUE),
 m_nPos(cwVector3D::ZERO),
 m_nRot(cwVector3D::ZERO),
 m_nScale(1.0f, 1.0f ,1.0f),
-m_bTransDirty(CWTRUE)
+m_bTransDirty(CWTRUE),
+m_pEffect(nullptr)
 {
 
 }
@@ -49,6 +51,7 @@ m_bTransDirty(CWTRUE)
 cwRenderNode::~cwRenderNode()
 {
 	CW_SAFE_RELEASE_NULL(m_pParent);
+	CW_SAFE_RELEASE_NULL(m_pEffect);
 	clearChildren();
 	clearEventListener();
 }
@@ -274,6 +277,14 @@ CWVOID cwRenderNode::clearEventListener()
 	}
 
 	m_nVecEventListener.clear();
+}
+
+CWVOID cwRenderNode::setEffect(cwEffect* pEffect)
+{
+	if (pEffect == m_pEffect) return;
+	CW_SAFE_RETAIN(pEffect);
+	CW_SAFE_RELEASE_NULL(m_pEffect);
+	m_pEffect = pEffect;
 }
 
 NS_MINIR_END

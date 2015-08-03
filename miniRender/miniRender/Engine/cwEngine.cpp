@@ -27,6 +27,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Event/cwEventManager.h"
 #include "Scheduler/cwSchedulerManager.h"
 #include "Shader/cwShader.h"
+#include "Effect/cwEffect.h"
 
 NS_MINIR_BEGIN
 
@@ -124,11 +125,14 @@ void cwEngine::render()
 void cwEngine::render(cwEntity* pEntity)
 {
 	if (pEntity) {
-		cwMaterial* pMaterial = pEntity->getMaterial();
-		if (pMaterial) {
-			this->setCurrShader(pMaterial->getShader());
-			cwRepertory::getInstance().getDevice()->render(pEntity, m_pCurrCamera);
-		}
+		this->setCurrShader(pEntity->getEffect()->getShader());
+		cwRepertory::getInstance().getDevice()->render(pEntity, m_pCurrCamera);
+
+		//cwMaterial* pMaterial = pEntity->getMaterial();
+		//if (pMaterial) {
+		//	this->setCurrShader(pMaterial->getShader());
+		//	cwRepertory::getInstance().getDevice()->render(pEntity, m_pCurrCamera);
+		//}
 	}
 }
 
@@ -154,11 +158,13 @@ void cwEngine::configShaderLight()
 	CWUINT index = 0;
 	const cwVector<cwLight*>& vecLight = m_pCurrScene->getLights();
 	for (auto it = vecLight.begin(); it != vecLight.end(); ++it) {
-		m_pCurrShader->setVariableData(CW_SHADER_LIGHT, index, (*it)->data(), 0, (*it)->size());
+		//m_pCurrShader->setVariableData(CW_SHADER_LIGHT, index, (*it)->data(), 0, (*it)->size());
+		m_pCurrShader->setVariableData(eShaderParamLight, index, (*it)->data(), 0, (*it)->size());
 		index++;
 	}
 
-	m_pCurrShader->setVariableInt(CW_SHADER_LIGHT_CNT, (CWINT)(vecLight.size()));
+	//m_pCurrShader->setVariableInt(CW_SHADER_LIGHT_CNT, (CWINT)(vecLight.size()));
+	m_pCurrShader->setVariableInt(eShaderParamLightCnt, (CWINT)(vecLight.size()));
 }
 
 NS_MINIR_END

@@ -127,6 +127,12 @@
     <Filter Include="源文件\ViewPort">
       <UniqueIdentifier>{146f2bbe-4896-4be6-ac91-ebcdff90eacf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Platform\D3D\D3D11\ViewPort">
+      <UniqueIdentifier>{2e7b829e-8b0c-41bd-b20c-407d1a753943}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Effect">
+      <UniqueIdentifier>{a0e0ac37-eb30-48df-965e-552b70e64d6e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\cwVector.h">
@@ -393,6 +399,12 @@
     <ClInclude Include="ViewPort\cwViewPort.h">
       <Filter>源文件\ViewPort</Filter>
     </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\ViewPort\cwD3D11ViewPort.h">
+      <Filter>源文件\Platform\D3D\D3D11\ViewPort</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect\cwEffect.h">
+      <Filter>源文件\Effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -610,6 +622,12 @@
     </ClCompile>
     <ClCompile Include="ViewPort\cwViewPort.cpp">
       <Filter>源文件\ViewPort</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\ViewPort\cwD3D11ViewPort.cpp">
+      <Filter>源文件\Platform\D3D\D3D11\ViewPort</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect\cwEffect.cpp">
+      <Filter>源文件\Effect</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

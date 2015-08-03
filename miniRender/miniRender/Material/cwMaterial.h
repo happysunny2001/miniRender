@@ -30,6 +30,7 @@ NS_MINIR_BEGIN
 class cwShader;
 class cwTexture;
 class cwBlend;
+class cwEffect;
 
 class CW_DLL cwMaterial : public cwRef
 {
@@ -48,13 +49,6 @@ public:
 		const cwVector4D& ambient,
 		const cwVector4D& diffuse,
 		const cwVector4D& specular,
-		const cwVector4D& reflect,
-		const string& strShader);
-
-	static cwMaterial* create(
-		const cwVector4D& ambient,
-		const cwVector4D& diffuse,
-		const cwVector4D& specular,
 		const cwVector4D& reflect);
 
 
@@ -62,13 +56,6 @@ public:
 	virtual ~cwMaterial();
 
 	virtual bool init();
-
-	virtual bool init(
-		const cwVector4D& ambient,
-		const cwVector4D& diffuse,
-		const cwVector4D& specular,
-		const cwVector4D& reflect,
-		const string& strShader);
 
 	virtual bool init(
 		const cwVector4D& ambient,
@@ -87,10 +74,6 @@ public:
 
 	virtual void setReflect(const cwVector4D& color);
 	inline const cwVector4D& getReflect() { return m_nMatData.m_nReflect; }
-
-	virtual void setShader(const string& strShader);
-	virtual void setShader(cwShader* pShader);
-	inline cwShader* getShader() { return m_pShader; }
 
 	// set/get diffuse texture
 	virtual void setDiffuseTexture(cwTexture* pTexture);
@@ -112,15 +95,10 @@ public:
 	inline CWVOID* getColorData() { return &m_nMatData;  }
 	inline CWUINT getColorDataSize() { return sizeof(matColor); }
 
-	virtual void setTechName(const string& str) { m_strTechName = str; }
-	inline const string& getTechName() const { return m_strTechName; }
-
-	virtual void configEffect();
+	virtual void configEffect(cwEffect* pEffect);
 
 public:
 	matColor m_nMatData;
-	cwShader* m_pShader;
-	string m_strTechName;         //the name of technique for render 
 	
 	cwBlend* m_pBlendOp;          //blend object
 

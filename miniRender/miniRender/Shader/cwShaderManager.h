@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #define __CW_SHADER_MANAGER_H__
 
 #include "Base/cwMacros.h"
+#include "Base/cwUtils.h"
 #include "Base/cwMap.h"
 #include "Ref/cwRef.h"
 #include "Repertory/cwRepertory.h"
@@ -33,18 +34,25 @@ class CW_DLL cwShaderManager : public cwRef
 public:
 	virtual ~cwShaderManager();
 
-	virtual bool init();
+	virtual CWBOOL init();
 
+	virtual CWVOID loadDefaultShader();
 	cwShader* loadShader(const CWSTRING& strFile);
 	cwShader* getShader(const CWSTRING& strFile);
 	cwShader* getDefShader(CWUINT iKey);
 
+	const CWSTRING& getShaderParamString(eShaderParamIndex eParam) const;
+
 protected:
 	cwShaderManager();
+
+	CWVOID buildShaderParam();
 
 protected:
 	cwMap<CWSTRING, cwShader*> m_nMapShader;
 	cwMap<CWUINT, cwShader*> m_nMapDefShader;
+
+	CWSTRING m_strShaderParam[eShaderParamMax];
 
 };
 

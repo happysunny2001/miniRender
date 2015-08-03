@@ -19,54 +19,47 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #ifdef _CW_D3D11_
 
-#include "cwD3D11Repertory.h"
+#include "cwD3D11ViewPort.h"
+#include "Repertory/cwRepertory.h"
 #include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
-#include "Platform/D3D/D3D11/Shader/cwD3D11ShaderManager.h"
-#include "Platform/D3D/D3D11/Layouts/cwD3D11LayoutsManager.h"
-#include "Texture/cwTextureManager.h"
-#include "Engine/cwEngine.h"
-#include "Base/cwValueMap.h"
-
-#include <assert.h>
 
 NS_MINIR_BEGIN
 
-cwD3D11Repertory::cwD3D11Repertory()
+cwD3D11ViewPort* cwD3D11ViewPort::create(CWFLOAT fTopLeftX, CWFLOAT fTopLeftY,
+										 CWFLOAT fWidth, CWFLOAT fHeight,
+										 CWFLOAT fMinDepth, CWFLOAT fMaxDepth)
 {
+	cwD3D11ViewPort* pViewPort = new cwD3D11ViewPort();
+	if (pViewPort && pViewPort->init(fTopLeftX, fTopLeftY, fWidth, fHeight, fMinDepth, fMaxDepth)) {
+		pViewPort->autorelease();
+		return pViewPort;
+	}
 
+	CW_SAFE_DELETE(pViewPort);
+	return nullptr;
 }
 
-cwD3D11Repertory::~cwD3D11Repertory()
+CWBOOL cwD3D11ViewPort::init(
+	CWFLOAT fTopLeftX, CWFLOAT fTopLeftY,
+	CWFLOAT fWidth, CWFLOAT fHeight,
+	CWFLOAT fMinDepth, CWFLOAT fMaxDepth)
 {
-}
+	if (!cwViewPort::init(fTopLeftX, fTopLeftY, fWidth, fHeight, fMinDepth, fMaxDepth)) return false;
 
-bool cwD3D11Repertory::specialInit()
-{
-	m_pDevice = new cwD3D11Device();
-	assert(m_pDevice != nullptr);
-	bool b = m_pDevice->initDevice();
-	assert(b);
-
-	m_pShaderManager = cwD3D11ShaderManager::create();
-	CW_SAFE_RETAIN(m_pShaderManager);
-	m_pShaderManager->loadDefaultShader();
-
-	m_pLayoutManager = cwD3D11LayoutsManager::create();
-	assert(m_pLayoutManager != nullptr);
-	CW_SAFE_RETAIN(m_pLayoutManager);
+	m_nD3D11ViewPort.TopLeftX = fTopLeftX;
+	m_nD3D11ViewPort.TopLeftY = fTopLeftY;
+	m_nD3D11ViewPort.Width  = fWidth;
+	m_nD3D11ViewPort.Height = fHeight;
+	m_nD3D11ViewPort.MinDepth = fMinDepth;
+	m_nD3D11ViewPort.MaxDepth = fMaxDepth;
 
 	return true;
 }
 
-void cwD3D11Repertory::refreshWindowTitle(const CWSTRING& strTitle)
+CWVOID cwD3D11ViewPort::binding()
 {
-	//if (!pcTitle) return;
-
-	//CWVOID* phWnd = this->getPtr(gValueWinHandle);
-	//if (!phWnd) return;
-
-	//HWND hWnd = reinterpret_cast<HWND>(phWnd);
-	//SetWindowText(hWnd, pcTitle);
+	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+	pD3D11Device->getD3D11DeviceContext()->RSSetViewports(1, &m_nD3D11ViewPort);
 }
 
 NS_MINIR_END

@@ -126,6 +126,9 @@ void cwRepertory::initAll()
 {
 //	m_pLog = new cwLog();
 
+	this->addValue(gValueWinWidth, cwValueMap(CWUINT(800)));
+	this->addValue(gValueWinHeight, cwValueMap(CWUINT(600)));
+
 	addValue(gValueNearZ, cwValueMap(1.0f));
 	addValue(gValueFarZ, cwValueMap(1000.0f));
 	addValue(gValueFov, cwValueMap(0.25f*3.14159f));

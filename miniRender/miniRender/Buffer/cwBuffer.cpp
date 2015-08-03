@@ -50,7 +50,7 @@ cwBuffer::~cwBuffer()
 	
 }
 
-bool cwBuffer::init(
+CWBOOL cwBuffer::init(
 	CWUINT uSize,
 	CWUINT usage,
 	CWUINT bindFlag,
@@ -66,6 +66,11 @@ bool cwBuffer::init(
 	m_nBuffDesc.Usage = usage;
 
 	return true;
+}
+
+CWVOID cwBuffer::refresh(CWVOID* pData)
+{
+
 }
 
 NS_MINIR_END

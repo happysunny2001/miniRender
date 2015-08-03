@@ -47,7 +47,14 @@ cwD3D11ShaderManager::~cwD3D11ShaderManager()
 
 }
 
-bool cwD3D11ShaderManager::init()
+CWBOOL cwD3D11ShaderManager::init()
+{
+	if (!cwShaderManager::init()) return false;
+
+	return true;
+}
+
+CWVOID cwD3D11ShaderManager::loadDefaultShader()
 {
 	//init d3d shader first
 	auto fileSystem = cwRepertory::getInstance().getFileSystem();
@@ -59,8 +66,6 @@ bool cwD3D11ShaderManager::init()
 	m_nMapDefShader.insert(CW_SHADER_DEF_COLOR, getShader(fileSystem->getFullFilePath("effect/D3D11/color.fx")));
 	m_nMapDefShader.insert(CW_SHADER_DEF_LIGHTING, getShader(fileSystem->getFullFilePath("effect/D3D11/lighting.fx")));
 	m_nMapDefShader.insert(CW_SHADER_DEF_LIGHTINGTEX, getShader(fileSystem->getFullFilePath("effect/D3D11/lightingTex.fx")));
-
-	return true;
 }
 
 NS_MINIR_END

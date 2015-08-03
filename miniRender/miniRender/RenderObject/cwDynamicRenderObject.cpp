@@ -82,9 +82,11 @@ void cwDynamicRenderObject::preRender()
 
 void cwDynamicRenderObject::updateVertexBuffer()
 {
-	CW_RES_LOCK_DATA lockData = cwRepertory::getInstance().getDevice()->lockBuffer(m_pVertexBuffer);
-	memcpy(lockData.pData, m_pVertexData, m_pVertexBuffer->getSize());
-	cwRepertory::getInstance().getDevice()->unlockBuffer(m_pVertexBuffer);
+	m_pVertexBuffer->refresh(m_pVertexData);
+
+	//CW_RES_LOCK_DATA lockData = cwRepertory::getInstance().getDevice()->lockBuffer(m_pVertexBuffer);
+	//memcpy(lockData.pData, m_pVertexData, m_pVertexBuffer->getSize());
+	//cwRepertory::getInstance().getDevice()->unlockBuffer(m_pVertexBuffer);
 }
 
 NS_MINIR_END

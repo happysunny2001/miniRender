@@ -48,6 +48,8 @@ public:
 		CWUINT uCpuFlag,
 		CWUINT miscFlag,
 		CWUINT structureByteStride) override;
+
+	virtual CWVOID refresh(CWVOID* pData) override;
 	
 protected:
 

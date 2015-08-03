@@ -167,13 +167,16 @@ void BoxDemoScene::buildPlane()
 
 	cwShader* pShader = repertory.getShaderManager()->getDefShader(CW_SHADER_DEF_LIGHTINGTEX);
 	cwMaterial* pMaterial = cwMaterial::create();
-	pMaterial->setShader(pShader);
+	//pMaterial->setShader(pShader);
 	pMaterial->setDiffuseTexture(m_pRenderTex);
+	cwEffect* pEffect = cwEffect::create();
+	pEffect->setShader(pShader);
 
 	m_pTerrain = cwEntity::create();
 	m_pTerrain->setMaterial(pMaterial);
 	m_pTerrain->setRenderObject(pRenderObj);
 	m_pTerrain->setPosition(cwVector3D::ZERO);
+	m_pTerrain->setEffect(pEffect);
 	//this->addChild(m_pTerrain);
 	CW_SAFE_RETAIN(m_pTerrain);
 

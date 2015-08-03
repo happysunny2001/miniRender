@@ -21,6 +21,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwColor.h"
 #include "Base/cwMacros.h"
 #include "Texture/cwRenderTexture.h"
+#include "Texture/cwTextureManager.h"
+#include "ViewPort/cwViewPort.h"
+#include "Repertory/cwRepertory.h"
 
 NS_MINIR_BEGIN
 
@@ -31,8 +34,10 @@ m_bEnableMsaa4x(false),
 m_pBlendState(nullptr),
 m_pRenderTargetBkBuffer(nullptr),
 m_pCurrRenderTarget(nullptr),
-//m_pDepthStencil(nullptr),
-m_bRefreshRenderTarget(true)
+m_bRefreshRenderTarget(false),
+m_pDefaultViewPort(nullptr),
+m_pCurrViewPort(nullptr),
+m_bRefreshViewPort(false)
 {
 
 }
@@ -40,6 +45,11 @@ m_bRefreshRenderTarget(true)
 cwDevice::~cwDevice()
 {
 	//m_pBlendState = nullptr;
+	CW_SAFE_RELEASE_NULL(m_pDefaultViewPort);
+	CW_SAFE_RELEASE_NULL(m_pCurrViewPort);
+
+	CW_SAFE_RELEASE_NULL(m_pRenderTargetBkBuffer);
+	CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
 }
 
 void cwDevice::setRenderTarget(cwRenderTexture* pRenderTexture)
@@ -54,7 +64,48 @@ void cwDevice::setRenderTarget(cwRenderTexture* pRenderTexture)
 	CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
 	m_pCurrRenderTarget = pRenderTexture;
 
-	m_bRefreshRenderTarget = true;
+	m_bRefreshRenderTarget = CWTRUE;
+}
+
+CWVOID cwDevice::setViewPort(cwViewPort* pViewPort)
+{
+	if (m_pCurrViewPort == pViewPort) return;
+	if (pViewPort == nullptr) {
+		if (m_pCurrViewPort == m_pDefaultViewPort) return;
+		pViewPort = m_pDefaultViewPort;
+	}
+
+	CW_SAFE_RETAIN(pViewPort);
+	CW_SAFE_RELEASE_NULL(m_pCurrViewPort);
+	m_pCurrViewPort = pViewPort;
+
+	m_bRefreshViewPort = CWTRUE;
+}
+
+CWVOID cwDevice::createDefaultViewPort()
+{
+	if (m_pDefaultViewPort) {
+		CW_SAFE_RELEASE_NULL(m_pDefaultViewPort);
+	}
+
+	CWUINT winWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
+	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
+
+	m_pDefaultViewPort = createViewPort(0, 0, static_cast <CWFLOAT>(winWidth), static_cast <CWFLOAT>(winHeight));
+	CW_SAFE_RETAIN(m_pDefaultViewPort);
+
+	setViewPort(m_pDefaultViewPort);
+}
+
+CWVOID cwDevice::createDefaultRenderTarget()
+{
+	if (m_pRenderTargetBkBuffer) {
+		CW_SAFE_RELEASE_NULL(m_pRenderTargetBkBuffer);
+	}
+
+	m_pRenderTargetBkBuffer = cwRepertory::getInstance().getTextureManager()->createRenderTexture(1.0f, 1.0f, eRenderTextureTarget);
+	CW_SAFE_RETAIN(m_pRenderTargetBkBuffer);
+	this->setRenderTarget(m_pRenderTargetBkBuffer);
 }
 
 void cwDevice::setClearColor(const cwVector4D& color)

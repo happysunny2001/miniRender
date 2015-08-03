@@ -71,8 +71,8 @@ bool cwD3D11Stencil::init(const StencilData& stencilData)
 	m_nDepthStencilDesc.BackFace.StencilPassOp = cwD3D11Device::getStencilOp(stencilData.backStencilPassOp); //static_cast<D3D11_STENCIL_OP>(backPassOp);
 	m_nDepthStencilDesc.BackFace.StencilFunc = cwD3D11Device::getComparison(stencilData.backStencilFunc); //static_cast<D3D11_COMPARISON_FUNC>(backFunc);
 
-	ID3D11Device* pD3D11Device = static_cast<ID3D11Device*>(cwRepertory::getInstance().getDevice()->getDevice());
-	CW_HR(pD3D11Device->CreateDepthStencilState(&m_nDepthStencilDesc, &m_pDepthStencilState));
+	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+	CW_HR(pD3D11Device->getD3D11Device()->CreateDepthStencilState(&m_nDepthStencilDesc, &m_pDepthStencilState));
 
 	return true;
 }

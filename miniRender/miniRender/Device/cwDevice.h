@@ -38,32 +38,30 @@ class cwTexture;
 class cwBlend;
 class cwStencil;
 class cwRenderTexture;
+class cwViewPort;
 
 class CW_DLL cwDevice
 {
 public:
 	virtual ~cwDevice();
 
-	virtual bool initDevice() = 0;
-	virtual void resize(CWUINT width, CWUINT height) = 0;
-	virtual void resize() = 0;
+	virtual CWBOOL initDevice() = 0;
+	virtual CWVOID resize(CWUINT width, CWUINT height) = 0;
+	virtual CWVOID resize() = 0;
 
-	virtual void createRenderTarget() = 0;
-	virtual void createViewPort() = 0;
-	virtual void createRenderState() = 0;
+	virtual cwViewPort* createViewPort(CWFLOAT fTopLeftX, CWFLOAT fTopLeftY, CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fMinDepth=0.0f, CWFLOAT fMaxDepth=1.0f) = 0;
+	virtual CWVOID setViewPort(cwViewPort* pViewPort);
+	virtual CWVOID createRenderState() = 0;
 
-	virtual void beginDraw() = 0;
-	virtual void endDraw() = 0;
-	virtual void swap() = 0;
+	virtual CWVOID beginDraw() = 0;
+	virtual CWVOID endDraw() = 0;
+	virtual CWVOID swap() = 0;
 
-	virtual void setInputLayout(cwLayouts* pInputLayout) = 0;
-	virtual void setPrimitiveTopology(ePrimitiveType topology) = 0;
-	virtual void setClearColor(const cwVector4D& fvColor) = 0;
-	virtual void setRenderState(eRenderState e) = 0;
-	virtual void DrawIndexed(CWUINT indexCnt, CWUINT startIndex, CWINT baseVertex) = 0;
-
-	virtual CWVOID* getDevice() = 0;
-	virtual CWVOID* getDeviceContext() = 0;
+	virtual CWVOID setInputLayout(cwLayouts* pInputLayout) = 0;
+	virtual CWVOID setPrimitiveTopology(ePrimitiveType topology) = 0;
+	virtual CWVOID setClearColor(const cwVector4D& fvColor) = 0;
+	virtual CWVOID setRenderState(eRenderState e) = 0;
+	virtual CWVOID DrawIndexed(CWUINT indexCnt, CWUINT startIndex, CWINT baseVertex) = 0;
 
 	virtual cwShader* createShader(const string& strName) = 0;
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) = 0;
@@ -73,44 +71,46 @@ public:
 	virtual cwBlend* createBlend(const BlendData& blendData) = 0;
 	virtual cwStencil* createStencil(const StencilData& stencliData) = 0;
 
-	virtual void setVertexBuffer(cwBuffer* pVertexBuffer) = 0;
-	virtual void setIndexBuffer(cwBuffer* pIndexBuffer) = 0;
+	virtual CWVOID setVertexBuffer(cwBuffer* pVertexBuffer) = 0;
+	virtual CWVOID setIndexBuffer(cwBuffer* pIndexBuffer) = 0;
 	//set blend state, nullptr for restore blend state
-	virtual void setBlend(const cwBlend* pBlendOper) = 0;
+	virtual CWVOID setBlend(const cwBlend* pBlendOper) = 0;
 	//set stencil state, nullptr for restore stencil state
-	virtual void setStencil(const cwStencil* pStencil) = 0;
-
-	virtual CW_RES_LOCK_DATA lockBuffer(cwBuffer* pBuffer) = 0;
-	virtual void unlockBuffer(cwBuffer* pBuffer) = 0;
+	virtual CWVOID setStencil(const cwStencil* pStencil) = 0;
 
 	virtual cwTexture* createTexture(const CWSTRING& strFileName) = 0;
-	virtual cwRenderTexture* createRenderTexture(float fWidth, float fHeight, eRenderTextureType eType=eRenderTextureShader) = 0;
+	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) = 0;
 
-	virtual void render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) = 0;
-	virtual void render(cwEntity* pEntity, cwCamera* pCamera) = 0;
+	virtual CWVOID render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) = 0;
+	virtual CWVOID render(cwEntity* pEntity, cwCamera* pCamera) = 0;
 
-	virtual void setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) = 0;
-	virtual void setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans) = 0;
-	virtual void draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) = 0;
+	virtual CWVOID setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) = 0;
+	virtual CWVOID setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans) = 0;
+	virtual CWVOID draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) = 0;
 
-	virtual void setRenderTarget(cwRenderTexture* pRenderTexture);
-	//virtual void setDepthStentil(cwRenderTexture* pDepthStencil);
+	virtual CWVOID setRenderTarget(cwRenderTexture* pRenderTexture);
 
-	inline bool getEnableMsaa4X() const { return m_bEnableMsaa4x; }
+	inline CWBOOL getEnableMsaa4X() const { return m_bEnableMsaa4x; }
 
 protected:
 	cwDevice();
+
+	virtual CWVOID createDefaultViewPort();
+	virtual CWVOID createDefaultRenderTarget();
 
 protected:
 	cwVector4D m_fvClearColor;
 	eRenderState m_eRenderState;
 	cwBlend* m_pBlendState; //current blend state, just for record
-	bool m_bEnableMsaa4x;
+	CWBOOL m_bEnableMsaa4x;
 
 	cwRenderTexture* m_pRenderTargetBkBuffer;
 	cwRenderTexture* m_pCurrRenderTarget;
+	CWBOOL m_bRefreshRenderTarget;
 
-	bool m_bRefreshRenderTarget;
+	cwViewPort* m_pDefaultViewPort;
+	cwViewPort* m_pCurrViewPort;
+	CWBOOL m_bRefreshViewPort;
 
 };
 

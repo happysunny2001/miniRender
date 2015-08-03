@@ -79,18 +79,22 @@ void BoxDemo::buildEntity()
 
 	cwShader* pShader = repertory.getShaderManager()->getDefShader(CW_SHADER_DEF_COLOR);
 	cwMaterial* pMaterial = cwMaterial::create();
-	pMaterial->setShader(pShader);
+	//pMaterial->setShader(pShader);
+	cwEffect* pEffect = cwEffect::create();
+	pEffect->setShader(pShader);
 
 	m_pEntityBox01 = cwEntity::create();
 	m_pEntityBox01->setMaterial(pMaterial);
 	m_pEntityBox01->setRenderObject(pRenderObj);
 	m_pEntityBox01->setPosition(cwVector3D(2.0f, 1.0f, 0.0f));
+	m_pEntityBox01->setEffect(pEffect);
 	CW_SAFE_RETAIN(m_pEntityBox01);
 
 	m_pEntityBox02 = cwEntity::create();
 	m_pEntityBox02->setMaterial(pMaterial);
 	m_pEntityBox02->setRenderObject(pRenderObj);
 	m_pEntityBox02->setPosition(cwVector3D(-2.0f, 1.0f, -3.0f));
+	m_pEntityBox02->setEffect(pEffect);
 	CW_SAFE_RETAIN(m_pEntityBox02);
 }
 

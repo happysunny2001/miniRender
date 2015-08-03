@@ -17,47 +17,39 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_VIEW_PORT_H__
-#define __CW_VIEW_PORT_H__
+#ifndef __CW_D3D11_VIEW_PORT_H__
+#define __CW_D3D11_VIEW_PORT_H__
 
 #include "Base/cwMacros.h"
-#include "Base/cwBasicType.h"
-#include "Ref/cwRef.h"
+#include "ViewPort/cwViewPort.h"
+
+#ifdef _CW_D3D11_
 
 NS_MINIR_BEGIN
 
-class cwViewPort : public cwRef
+class cwD3D11ViewPort : public cwViewPort
 {
 public:
-	static cwViewPort* create(
-		CWFLOAT fTopLeftX, CWFLOAT fTopLeftY, 
-		CWFLOAT fWidth, CWFLOAT fHeight, 
+	static cwD3D11ViewPort* create(
+		CWFLOAT fTopLeftX, CWFLOAT fTopLeftY,
+		CWFLOAT fWidth, CWFLOAT fHeight,
 		CWFLOAT fMinDepth, CWFLOAT fMaxDepth);
 
 	virtual CWBOOL init(
 		CWFLOAT fTopLeftX, CWFLOAT fTopLeftY,
 		CWFLOAT fWidth, CWFLOAT fHeight,
-		CWFLOAT fMinDepth, CWFLOAT fMaxDepth);
+		CWFLOAT fMinDepth, CWFLOAT fMaxDepth) override;
 
-	virtual CWVOID binding();
-
-	inline CWFLOAT getTopLeftX() const { return m_fTopLeftX; }
-	inline CWFLOAT getTopLeftY() const { return m_fTopLeftY; }
-	inline CWFLOAT getWidth() const  { return m_fWidth; }
-	inline CWFLOAT getHeight() const { return m_fHeight; }
-	inline CWFLOAT getMinDepth() const { return m_fMinDepth; }
-	inline CWFLOAT getMaxDepth() const { return m_fMaxDepth; }
+	virtual CWVOID binding() override;
 
 protected:
-	CWFLOAT m_fTopLeftX;
-	CWFLOAT m_fTopLeftY;
-	CWFLOAT m_fWidth;
-	CWFLOAT m_fHeight;
-	CWFLOAT m_fMinDepth;
-	CWFLOAT m_fMaxDepth;
+	D3D11_VIEWPORT m_nD3D11ViewPort;
 
 };
 
 NS_MINIR_END
 
-#endif
+#endif // end _CW_D3D11_
+
+#endif // end __CW_D3D11_VIEW_PORT_H__
+

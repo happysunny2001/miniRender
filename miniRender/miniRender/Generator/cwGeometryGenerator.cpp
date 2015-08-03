@@ -26,6 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Shader/cwShader.h"
 #include "Shader/cwShaderManager.h"
+#include "Effect/cwEffect.h"
 
 #include <fstream>
 #include <iostream>
@@ -451,12 +452,16 @@ cwEntity* cwGeometryGenerator::generateCoordinateAxisEntity(CWFLOAT scale)
 {
 	cwRenderObject* pRenderObject = generateCoordinateAxisRenderObject(scale);
 	cwMaterial* pMaterial = cwMaterial::create();
-	pMaterial->setShader(cwRepertory::getInstance().getShaderManager()->getDefShader(CW_SHADER_DEF_COLOR));
+	//pMaterial->setShader(cwRepertory::getInstance().getShaderManager()->getDefShader(CW_SHADER_DEF_COLOR));
+	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getDefShader(CW_SHADER_DEF_COLOR);
+	cwEffect* pEffect = cwEffect::create();
+	pEffect->setShader(pShader);
 
 	cwEntity* pEntity = cwEntity::create();
 	pEntity->setMaterial(pMaterial);
 	pEntity->setRenderObject(pRenderObject);
 	pEntity->setPosition(cwVector3D::ZERO);
+	pEntity->setEffect(pEffect);
 
 	return pEntity;
 }

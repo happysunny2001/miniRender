@@ -16,20 +16,11 @@ cbuffer cbPerObject
 	float4x4 gMatWorld;
 	float4x4 gMatWorldInvTranspose; //transform normal
 	float4x4 gMatWorldViewProj;
-	float4x4 gDiffTexTransform;     //transform texture coordinate
+//	float4x4 gDiffTexTransform;     //transform texture coordinate
 	Material gMaterial;             //material of object
 };
 
-SamplerState samAnisotropic
-{
-	Filter = ANISOTROPIC;
-	MaxAnisotropy = 4;
-
-	AddressU = WRAP;
-	AddressV = WRAP;
-};
-
-Texture2D gDiffuseTexture;
+//Texture2D gDiffuseTexture;
 
 struct VertexIn
 {
@@ -52,14 +43,15 @@ VertexOut VS(VertexIn vIn)
 	vOut.PosW    = mul(float4(vIn.PosL, 1.0f), gMatWorld).xyz;
 	vOut.PosH    = mul(float4(vIn.PosL, 1.0f), gMatWorldViewProj);
 	vOut.NormalW = mul(float4(vIn.NormalL, 0.0f), gMatWorldInvTranspose).xyz;
-	vOut.Tex     = mul(float4(vIn.Tex, 0.0f, 1.0f), gDiffTexTransform).xy;
+	vOut.Tex     = vIn.Tex;//mul(float4(vIn.Tex, 0.0f, 1.0f), gDiffTexTransform).xy;
 
 	return vOut;
 }
 
 float4 PS(VertexOut pIn, uniform bool gAlphaClip, uniform bool gFogEnable) : SV_Target
 {
-	float4 texColor = gDiffuseTexture.Sample( samAnisotropic, pIn.Tex );
+	//float4 texColor = gDiffuseTexture.Sample( samAnisotropic, pIn.Tex );
+	float4 texColor = gTexture0.Sample( samAnisotropic, pIn.Tex );
 	if(gAlphaClip) {
 		clip(texColor.a - 0.1f);
 	}

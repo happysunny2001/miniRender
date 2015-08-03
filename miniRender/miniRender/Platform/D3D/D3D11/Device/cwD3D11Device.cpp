@@ -34,6 +34,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Texture/cwTexture.h"
 #include "Texture/cwRenderTexture.h"
 #include "Texture/cwTextureManager.h"
+#include "Effect/cwEffect.h"
 #include "Stencil/cwStencil.h"
 #include "Platform/Windows/cwWinUtils.h"
 #include "Platform/D3D/D3D11/cwD3D11Utils.h"
@@ -47,6 +48,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/D3D/D3D11/Texture/cwD3D11RenderTextureMultiThread.h"
 #include "Platform/D3D/D3D11/Blend/cwD3D11Blend.h"
 #include "Platform/D3D/D3D11/Shader/cwD3D11Shader.h"
+#include "Platform/D3D/D3D11/ViewPort/cwD3D11ViewPort.h"
 
 #include <assert.h>
 #include <xnamath.h>
@@ -95,6 +97,7 @@ cwD3D11Device::~cwD3D11Device()
 	CW_RELEASE_COM(m_pNoCullRenderState);
 	CW_RELEASE_COM(m_pCullCWRenderState);
 	CW_SAFE_RELEASE_NULL(m_pMaterialDefault);
+	CW_SAFE_RELEASE_NULL(m_pRenderTargetBkBuffer);
 	CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
 
 	if (m_pD3D11Debug) {
@@ -180,8 +183,8 @@ bool cwD3D11Device::initDevice()
 	CW_RELEASE_COM(dxgiFactory);
 
 	createRenderState();
-	createRenderTarget();
-	createViewPort();
+	createDefaultRenderTarget();
+	createDefaultViewPort();
 
 	m_pMaterialDefault = cwMaterial::create(
 		cwVector4D(1.0f, 1.0f, 1.0f, 1.0f),
@@ -193,19 +196,13 @@ bool cwD3D11Device::initDevice()
 	return true;
 }
 
-void cwD3D11Device::createRenderTarget()
-{
-	m_pRenderTargetBkBuffer = cwRepertory::getInstance().getTextureManager()->createRenderTexture(1.0f, 1.0f, eRenderTextureTarget);
-	this->setRenderTarget(m_pRenderTargetBkBuffer);
-}
-
 void cwD3D11Device::resize(CWUINT width, CWUINT height)
 {
 	cwRepertory::getInstance().getTextureManager()->beginResize();
 	CW_HR(m_pDxgiSwapChain->ResizeBuffers(1, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
 	cwRepertory::getInstance().getTextureManager()->onResize();
 
-	createViewPort();
+	createDefaultViewPort();
 
 	m_bRefreshRenderTarget = true;
 }
@@ -223,19 +220,9 @@ void cwD3D11Device::setClearColor(const cwVector4D& fvColor)
 	m_fvClearColor = fvColor;
 }
 
-void cwD3D11Device::createViewPort()
+cwViewPort* cwD3D11Device::createViewPort(CWFLOAT fTopLeftX, CWFLOAT fTopLeftY, CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fMinDepth, CWFLOAT fMaxDepth)
 {
-	CWUINT winWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
-	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
-
-	D3D11_VIEWPORT viewPort;
-	viewPort.TopLeftX = 0;
-	viewPort.TopLeftY = 0;
-	viewPort.Width = (float)winWidth;
-	viewPort.Height = (float)winHeight;
-	viewPort.MinDepth = 0;
-	viewPort.MaxDepth = 1.0f;
-	m_pD3D11DeviceContext->RSSetViewports(1, &viewPort);
+	return cwD3D11ViewPort::create(fTopLeftX, fTopLeftY, fWidth, fHeight, fMinDepth, fMaxDepth);
 }
 
 void cwD3D11Device::createRenderState()
@@ -292,8 +279,12 @@ void cwD3D11Device::createRenderState()
 
 void cwD3D11Device::beginDraw()
 {
-	if (m_bRefreshRenderTarget) {
+	if (m_bRefreshRenderTarget && m_pCurrRenderTarget) {
 		m_pCurrRenderTarget->binding();
+	}
+
+	if (m_bRefreshViewPort && m_pCurrViewPort) {
+		m_pCurrViewPort->binding();
 	}
 
 	m_pCurrRenderTarget->beginDraw();
@@ -487,26 +478,6 @@ void cwD3D11Device::setStencil(const cwStencil* pStencil)
 	m_pD3D11DeviceContext->OMSetDepthStencilState(pState, pStencil->getStencilRef());
 }
 
-CW_RES_LOCK_DATA cwD3D11Device::lockBuffer(cwBuffer* pBuffer)
-{
-	D3D11_MAPPED_SUBRESOURCE mappedData;
-	ID3D11Buffer* pD3D11Buffer = static_cast<ID3D11Buffer*>(pBuffer->getBuffer());
-	CW_HR(m_pD3D11DeviceContext->Map(pD3D11Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
-
-	CW_RES_LOCK_DATA lockData;
-	lockData.pData = mappedData.pData;
-	lockData.DepthPitch = mappedData.DepthPitch;
-	lockData.RowPitch = mappedData.RowPitch;
-
-	return lockData;
-}
-
-void cwD3D11Device::unlockBuffer(cwBuffer* pBuffer)
-{
-	ID3D11Buffer* pD3D11Buffer = static_cast<ID3D11Buffer*>(pBuffer->getBuffer());
-	m_pD3D11DeviceContext->Unmap(pD3D11Buffer, 0);
-}
-
 cwTexture* cwD3D11Device::createTexture(const CWSTRING& strFileName)
 {
 	cwTexture* pTexture = cwD3D11Texture::create(strFileName);
@@ -535,29 +506,47 @@ void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPo
 	cwMatrix4X4 matWorld;
 	matWorld.setTranslation(worldPos);
 
-	if (pShader->hasVariable(CW_SHADER_MAT_WORLD)) {
-		pShader->setVariableMatrix(CW_SHADER_MAT_WORLD, reinterpret_cast<float*>(&matWorld));
-	}
+	//if (pShader->hasVariable(CW_SHADER_MAT_WORLD)) {
+	//	pShader->setVariableMatrix(CW_SHADER_MAT_WORLD, reinterpret_cast<float*>(&matWorld));
+	//}
 
-	if (pShader->hasVariable(CW_SHADER_MAT_WORLD_INV_TRANS)) {
+	pShader->setVariableMatrix(eShaderParamWorld, reinterpret_cast<float*>(&matWorld));
+
+	if (pShader->hasVariable(eShaderParamWorldInvTrans)) {
 		cwMatrix4X4 matWorldInvTrans = matWorld.inverse().transpose();
-		pShader->setVariableMatrix(CW_SHADER_MAT_WORLD_INV_TRANS, reinterpret_cast<float*>(&matWorldInvTrans));
+		pShader->setVariableMatrix(eShaderParamWorldInvTrans, reinterpret_cast<float*>(&matWorldInvTrans));
 	}
 
-	if (pShader->hasVariable(CW_SHADER_MATERIAL)) {
-		pShader->setVariableData(CW_SHADER_MATERIAL, m_pMaterialDefault->getColorData(), 0, m_pMaterialDefault->getColorDataSize());
-	}
+	//if (pShader->hasVariable(CW_SHADER_MAT_WORLD_INV_TRANS)) {
+	//	cwMatrix4X4 matWorldInvTrans = matWorld.inverse().transpose();
+	//	pShader->setVariableMatrix(CW_SHADER_MAT_WORLD_INV_TRANS, reinterpret_cast<float*>(&matWorldInvTrans));
+	//}
 
-	if (pShader->hasVariable(CW_SHADER_EYE_POSW)) {
-		const cwVector3D& pos = pCamera->getPos();
-		pShader->setVariableData(CW_SHADER_EYE_POSW, (CWVOID*)&pos, 0, sizeof(cwVector3D));
-	}
+	pShader->setVariableData(eShaderParamMaterial, m_pMaterialDefault->getColorData(), 0, m_pMaterialDefault->getColorDataSize());
 
-	if (pShader->hasVariable(CW_SHADER_MAT_WORLDVIEWPROJ)) {
+	//if (pShader->hasVariable(CW_SHADER_MATERIAL)) {
+	//	pShader->setVariableData(CW_SHADER_MATERIAL, m_pMaterialDefault->getColorData(), 0, m_pMaterialDefault->getColorDataSize());
+	//}
+
+	const cwVector3D& pos = pCamera->getPos();
+	pShader->setVariableData(eShaderParamEyePosWorld, (CWVOID*)&pos, 0, sizeof(cwVector3D));
+
+	//if (pShader->hasVariable(CW_SHADER_EYE_POSW)) {
+	//	const cwVector3D& pos = pCamera->getPos();
+	//	pShader->setVariableData(CW_SHADER_EYE_POSW, (CWVOID*)&pos, 0, sizeof(cwVector3D));
+	//}
+
+	if (pShader->hasVariable(eShaderParamWorldViewProj)) {
 		cwMatrix4X4 matViewProj = pCamera->getViewProjMatrix();
 		cwMatrix4X4 worldViewProj = matWorld*matViewProj;
-		pShader->setVariableMatrix(CW_SHADER_MAT_WORLDVIEWPROJ, reinterpret_cast<CWFLOAT*>(worldViewProj.getBuffer()));
+		pShader->setVariableMatrix(eShaderParamWorldViewProj, reinterpret_cast<CWFLOAT*>(worldViewProj.getBuffer()));
 	}
+
+	//if (pShader->hasVariable(CW_SHADER_MAT_WORLDVIEWPROJ)) {
+	//	cwMatrix4X4 matViewProj = pCamera->getViewProjMatrix();
+	//	cwMatrix4X4 worldViewProj = matWorld*matViewProj;
+	//	pShader->setVariableMatrix(CW_SHADER_MAT_WORLDVIEWPROJ, reinterpret_cast<CWFLOAT*>(worldViewProj.getBuffer()));
+	//}
 
 	pRenderObj->preRender();
 
@@ -576,15 +565,15 @@ void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
 
 	cwMaterial* pMaterial = pEntity->getMaterial();
 	assert(pMaterial != nullptr);
-	pMaterial->configEffect();
+	pMaterial->configEffect(pEntity->getEffect());
 
-	cwShader* pShader = pMaterial->getShader();
+	cwShader* pShader = pEntity->getEffect()->getShader();
 	assert(pShader != nullptr);
 	setShaderWorldTrans(pShader, pEntity->getTransformMatrix(), pCamera);
 
 	cwRenderObject* pRenderObj = pEntity->getRenderObj();
 	assert(pRenderObj != nullptr);
-	draw(pShader, pMaterial->getTechName(), pRenderObj);
+	draw(pShader, pEntity->getEffect()->getTech(), pRenderObj);
 
 	ID3D11ShaderResourceView* pSrvs[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = { 0 };
 	m_pD3D11DeviceContext->PSSetShaderResources(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, pSrvs);
@@ -594,38 +583,59 @@ void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& tr
 {
 	if (!pShader) return;
 
-	if (pShader->hasVariable(CW_SHADER_MAT_WORLD)) {
-		pShader->setVariableMatrix(CW_SHADER_MAT_WORLD, (CWFLOAT*)(&trans));
-	}
+	pShader->setVariableMatrix(eShaderParamWorld, (CWFLOAT*)(&trans));
+	//if (pShader->hasVariable(CW_SHADER_MAT_WORLD)) {
+	//	pShader->setVariableMatrix(CW_SHADER_MAT_WORLD, (CWFLOAT*)(&trans));
+	//}
 
-	if (pShader->hasVariable(CW_SHADER_MAT_WORLD_INV_TRANS)) {
+	if (pShader->hasVariable(eShaderParamWorldInvTrans)) {
 		if (trans.inverseExist()) {
 			cwMatrix4X4 matWorldInvTrans = trans.inverse().transpose();
-			pShader->setVariableMatrix(CW_SHADER_MAT_WORLD_INV_TRANS, reinterpret_cast<CWFLOAT*>(&matWorldInvTrans));
+			pShader->setVariableMatrix(eShaderParamWorldInvTrans, reinterpret_cast<CWFLOAT*>(&matWorldInvTrans));
 		}
 		else {
 			cwMatrix4X4& M = cwMatrix4X4::identityMatrix;
-			pShader->setVariableMatrix(CW_SHADER_MAT_WORLD_INV_TRANS, reinterpret_cast<CWFLOAT*>(&M));
+			pShader->setVariableMatrix(eShaderParamWorldInvTrans, reinterpret_cast<CWFLOAT*>(&M));
 		}
 	}
 
-	if (pShader->hasVariable(CW_SHADER_MAT_WORLDVIEWPROJ)) {
+	//if (pShader->hasVariable(CW_SHADER_MAT_WORLD_INV_TRANS)) {
+	//	if (trans.inverseExist()) {
+	//		cwMatrix4X4 matWorldInvTrans = trans.inverse().transpose();
+	//		pShader->setVariableMatrix(CW_SHADER_MAT_WORLD_INV_TRANS, reinterpret_cast<CWFLOAT*>(&matWorldInvTrans));
+	//	}
+	//	else {
+	//		cwMatrix4X4& M = cwMatrix4X4::identityMatrix;
+	//		pShader->setVariableMatrix(CW_SHADER_MAT_WORLD_INV_TRANS, reinterpret_cast<CWFLOAT*>(&M));
+	//	}
+	//}
+
+	if (pShader->hasVariable(eShaderParamWorldViewProj)) {
 		cwMatrix4X4 matViewProj = pCamera->getViewProjMatrix();
 		cwMatrix4X4 worldViewProj = trans*matViewProj;
-		pShader->setVariableMatrix(CW_SHADER_MAT_WORLDVIEWPROJ, reinterpret_cast<CWFLOAT*>(&worldViewProj));
+		pShader->setVariableMatrix(eShaderParamWorldViewProj, reinterpret_cast<CWFLOAT*>(&worldViewProj));
 	}
 
-	if (pShader->hasVariable(CW_SHADER_EYE_POSW)) {
-		cwVector3D pos = pCamera->getPos();
-		pShader->setVariableData(CW_SHADER_EYE_POSW, (CWVOID*)&pos, 0, sizeof(cwVector3D));
-	}
+	//if (pShader->hasVariable(CW_SHADER_MAT_WORLDVIEWPROJ)) {
+	//	cwMatrix4X4 matViewProj = pCamera->getViewProjMatrix();
+	//	cwMatrix4X4 worldViewProj = trans*matViewProj;
+	//	pShader->setVariableMatrix(CW_SHADER_MAT_WORLDVIEWPROJ, reinterpret_cast<CWFLOAT*>(&worldViewProj));
+	//}
+
+	const cwVector3D& pos = pCamera->getPos();
+	pShader->setVariableData(eShaderParamEyePosWorld, (CWVOID*)&pos, 0, sizeof(cwVector3D));
+
+	//if (pShader->hasVariable(CW_SHADER_EYE_POSW)) {
+	//	cwVector3D pos = pCamera->getPos();
+	//	pShader->setVariableData(CW_SHADER_EYE_POSW, (CWVOID*)&pos, 0, sizeof(cwVector3D));
+	//}
 }
 
 void cwD3D11Device::setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans)
 {
-	if (pShader && pShader->hasVariable(CW_SHADER_DIFF_TEX_TRANS)) {
-		pShader->setVariableMatrix(CW_SHADER_DIFF_TEX_TRANS, (CWFLOAT*)(&trans));
-	}
+	//if (pShader && pShader->hasVariable(CW_SHADER_DIFF_TEX_TRANS)) {
+	//	pShader->setVariableMatrix(CW_SHADER_DIFF_TEX_TRANS, (CWFLOAT*)(&trans));
+	//}
 }
 
 void cwD3D11Device::draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj)

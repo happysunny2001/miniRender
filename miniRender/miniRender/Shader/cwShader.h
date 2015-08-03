@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #define __CW_SHADER_H__
 
 #include "Base/cwMacros.h"
+#include "Base/cwUtils.h"
 #include "Ref/cwRef.h"
 #include "cwShaderConstant.h"
 
@@ -36,18 +37,27 @@ public:
 	cwShader();
 	virtual ~cwShader();
 
-	virtual bool init(const CWSTRING& strShaderFile) = 0;
+	virtual CWBOOL init(const CWSTRING& strShaderFile) = 0;
 
-	virtual bool hasVariable(const string& strVariable) = 0;
-	virtual void setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize) = 0;
-	virtual void setVariableData(const string& strVariable, CWUINT index, void* pData, CWUINT offset, CWUINT iSize) = 0;
-	virtual void setVariableMatrix(const string& strVariable, CWFLOAT* pData) = 0;
-	virtual void setVariableInt(const string& strVariable, CWINT value) = 0;
-	virtual void setVariableFloat(const string& strVariable, CWFLOAT value) = 0;
-	virtual void setVariableFloatArray(const string& strVariable, CWFLOAT* pData, CWUINT count) = 0;
-	virtual void setVariableTexture(const string& strVariable, cwTexture* pTexture) = 0;
+	virtual CWBOOL hasVariable(const CWSTRING& strVariable) = 0;
+	//virtual CWVOID setVariableData(const CWSTRING& strVariable, CWVOID* pData, CWUINT offset, CWUINT iSize) = 0;
+	//virtual CWVOID setVariableData(const CWSTRING& strVariable, CWUINT index, CWVOID* pData, CWUINT offset, CWUINT iSize) = 0;
+	//virtual CWVOID setVariableMatrix(const CWSTRING& strVariable, CWFLOAT* pData) = 0;
+	//virtual CWVOID setVariableInt(const CWSTRING& strVariable, CWINT value) = 0;
+	//virtual CWVOID setVariableFloat(const CWSTRING& strVariable, CWFLOAT value) = 0;
+	//virtual CWVOID setVariableFloatArray(const CWSTRING& strVariable, CWFLOAT* pData, CWUINT count) = 0;
+	//virtual CWVOID setVariableTexture(const CWSTRING& strVariable, cwTexture* pTexture) = 0;
 
-	virtual void apply(CWUINT techIndex, CWUINT passIndex) = 0;
+	virtual CWBOOL hasVariable(eShaderParamIndex eParam) = 0;
+	virtual CWVOID setVariableData(eShaderParamIndex eParam, CWVOID* pData, CWUINT offset, CWUINT iSize) = 0;
+	virtual CWVOID setVariableData(eShaderParamIndex eParam, CWUINT index, CWVOID* pData, CWUINT offset, CWUINT iSize) = 0;
+	virtual CWVOID setVariableMatrix(eShaderParamIndex eParam, CWFLOAT* pData) = 0;
+	virtual CWVOID setVariableInt(eShaderParamIndex eParam, CWINT value) = 0;
+	virtual CWVOID setVariableFloat(eShaderParamIndex eParam, CWFLOAT value) = 0;
+	virtual CWVOID setVariableFloatArray(eShaderParamIndex eParam, CWFLOAT* pData, CWUINT count) = 0;
+	virtual CWVOID setVariableTexture(eShaderParamIndex eParam, cwTexture* pTexture) = 0;
+
+	virtual CWVOID apply(CWUINT techIndex, CWUINT passIndex) = 0;
 
 protected:
 

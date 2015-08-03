@@ -48,6 +48,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Texture/cwTexture.h"
 #include "Texture/cwTextureManager.h"
 #include "Texture/cwRenderTexture.h"
+#include "Effect/cwEffect.h"
 #include "Blend/cwBlend.h"
 #include "Stencil/cwStencil.h"
 #include "Platform/cwFileSystem.h"

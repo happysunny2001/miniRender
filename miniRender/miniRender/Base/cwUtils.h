@@ -217,6 +217,28 @@ typedef enum {
 	eRenderTextureMultiThread = 3,
 }eRenderTextureType;
 
+typedef enum {
+	eShaderParamWorldViewProj = 0,
+	eShaderParamWorld         = 1,
+	eShaderParamWorldInvTrans = 2,
+	eShaderParamMaterial      = 3, 
+	eShaderParamLight         = 4,
+	eShaderParamLightCnt      = 5,
+	eShaderParamEyePosWorld   = 6,
+	eShaderParamTexture0      = 7,
+	eShaderParamTexture1      = 8,
+	eShaderParamTexture2      = 9,
+	eShaderParamTexture3      = 10,
+	eShaderParamTexture4      = 11,
+	eShaderParamTexture5      = 12,
+	eShaderParamTexture6      = 13,
+	eShaderParamTexture7      = 14,
+	eShaderParamFogStart      = 15,
+	eShaderParamFogRange      = 16,
+	eShaderParamFogColor      = 17,
+	eShaderParamMax,
+}eShaderParamIndex;
+
 #define CW_CONTROL MK_CONTROL
 #define CW_LBUTTON MK_LBUTTON
 #define CW_MBUTTON MK_MBUTTON
