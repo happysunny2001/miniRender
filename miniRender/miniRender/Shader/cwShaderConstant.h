@@ -36,7 +36,6 @@ NS_MINIR_BEGIN
 #define CW_SHADER_LIGHT               "gLightList"
 #define CW_SHADER_LIGHT_CNT           "gLightCount"
 #define CW_SHADER_EYE_POSW            "gEyePosWorld"
-#define CW_SHADER_DIFFUSE_TEXTURE     "gDiffuseTexture"
 #define CW_SHADER_TEXTURE0            "gTexture0"
 #define CW_SHADER_TEXTURE1            "gTexture1"
 #define CW_SHADER_TEXTURE2            "gTexture2"

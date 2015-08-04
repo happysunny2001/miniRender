@@ -133,6 +133,9 @@
     <Filter Include="源文件\Effect">
       <UniqueIdentifier>{a0e0ac37-eb30-48df-965e-552b70e64d6e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Render\Parser">
+      <UniqueIdentifier>{31a8762c-d3d0-4d0f-8ec5-6dd433122344}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\cwVector.h">
@@ -405,6 +408,9 @@
     <ClInclude Include="Effect\cwEffect.h">
       <Filter>源文件\Effect</Filter>
     </ClInclude>
+    <ClInclude Include="Render\Parser\cwStageParser.h">
+      <Filter>源文件\Render\Parser</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -628,6 +634,9 @@
     </ClCompile>
     <ClCompile Include="Effect\cwEffect.cpp">
       <Filter>源文件\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Parser\cwStageParser.cpp">
+      <Filter>源文件\Render\Parser</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

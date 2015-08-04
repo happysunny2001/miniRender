@@ -173,8 +173,8 @@ bool cwD3D11Shader::saveVariable()
 		pVariable->GetDesc(&desc);
 
 		m_mapVariable[desc.Name] = pVariable;
-		OutputDebugStringA(desc.Name);
-		OutputDebugStringA("\n");
+		//OutputDebugStringA(desc.Name);
+		//OutputDebugStringA("\n");
 	}
 
 	cwShaderManager* pShaderManager = cwRepertory::getInstance().getShaderManager();
@@ -194,69 +194,69 @@ bool cwD3D11Shader::hasVariable(const string& strVariable)
 	return false;
 }
 
-//void cwD3D11Shader::setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize)
-//{
-//	auto itVariable = m_mapVariable.find(strVariable);
-//	if (itVariable == m_mapVariable.end()) return;
-//	ID3DX11EffectVariable* pVariable = itVariable->second;
-//	pVariable->SetRawValue(pData, offset, iSize);
-//}
+void cwD3D11Shader::setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize)
+{
+	auto itVariable = m_mapVariable.find(strVariable);
+	if (itVariable == m_mapVariable.end()) return;
+	ID3DX11EffectVariable* pVariable = itVariable->second;
+	pVariable->SetRawValue(pData, offset, iSize);
+}
 
-//void cwD3D11Shader::setVariableData(const string& strVariable, CWUINT index, void* pData, CWUINT offset, CWUINT iSize)
-//{
-//	auto itVariable = m_mapVariable.find(strVariable);
-//	if (itVariable == m_mapVariable.end()) return;
-//	ID3DX11EffectVariable* pVariable = itVariable->second;
-//
-//	ID3DX11EffectVariable* pVariElement = pVariable->GetElement(index);
-//	if (pVariElement) {
-//		pVariElement->SetRawValue(pData, offset, iSize);
-//	}
-//}
+void cwD3D11Shader::setVariableData(const string& strVariable, CWUINT index, void* pData, CWUINT offset, CWUINT iSize)
+{
+	auto itVariable = m_mapVariable.find(strVariable);
+	if (itVariable == m_mapVariable.end()) return;
+	ID3DX11EffectVariable* pVariable = itVariable->second;
 
-//void cwD3D11Shader::setVariableMatrix(const string& strVariable, CWFLOAT* pData)
-//{
-//	auto itVariable = m_mapVariable.find(strVariable);
-//	if (itVariable == m_mapVariable.end()) return;
-//	ID3DX11EffectVariable* pVariable = itVariable->second;
-//	pVariable->AsMatrix()->SetMatrix(pData);
-//}
+	ID3DX11EffectVariable* pVariElement = pVariable->GetElement(index);
+	if (pVariElement) {
+		pVariElement->SetRawValue(pData, offset, iSize);
+	}
+}
 
-//void cwD3D11Shader::setVariableInt(const string& strVariable, CWINT value)
-//{
-//	auto itVariable = m_mapVariable.find(strVariable);
-//	if (itVariable == m_mapVariable.end()) return;
-//	ID3DX11EffectVariable* pVariable = itVariable->second;
-//	CW_HR(pVariable->AsScalar()->SetInt(value));
-//}
-//
-//void cwD3D11Shader::setVariableFloat(const string& strVariable, CWFLOAT value)
-//{
-//	auto itVariable = m_mapVariable.find(strVariable);
-//	if (itVariable == m_mapVariable.end()) return;
-//	ID3DX11EffectVariable* pVariable = itVariable->second;
-//	CW_HR(pVariable->AsScalar()->SetFloat(value));
-//}
-//
-//void cwD3D11Shader::setVariableFloatArray(const string& strVariable, CWFLOAT* pData, CWUINT count)
-//{
-//	auto itVariable = m_mapVariable.find(strVariable);
-//	if (itVariable == m_mapVariable.end()) return;
-//	ID3DX11EffectVariable* pVariable = itVariable->second;
-//	CW_HR(pVariable->AsScalar()->SetFloatArray(pData, 0, count));
-//}
-//
-//void cwD3D11Shader::setVariableTexture(const string& strVariable, cwTexture* pTexture)
-//{
-//	if (!pTexture) return;
-//	auto itVariable = m_mapVariable.find(strVariable);
-//	if (itVariable == m_mapVariable.end()) return;
-//
-//	ID3D11ShaderResourceView* pShaderRes = reinterpret_cast<ID3D11ShaderResourceView*>(pTexture->getTexturePtr());
-//	if (!pShaderRes) return;
-//	ID3DX11EffectVariable* pVariable = itVariable->second;
-//	CW_HR(pVariable->AsShaderResource()->SetResource(pShaderRes));
-//}
+void cwD3D11Shader::setVariableMatrix(const string& strVariable, CWFLOAT* pData)
+{
+	auto itVariable = m_mapVariable.find(strVariable);
+	if (itVariable == m_mapVariable.end()) return;
+	ID3DX11EffectVariable* pVariable = itVariable->second;
+	pVariable->AsMatrix()->SetMatrix(pData);
+}
+
+void cwD3D11Shader::setVariableInt(const string& strVariable, CWINT value)
+{
+	auto itVariable = m_mapVariable.find(strVariable);
+	if (itVariable == m_mapVariable.end()) return;
+	ID3DX11EffectVariable* pVariable = itVariable->second;
+	CW_HR(pVariable->AsScalar()->SetInt(value));
+}
+
+void cwD3D11Shader::setVariableFloat(const string& strVariable, CWFLOAT value)
+{
+	auto itVariable = m_mapVariable.find(strVariable);
+	if (itVariable == m_mapVariable.end()) return;
+	ID3DX11EffectVariable* pVariable = itVariable->second;
+	CW_HR(pVariable->AsScalar()->SetFloat(value));
+}
+
+void cwD3D11Shader::setVariableFloatArray(const string& strVariable, CWFLOAT* pData, CWUINT count)
+{
+	auto itVariable = m_mapVariable.find(strVariable);
+	if (itVariable == m_mapVariable.end()) return;
+	ID3DX11EffectVariable* pVariable = itVariable->second;
+	CW_HR(pVariable->AsScalar()->SetFloatArray(pData, 0, count));
+}
+
+void cwD3D11Shader::setVariableTexture(const string& strVariable, cwTexture* pTexture)
+{
+	if (!pTexture) return;
+	auto itVariable = m_mapVariable.find(strVariable);
+	if (itVariable == m_mapVariable.end()) return;
+
+	ID3D11ShaderResourceView* pShaderRes = reinterpret_cast<ID3D11ShaderResourceView*>(pTexture->getTexturePtr());
+	if (!pShaderRes) return;
+	ID3DX11EffectVariable* pVariable = itVariable->second;
+	CW_HR(pVariable->AsShaderResource()->SetResource(pShaderRes));
+}
 
 CWBOOL cwD3D11Shader::hasVariable(eShaderParamIndex eParam)
 {

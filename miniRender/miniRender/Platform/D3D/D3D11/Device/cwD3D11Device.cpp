@@ -326,7 +326,7 @@ void cwD3D11Device::setRenderState(eRenderState e)
 	m_eRenderState = e;
 }
 
-void cwD3D11Device::DrawIndexed(CWUINT indexCnt, CWUINT startIndex, CWINT baseVertex)
+void cwD3D11Device::drawIndexed(CWUINT indexCnt, CWUINT startIndex, CWINT baseVertex)
 {
 	m_pD3D11DeviceContext->DrawIndexed(indexCnt, startIndex, baseVertex);
 }
@@ -506,47 +506,7 @@ void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPo
 	cwMatrix4X4 matWorld;
 	matWorld.setTranslation(worldPos);
 
-	//if (pShader->hasVariable(CW_SHADER_MAT_WORLD)) {
-	//	pShader->setVariableMatrix(CW_SHADER_MAT_WORLD, reinterpret_cast<float*>(&matWorld));
-	//}
-
-	pShader->setVariableMatrix(eShaderParamWorld, reinterpret_cast<float*>(&matWorld));
-
-	if (pShader->hasVariable(eShaderParamWorldInvTrans)) {
-		cwMatrix4X4 matWorldInvTrans = matWorld.inverse().transpose();
-		pShader->setVariableMatrix(eShaderParamWorldInvTrans, reinterpret_cast<float*>(&matWorldInvTrans));
-	}
-
-	//if (pShader->hasVariable(CW_SHADER_MAT_WORLD_INV_TRANS)) {
-	//	cwMatrix4X4 matWorldInvTrans = matWorld.inverse().transpose();
-	//	pShader->setVariableMatrix(CW_SHADER_MAT_WORLD_INV_TRANS, reinterpret_cast<float*>(&matWorldInvTrans));
-	//}
-
-	pShader->setVariableData(eShaderParamMaterial, m_pMaterialDefault->getColorData(), 0, m_pMaterialDefault->getColorDataSize());
-
-	//if (pShader->hasVariable(CW_SHADER_MATERIAL)) {
-	//	pShader->setVariableData(CW_SHADER_MATERIAL, m_pMaterialDefault->getColorData(), 0, m_pMaterialDefault->getColorDataSize());
-	//}
-
-	const cwVector3D& pos = pCamera->getPos();
-	pShader->setVariableData(eShaderParamEyePosWorld, (CWVOID*)&pos, 0, sizeof(cwVector3D));
-
-	//if (pShader->hasVariable(CW_SHADER_EYE_POSW)) {
-	//	const cwVector3D& pos = pCamera->getPos();
-	//	pShader->setVariableData(CW_SHADER_EYE_POSW, (CWVOID*)&pos, 0, sizeof(cwVector3D));
-	//}
-
-	if (pShader->hasVariable(eShaderParamWorldViewProj)) {
-		cwMatrix4X4 matViewProj = pCamera->getViewProjMatrix();
-		cwMatrix4X4 worldViewProj = matWorld*matViewProj;
-		pShader->setVariableMatrix(eShaderParamWorldViewProj, reinterpret_cast<CWFLOAT*>(worldViewProj.getBuffer()));
-	}
-
-	//if (pShader->hasVariable(CW_SHADER_MAT_WORLDVIEWPROJ)) {
-	//	cwMatrix4X4 matViewProj = pCamera->getViewProjMatrix();
-	//	cwMatrix4X4 worldViewProj = matWorld*matViewProj;
-	//	pShader->setVariableMatrix(CW_SHADER_MAT_WORLDVIEWPROJ, reinterpret_cast<CWFLOAT*>(worldViewProj.getBuffer()));
-	//}
+	setShaderWorldTrans(pShader, matWorld, pCamera);
 
 	pRenderObj->preRender();
 
@@ -556,7 +516,7 @@ void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPo
 	this->setIndexBuffer(pRenderObj->getIndexBuffer());
 
 	pShader->apply(0, 0);
-	this->DrawIndexed(pRenderObj->getIndexBuffer()->getIndexCount(), 0, 0);
+	this->drawIndexed(pRenderObj->getIndexBuffer()->getIndexCount(), 0, 0);
 }
 
 void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
@@ -584,9 +544,6 @@ void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& tr
 	if (!pShader) return;
 
 	pShader->setVariableMatrix(eShaderParamWorld, (CWFLOAT*)(&trans));
-	//if (pShader->hasVariable(CW_SHADER_MAT_WORLD)) {
-	//	pShader->setVariableMatrix(CW_SHADER_MAT_WORLD, (CWFLOAT*)(&trans));
-	//}
 
 	if (pShader->hasVariable(eShaderParamWorldInvTrans)) {
 		if (trans.inverseExist()) {
@@ -599,43 +556,14 @@ void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& tr
 		}
 	}
 
-	//if (pShader->hasVariable(CW_SHADER_MAT_WORLD_INV_TRANS)) {
-	//	if (trans.inverseExist()) {
-	//		cwMatrix4X4 matWorldInvTrans = trans.inverse().transpose();
-	//		pShader->setVariableMatrix(CW_SHADER_MAT_WORLD_INV_TRANS, reinterpret_cast<CWFLOAT*>(&matWorldInvTrans));
-	//	}
-	//	else {
-	//		cwMatrix4X4& M = cwMatrix4X4::identityMatrix;
-	//		pShader->setVariableMatrix(CW_SHADER_MAT_WORLD_INV_TRANS, reinterpret_cast<CWFLOAT*>(&M));
-	//	}
-	//}
-
 	if (pShader->hasVariable(eShaderParamWorldViewProj)) {
 		cwMatrix4X4 matViewProj = pCamera->getViewProjMatrix();
 		cwMatrix4X4 worldViewProj = trans*matViewProj;
 		pShader->setVariableMatrix(eShaderParamWorldViewProj, reinterpret_cast<CWFLOAT*>(&worldViewProj));
 	}
 
-	//if (pShader->hasVariable(CW_SHADER_MAT_WORLDVIEWPROJ)) {
-	//	cwMatrix4X4 matViewProj = pCamera->getViewProjMatrix();
-	//	cwMatrix4X4 worldViewProj = trans*matViewProj;
-	//	pShader->setVariableMatrix(CW_SHADER_MAT_WORLDVIEWPROJ, reinterpret_cast<CWFLOAT*>(&worldViewProj));
-	//}
-
 	const cwVector3D& pos = pCamera->getPos();
 	pShader->setVariableData(eShaderParamEyePosWorld, (CWVOID*)&pos, 0, sizeof(cwVector3D));
-
-	//if (pShader->hasVariable(CW_SHADER_EYE_POSW)) {
-	//	cwVector3D pos = pCamera->getPos();
-	//	pShader->setVariableData(CW_SHADER_EYE_POSW, (CWVOID*)&pos, 0, sizeof(cwVector3D));
-	//}
-}
-
-void cwD3D11Device::setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans)
-{
-	//if (pShader && pShader->hasVariable(CW_SHADER_DIFF_TEX_TRANS)) {
-	//	pShader->setVariableMatrix(CW_SHADER_DIFF_TEX_TRANS, (CWFLOAT*)(&trans));
-	//}
 }
 
 void cwD3D11Device::draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj)
@@ -665,7 +593,7 @@ void cwD3D11Device::draw(cwShader* pShader, const string& strTech, cwRenderObjec
 		this->setIndexBuffer(pRenderObj->getIndexBuffer());
 
 		pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
-		this->DrawIndexed(pRenderObj->getIndexBuffer()->getIndexCount(), 0, 0);
+		this->drawIndexed(pRenderObj->getIndexBuffer()->getIndexCount(), 0, 0);
 	}
 }
 

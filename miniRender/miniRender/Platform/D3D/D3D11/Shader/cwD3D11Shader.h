@@ -41,13 +41,13 @@ public:
 	virtual CWBOOL init(const CWSTRING& strShaderFile) override;
 
 	virtual CWBOOL hasVariable(const string& strVariable) override;
-	//virtual CWVOID setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize) override;
-	//virtual CWVOID setVariableData(const string& strVariable, CWUINT index, void* pData, CWUINT offset, CWUINT iSize) override;
-	//virtual CWVOID setVariableMatrix(const string& strVariable, CWFLOAT* pData) override;
-	//virtual CWVOID setVariableInt(const string& strVariable, CWINT value) override;
-	//virtual CWVOID setVariableFloat(const string& strVariable, CWFLOAT value) override;
-	//virtual CWVOID setVariableFloatArray(const string& strVariable, CWFLOAT* pData, CWUINT count) override;
-	//virtual CWVOID setVariableTexture(const string& strVariable, cwTexture* pTexture) override;
+	virtual CWVOID setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize) override;
+	virtual CWVOID setVariableData(const string& strVariable, CWUINT index, void* pData, CWUINT offset, CWUINT iSize) override;
+	virtual CWVOID setVariableMatrix(const string& strVariable, CWFLOAT* pData) override;
+	virtual CWVOID setVariableInt(const string& strVariable, CWINT value) override;
+	virtual CWVOID setVariableFloat(const string& strVariable, CWFLOAT value) override;
+	virtual CWVOID setVariableFloatArray(const string& strVariable, CWFLOAT* pData, CWUINT count) override;
+	virtual CWVOID setVariableTexture(const string& strVariable, cwTexture* pTexture) override;
 
 	virtual CWBOOL hasVariable(eShaderParamIndex eParam) override;
 	virtual CWVOID setVariableData(eShaderParamIndex eParam, CWVOID* pData, CWUINT offset, CWUINT iSize) override;
@@ -81,8 +81,8 @@ protected:
 	unordered_map<ID3DX11EffectTechnique*, vector<ID3DX11EffectPass*> > m_mapIndexPass;
 	unordered_map<ID3DX11EffectTechnique*, unordered_map<string, ID3DX11EffectPass*> > m_mapNamePass;
 
+	//shader variable map
 	unordered_map<string, ID3DX11EffectVariable*> m_mapVariable;
-
 	ID3DX11EffectVariable* m_pShaderParam[eShaderParamMax];
 
 };

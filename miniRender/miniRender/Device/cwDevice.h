@@ -61,7 +61,7 @@ public:
 	virtual CWVOID setPrimitiveTopology(ePrimitiveType topology) = 0;
 	virtual CWVOID setClearColor(const cwVector4D& fvColor) = 0;
 	virtual CWVOID setRenderState(eRenderState e) = 0;
-	virtual CWVOID DrawIndexed(CWUINT indexCnt, CWUINT startIndex, CWINT baseVertex) = 0;
+	virtual CWVOID drawIndexed(CWUINT indexCnt, CWUINT startIndex, CWINT baseVertex) = 0;
 
 	virtual cwShader* createShader(const string& strName) = 0;
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) = 0;
@@ -85,7 +85,6 @@ public:
 	virtual CWVOID render(cwEntity* pEntity, cwCamera* pCamera) = 0;
 
 	virtual CWVOID setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) = 0;
-	virtual CWVOID setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans) = 0;
 	virtual CWVOID draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) = 0;
 
 	virtual CWVOID setRenderTarget(cwRenderTexture* pRenderTexture);

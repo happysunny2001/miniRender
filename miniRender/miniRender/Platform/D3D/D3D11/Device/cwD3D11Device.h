@@ -55,7 +55,7 @@ public:
 	virtual CWVOID setPrimitiveTopology(ePrimitiveType topology);
 	virtual CWVOID setClearColor(const cwVector4D& fvColor);
 	virtual CWVOID setRenderState(eRenderState e);
-	virtual CWVOID DrawIndexed(CWUINT indexCnt, CWUINT startIndex, CWINT baseVertex);
+	virtual CWVOID drawIndexed(CWUINT indexCnt, CWUINT startIndex, CWINT baseVertex);
 
 	virtual cwShader* createShader(const string& strFileName) override;
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) override;
@@ -77,7 +77,6 @@ public:
 	virtual CWVOID render(cwEntity* pEntity, cwCamera* pCamera) override;
 
 	virtual CWVOID setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) override;
-	virtual CWVOID setDiffuseTrans(cwShader* pShader, const cwMatrix4X4& trans) override;
 	virtual CWVOID draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) override;
 
 public:

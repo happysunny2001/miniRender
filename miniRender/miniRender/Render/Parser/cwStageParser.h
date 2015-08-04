@@ -17,62 +17,30 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwStage.h"
-#include "Camera/cwCamera.h"
+#ifndef __CW_STAGE_PARSER_H__
+#define __CW_STAGE_PARSER_H__
+
+#include "Base/cwMacros.h"
+#include "Ref/cwRef.h"
+#include "tinyxml2.h"
 
 NS_MINIR_BEGIN
 
-cwStage* cwStage::create()
+class cwStage;
+
+class cwStageParser : public cwRef
 {
-	cwStage* pStage = new cwStage();
-	if (pStage && pStage->init()) {
-		pStage->autorelease();
-		return pStage;
-	}
+public:
+	cwStage* parse(tinyxml2::XMLElement* pStageData);
 
-	CW_SAFE_DELETE(pStage);
-	return nullptr;
-}
+protected:
+	CWVOID parseAttribute(cwStage* pStage, tinyxml2::XMLElement* pStageData);
+	CWVOID parseCamera(cwStage* pStage, tinyxml2::XMLElement* pStageData);
+	CWVOID parseViewPort(cwStage* pStage, tinyxml2::XMLElement* pStageData);
+	CWVOID parseRenderTarget(cwStage* pStage, tinyxml2::XMLElement* pStageData);
 
-cwStage::cwStage() : 
-m_pCamera(nullptr),
-m_bEnable(CWTRUE),
-m_eType(eStageTypeNormal),
-m_pViewPort(nullptr),
-m_pRenderTarget(nullptr)
-{
-
-}
-
-cwStage::~cwStage()
-{
-	CW_SAFE_RELEASE_NULL(m_pCamera);
-	CW_SAFE_RELEASE_NULL(m_pViewPort);
-	CW_SAFE_RELEASE_NULL(m_pRenderTarget);
-}
-
-CWBOOL cwStage::init()
-{
-	
-	return CWTRUE;
-}
-
-CWVOID cwStage::setViewPort(cwViewPort* pView)
-{
-	if (m_pViewPort == pView) return;
-
-	CW_SAFE_RETAIN(pView);
-	CW_SAFE_RELEASE_NULL(m_pViewPort);
-	m_pViewPort = pView;
-}
-
-CWVOID cwStage::setRenderTexture(cwRenderTexture* pRenderTexture)
-{
-	if (pRenderTexture == m_pRenderTarget) return;
-
-	CW_SAFE_RETAIN(pRenderTexture);
-	CW_SAFE_RELEASE_NULL(m_pRenderTarget);
-	m_pRenderTarget = pRenderTexture;
-}
+};
 
 NS_MINIR_END
+
+#endif

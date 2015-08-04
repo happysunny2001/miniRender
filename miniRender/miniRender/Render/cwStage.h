@@ -23,7 +23,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwMacros.h"
 #include "Base/cwUtils.h"
 #include "Ref/cwRef.h"
-#include "tinyxml2.h"
+#include "ViewPort/cwViewPort.h"
+#include "Texture/cwRenderTexture.h"
+#include "Parser/cwStageParser.h"
 
 NS_MINIR_BEGIN
 
@@ -32,25 +34,42 @@ class cwCamera;
 class CW_DLL cwStage : public cwRef
 {
 public:
-	static cwStage* create(tinyxml2::XMLElement* pStageData);
+	static cwStage* create();
 
 	cwStage();
 	virtual ~cwStage();
 
-	virtual bool init(tinyxml2::XMLElement* pStageData);
+	virtual CWBOOL init();
 
+	inline CWBOOL getEnable() const { return m_bEnable; }
 	inline eStageType getType() const { return m_eType; }
 	inline const CWSTRING& getName() const { return m_strName; }
 
 	inline const CWSTRING& getCameraName() const { return m_strCameraName; }
 	inline cwCamera* getCamera() const { return m_pCamera; }
 
+	inline cwViewPort* getViewPort() const { return m_pViewPort; }
+	inline cwRenderTexture* getRenderTexture() const { return m_pRenderTarget; }
+
 protected:
+	CWVOID setName(const CWSTRING& strName) { m_strName = strName; }
+	CWVOID setType(eStageType eType) { m_eType = eType; }
+	CWVOID setEnable(CWBOOL bEnable) { m_bEnable = bEnable; }
+	CWVOID setViewPort(cwViewPort* pView);
+	CWVOID setRenderTexture(cwRenderTexture* pRenderTexture);
+
+	friend class cwStageParser;
+
+protected:
+	CWBOOL m_bEnable;
 	eStageType m_eType;
 	CWSTRING m_strName;
 
 	CWSTRING m_strCameraName;
 	cwCamera* m_pCamera;
+	
+	cwViewPort* m_pViewPort;
+	cwRenderTexture* m_pRenderTarget;
 
 };
 
