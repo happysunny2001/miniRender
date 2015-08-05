@@ -255,12 +255,6 @@
     <ClInclude Include="Ref\cwRef.h">
       <Filter>源文件\Ref</Filter>
     </ClInclude>
-    <ClInclude Include="Render\cwRenderCommand.h">
-      <Filter>源文件\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\cwRenderQueue.h">
-      <Filter>源文件\Render</Filter>
-    </ClInclude>
     <ClInclude Include="RenderObject\cwDynamicRenderObject.h">
       <Filter>源文件\RenderObject</Filter>
     </ClInclude>
@@ -411,6 +405,15 @@
     <ClInclude Include="Render\Parser\cwStageParser.h">
       <Filter>源文件\Render\Parser</Filter>
     </ClInclude>
+    <ClInclude Include="Render\cwRenderPipeline.h">
+      <Filter>源文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\cwRenderBatch.h">
+      <Filter>源文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\cwRenderer.h">
+      <Filter>源文件\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -499,12 +502,6 @@
     </ClCompile>
     <ClCompile Include="Ref\cwRef.cpp">
       <Filter>源文件\Ref</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\cwRenderCommand.cpp">
-      <Filter>源文件\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\cwRenderQueue.cpp">
-      <Filter>源文件\Render</Filter>
     </ClCompile>
     <ClCompile Include="RenderObject\cwDynamicRenderObject.cpp">
       <Filter>源文件\RenderObject</Filter>
@@ -637,6 +634,15 @@
     </ClCompile>
     <ClCompile Include="Render\Parser\cwStageParser.cpp">
       <Filter>源文件\Render\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\cwRenderPipeline.cpp">
+      <Filter>源文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\cwRenderBatch.cpp">
+      <Filter>源文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\cwRenderer.cpp">
+      <Filter>源文件\Render</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

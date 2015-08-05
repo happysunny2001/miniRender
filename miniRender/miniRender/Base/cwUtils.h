@@ -239,12 +239,21 @@ typedef enum {
 	eShaderParamMax,
 }eShaderParamIndex;
 
+typedef enum {
+	eSceneObjectNode = 1,
+	eSceneObjectEntity,
+	eSceneObjectScene,
+}eSceneObjectType;
+
 #define CW_CONTROL MK_CONTROL
 #define CW_LBUTTON MK_LBUTTON
 #define CW_MBUTTON MK_MBUTTON
 #define CW_RBUTTON MK_RBUTTON
 #define CW_SHIFT MK_SHIFT
 #define CW_UINT_MAX 0xFFFFFFFF
+
+#define CW_PIPELINE_BATCH_SIZE 512
+#define CW_STAGE_PIPELINE_SIZE 32
 
 NS_MINIR_END
 

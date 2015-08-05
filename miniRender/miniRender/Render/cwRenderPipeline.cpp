@@ -17,32 +17,54 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_RENDER_QUEUE_H__
-#define __CW_RENDER_QUEUE_H__
-
-#include "Base/cwMacros.h"
-#include "Base/cwVector.h"
-#include "Base/cwMap.h"
+#include "cwRenderPipeline.h"
+#include "Entity/cwEntity.h"
 
 NS_MINIR_BEGIN
 
-class cwRenderCommand;
-class cwEffects;
-
-class CW_DLL cwRenderQueue
+cwRenderPipeline::cwRenderPipeline():
+m_iBatchIndex(0)
 {
-public:
-	cwRenderQueue();
-	virtual ~cwRenderQueue();
+	m_nVecBatch.resize(CW_PIPELINE_BATCH_SIZE);
+}
 
-	void addCommand(cwRenderCommand* pCommand);
-	void clear();
+cwRenderPipeline::~cwRenderPipeline()
+{
 
-protected:
-	cwMap<cwEffects*, cwVector<cwRenderCommand*>> m_nMapRenderCommand;
+}
 
-};
+CWVOID cwRenderPipeline::reset()
+{
+	m_iBatchIndex = 0;
+}
+
+cwRenderBatch* cwRenderPipeline::getNextAvailableBatch()
+{
+	if (m_iBatchIndex < m_nVecBatch.size()) {
+		return &(m_nVecBatch[m_iBatchIndex++]);
+	}
+
+	return nullptr;
+}
+
+CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity)
+{
+	cwRenderBatch* pBatch = getNextAvailableBatch();
+	if (!pBatch) return CWFALSE;
+
+	pBatch->m_pEntity = pEntity;
+	pBatch->m_pEffect = pEntity->getEffect();
+	return CWTRUE;
+}
+
+CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity, cwEffect* pEffect)
+{
+	cwRenderBatch* pBatch = getNextAvailableBatch();
+	if (!pBatch) return CWFALSE;
+
+	pBatch->m_pEntity = pEntity;
+	pBatch->m_pEffect = pEffect;
+	return CWTRUE;
+}
 
 NS_MINIR_END
-
-#endif

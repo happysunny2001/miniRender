@@ -19,6 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwScene.h"
 #include "Base/cwMacros.h"
+#include "cwEntity.h"
 
 NS_MINIR_BEGIN
 
@@ -35,7 +36,7 @@ cwScene* cwScene::create()
 
 cwScene::cwScene()
 {
-
+	m_eType = eSceneObjectScene;
 }
 
 cwScene::~cwScene()
@@ -45,8 +46,8 @@ cwScene::~cwScene()
 
 CWBOOL cwScene::init()
 {
-	if (!cwRenderNode::init()) return false;
-	return true;
+	if (!cwRenderNode::init()) return CWFALSE;
+	return CWTRUE;
 }
 
 CWVOID cwScene::addLight(cwLight* pLight)
@@ -65,6 +66,31 @@ CWVOID cwScene::removeLight(cwLight* pLight)
 const cwVector<cwLight*>& cwScene::getLights() const
 {
 	return m_nVecLights;
+}
+
+std::vector<cwEntity*>& cwScene::getVisibleEntities(cwCamera* pCamera)
+{
+	m_nVecVisibleEntity.clear();
+
+	std::vector<cwRenderNode*> m_nVecStack;
+	m_nVecStack.push_back(this);
+
+	while (!m_nVecStack.empty()) {
+		cwRenderNode* pLast = m_nVecStack.back();
+		if (pLast->getType() == eSceneObjectEntity)
+			m_nVecVisibleEntity.push_back(static_cast<cwEntity*>(pLast));
+
+		m_nVecStack.pop_back();
+
+		cwVector<cwRenderNode*>& nVecChildren = pLast->getChildren();
+		if (!nVecChildren.empty()) {
+			for (auto pNode : nVecChildren) {
+				m_nVecStack.push_back(pNode);
+			}
+		}
+	}
+
+	return m_nVecVisibleEntity;
 }
 
 NS_MINIR_END

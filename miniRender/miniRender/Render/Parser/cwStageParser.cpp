@@ -31,12 +31,13 @@ cwStage* cwStageParser::parse(tinyxml2::XMLElement* pStageData)
 {
 	if (!pStageData) return nullptr;
 
-	cwStage* pStage = cwStage::create();
+	cwStage* pStage = new cwStage();
 	if (!pStage) return nullptr;
 
 	parseAttribute(pStage, pStageData);
 	parseCamera(pStage, pStageData);
 	parseViewPort(pStage, pStageData);
+	parseRenderTarget(pStage, pStageData);
 
 	return pStage;
 }

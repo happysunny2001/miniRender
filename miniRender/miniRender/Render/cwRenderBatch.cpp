@@ -17,64 +17,24 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_ENGINE_H__
-#define __CW_ENGINE_H__
-
-//engine core class
-//for main loop
-//global data
-
-#include "Base/cwMacros.h"
-#include "Base/cwVector.h"
-#include "Repertory/cwRepertory.h"
-#include "Ref/cwRef.h"
+#include "cwRenderBatch.h"
 
 NS_MINIR_BEGIN
 
-class cwScene;
-class cwCamera;
-class cwShader;
-class cwEntity;
-
-class CW_DLL cwEngine : public cwRef
+cwRenderBatch::cwRenderBatch()
 {
-public:
-	CWVOID setScene(cwScene* pScene);
-	cwScene* getCurrScene() { return m_pCurrScene; }
-	CWVOID mainLoop(CWFLOAT dt);
+	reset();
+}
 
-	cwCamera* getDefaultCamera();
-	CWBOOL removeCamera(cwCamera* pCamera);
-	cwCamera* getCurrentCamera();
-	CWVOID setCurrCamera(cwCamera* pCamera);
+cwRenderBatch::~cwRenderBatch()
+{
+	reset();
+}
 
-	virtual CWVOID setCurrShader(cwShader* pShader);
-	cwShader* getCurrShader() const;
-
-	virtual CWVOID render(cwEntity* pEntity);
-
-protected:
-	static cwEngine* create();
-
-	cwEngine();
-	virtual ~cwEngine();
-
-	virtual CWBOOL init();
-	virtual CWVOID buildDefaultCamera();
-	virtual CWVOID configShaderLight();
-
-	virtual CWVOID render();
-
-	friend class cwRepertory;
-
-protected:
-	cwScene* m_pCurrScene;
-	cwCamera* m_pCurrCamera;
-	cwShader*m_pCurrShader;
-	cwVector<cwCamera*> m_nVecCameras;
-
-};
+CWVOID cwRenderBatch::reset()
+{
+	m_pEffect = nullptr;
+	m_pEntity = nullptr;
+}
 
 NS_MINIR_END
-
-#endif

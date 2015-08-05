@@ -40,22 +40,24 @@ cwEntity* cwEntity::create()
 	return nullptr;
 }
 
-bool cwEntity::init()
-{
-	return CWTRUE;
-}
-
 cwEntity::cwEntity():
 m_pRenderObj(nullptr),
 m_pMaterial(nullptr)
 {
-
+	m_eType = eSceneObjectEntity;
 }
 
 cwEntity::~cwEntity()
 {
 	CW_SAFE_RELEASE_NULL(m_pRenderObj);
 	CW_SAFE_RELEASE_NULL(m_pMaterial);
+}
+
+CWBOOL cwEntity::init()
+{
+	if (!cwRenderNode::init()) return CWFALSE;
+
+	return CWTRUE;
 }
 
 CWVOID cwEntity::setRenderObject(cwRenderObject* pRenderObj)

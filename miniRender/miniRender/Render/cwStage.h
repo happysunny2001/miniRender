@@ -22,24 +22,25 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Base/cwUtils.h"
-#include "Ref/cwRef.h"
 #include "ViewPort/cwViewPort.h"
 #include "Texture/cwRenderTexture.h"
 #include "Parser/cwStageParser.h"
+#include "cwRenderPipeline.h"
+
+#include <unordered_map>
 
 NS_MINIR_BEGIN
 
 class cwCamera;
+class cwEffect;
+class cwRenderPipeline;
+class cwShader;
 
-class CW_DLL cwStage : public cwRef
+class CW_DLL cwStage
 {
 public:
-	static cwStage* create();
-
 	cwStage();
-	virtual ~cwStage();
-
-	virtual CWBOOL init();
+	~cwStage();
 
 	inline CWBOOL getEnable() const { return m_bEnable; }
 	inline eStageType getType() const { return m_eType; }
@@ -51,12 +52,19 @@ public:
 	inline cwViewPort* getViewPort() const { return m_pViewPort; }
 	inline cwRenderTexture* getRenderTexture() const { return m_pRenderTarget; }
 
+	CWVOID reset();
+	CWVOID begin();
+	CWVOID render();
+	CWVOID end();
+
 protected:
 	CWVOID setName(const CWSTRING& strName) { m_strName = strName; }
 	CWVOID setType(eStageType eType) { m_eType = eType; }
 	CWVOID setEnable(CWBOOL bEnable) { m_bEnable = bEnable; }
 	CWVOID setViewPort(cwViewPort* pView);
 	CWVOID setRenderTexture(cwRenderTexture* pRenderTexture);
+
+	cwRenderPipeline* getPipeline(cwEntity* pEntity);
 
 	friend class cwStageParser;
 
@@ -70,6 +78,12 @@ protected:
 	
 	cwViewPort* m_pViewPort;
 	cwRenderTexture* m_pRenderTarget;
+
+	cwEffect* m_pStageEffect;
+
+	cwRenderPipeline m_nPipeline[CW_STAGE_PIPELINE_SIZE];
+	CWUINT m_iPipeLineIndex;
+	std::unordered_map<cwShader*, cwRenderPipeline*> m_nMapPipeline;
 
 };
 

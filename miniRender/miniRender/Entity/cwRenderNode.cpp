@@ -45,7 +45,7 @@ m_nScale(1.0f, 1.0f ,1.0f),
 m_bTransDirty(CWTRUE),
 m_pEffect(nullptr)
 {
-
+	m_eType = eSceneObjectNode;
 }
 
 cwRenderNode::~cwRenderNode()

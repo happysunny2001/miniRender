@@ -17,10 +17,35 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwRenderQueue.h"
+#ifndef __CW_RENDERER_H__
+#define __CW_RENDERER_H__
+
+#include "Base/cwMacros.h"
+#include "Ref/cwRef.h"
+
+#include <vector>
 
 NS_MINIR_BEGIN
 
+class cwStage;
+class cwCamera;
 
+class cwRenderer : public cwRef
+{
+public:
+	static cwRenderer* create();
+
+	cwRenderer();
+	virtual ~cwRenderer();
+
+	virtual CWBOOL init();
+
+protected:
+	std::vector<cwStage*> m_nVecStage;
+	cwCamera* m_pCurrCamera;
+
+};
 
 NS_MINIR_END
+
+#endif

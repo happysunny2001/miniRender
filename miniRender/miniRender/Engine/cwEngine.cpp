@@ -58,13 +58,13 @@ cwEngine::~cwEngine()
 	m_pCurrShader = nullptr;
 }
 
-bool cwEngine::init()
+CWBOOL cwEngine::init()
 {
 	buildDefaultCamera();
 	return true;
 }
 
-void cwEngine::setScene(cwScene* pScene)
+CWVOID cwEngine::setScene(cwScene* pScene)
 {
 	if (pScene == m_pCurrScene) return;
 	CW_SAFE_RETAIN(pScene);
@@ -72,7 +72,7 @@ void cwEngine::setScene(cwScene* pScene)
 	m_pCurrScene = pScene;
 }
 
-void cwEngine::mainLoop(CWFLOAT dt)
+CWVOID cwEngine::mainLoop(CWFLOAT dt)
 {
 	cwRepertory& repertory = cwRepertory::getInstance();
 
@@ -82,7 +82,7 @@ void cwEngine::mainLoop(CWFLOAT dt)
 	repertory.getAutoReleasePool()->clear();
 }
 
-void cwEngine::buildDefaultCamera()
+CWVOID cwEngine::buildDefaultCamera()
 {
 	m_nVecCameras.pushBack(cwCamera::create());
 }
@@ -93,7 +93,7 @@ cwCamera* cwEngine::getDefaultCamera()
 	return m_nVecCameras.at(0);
 }
 
-bool cwEngine::removeCamera(cwCamera* pCamera)
+CWBOOL cwEngine::removeCamera(cwCamera* pCamera)
 {
 	if (!pCamera) return false;
 	//last camera can't remove
@@ -107,7 +107,18 @@ cwCamera* cwEngine::getCurrentCamera()
 	return m_pCurrCamera;
 }
 
-void cwEngine::render()
+CWVOID cwEngine::setCurrCamera(cwCamera* pCamera)
+{
+	if (pCamera == m_pCurrCamera) return;
+	if (!pCamera) {
+		m_pCurrCamera = getDefaultCamera();
+		return;
+	}
+
+	m_pCurrCamera = pCamera;
+}
+
+CWVOID cwEngine::render()
 {
 	m_pCurrCamera = getDefaultCamera();
 	//cwRepertory::getInstance().getDevice()->beginDraw();
@@ -122,21 +133,15 @@ void cwEngine::render()
 	m_pCurrCamera = nullptr;
 }
 
-void cwEngine::render(cwEntity* pEntity)
+CWVOID cwEngine::render(cwEntity* pEntity)
 {
 	if (pEntity) {
 		this->setCurrShader(pEntity->getEffect()->getShader());
 		cwRepertory::getInstance().getDevice()->render(pEntity, m_pCurrCamera);
-
-		//cwMaterial* pMaterial = pEntity->getMaterial();
-		//if (pMaterial) {
-		//	this->setCurrShader(pMaterial->getShader());
-		//	cwRepertory::getInstance().getDevice()->render(pEntity, m_pCurrCamera);
-		//}
 	}
 }
 
-void cwEngine::setCurrShader(cwShader* pShader)
+CWVOID cwEngine::setCurrShader(cwShader* pShader)
 {
 	if (m_pCurrShader == pShader) return;
 	m_pCurrShader = pShader;
@@ -148,7 +153,7 @@ cwShader* cwEngine::getCurrShader() const
 	return m_pCurrShader;
 }
 
-void cwEngine::configShaderLight()
+CWVOID cwEngine::configShaderLight()
 {
 	if (!m_pCurrShader) return;
 	if (!m_pCurrScene) return;

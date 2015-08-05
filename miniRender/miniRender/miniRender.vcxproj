@@ -94,8 +94,9 @@
     <ClInclude Include="RenderObject\cwDynamicRenderObject.h" />
     <ClInclude Include="RenderObject\cwRenderObject.h" />
     <ClInclude Include="RenderObject\cwStaticRenderObject.h" />
-    <ClInclude Include="Render\cwRenderCommand.h" />
-    <ClInclude Include="Render\cwRenderQueue.h" />
+    <ClInclude Include="Render\cwRenderBatch.h" />
+    <ClInclude Include="Render\cwRenderer.h" />
+    <ClInclude Include="Render\cwRenderPipeline.h" />
     <ClInclude Include="Render\cwStage.h" />
     <ClInclude Include="Render\Parser\cwStageParser.h" />
     <ClInclude Include="Repertory\cwRepertory.h" />
@@ -172,8 +173,9 @@
     <ClCompile Include="RenderObject\cwDynamicRenderObject.cpp" />
     <ClCompile Include="RenderObject\cwRenderObject.cpp" />
     <ClCompile Include="RenderObject\cwStaticRenderObject.cpp" />
-    <ClCompile Include="Render\cwRenderCommand.cpp" />
-    <ClCompile Include="Render\cwRenderQueue.cpp" />
+    <ClCompile Include="Render\cwRenderBatch.cpp" />
+    <ClCompile Include="Render\cwRenderer.cpp" />
+    <ClCompile Include="Render\cwRenderPipeline.cpp" />
     <ClCompile Include="Render\cwStage.cpp" />
     <ClCompile Include="Render\Parser\cwStageParser.cpp" />
     <ClCompile Include="Repertory\cwRepertory.cpp" />

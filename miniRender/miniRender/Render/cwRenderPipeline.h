@@ -17,61 +17,36 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_ENGINE_H__
-#define __CW_ENGINE_H__
-
-//engine core class
-//for main loop
-//global data
+#ifndef __CW_RENDER_PIPELINE_H__
+#define __CW_RENDER_PIPELINE_H__
 
 #include "Base/cwMacros.h"
-#include "Base/cwVector.h"
-#include "Repertory/cwRepertory.h"
-#include "Ref/cwRef.h"
+#include "Base/cwUtils.h"
+#include "cwRenderBatch.h"
+
+#include <vector>
 
 NS_MINIR_BEGIN
 
-class cwScene;
-class cwCamera;
-class cwShader;
 class cwEntity;
+class cwEffect;
 
-class CW_DLL cwEngine : public cwRef
+class cwRenderPipeline 
 {
 public:
-	CWVOID setScene(cwScene* pScene);
-	cwScene* getCurrScene() { return m_pCurrScene; }
-	CWVOID mainLoop(CWFLOAT dt);
-
-	cwCamera* getDefaultCamera();
-	CWBOOL removeCamera(cwCamera* pCamera);
-	cwCamera* getCurrentCamera();
-	CWVOID setCurrCamera(cwCamera* pCamera);
-
-	virtual CWVOID setCurrShader(cwShader* pShader);
-	cwShader* getCurrShader() const;
-
-	virtual CWVOID render(cwEntity* pEntity);
+	cwRenderPipeline();
+	~cwRenderPipeline();
+	
+	CWVOID reset();
+	CWBOOL addEntity(cwEntity* pEntity);
+	CWBOOL addEntity(cwEntity* pEntity, cwEffect* pEffect);
 
 protected:
-	static cwEngine* create();
-
-	cwEngine();
-	virtual ~cwEngine();
-
-	virtual CWBOOL init();
-	virtual CWVOID buildDefaultCamera();
-	virtual CWVOID configShaderLight();
-
-	virtual CWVOID render();
-
-	friend class cwRepertory;
+	cwRenderBatch* getNextAvailableBatch();
 
 protected:
-	cwScene* m_pCurrScene;
-	cwCamera* m_pCurrCamera;
-	cwShader*m_pCurrShader;
-	cwVector<cwCamera*> m_nVecCameras;
+	std::vector<cwRenderBatch> m_nVecBatch;
+	CWUINT m_iBatchIndex;
 
 };
 

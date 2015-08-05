@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #define __CW_RENDER_NODE_H__
 
 #include "Base/cwMacros.h"
+#include "Base/cwUtils.h"
 #include "Ref/cwRef.h"
 #include "Math/cwMath.h"
 #include "Base/cwVector.h"
@@ -69,8 +70,12 @@ public:
 	virtual CWVOID setVisible(CWBOOL b);
 	CWBOOL getVisible() const { return m_bVisible; }
 
+	eSceneObjectType getType() const { return m_eType; }
+
 	virtual CWVOID setEffect(cwEffect* pEffect);
 	inline cwEffect* getEffect() const { return m_pEffect; }
+
+	cwVector<cwRenderNode*>& getChildren() { return m_nVecChildren; }
 
 	virtual CWVOID transform();
 	const cwMatrix4X4& getTransformMatrix() const { return m_nTrans; }
@@ -90,6 +95,7 @@ protected:
 	CWVOID clearEventListener();
 	
 protected:
+	eSceneObjectType m_eType;
 	CWBOOL m_bVisible;
 
 	cwVector3D m_nPos;
@@ -99,7 +105,7 @@ protected:
 	cwMatrix4X4 m_nTrans; 
 	CWBOOL m_bTransDirty;
 
-	cwEffect* m_pEffect;
+	cwEffect* m_pEffect; //effect for render, contains shader and tech
 
 	cwVector<cwRenderNode*> m_nVecChildren;
 	cwRenderNode* m_pParent;
