@@ -39,6 +39,14 @@ public:
 	virtual ~cwRenderer();
 
 	virtual CWBOOL init();
+	virtual CWVOID setCurrCamera(cwCamera* pCamera);
+	virtual CWVOID addStage(cwStage* pStage);
+	virtual cwStage* getStage(const CWSTRING& strName);
+
+	virtual CWVOID render();
+
+protected:
+	virtual CWVOID render(cwStage* pStage);
 
 protected:
 	std::vector<cwStage*> m_nVecStage;

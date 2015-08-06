@@ -65,18 +65,20 @@ public:
 	virtual cwBlend* createBlend(const BlendData& blendData) override;
 	virtual cwStencil* createStencil(const StencilData& stencliData) override;
 
+	virtual cwTexture* createTexture(const CWSTRING& strFileName) override;
+	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) override;
+
 	virtual CWVOID setVertexBuffer(cwBuffer* pVertexBuffer) override;
 	virtual CWVOID setIndexBuffer(cwBuffer* pIndexBuffer) override;
 	virtual CWVOID setBlend(const cwBlend* pBlendOper);
 	virtual CWVOID setStencil(const cwStencil* pStencil);
+	virtual CWVOID setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) override;
 
-	virtual cwTexture* createTexture(const CWSTRING& strFileName) override;
-	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) override;
+	virtual CWVOID clearPixelShaderResource() override;
 
 	virtual CWVOID render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) override;
 	virtual CWVOID render(cwEntity* pEntity, cwCamera* pCamera) override;
-
-	virtual CWVOID setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) override;
+	
 	virtual CWVOID draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) override;
 
 public:

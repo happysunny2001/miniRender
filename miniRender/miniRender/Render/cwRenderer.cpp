@@ -16,3 +16,81 @@ PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS B
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
+#include "cwRenderer.h"
+#include "cwStage.h"
+#include "Repertory/cwRepertory.h"
+#include "Device/cwDevice.h"
+
+NS_MINIR_BEGIN
+
+cwRenderer* cwRenderer::create()
+{
+	cwRenderer* pRenderer = new cwRenderer();
+	if (pRenderer && pRenderer->init()) {
+		pRenderer->autorelease();
+		return pRenderer;
+	}
+
+	CW_SAFE_DELETE(pRenderer);
+	return nullptr;
+}
+
+cwRenderer::cwRenderer():
+m_pCurrCamera(nullptr)
+{
+
+}
+
+cwRenderer::~cwRenderer()
+{
+	for (auto pStage : m_nVecStage) {
+		CW_SAFE_DELETE(pStage);
+	}
+
+	m_pCurrCamera = nullptr;
+}
+
+CWBOOL cwRenderer::init()
+{
+	return true;
+}
+
+CWVOID cwRenderer::setCurrCamera(cwCamera* pCamera)
+{
+	m_pCurrCamera = pCamera;
+}
+
+CWVOID cwRenderer::addStage(cwStage* pStage)
+{
+	m_nVecStage.push_back(pStage);
+}
+
+CWVOID cwRenderer::render()
+{
+	for (auto pStage : m_nVecStage) {
+		this->render(pStage);
+	}
+
+	cwRepertory::getInstance().getDevice()->swap();
+}
+
+CWVOID cwRenderer::render(cwStage* pStage)
+{
+	if (!pStage) return;
+
+	pStage->begin();
+	pStage->render();
+	pStage->end();
+}
+
+cwStage* cwRenderer::getStage(const CWSTRING& strName)
+{
+	for (auto pStage : m_nVecStage) {
+		if (pStage->getName == strName) return pStage;
+	}
+
+	return nullptr;
+}
+
+NS_MINIR_END

@@ -18,6 +18,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwRenderBatch.h"
+#include "Repertory/cwRepertory.h"
+#include "Engine/cwEngine.h"
 
 NS_MINIR_BEGIN
 
@@ -35,6 +37,14 @@ CWVOID cwRenderBatch::reset()
 {
 	m_pEffect = nullptr;
 	m_pEntity = nullptr;
+}
+
+CWVOID cwRenderBatch::render()
+{
+	if (m_pEffect)
+		cwRepertory::getInstance().getEngine()->render(m_pEntity, m_pEffect);
+	else
+		cwRepertory::getInstance().getEngine()->render(m_pEntity);
 }
 
 NS_MINIR_END

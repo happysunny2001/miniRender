@@ -28,6 +28,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Scheduler/cwSchedulerManager.h"
 #include "Shader/cwShader.h"
 #include "Effect/cwEffect.h"
+#include "Render/cwRenderer.h"
+#include "Parser/cwParserManager.h"
+#include "Parser/cwRendererParser.h"
+#include "Platform/cwFileSystem.h"
+#include "Repertory/cwRepertory.h"
 
 NS_MINIR_BEGIN
 
@@ -46,7 +51,8 @@ cwEngine* cwEngine::create()
 cwEngine::cwEngine():
 m_pCurrScene(nullptr),
 m_pCurrCamera(nullptr),
-m_pCurrShader(nullptr)
+m_pCurrShader(nullptr),
+m_pRenderer(nullptr)
 {
 
 }
@@ -54,6 +60,7 @@ m_pCurrShader(nullptr)
 cwEngine::~cwEngine()
 {
 	CW_SAFE_RELEASE_NULL(m_pCurrScene);
+	CW_SAFE_RELEASE_NULL(m_pRenderer);
 	m_pCurrCamera = nullptr;
 	m_pCurrShader = nullptr;
 }
@@ -61,7 +68,18 @@ cwEngine::~cwEngine()
 CWBOOL cwEngine::init()
 {
 	buildDefaultCamera();
+	buildRenderer();
 	return true;
+}
+
+CWVOID cwEngine::buildRenderer()
+{
+	cwRendererParser* pRendererParser = static_cast<cwRendererParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParerRenderer));
+	if (pRendererParser) {
+		CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath("Render/render01.xml");
+		m_pRenderer = pRendererParser->parse(strFilePath);
+		CW_SAFE_RETAIN(m_pRenderer);
+	}
 }
 
 CWVOID cwEngine::setScene(cwScene* pScene)
@@ -102,11 +120,6 @@ CWBOOL cwEngine::removeCamera(cwCamera* pCamera)
 	return true;
 }
 
-cwCamera* cwEngine::getCurrentCamera()
-{
-	return m_pCurrCamera;
-}
-
 CWVOID cwEngine::setCurrCamera(cwCamera* pCamera)
 {
 	if (pCamera == m_pCurrCamera) return;
@@ -123,9 +136,12 @@ CWVOID cwEngine::render()
 	m_pCurrCamera = getDefaultCamera();
 	//cwRepertory::getInstance().getDevice()->beginDraw();
 
-	if (m_pCurrScene) {
-		m_pCurrScene->render();
-	}
+	//if (m_pCurrScene) {
+	//	m_pCurrScene->render();
+	//}
+
+	if (m_pRenderer)
+		m_pRenderer->render();
 
 	//cwRepertory::getInstance().getDevice()->endDraw();
 	//cwRepertory::getInstance().getDevice()->swap();
@@ -141,16 +157,20 @@ CWVOID cwEngine::render(cwEntity* pEntity)
 	}
 }
 
+CWVOID cwEngine::render(cwEntity* pEntity, cwEffect* pEffect)
+{
+	if (pEffect){
+		this->setCurrShader(pEffect->getShader());
+	}
+
+	cwRepertory::getInstance().getDevice()->render(pEntity, m_pCurrCamera);
+}
+
 CWVOID cwEngine::setCurrShader(cwShader* pShader)
 {
 	if (m_pCurrShader == pShader) return;
 	m_pCurrShader = pShader;
 	configShaderLight();
-}
-
-cwShader* cwEngine::getCurrShader() const
-{
-	return m_pCurrShader;
 }
 
 CWVOID cwEngine::configShaderLight()

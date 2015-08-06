@@ -17,61 +17,47 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwRenderPipeline.h"
-#include "Entity/cwEntity.h"
+#include "cwParserManager.h"
+#include "cwStageParser.h"
+#include "cwRendererParser.h"
 
 NS_MINIR_BEGIN
 
-cwRenderPipeline::cwRenderPipeline():
-m_iBatchIndex(0)
+cwParserManager* cwParserManager::create()
 {
-	m_nVecBatch.resize(CW_PIPELINE_BATCH_SIZE);
-}
-
-cwRenderPipeline::~cwRenderPipeline()
-{
-
-}
-
-CWVOID cwRenderPipeline::reset()
-{
-	m_iBatchIndex = 0;
-}
-
-cwRenderBatch* cwRenderPipeline::getNextAvailableBatch()
-{
-	if (m_iBatchIndex < m_nVecBatch.size()) {
-		return &(m_nVecBatch[m_iBatchIndex++]);
+	cwParserManager* pManager = new cwParserManager();
+	if (pManager && pManager->init()) {
+		pManager->autorelease();
+		return pManager;
 	}
 
+	CW_SAFE_DELETE(pManager);
 	return nullptr;
 }
 
-CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity)
+cwParserManager::cwParserManager()
 {
-	cwRenderBatch* pBatch = getNextAvailableBatch();
-	if (!pBatch) return CWFALSE;
-
-	pBatch->m_pEntity = pEntity;
-	pBatch->m_pEffect = pEntity->getEffect();
-	return CWTRUE;
-}
-
-CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity, cwEffect* pEffect)
-{
-	cwRenderBatch* pBatch = getNextAvailableBatch();
-	if (!pBatch) return CWFALSE;
-
-	pBatch->m_pEntity = pEntity;
-	pBatch->m_pEffect = pEffect;
-	return CWTRUE;
-}
-
-CWVOID cwRenderPipeline::render()
-{
-	for (CWUINT i = 0; i < m_iBatchIndex; ++i) {
-		m_nVecBatch[i].render();
+	for (int i = 0; i < eParerTypeMax; ++i) {
+		m_nArrParser[i] = nullptr;
 	}
+}
+
+cwParserManager::~cwParserManager()
+{
+	for (int i = 0; i < eParerTypeMax; ++i) {
+		CW_SAFE_RELEASE_NULL(m_nArrParser[i]);
+	}
+}
+
+CWBOOL cwParserManager::init()
+{
+	m_nArrParser[eParerStage] = cwStageParser::create();
+	CW_SAFE_RETAIN(m_nArrParser[eParerStage]);
+
+	m_nArrParser[eParerRenderer] = cwRendererParser::create();
+	CW_SAFE_RETAIN(m_nArrParser[eParerRenderer]);
+
+	return CWTRUE;
 }
 
 NS_MINIR_END

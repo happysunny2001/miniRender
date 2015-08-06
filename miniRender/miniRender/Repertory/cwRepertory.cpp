@@ -29,6 +29,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Generator/cwGeometryGenerator.h"
 #include "Event/cwEventManager.h"
 #include "Scheduler/cwSchedulerManager.h"
+#include "Parser/cwParserManager.h"
 
 #ifdef _CW_D3D11_
 #include "Platform/D3D/D3D11/Repertory/cwD3D11Repertory.h"
@@ -53,7 +54,8 @@ m_pFileSystem(nullptr),
 m_pEngine(nullptr),
 m_pGeoGenerator(nullptr),
 m_pEventManager(nullptr),
-m_pSchedulerManager(nullptr)
+m_pSchedulerManager(nullptr),
+m_pParserManager(nullptr)
 {
 	m_pAutoReleasePool = new cwAutoReleasePool();
 }
@@ -69,57 +71,8 @@ cwRepertory::~cwRepertory()
 	CW_SAFE_RELEASE_NULL(m_pGeoGenerator);
 	CW_SAFE_RELEASE_NULL(m_pEventManager);
 	CW_SAFE_RELEASE_NULL(m_pSchedulerManager);
+	CW_SAFE_RELEASE_NULL(m_pParserManager);
 	CW_SAFE_DELETE(m_pDevice);
-}
-
-cwDevice* cwRepertory::getDevice()
-{
-	return m_pDevice;
-}
-
-cwShaderManager* cwRepertory::getShaderManager()
-{
-	return m_pShaderManager;
-}
-
-cwLayoutsManager* cwRepertory::getLayoutManager()
-{
-	return m_pLayoutManager;
-}
-
-cwAutoReleasePool* cwRepertory::getAutoReleasePool()
-{
-	return m_pAutoReleasePool;
-}
-
-cwTextureManager* cwRepertory::getTextureManager()
-{
-	return m_pTextureManager;
-}
-
-cwFileSystem* cwRepertory::getFileSystem()
-{
-	return m_pFileSystem;
-}
-
-cwEngine* cwRepertory::getEngine()
-{
-	return m_pEngine;
-}
-
-cwGeometryGenerator* cwRepertory::getGeoGenerator()
-{
-	return m_pGeoGenerator;
-}
-
-cwEventManager* cwRepertory::getEventManager()
-{
-	return m_pEventManager;
-}
-
-cwSchedulerManager* cwRepertory::getSchedulerManager()
-{
-	return m_pSchedulerManager;
 }
 
 void cwRepertory::initAll()
@@ -132,6 +85,9 @@ void cwRepertory::initAll()
 	addValue(gValueNearZ, cwValueMap(1.0f));
 	addValue(gValueFarZ, cwValueMap(1000.0f));
 	addValue(gValueFov, cwValueMap(0.25f*3.14159f));
+
+	m_pParserManager = cwParserManager::create();
+	CW_SAFE_RETAIN(m_pParserManager);
 
 	m_pEventManager = cwEventManager::create();
 	CW_SAFE_RETAIN(m_pEventManager);

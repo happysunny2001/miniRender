@@ -71,23 +71,24 @@ public:
 	virtual cwBlend* createBlend(const BlendData& blendData) = 0;
 	virtual cwStencil* createStencil(const StencilData& stencliData) = 0;
 
+	virtual cwTexture* createTexture(const CWSTRING& strFileName) = 0;
+	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) = 0;
+
 	virtual CWVOID setVertexBuffer(cwBuffer* pVertexBuffer) = 0;
 	virtual CWVOID setIndexBuffer(cwBuffer* pIndexBuffer) = 0;
 	//set blend state, nullptr for restore blend state
 	virtual CWVOID setBlend(const cwBlend* pBlendOper) = 0;
 	//set stencil state, nullptr for restore stencil state
 	virtual CWVOID setStencil(const cwStencil* pStencil) = 0;
+	virtual CWVOID setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) = 0;
+	virtual CWVOID setRenderTarget(cwRenderTexture* pRenderTexture);
 
-	virtual cwTexture* createTexture(const CWSTRING& strFileName) = 0;
-	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) = 0;
+	virtual CWVOID clearPixelShaderResource() = 0;
 
 	virtual CWVOID render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) = 0;
 	virtual CWVOID render(cwEntity* pEntity, cwCamera* pCamera) = 0;
 
-	virtual CWVOID setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) = 0;
 	virtual CWVOID draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) = 0;
-
-	virtual CWVOID setRenderTarget(cwRenderTexture* pRenderTexture);
 
 	inline CWBOOL getEnableMsaa4X() const { return m_bEnableMsaa4x; }
 

@@ -95,11 +95,11 @@ public:
 	inline CWVOID* getColorData() { return &m_nMatData;  }
 	inline CWUINT getColorDataSize() { return sizeof(matColor); }
 
-	virtual void configEffect(cwEffect* pEffect);
+	virtual CWVOID configEffect(cwEffect* pEffect);
+	virtual CWVOID configShader(cwShader* pShader);
 
 public:
 	matColor m_nMatData;
-	
 	cwBlend* m_pBlendOp;          //blend object
 
 	//the diffuse texture and it's transform matrix

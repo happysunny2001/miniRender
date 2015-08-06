@@ -27,6 +27,17 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
+cwStageParser* cwStageParser::create()
+{
+	cwStageParser* pParser = new cwStageParser();
+	if (pParser) {
+		pParser->autorelease();
+		return pParser;
+	}
+
+	return nullptr;
+}
+
 cwStage* cwStageParser::parse(tinyxml2::XMLElement* pStageData)
 {
 	if (!pStageData) return nullptr;
@@ -117,7 +128,7 @@ CWVOID cwStageParser::parseRenderTarget(cwStage* pStage, tinyxml2::XMLElement* p
 	tinyxml2::XMLElement* pRenderTarget = pStageData->FirstChildElement("RenderTarget");
 	if (!pRenderTarget) return;
 
-	const CWCHAR* pcType = pRenderTarget->Attribute("type");
+	const CWCHAR* pcType = pRenderTarget->Attribute("Type");
 	if (!pcType) return;
 
 	if (strncmp(pcType, "backbuffer", 10) == 0)

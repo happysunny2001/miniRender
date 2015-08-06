@@ -190,18 +190,18 @@ void cwMaterial::configEffect(cwEffect* pEffect)
 	cwShader* pShader = pEffect->getShader();
 	if (!pShader) return;
 
-	//pShader->setVariableData(CW_SHADER_MATERIAL, this->getColorData(), 0, this->getColorDataSize());
 	pShader->setVariableData(eShaderParamMaterial, this->getColorData(), 0, this->getColorDataSize());
-
 	pShader->setVariableTexture(eShaderParamTexture0, this->getDiffuseTexture());
 
-	//if (pShader->hasVariable(CW_SHADER_DIFFUSE_TEXTURE)) {
-	//	pShader->setVariableTexture(CW_SHADER_DIFFUSE_TEXTURE, this->getDiffuseTexture());
-	//}
+	cwRepertory::getInstance().getDevice()->setBlend(this->getBlend());
+}
 
-	//if (pShader->hasVariable(CW_SHADER_DIFF_TEX_TRANS)) {
-	//	pShader->setVariableMatrix(CW_SHADER_DIFF_TEX_TRANS, (CWFLOAT*)(&m_nDiffuseTrans));
-	//}
+CWVOID cwMaterial::configShader(cwShader* pShader)
+{
+	if (pShader) {
+		pShader->setVariableData(eShaderParamMaterial, this->getColorData(), 0, this->getColorDataSize());
+		pShader->setVariableTexture(eShaderParamTexture0, this->getDiffuseTexture());
+	}
 
 	cwRepertory::getInstance().getDevice()->setBlend(this->getBlend());
 }

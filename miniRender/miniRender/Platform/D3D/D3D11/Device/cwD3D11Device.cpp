@@ -36,6 +36,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Texture/cwTextureManager.h"
 #include "Effect/cwEffect.h"
 #include "Stencil/cwStencil.h"
+#include "Engine/cwEngine.h"
 #include "Platform/Windows/cwWinUtils.h"
 #include "Platform/D3D/D3D11/cwD3D11Utils.h"
 #include "Platform/D3D/D3D11/Layouts/cwD3D11Layouts.h"
@@ -517,26 +518,33 @@ void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPo
 
 	pShader->apply(0, 0);
 	this->drawIndexed(pRenderObj->getIndexBuffer()->getIndexCount(), 0, 0);
+
+	//ID3D11ShaderResourceView* pSrvs[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = { 0 };
+	//m_pD3D11DeviceContext->PSSetShaderResources(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, pSrvs);
 }
 
 void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
 {
 	if (!pEntity || !pCamera) return;
 
+	cwShader* pShader = cwRepertory::getInstance().getEngine()->getCurrShader();
+
 	cwMaterial* pMaterial = pEntity->getMaterial();
 	assert(pMaterial != nullptr);
-	pMaterial->configEffect(pEntity->getEffect());
+	//pMaterial->configEffect(pEntity->getEffect());
+	pMaterial->configShader(pShader);
 
-	cwShader* pShader = pEntity->getEffect()->getShader();
-	assert(pShader != nullptr);
+	//cwShader* pShader = pEntity->getEffect()->getShader();
+	//assert(pShader != nullptr);
 	setShaderWorldTrans(pShader, pEntity->getTransformMatrix(), pCamera);
 
 	cwRenderObject* pRenderObj = pEntity->getRenderObj();
 	assert(pRenderObj != nullptr);
-	draw(pShader, pEntity->getEffect()->getTech(), pRenderObj);
+	if (pShader)
+		draw(pShader, pEntity->getEffect()->getTech(), pRenderObj);
 
-	ID3D11ShaderResourceView* pSrvs[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = { 0 };
-	m_pD3D11DeviceContext->PSSetShaderResources(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, pSrvs);
+	//ID3D11ShaderResourceView* pSrvs[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = { 0 };
+	//m_pD3D11DeviceContext->PSSetShaderResources(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, pSrvs);
 }
 
 void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera)
@@ -595,6 +603,12 @@ void cwD3D11Device::draw(cwShader* pShader, const string& strTech, cwRenderObjec
 		pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
 		this->drawIndexed(pRenderObj->getIndexBuffer()->getIndexCount(), 0, 0);
 	}
+}
+
+CWVOID cwD3D11Device::clearPixelShaderResource()
+{
+	ID3D11ShaderResourceView* pSrvs[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = { 0 };
+	m_pD3D11DeviceContext->PSSetShaderResources(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, pSrvs);
 }
 
 void cwD3D11Device::initBlendBaseData()

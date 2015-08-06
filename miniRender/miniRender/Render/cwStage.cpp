@@ -85,7 +85,9 @@ CWVOID cwStage::begin()
 		pPipeline->reset();
 
 		for (auto pEntity : vecEntity) {
-			CWBOOL bRet = pPipeline->addEntity(pEntity, m_pStageEffect);
+			pEntity->transform();
+
+			CWBOOL bRet = pPipeline->addEntity(pEntity, nullptr);
 			if (!bRet) {
 				if (m_iPipeLineIndex >= CW_STAGE_PIPELINE_SIZE)
 					break;
@@ -101,6 +103,8 @@ CWVOID cwStage::begin()
 		pPipeline->reset();
 
 		for (auto pEntity : vecEntity) {
+			pEntity->transform();
+
 			CWBOOL bRet = pPipeline->addEntity(pEntity);
 			if (!bRet) {
 				if (m_iPipeLineIndex >= CW_STAGE_PIPELINE_SIZE)
@@ -112,17 +116,27 @@ CWVOID cwStage::begin()
 			}
 		}
 	}
+
+	cwRepertory::getInstance().getEngine()->setCurrCamera(m_pCamera);
+	if (m_pStageEffect) {
+		cwRepertory::getInstance().getEngine()->setCurrShader(m_pStageEffect->getShader());
+	}
+
+	cwRepertory::getInstance().getDevice()->setViewPort(m_pViewPort);
+	cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTarget);
+	cwRepertory::getInstance().getDevice()->beginDraw();
 }
 
 CWVOID cwStage::render()
 {
-	cwRepertory::getInstance().getEngine()->setCurrCamera(m_pCamera);
-	cwRepertory::getInstance().getDevice()->setViewPort(m_pViewPort);
-	cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTarget);
-
-	for (int i = 0; i < m_iPipeLineIndex; ++i) {
-
+	for (CWUINT i = 0; i < m_iPipeLineIndex; ++i) {
+		m_nPipeline[i].render();
 	}
+}
+
+CWVOID cwStage::end()
+{
+	cwRepertory::getInstance().getDevice()->endDraw();
 }
 
 cwRenderPipeline* cwStage::getPipeline(cwEntity* pEntity)

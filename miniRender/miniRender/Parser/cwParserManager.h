@@ -17,27 +17,28 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_STAGE_PARSER_H__
-#define __CW_STAGE_PARSER_H__
+#ifndef __CW_PARSER_MANAGER_H__
+#define __CW_PARSER_MANAGER_H__
 
 #include "Base/cwMacros.h"
+#include "Base/cwUtils.h"
 #include "Ref/cwRef.h"
-#include "tinyxml2.h"
 
 NS_MINIR_BEGIN
 
-class cwStage;
-
-class cwStageParser : public cwRef
+class cwParserManager : public cwRef
 {
 public:
-	cwStage* parse(tinyxml2::XMLElement* pStageData);
+	static cwParserManager* create();
+
+	cwParserManager();
+	virtual~ cwParserManager();
+
+	virtual CWBOOL init();
+	inline cwRef* getParser(eParerType eType) { return m_nArrParser[eType]; }
 
 protected:
-	CWVOID parseAttribute(cwStage* pStage, tinyxml2::XMLElement* pStageData);
-	CWVOID parseCamera(cwStage* pStage, tinyxml2::XMLElement* pStageData);
-	CWVOID parseViewPort(cwStage* pStage, tinyxml2::XMLElement* pStageData);
-	CWVOID parseRenderTarget(cwStage* pStage, tinyxml2::XMLElement* pStageData);
+	cwRef* m_nArrParser[eParerTypeMax];
 
 };
 

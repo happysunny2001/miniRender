@@ -17,61 +17,25 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwRenderPipeline.h"
-#include "Entity/cwEntity.h"
+#ifndef __CW_RENDERER_PARSER_H__
+#define __CW_RENDERER_PARSER_H__
+
+#include "Base/cwMacros.h"
+#include "Base/cwBasicType.h"
+#include "Ref/cwRef.h"
+#include "Render/cwRenderer.h"
 
 NS_MINIR_BEGIN
 
-cwRenderPipeline::cwRenderPipeline():
-m_iBatchIndex(0)
+class cwRendererParser : public cwRef
 {
-	m_nVecBatch.resize(CW_PIPELINE_BATCH_SIZE);
-}
+public:
+	static cwRendererParser* create();
+	
+	cwRenderer* parse(const CWSTRING& strFileName);
 
-cwRenderPipeline::~cwRenderPipeline()
-{
-
-}
-
-CWVOID cwRenderPipeline::reset()
-{
-	m_iBatchIndex = 0;
-}
-
-cwRenderBatch* cwRenderPipeline::getNextAvailableBatch()
-{
-	if (m_iBatchIndex < m_nVecBatch.size()) {
-		return &(m_nVecBatch[m_iBatchIndex++]);
-	}
-
-	return nullptr;
-}
-
-CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity)
-{
-	cwRenderBatch* pBatch = getNextAvailableBatch();
-	if (!pBatch) return CWFALSE;
-
-	pBatch->m_pEntity = pEntity;
-	pBatch->m_pEffect = pEntity->getEffect();
-	return CWTRUE;
-}
-
-CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity, cwEffect* pEffect)
-{
-	cwRenderBatch* pBatch = getNextAvailableBatch();
-	if (!pBatch) return CWFALSE;
-
-	pBatch->m_pEntity = pEntity;
-	pBatch->m_pEffect = pEffect;
-	return CWTRUE;
-}
-
-CWVOID cwRenderPipeline::render()
-{
-	for (CWUINT i = 0; i < m_iBatchIndex; ++i) {
-		m_nVecBatch[i].render();
-	}
-}
+};
 
 NS_MINIR_END
+
+#endif

@@ -245,6 +245,12 @@ typedef enum {
 	eSceneObjectScene,
 }eSceneObjectType;
 
+typedef enum {
+	eParerStage = 0,
+	eParerRenderer,
+	eParerTypeMax
+}eParerType;
+
 #define CW_CONTROL MK_CONTROL
 #define CW_LBUTTON MK_LBUTTON
 #define CW_MBUTTON MK_MBUTTON

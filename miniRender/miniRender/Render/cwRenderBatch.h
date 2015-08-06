@@ -35,6 +35,7 @@ public:
 	~cwRenderBatch();
 
 	CWVOID reset();
+	CWVOID render();
 
 public:
 	cwEffect* m_pEffect;

@@ -39,6 +39,7 @@ class cwEngine;
 class cwGeometryGenerator;
 class cwEventManager;
 class cwSchedulerManager;
+class cwParserManager;
 
 class CW_DLL cwRepertory
 {
@@ -51,16 +52,17 @@ public:
 	CWUINT  getUInt(const string& strName);
 	CWVOID* getPtr(const string& strName);
 
-	cwDevice* getDevice();
-	cwShaderManager* getShaderManager();
-	cwLayoutsManager* getLayoutManager();
-	cwAutoReleasePool* getAutoReleasePool();
-	cwTextureManager* getTextureManager();
-	cwFileSystem* getFileSystem();
-	cwEngine* getEngine();
-	cwGeometryGenerator* getGeoGenerator();
-	cwEventManager* getEventManager();
-	cwSchedulerManager* getSchedulerManager();
+	inline cwDevice* getDevice() { return m_pDevice; }
+	inline cwShaderManager* getShaderManager() { return m_pShaderManager; }
+	inline cwLayoutsManager* getLayoutManager() { return m_pLayoutManager; }
+	inline cwAutoReleasePool* getAutoReleasePool() { return m_pAutoReleasePool; }
+	inline cwTextureManager* getTextureManager() { return m_pTextureManager; }
+	inline cwFileSystem* getFileSystem() { return m_pFileSystem; }
+	inline cwEngine* getEngine() { return m_pEngine; }
+	inline cwGeometryGenerator* getGeoGenerator() { return m_pGeoGenerator; }
+	inline cwEventManager* getEventManager() { return m_pEventManager; }
+	inline cwSchedulerManager* getSchedulerManager() { return m_pSchedulerManager; }
+	inline cwParserManager* getParserManager() { return m_pParserManager; }
 
 	virtual void refreshWindowTitle(const CWSTRING& strTitle) {}
 
@@ -83,6 +85,7 @@ protected:
 	cwGeometryGenerator* m_pGeoGenerator;
 	cwEventManager* m_pEventManager;
 	cwSchedulerManager* m_pSchedulerManager;
+	cwParserManager* m_pParserManager;
 
 	unordered_map<string, cwValueMap> m_mapData;
 

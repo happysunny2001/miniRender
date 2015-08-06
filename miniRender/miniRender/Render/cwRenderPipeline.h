@@ -41,6 +41,8 @@ public:
 	CWBOOL addEntity(cwEntity* pEntity);
 	CWBOOL addEntity(cwEntity* pEntity, cwEffect* pEffect);
 
+	CWVOID render();
+
 protected:
 	cwRenderBatch* getNextAvailableBatch();
 
