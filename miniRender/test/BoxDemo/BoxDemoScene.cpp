@@ -165,7 +165,7 @@ void BoxDemoScene::buildPlane()
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTex), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosNormalTex);
 
-	cwShader* pShader = repertory.getShaderManager()->getDefShader(CW_SHADER_DEF_LIGHTINGTEX);
+	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderLightingTex);
 	cwMaterial* pMaterial = cwMaterial::create();
 	//pMaterial->setShader(pShader);
 	pMaterial->setDiffuseTexture(m_pRenderTex);

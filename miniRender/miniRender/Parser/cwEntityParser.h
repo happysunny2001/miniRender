@@ -17,42 +17,38 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_SHADER_MANAGER_H__
-#define __CW_SHADER_MANAGER_H__
+#ifndef __CW_ENTITY_PARSER_H__
+#define __CW_ENTITY_PARSER_H__
 
 #include "Base/cwMacros.h"
-#include "Base/cwUtils.h"
-#include "Base/cwMap.h"
+#include "Base/cwBasicType.h"
 #include "Ref/cwRef.h"
-#include "Repertory/cwRepertory.h"
-#include "cwShader.h"
+#include "Entity/cwEntity.h"
+#include "tinyxml2.h"
+
+#include <unordered_map>
 
 NS_MINIR_BEGIN
 
-class CW_DLL cwShaderManager : public cwRef
+class cwEntityParser : public cwRef
 {
 public:
-	virtual ~cwShaderManager();
+	static cwEntityParser* create();
 
-	virtual CWBOOL init();
+	cwEntityParser();
 
-	virtual CWVOID loadDefaultShader();
-	cwShader* loadShader(const CWSTRING& strFile);
-	cwShader* getShader(const CWSTRING& strFile);
-	cwShader* getDefShader(eDefShaderID eShaderID);
-
-	const CWSTRING& getShaderParamString(eShaderParamIndex eParam) const;
+	cwEntity* parse(tinyxml2::XMLElement* pEntityData);
 
 protected:
-	cwShaderManager();
+	cwEntity* getEntity(const CWSTRING& strType, const CWSTRING& strVertexType);
 
-	CWVOID buildShaderParam();
+	CWVOID parsePosition(tinyxml2::XMLElement* pPosData, cwEntity* pEntity);
+	CWVOID parseScale(tinyxml2::XMLElement* pScaleData, cwEntity* pEntity);
+	CWVOID parseRotation(tinyxml2::XMLElement* pRotData, cwEntity* pEntity);
+	CWVOID parseMaterial(tinyxml2::XMLElement* pMaterialData, cwEntity* pEntity);
+	CWVOID parseEffect(tinyxml2::XMLElement* pEffectData, cwEntity* pEntity);
 
-protected:
-	cwMap<CWSTRING, cwShader*> m_nMapShader;
-	cwMap<eDefShaderID, cwShader*> m_nMapDefShader;
-
-	CWSTRING m_strShaderParam[eShaderParamMax];
+	unordered_map<CWSTRING, std::function<CWVOID(tinyxml2::XMLElement*, cwEntity*)>> m_nMapEntityParser;
 
 };
 

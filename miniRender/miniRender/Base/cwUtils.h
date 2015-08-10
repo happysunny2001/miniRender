@@ -248,8 +248,14 @@ typedef enum {
 typedef enum {
 	eParerStage = 0,
 	eParerRenderer,
+	eParerEntity,
 	eParerTypeMax
 }eParerType;
+
+typedef enum {
+	eStageLayerNormal = 1,
+	eStageLayerSelf,
+}eStageLayerType;
 
 #define CW_CONTROL MK_CONTROL
 #define CW_LBUTTON MK_LBUTTON

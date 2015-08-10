@@ -17,42 +17,49 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_SHADER_MANAGER_H__
-#define __CW_SHADER_MANAGER_H__
+#ifndef __CW_STAGE_LAYER_H__
+#define __CW_STAGE_LAYER_H__
 
 #include "Base/cwMacros.h"
 #include "Base/cwUtils.h"
-#include "Base/cwMap.h"
-#include "Ref/cwRef.h"
-#include "Repertory/cwRepertory.h"
-#include "cwShader.h"
+#include "cwRenderPipeline.h"
+
+#include <unordered_map>
+#include <vector>
 
 NS_MINIR_BEGIN
 
-class CW_DLL cwShaderManager : public cwRef
+class cwShader;
+class cwEntity;
+class cwEffect;
+
+class cwStageLayer
 {
 public:
-	virtual ~cwShaderManager();
+	cwStageLayer();
+	~cwStageLayer();
 
-	virtual CWBOOL init();
+	eStageLayerType getType() const { return m_eType; }
+	CWVOID setType(eStageLayerType eType) { m_eType = eType; }
 
-	virtual CWVOID loadDefaultShader();
-	cwShader* loadShader(const CWSTRING& strFile);
-	cwShader* getShader(const CWSTRING& strFile);
-	cwShader* getDefShader(eDefShaderID eShaderID);
-
-	const CWSTRING& getShaderParamString(eShaderParamIndex eParam) const;
-
-protected:
-	cwShaderManager();
-
-	CWVOID buildShaderParam();
+	CWVOID reset();
+	CWVOID begin(std::vector<cwEntity*>& vecEntities, cwEffect* pEffect);
+	CWVOID render();
+	CWVOID end();
 
 protected:
-	cwMap<CWSTRING, cwShader*> m_nMapShader;
-	cwMap<eDefShaderID, cwShader*> m_nMapDefShader;
+	cwRenderPipeline* getPipeline(cwEntity* pEntity);
 
-	CWSTRING m_strShaderParam[eShaderParamMax];
+	CWVOID addEntities(std::vector<cwEntity*>& vecEntities);
+	CWVOID addEntities(std::vector<cwEntity*>& vecEntities, cwEffect* pEffect);
+
+protected:
+	eStageLayerType m_eType;
+
+	cwRenderPipeline m_nPipeline[CW_STAGE_PIPELINE_SIZE];
+	CWUINT m_iPipeLineIndex;
+
+	std::unordered_map<cwShader*, cwRenderPipeline*> m_nMapPipeline;
 
 };
 

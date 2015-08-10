@@ -87,7 +87,7 @@ CWVOID cwRenderer::render(cwStage* pStage)
 cwStage* cwRenderer::getStage(const CWSTRING& strName)
 {
 	for (auto pStage : m_nVecStage) {
-		if (pStage->getName == strName) return pStage;
+		if (pStage->getName() == strName) return pStage;
 	}
 
 	return nullptr;

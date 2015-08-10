@@ -108,6 +108,7 @@ void cwRepertory::initAll()
 
 	m_pEngine = cwEngine::create();
 	CW_SAFE_RETAIN(m_pEngine);
+	m_pEngine->deferParseRenderer();
 }
 
 bool cwRepertory::specialInit()

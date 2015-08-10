@@ -48,13 +48,13 @@ cwRenderer* cwRendererParser::parse(const CWSTRING& strFileName)
 		return nullptr;
 	}
 
-	tinyxml2::XMLElement* pRendererNode = doc.FirstChildElement("Renderer");
-	if (!pRendererNode) return nullptr;
+	tinyxml2::XMLElement* pRendererElement = doc.FirstChildElement("Renderer");
+	if (!pRendererElement) return nullptr;
 
 	cwRenderer* pRenderer = cwRenderer::create();
 	if (!pRenderer) return nullptr;
 
-	tinyxml2::XMLElement* pStageListNode = pRendererNode->FirstChildElement("StageList");
+	tinyxml2::XMLElement* pStageListNode = pRendererElement->FirstChildElement("StageList");
 	if (pStageListNode) {
 		tinyxml2::XMLElement* pStageNode = pStageListNode->FirstChildElement("Stage");
 		while (pStageNode) {
@@ -67,7 +67,45 @@ cwRenderer* cwRendererParser::parse(const CWSTRING& strFileName)
 		}
 	}
 
+	pRenderer->setFullPath(strFileName);
+
 	return pRenderer;
+}
+
+CWVOID cwRendererParser::deferParse(cwRenderer* pRenderer)
+{
+	if (!pRenderer) return;
+
+	const CWSTRING& strFullPath = pRenderer->getFullPath();
+	if (strFullPath.empty()) return;
+
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLError err = doc.LoadFile(strFullPath.c_str());
+	if (err != tinyxml2::XML_NO_ERROR) {
+		return;
+	}
+
+	tinyxml2::XMLElement* pRendererElement = doc.FirstChildElement("Renderer");
+	if (!pRendererElement) return;
+
+	cwStageParser* pStageParser = static_cast<cwStageParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParerStage));
+	if (!pStageParser) return;
+
+	tinyxml2::XMLElement* pStageListElement = pRendererElement->FirstChildElement("StageList");
+	if (pStageListElement) {
+		tinyxml2::XMLElement* pStageElement = pStageListElement->FirstChildElement("Stage");
+
+		while (pStageElement) {
+			const CWCHAR* pcStageName = pStageElement->Attribute("Name");
+
+			cwStage* pStage = pRenderer->getStage(pcStageName);
+			if (pStage) {
+				pStageParser->deferParse(pStage, pStageElement);
+			}
+
+			pStageElement = pStageElement->NextSiblingElement("Stage");
+		}
+	}
 }
 
 NS_MINIR_END

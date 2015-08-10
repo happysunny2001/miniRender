@@ -62,18 +62,20 @@ CWBOOL cwEntity::init()
 
 CWVOID cwEntity::setRenderObject(cwRenderObject* pRenderObj)
 {
+	if (pRenderObj == m_pRenderObj) return;
+
+	CW_SAFE_RETAIN(pRenderObj);
 	CW_SAFE_RELEASE_NULL(m_pRenderObj);
 	m_pRenderObj = pRenderObj;
-	CW_SAFE_RETAIN(m_pRenderObj);
 }
 
 CWVOID cwEntity::setMaterial(cwMaterial* pMaterial)
 {
 	if (pMaterial == m_pMaterial) return;
 
+	CW_SAFE_RETAIN(pMaterial);
 	CW_SAFE_RELEASE_NULL(m_pMaterial);
 	m_pMaterial = pMaterial;
-	CW_SAFE_RETAIN(m_pMaterial);
 }
 
 CWVOID cwEntity::renderSelf()

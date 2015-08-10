@@ -12,8 +12,24 @@
 			<Camera Name="default" />
 			<ViewPort Name="default" TopLeftX="0" TopLeftY="0" Width="-1" Height="-1" MinDepth="0" MaxDepth="1.0" />
 			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" />
-			<Effect Name="" Shader="" Tech="">
-			</Effect> 
+			<Layer Filter="self"/> 
+			<EntityList>
+				<Entity Type="Quad" VertexType="PosNormalTex">
+					<Position x="0" y="0" z="0" />
+					<Scale x="10" y="10" z="1.0" />
+					<Rotation x="0" y="0" z="0" />
+					<Material>
+						<Ambient r="1.0" g="1.0" b="1.0" a="1.0" />
+						<Diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+						<Specular r="1.0" g="1.0" b="1.0" a="1.0" />
+						<Reflect r="1.0" g="1.0" b="1.0" a="1.0" />
+						<DiffuseTexture Type="Stage" File="S1" />
+
+						<Effect Name="" ShaderType="default" Shader="2" Tech="">
+						</Effect> 
+					</Material>
+				</Entity>
+			</EntityList>
 		</Stage>
 
 	</StageList>

@@ -151,7 +151,7 @@ CWHANDLE cwD3D11RenderTexture::getTextureMultiThreadPtr()
 
 CWVOID cwD3D11RenderTexture::endDraw()
 {
-	cwRepertory::getInstance().getDevice()->clearPixelShaderResource();
+
 }
 
 NS_MINIR_END

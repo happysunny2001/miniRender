@@ -78,7 +78,15 @@ CWVOID cwEngine::buildRenderer()
 	if (pRendererParser) {
 		CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath("Render/render01.xml");
 		m_pRenderer = pRendererParser->parse(strFilePath);
-		CW_SAFE_RETAIN(m_pRenderer);
+		CW_SAFE_RETAIN(m_pRenderer);	
+	}
+}
+
+CWVOID cwEngine::deferParseRenderer()
+{
+	cwRendererParser* pRendererParser = static_cast<cwRendererParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParerRenderer));
+	if (pRendererParser) {
+		pRendererParser->deferParse(m_pRenderer);
 	}
 }
 
@@ -183,12 +191,10 @@ CWVOID cwEngine::configShaderLight()
 	CWUINT index = 0;
 	const cwVector<cwLight*>& vecLight = m_pCurrScene->getLights();
 	for (auto it = vecLight.begin(); it != vecLight.end(); ++it) {
-		//m_pCurrShader->setVariableData(CW_SHADER_LIGHT, index, (*it)->data(), 0, (*it)->size());
 		m_pCurrShader->setVariableData(eShaderParamLight, index, (*it)->data(), 0, (*it)->size());
 		index++;
 	}
 
-	//m_pCurrShader->setVariableInt(CW_SHADER_LIGHT_CNT, (CWINT)(vecLight.size()));
 	m_pCurrShader->setVariableInt(eShaderParamLightCnt, (CWINT)(vecLight.size()));
 }
 

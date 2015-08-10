@@ -77,7 +77,7 @@ void BoxDemo::buildEntity()
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosColor);
 
-	cwShader* pShader = repertory.getShaderManager()->getDefShader(CW_SHADER_DEF_COLOR);
+	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderColor);
 	cwMaterial* pMaterial = cwMaterial::create();
 	//pMaterial->setShader(pShader);
 	cwEffect* pEffect = cwEffect::create();

@@ -70,6 +70,7 @@ protected:
 	virtual CWVOID buildRenderer();
 
 	virtual CWVOID render();
+	virtual CWVOID deferParseRenderer();
 
 	friend class cwRepertory;
 

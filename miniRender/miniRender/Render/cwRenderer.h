@@ -43,12 +43,17 @@ public:
 	virtual CWVOID addStage(cwStage* pStage);
 	virtual cwStage* getStage(const CWSTRING& strName);
 
+	const CWSTRING& getFullPath() const { return m_strFullPath; }
+	CWVOID setFullPath(const CWSTRING& strPath) { m_strFullPath = strPath; }
+
 	virtual CWVOID render();
 
 protected:
 	virtual CWVOID render(cwStage* pStage);
 
 protected:
+	CWSTRING m_strFullPath;
+
 	std::vector<cwStage*> m_nVecStage;
 	cwCamera* m_pCurrCamera;
 

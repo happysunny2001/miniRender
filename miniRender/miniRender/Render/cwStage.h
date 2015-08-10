@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Base/cwUtils.h"
+#include "Base/cwVector.h"
 #include "ViewPort/cwViewPort.h"
 #include "Texture/cwRenderTexture.h"
 #include "Parser/cwStageParser.h"
@@ -33,8 +34,8 @@ NS_MINIR_BEGIN
 
 class cwCamera;
 class cwEffect;
-class cwRenderPipeline;
 class cwShader;
+class cwStageLayer;
 
 class CW_DLL cwStage
 {
@@ -56,6 +57,10 @@ public:
 	CWVOID begin();
 	CWVOID render();
 	CWVOID end();
+
+	CWVOID addStageEntity(cwEntity* pEntity);
+	CWVOID addStageLayer(cwStageLayer* pLayer);
+	CWUINT getStageLayerCount() const;
 
 protected:
 	CWVOID setName(const CWSTRING& strName) { m_strName = strName; }
@@ -81,9 +86,13 @@ protected:
 
 	cwEffect* m_pStageEffect;
 
-	cwRenderPipeline m_nPipeline[CW_STAGE_PIPELINE_SIZE];
-	CWUINT m_iPipeLineIndex;
-	std::unordered_map<cwShader*, cwRenderPipeline*> m_nMapPipeline;
+	//cwRenderPipeline m_nPipeline[CW_STAGE_PIPELINE_SIZE];
+	//CWUINT m_iPipeLineIndex;
+
+	std::vector<cwEntity*> m_nVecStageEntities;
+	std::vector<cwStageLayer*> m_nVecLayer;
+
+	//std::unordered_map<cwShader*, cwRenderPipeline*> m_nMapPipeline;
 
 };
 

@@ -79,7 +79,7 @@ public:
 	virtual CWVOID render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) override;
 	virtual CWVOID render(cwEntity* pEntity, cwCamera* pCamera) override;
 	
-	virtual CWVOID draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) override;
+	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj) override;
 
 public:
 	IDXGISwapChain* getSwapChain() { return m_pDxgiSwapChain; }

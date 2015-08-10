@@ -426,6 +426,12 @@
     <ClInclude Include="Effect\cwEffectFloatParameter.h">
       <Filter>源文件\Effect</Filter>
     </ClInclude>
+    <ClInclude Include="Parser\cwEntityParser.h">
+      <Filter>源文件\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\cwStageLayer.h">
+      <Filter>源文件\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -667,6 +673,12 @@
     </ClCompile>
     <ClCompile Include="Effect\cwEffectFloatParameter.cpp">
       <Filter>源文件\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser\cwEntityParser.cpp">
+      <Filter>源文件\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\cwStageLayer.cpp">
+      <Filter>源文件\Render</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

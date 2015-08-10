@@ -20,6 +20,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwParserManager.h"
 #include "cwStageParser.h"
 #include "cwRendererParser.h"
+#include "cwEntityParser.h"
 
 NS_MINIR_BEGIN
 
@@ -56,6 +57,9 @@ CWBOOL cwParserManager::init()
 
 	m_nArrParser[eParerRenderer] = cwRendererParser::create();
 	CW_SAFE_RETAIN(m_nArrParser[eParerRenderer]);
+
+	m_nArrParser[eParerEntity] = cwEntityParser::create();
+	CW_SAFE_RETAIN(m_nArrParser[eParerEntity]);
 
 	return CWTRUE;
 }

@@ -57,21 +57,22 @@ public:
 		vector<CWUINT> nIndex;
 	};
 
-	void generateGrid(CWFLOAT width, CWFLOAT height, CWUINT m, CWUINT n, cwMeshData& mesh);
-	void generateBox(cwMeshData& mesh);
-	void generateCylinder(
+	CWVOID generateGrid(CWFLOAT width, CWFLOAT height, CWUINT m, CWUINT n, cwMeshData& mesh);
+	CWVOID generateBox(cwMeshData& mesh);
+	CWVOID generateCylinder(
 		CWFLOAT bottomRadius, CWFLOAT topRadius, 
 		CWFLOAT height, 
 		CWUINT sliceCount, CWUINT stackCount, 
 		cwMeshData& mesh);
-	void generateSphere(CWFLOAT radius, CWUINT sliceCount, CWUINT stackCount, cwMeshData& mesh);
-	void generateGeoSphere(CWFLOAT radius, CWUINT divideTimes, cwMeshData& mesh);
+	CWVOID generateSphere(CWFLOAT radius, CWUINT sliceCount, CWUINT stackCount, cwMeshData& mesh);
+	CWVOID generateGeoSphere(CWFLOAT radius, CWUINT divideTimes, cwMeshData& mesh);
+	CWVOID generateQuad(cwMeshData& mesh);
 
-	void generateCoordinateAxis(CWFLOAT scale, cwMeshData& mesh);
+	CWVOID generateCoordinateAxis(CWFLOAT scale, cwMeshData& mesh);
 	cwRenderObject* generateCoordinateAxisRenderObject(CWFLOAT scale);
 	cwEntity* generateCoordinateAxisEntity(CWFLOAT scale);
 
-	void loadTxt(const std::string& strFile, cwMeshData& mesh);
+	CWVOID loadTxt(const CWSTRING& strFile, cwMeshData& mesh);
 
 	CWFLOAT getTerrainHeight(CWFLOAT x, CWFLOAT z);
 	cwVector3D getTerrainNormal(CWFLOAT x, CWFLOAT z);

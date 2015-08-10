@@ -88,7 +88,7 @@ public:
 	virtual CWVOID render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) = 0;
 	virtual CWVOID render(cwEntity* pEntity, cwCamera* pCamera) = 0;
 
-	virtual CWVOID draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj) = 0;
+	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj) = 0;
 
 	inline CWBOOL getEnableMsaa4X() const { return m_bEnableMsaa4x; }
 

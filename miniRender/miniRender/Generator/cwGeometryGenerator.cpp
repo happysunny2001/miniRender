@@ -417,6 +417,25 @@ void cwGeometryGenerator::generateCoordinateAxis(CWFLOAT scale, cwMeshData& mesh
 	}
 }
 
+CWVOID cwGeometryGenerator::generateQuad(cwMeshData& mesh)
+{
+	mesh.nVertex.resize(4);
+	mesh.nIndex.resize(6);
+
+	mesh.nVertex[0] = cwVertex(-1.0f, -1.0f, 0, 0, 0, -1.0, 1.0, 0, 0, 0, 1.0);
+	mesh.nVertex[1] = cwVertex(-1.0f,  1.0f, 0, 0, 0, -1.0, 1.0, 0, 0, 0, 0  );
+	mesh.nVertex[2] = cwVertex( 1.0f,  1.0f, 0, 0, 0, -1.0, 1.0, 0, 0, 1.0, 0);
+	mesh.nVertex[3] = cwVertex( 1.0f, -1.0f, 0, 0, 0, -1.0, 1.0, 0, 0, 1.0, 1.0);
+
+	mesh.nIndex[0] = 0;
+	mesh.nIndex[1] = 1;
+	mesh.nIndex[2] = 2;
+
+	mesh.nIndex[3] = 0;
+	mesh.nIndex[4] = 2;
+	mesh.nIndex[5] = 3;
+}
+
 cwRenderObject* cwGeometryGenerator::generateCoordinateAxisRenderObject(CWFLOAT scale)
 {
 	cwMeshData mesh;
@@ -452,8 +471,7 @@ cwEntity* cwGeometryGenerator::generateCoordinateAxisEntity(CWFLOAT scale)
 {
 	cwRenderObject* pRenderObject = generateCoordinateAxisRenderObject(scale);
 	cwMaterial* pMaterial = cwMaterial::create();
-	//pMaterial->setShader(cwRepertory::getInstance().getShaderManager()->getDefShader(CW_SHADER_DEF_COLOR));
-	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getDefShader(CW_SHADER_DEF_COLOR);
+	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getDefShader(eDefShaderColor);
 	cwEffect* pEffect = cwEffect::create();
 	pEffect->setShader(pShader);
 

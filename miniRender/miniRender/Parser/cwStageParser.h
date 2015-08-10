@@ -24,6 +24,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Ref/cwRef.h"
 #include "tinyxml2.h"
 
+#include <unordered_map>
+#include <functional>
+
 NS_MINIR_BEGIN
 
 class cwStage;
@@ -32,14 +35,21 @@ class cwStageParser : public cwRef
 {
 public:
 	static cwStageParser* create();
+
+	cwStageParser();
 	
 	cwStage* parse(tinyxml2::XMLElement* pStageData);
+	CWVOID deferParse(cwStage* pStage, tinyxml2::XMLElement* pStageElement);
 
 protected:
+	CWVOID parseElement(cwStage* pStage, tinyxml2::XMLElement* pStageData);
 	CWVOID parseAttribute(cwStage* pStage, tinyxml2::XMLElement* pStageData);
 	CWVOID parseCamera(cwStage* pStage, tinyxml2::XMLElement* pStageData);
 	CWVOID parseViewPort(cwStage* pStage, tinyxml2::XMLElement* pStageData);
 	CWVOID parseRenderTarget(cwStage* pStage, tinyxml2::XMLElement* pStageData);
+	CWVOID parseLayer(cwStage* pStage, tinyxml2::XMLElement* pStageData);
+
+	std::unordered_map <CWSTRING, std::function<CWVOID(cwStage*, tinyxml2::XMLElement*)>> m_nMapParser;
 
 };
 

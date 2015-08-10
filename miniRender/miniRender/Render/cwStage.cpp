@@ -25,6 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Entity/cwScene.h"
 #include "Entity/cwEntity.h"
 #include "Device/cwDevice.h"
+#include "cwStageLayer.h"
 
 NS_MINIR_BEGIN
 
@@ -45,6 +46,16 @@ cwStage::~cwStage()
 	CW_SAFE_RELEASE_NULL(m_pViewPort);
 	CW_SAFE_RELEASE_NULL(m_pRenderTarget);
 	CW_SAFE_RELEASE_NULL(m_pStageEffect);
+
+	for (auto pEntity : m_nVecStageEntities) {
+		CW_SAFE_RELEASE_NULL(pEntity);
+	}
+	m_nVecStageEntities.clear();
+
+	for (auto pLayer : m_nVecLayer) {
+		CW_SAFE_DELETE(pLayer);
+	}
+	m_nVecLayer.clear();
 }
 
 CWVOID cwStage::setViewPort(cwViewPort* pView)
@@ -67,8 +78,8 @@ CWVOID cwStage::setRenderTexture(cwRenderTexture* pRenderTexture)
 
 CWVOID cwStage::reset()
 {
-	m_iPipeLineIndex = 0;
-	m_nMapPipeline.clear();
+	//m_iPipeLineIndex = 0;
+	//m_nMapPipeline.clear();
 }
 
 CWVOID cwStage::begin()
@@ -80,43 +91,18 @@ CWVOID cwStage::begin()
 
 	std::vector<cwEntity*>& vecEntity = pScene->getVisibleEntities(nullptr);
 
-	if (m_pStageEffect) {
-		cwRenderPipeline* pPipeline = &(m_nPipeline[m_iPipeLineIndex++]);
-		pPipeline->reset();
-
-		for (auto pEntity : vecEntity) {
-			pEntity->transform();
-
-			CWBOOL bRet = pPipeline->addEntity(pEntity, nullptr);
-			if (!bRet) {
-				if (m_iPipeLineIndex >= CW_STAGE_PIPELINE_SIZE)
-					break;
-				else {
-					pPipeline = &(m_nPipeline[m_iPipeLineIndex++]);
-					pPipeline->reset();
-				}
-			}
+	for (auto pLayer : m_nVecLayer) {
+		if (pLayer->getType() == eStageLayerNormal) {
+			pLayer->begin(vecEntity, m_pStageEffect);
+		}
+		else if (pLayer->getType() == eStageLayerSelf) {
+			pLayer->begin(m_nVecStageEntities, m_pStageEffect);
 		}
 	}
-	else {
-		cwRenderPipeline* pPipeline = &(m_nPipeline[m_iPipeLineIndex++]);
-		pPipeline->reset();
+}
 
-		for (auto pEntity : vecEntity) {
-			pEntity->transform();
-
-			CWBOOL bRet = pPipeline->addEntity(pEntity);
-			if (!bRet) {
-				if (m_iPipeLineIndex >= CW_STAGE_PIPELINE_SIZE)
-					break;
-				else {
-					pPipeline = &(m_nPipeline[m_iPipeLineIndex++]);
-					pPipeline->reset();
-				}
-			}
-		}
-	}
-
+CWVOID cwStage::render()
+{
 	cwRepertory::getInstance().getEngine()->setCurrCamera(m_pCamera);
 	if (m_pStageEffect) {
 		cwRepertory::getInstance().getEngine()->setCurrShader(m_pStageEffect->getShader());
@@ -125,35 +111,54 @@ CWVOID cwStage::begin()
 	cwRepertory::getInstance().getDevice()->setViewPort(m_pViewPort);
 	cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTarget);
 	cwRepertory::getInstance().getDevice()->beginDraw();
-}
 
-CWVOID cwStage::render()
-{
-	for (CWUINT i = 0; i < m_iPipeLineIndex; ++i) {
-		m_nPipeline[i].render();
+	for (auto pLayer : m_nVecLayer) {
+		pLayer->render();
 	}
 }
 
 CWVOID cwStage::end()
 {
+	for (auto pLayer : m_nVecLayer) {
+		pLayer->end();
+	}
+
 	cwRepertory::getInstance().getDevice()->endDraw();
 }
 
 cwRenderPipeline* cwStage::getPipeline(cwEntity* pEntity)
 {
-	cwShader* pShader = pEntity->getEffect()->getShader();
-	if (m_nMapPipeline.find(pShader) != m_nMapPipeline.end()) {
-		return m_nMapPipeline[pShader];
-	}
-	else {
-		if (m_iPipeLineIndex < CW_STAGE_PIPELINE_SIZE) {
-			cwRenderPipeline* pPipeline = &(m_nPipeline[m_iPipeLineIndex++]);
-			m_nMapPipeline[pShader] = pPipeline;
-			return pPipeline;
-		}
-	}
+	//cwShader* pShader = pEntity->getEffect()->getShader();
+	//if (m_nMapPipeline.find(pShader) != m_nMapPipeline.end()) {
+	//	return m_nMapPipeline[pShader];
+	//}
+	//else {
+	//	if (m_iPipeLineIndex < CW_STAGE_PIPELINE_SIZE) {
+	//		cwRenderPipeline* pPipeline = &(m_nPipeline[m_iPipeLineIndex++]);
+	//		m_nMapPipeline[pShader] = pPipeline;
+	//		return pPipeline;
+	//	}
+	//}
 
 	return nullptr;
+}
+
+CWVOID cwStage::addStageEntity(cwEntity* pEntity)
+{
+	if (!pEntity) return;
+	m_nVecStageEntities.push_back(pEntity);
+	CW_SAFE_RETAIN(pEntity);
+}
+
+CWVOID cwStage::addStageLayer(cwStageLayer* pLayer)
+{
+	if (!pLayer) return;
+	m_nVecLayer.push_back(pLayer);
+}
+
+CWUINT cwStage::getStageLayerCount() const
+{
+	return static_cast<CWUINT>(m_nVecLayer.size());
 }
 
 NS_MINIR_END

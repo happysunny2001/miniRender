@@ -294,6 +294,7 @@ void cwD3D11Device::beginDraw()
 void cwD3D11Device::endDraw()
 {
 	m_pCurrRenderTarget->endDraw();
+	clearPixelShaderResource();
 }
 
 void cwD3D11Device::swap()
@@ -518,9 +519,6 @@ void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPo
 
 	pShader->apply(0, 0);
 	this->drawIndexed(pRenderObj->getIndexBuffer()->getIndexCount(), 0, 0);
-
-	//ID3D11ShaderResourceView* pSrvs[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = { 0 };
-	//m_pD3D11DeviceContext->PSSetShaderResources(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, pSrvs);
 }
 
 void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
@@ -531,20 +529,14 @@ void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
 
 	cwMaterial* pMaterial = pEntity->getMaterial();
 	assert(pMaterial != nullptr);
-	//pMaterial->configEffect(pEntity->getEffect());
 	pMaterial->configShader(pShader);
 
-	//cwShader* pShader = pEntity->getEffect()->getShader();
-	//assert(pShader != nullptr);
 	setShaderWorldTrans(pShader, pEntity->getTransformMatrix(), pCamera);
 
 	cwRenderObject* pRenderObj = pEntity->getRenderObj();
 	assert(pRenderObj != nullptr);
 	if (pShader)
 		draw(pShader, pEntity->getEffect()->getTech(), pRenderObj);
-
-	//ID3D11ShaderResourceView* pSrvs[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = { 0 };
-	//m_pD3D11DeviceContext->PSSetShaderResources(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, pSrvs);
 }
 
 void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera)
@@ -574,7 +566,7 @@ void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& tr
 	pShader->setVariableData(eShaderParamEyePosWorld, (CWVOID*)&pos, 0, sizeof(cwVector3D));
 }
 
-void cwD3D11Device::draw(cwShader* pShader, const string& strTech, cwRenderObject* pRenderObj)
+void cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj)
 {
 	this->setInputLayout(pRenderObj->getInputLayout());
 	this->setPrimitiveTopology(pRenderObj->getPrimitiveTopology());

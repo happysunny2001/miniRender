@@ -33,6 +33,7 @@ public:
 	static cwRendererParser* create();
 	
 	cwRenderer* parse(const CWSTRING& strFileName);
+	CWVOID deferParse(cwRenderer* pRender);
 
 };
 

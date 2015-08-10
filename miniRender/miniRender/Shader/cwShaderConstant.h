@@ -49,9 +49,12 @@ NS_MINIR_BEGIN
 #define CW_SHADER_FOG_RANGE           "gFogRange"
 #define CW_SHADER_FOG_COLOR           "gFogColor"
 
-#define CW_SHADER_DEF_COLOR       1
-#define CW_SHADER_DEF_LIGHTING    2
-#define CW_SHADER_DEF_LIGHTINGTEX 3
+typedef enum {
+	eDefShaderColor = 0,
+	eDefShaderLighting,
+	eDefShaderLightingTex,
+	eDefShaderMax
+}eDefShaderID;
 
 NS_MINIR_END
 
