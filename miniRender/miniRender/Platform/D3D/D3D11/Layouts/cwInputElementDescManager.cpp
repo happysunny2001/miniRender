@@ -113,6 +113,13 @@ void cwInputElementDescManager::buildDescMap()
 		pDescPosNormalTex->addElementDesc(CW_SIG_TEXCOORD, DXGI_FORMAT_R32G32_FLOAT, 24, 2);
 		m_mapDesc.insert(ceEleDescPosNormalTex, pDescPosNormalTex);
 	}
+
+	{
+		cwInputElementDesc *pDescPosColorTex = cwInputElementDesc::create(2);
+		pDescPosColorTex->addElementDesc(CW_SIG_POSITION, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0);
+		pDescPosColorTex->addElementDesc(CW_SIG_TEXCOORD, DXGI_FORMAT_R32G32_FLOAT, 12, 1);
+		m_mapDesc.insert(ceEleDescPosTex, pDescPosColorTex);
+	}
 }
 
 NS_MINIR_END

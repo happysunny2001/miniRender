@@ -50,8 +50,6 @@ public:
 	virtual CWVOID setMaterial(cwMaterial* pMaterial);
 	inline cwMaterial* getMaterial() { return m_pMaterial; }
 
-	virtual CWVOID renderSelf() override;
-
 protected:
 	cwMaterial* m_pMaterial;
 	cwRenderObject* m_pRenderObj;

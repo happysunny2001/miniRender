@@ -25,7 +25,7 @@ m_pEntityBox01(nullptr),
 m_pEntityBox02(nullptr),
 m_pScene(nullptr)
 {
-
+	
 }
 
 BoxDemo::~BoxDemo()
@@ -38,10 +38,9 @@ BoxDemo::~BoxDemo()
 
 void BoxDemo::gameBegin()
 {
+	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderBoxDemo.xml");
 	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 2.0f, -20.0f);
 	buildScene();
-
-	
 }
 
 void BoxDemo::gameEnd()

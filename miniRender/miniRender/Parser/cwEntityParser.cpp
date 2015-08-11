@@ -132,6 +132,18 @@ cwEntity* cwEntityParser::getEntity(const CWSTRING& strType, const CWSTRING& str
 			(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTex), static_cast<CWUINT>(mesh.nVertex.size()),
 			(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosNormalTex);
 	}
+	else if (strVertexType == "PosTex") {
+		vector<cwVertexPosTex> vecVertex(mesh.nVertex.size());
+		for (int i = 0; i < mesh.nVertex.size(); ++i) {
+			vecVertex[i].pos = mesh.nVertex[i].pos;
+			vecVertex[i].tex = mesh.nVertex[i].tex;
+		}
+
+		pRenderObj = cwStaticRenderObject::create(
+			ePrimitiveTypeTriangleList,
+			(CWVOID*)&vecVertex[0], sizeof(cwVertexPosTex), static_cast<CWUINT>(mesh.nVertex.size()),
+			(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosTex);
+	}
 	else {
 		return nullptr;
 	}

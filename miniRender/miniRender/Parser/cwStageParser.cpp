@@ -25,6 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "ViewPort/cwViewPort.h"
 #include "Texture/cwRenderTexture.h"
 #include "Texture/cwTextureManager.h"
+#include "Engine/cwEngine.h"
 #include "cwEntityParser.h"
 #include "cwParserManager.h"
 
@@ -64,11 +65,6 @@ cwStage* cwStageParser::parse(tinyxml2::XMLElement* pStageData)
 		parseElement(pStage, pChildNode);
 		pChildNode = pChildNode->NextSiblingElement();
 	}
-
-	//parseAttribute(pStage, pStageData);
-	//parseCamera(pStage, pStageData);
-	//parseViewPort(pStage, pStageData);
-	//parseRenderTarget(pStage, pStageData);
 
 	return pStage;
 }
@@ -113,20 +109,15 @@ CWVOID cwStageParser::parseAttribute(cwStage* pStage, tinyxml2::XMLElement* pSta
 
 CWVOID cwStageParser::parseCamera(cwStage* pStage, tinyxml2::XMLElement* pCameraData)
 {
-	//tinyxml2::XMLElement* pCameraData = pStageData->FirstChildElement("Camera");
-	//if (!pCameraData) return;
-
 	const CWCHAR* pcCameraName = pCameraData->Attribute("Name");
-	if (pcCameraName && strncmp(pcCameraName, "default", 7) != 0) {
-		//set camera object
-	}
+	pStage->setCameraName(pcCameraName);
+	//if (pcCameraName && strncmp(pcCameraName, "default", 7) != 0) {
+	//	//set camera object
+	//}
 }
 
 CWVOID cwStageParser::parseViewPort(cwStage* pStage, tinyxml2::XMLElement* pViewPortData)
 {
-	//tinyxml2::XMLElement* pViewPortData = pStageData->FirstChildElement("ViewPort");
-	//if (!pViewPortData) return;
-
 	const CWCHAR* pcViewPortName = pViewPortData->Attribute("Name");
 	if (pcViewPortName && strncmp(pcViewPortName, "default", 7) == 0) return;
 
@@ -153,9 +144,6 @@ CWVOID cwStageParser::parseViewPort(cwStage* pStage, tinyxml2::XMLElement* pView
 
 CWVOID cwStageParser::parseRenderTarget(cwStage* pStage, tinyxml2::XMLElement* pRenderTarget)
 {
-	//tinyxml2::XMLElement* pRenderTarget = pStageData->FirstChildElement("RenderTarget");
-	//if (!pRenderTarget) return;
-
 	const CWCHAR* pcType = pRenderTarget->Attribute("Type");
 	if (!pcType) return;
 
@@ -214,6 +202,8 @@ CWVOID cwStageParser::deferParse(cwStage* pStage, tinyxml2::XMLElement* pStageEl
 		cwStageLayer* pStageLayer = new cwStageLayer();
 		pStage->addStageLayer(pStageLayer);
 	}
+
+	pStage->setCamera(cwRepertory::getInstance().getEngine()->getCamera(pStage->getCameraName()));
 }
 
 NS_MINIR_END

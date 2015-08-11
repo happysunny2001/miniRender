@@ -36,25 +36,27 @@ public:
 	cwCamera();
 	virtual ~cwCamera();
 
-	virtual bool init();
-	virtual bool init(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ);
+	virtual CWBOOL init();
+	virtual CWBOOL init(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ);
 
-	virtual void updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ);
-	//virtual void updateViewMatrix(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ);
-	virtual void updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ);
+	virtual CWVOID updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ);
+	virtual CWVOID updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ);
 
-	const cwMatrix4X4& getViewMatrix() { return m_nViewMatrix; }
-	const cwMatrix4X4& getProjMatrix() { return m_nProjMatrix; }
-	cwMatrix4X4 getViewProjMatrix() const;
+	inline const cwMatrix4X4& getViewMatrix() const { return m_nViewMatrix; }
+	inline const cwMatrix4X4& getProjMatrix() const { return m_nProjMatrix; }
+	inline const cwMatrix4X4& getViewProjMatrix() const { return m_nViewProjMatrix; }
+	inline const cwVector3D& getPos() const { return m_nPos; }
 
-	const cwVector3D& getPos() { return m_nPos; }
+	inline const CWSTRING& getName() const { return m_strName; }
+	inline CWVOID setName(const CWSTRING& strName) { m_strName = strName; }
 
 protected:
-	void updateViewMatrix();
+	CWVOID updateViewMatrix();
 
 protected:
 	cwMatrix4X4 m_nViewMatrix;
 	cwMatrix4X4 m_nProjMatrix;
+	cwMatrix4X4 m_nViewProjMatrix;
 
 	cwVector3D m_nPos;
 	cwVector3D m_nTarget;
@@ -64,6 +66,8 @@ protected:
 	CWFLOAT m_fAspect;
 	CWFLOAT m_fNearZ;
 	CWFLOAT m_fFarZ;
+
+	CWSTRING m_strName;
 
 };
 

@@ -14,7 +14,7 @@
 			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" />
 			<Layer Filter="self"/> 
 			<EntityList>
-				<Entity Type="Quad" VertexType="PosNormalTex">
+				<Entity Type="Quad" VertexType="PosTex">
 					<Position x="0" y="0" z="0" />
 					<Scale x="10" y="10" z="1.0" />
 					<Rotation x="0" y="0" z="0" />
@@ -24,10 +24,9 @@
 						<Specular r="1.0" g="1.0" b="1.0" a="1.0" />
 						<Reflect r="1.0" g="1.0" b="1.0" a="1.0" />
 						<DiffuseTexture Type="Stage" File="S1" />
-
-						<Effect Name="" ShaderType="default" Shader="2" Tech="">
-						</Effect> 
 					</Material>
+					<Effect Name="" ShaderType="default" Shader="3" Tech="">
+					</Effect> 
 				</Entity>
 			</EntityList>
 		</Stage>

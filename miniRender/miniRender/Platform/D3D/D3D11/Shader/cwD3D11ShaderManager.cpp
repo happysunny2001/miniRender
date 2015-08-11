@@ -62,10 +62,12 @@ CWVOID cwD3D11ShaderManager::loadDefaultShader()
 	this->loadShader(fileSystem->getFullFilePath("effect/D3D11/color.fx"));
 	this->loadShader(fileSystem->getFullFilePath("effect/D3D11/lighting.fx"));
 	this->loadShader(fileSystem->getFullFilePath("effect/D3D11/lightingTex.fx"));
+	this->loadShader(fileSystem->getFullFilePath("effect/D3D11/colorTex.fx"));
 
 	m_nMapDefShader.insert(eDefShaderColor, getShader(fileSystem->getFullFilePath("effect/D3D11/color.fx")));
 	m_nMapDefShader.insert(eDefShaderLighting, getShader(fileSystem->getFullFilePath("effect/D3D11/lighting.fx")));
 	m_nMapDefShader.insert(eDefShaderLightingTex, getShader(fileSystem->getFullFilePath("effect/D3D11/lightingTex.fx")));
+	m_nMapDefShader.insert(eDefShaderTex, getShader(fileSystem->getFullFilePath("effect/D3D11/colorTex.fx")));
 }
 
 NS_MINIR_END

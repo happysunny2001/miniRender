@@ -76,10 +76,17 @@ CWVOID cwStage::setRenderTexture(cwRenderTexture* pRenderTexture)
 	m_pRenderTarget = pRenderTexture;
 }
 
+CWVOID cwStage::setCamera(cwCamera* pCamera)
+{
+	if (m_pCamera == pCamera) return;
+	CW_SAFE_RETAIN(pCamera);
+	CW_SAFE_RELEASE_NULL(m_pCamera);
+	m_pCamera = pCamera;
+}
+
 CWVOID cwStage::reset()
 {
-	//m_iPipeLineIndex = 0;
-	//m_nMapPipeline.clear();
+
 }
 
 CWVOID cwStage::begin()
@@ -89,10 +96,9 @@ CWVOID cwStage::begin()
 	cwScene* pScene = cwRepertory::getInstance().getEngine()->getCurrScene();
 	if (!pScene) return;
 
-	std::vector<cwEntity*>& vecEntity = pScene->getVisibleEntities(nullptr);
-
 	for (auto pLayer : m_nVecLayer) {
 		if (pLayer->getType() == eStageLayerNormal) {
+			std::vector<cwEntity*>& vecEntity = pScene->getVisibleEntities(nullptr);
 			pLayer->begin(vecEntity, m_pStageEffect);
 		}
 		else if (pLayer->getType() == eStageLayerSelf) {
@@ -124,23 +130,6 @@ CWVOID cwStage::end()
 	}
 
 	cwRepertory::getInstance().getDevice()->endDraw();
-}
-
-cwRenderPipeline* cwStage::getPipeline(cwEntity* pEntity)
-{
-	//cwShader* pShader = pEntity->getEffect()->getShader();
-	//if (m_nMapPipeline.find(pShader) != m_nMapPipeline.end()) {
-	//	return m_nMapPipeline[pShader];
-	//}
-	//else {
-	//	if (m_iPipeLineIndex < CW_STAGE_PIPELINE_SIZE) {
-	//		cwRenderPipeline* pPipeline = &(m_nPipeline[m_iPipeLineIndex++]);
-	//		m_nMapPipeline[pShader] = pPipeline;
-	//		return pPipeline;
-	//	}
-	//}
-
-	return nullptr;
 }
 
 CWVOID cwStage::addStageEntity(cwEntity* pEntity)

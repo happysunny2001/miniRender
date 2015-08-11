@@ -53,6 +53,12 @@ typedef struct
 	cwVector2D tex;
 }cwVertexPosNormalTex;
 
+typedef struct  
+{
+	cwVector3D pos;
+	cwVector2D tex;
+}cwVertexPosTex;
+
 typedef struct CW_BUFFER_DESC
 {
 	CWUINT ByteWidth;

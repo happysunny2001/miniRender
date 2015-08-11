@@ -124,25 +124,25 @@ void BoxDemoScene::update(CWFLOAT dt)
 
 CWVOID BoxDemoScene::render()
 {
-	if (m_bVisible) {
-		this->transform();
+	//if (m_bVisible) {
+	//	this->transform();
 
-		cwRepertory::getInstance().getDevice()->setClearColor(cwColor::blue);
-		cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTex);
-		cwRepertory::getInstance().getDevice()->beginDraw();
-		this->renderSelf();
-		this->renderChildren();
-		cwRepertory::getInstance().getDevice()->endDraw();
+	//	cwRepertory::getInstance().getDevice()->setClearColor(cwColor::blue);
+	//	cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTex);
+	//	cwRepertory::getInstance().getDevice()->beginDraw();
+	//	this->renderSelf();
+	//	this->renderChildren();
+	//	cwRepertory::getInstance().getDevice()->endDraw();
 
 
-		cwRepertory::getInstance().getDevice()->setClearColor(cwColor::sliver);
-		cwRepertory::getInstance().getDevice()->setRenderTarget(nullptr);
-		cwRepertory::getInstance().getDevice()->beginDraw();
-		m_pTerrain->transform();
-		cwRepertory::getInstance().getEngine()->render(m_pTerrain);
-		cwRepertory::getInstance().getDevice()->endDraw();
-		cwRepertory::getInstance().getDevice()->swap();
-	}
+	//	cwRepertory::getInstance().getDevice()->setClearColor(cwColor::sliver);
+	//	cwRepertory::getInstance().getDevice()->setRenderTarget(nullptr);
+	//	cwRepertory::getInstance().getDevice()->beginDraw();
+	//	m_pTerrain->transform();
+	//	cwRepertory::getInstance().getEngine()->render(m_pTerrain);
+	//	cwRepertory::getInstance().getDevice()->endDraw();
+	//	cwRepertory::getInstance().getDevice()->swap();
+	//}
 }
 
 void BoxDemoScene::buildPlane()

@@ -86,9 +86,7 @@ public:
 
 	virtual CWVOID update(CWFLOAT dt);
 	
-	virtual CWVOID renderChildren();
 	virtual CWVOID render();
-	virtual CWVOID renderSelf();
 
 protected:
 	CWVOID clearChildren();

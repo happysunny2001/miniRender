@@ -528,8 +528,8 @@ void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
 	cwShader* pShader = cwRepertory::getInstance().getEngine()->getCurrShader();
 
 	cwMaterial* pMaterial = pEntity->getMaterial();
-	assert(pMaterial != nullptr);
-	pMaterial->configShader(pShader);
+	if (pMaterial)
+		pMaterial->configShader(pShader);
 
 	setShaderWorldTrans(pShader, pEntity->getTransformMatrix(), pCamera);
 
@@ -537,6 +537,8 @@ void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
 	assert(pRenderObj != nullptr);
 	if (pShader)
 		draw(pShader, pEntity->getEffect()->getTech(), pRenderObj);
+
+	pEntity->render();
 }
 
 void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera)
@@ -557,7 +559,7 @@ void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& tr
 	}
 
 	if (pShader->hasVariable(eShaderParamWorldViewProj)) {
-		cwMatrix4X4 matViewProj = pCamera->getViewProjMatrix();
+		const cwMatrix4X4& matViewProj = pCamera->getViewProjMatrix();
 		cwMatrix4X4 worldViewProj = trans*matViewProj;
 		pShader->setVariableMatrix(eShaderParamWorldViewProj, reinterpret_cast<CWFLOAT*>(&worldViewProj));
 	}

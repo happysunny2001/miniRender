@@ -30,6 +30,7 @@ NS_MINIR_BEGIN
 
 class cwEntity;
 class cwEffect;
+class cwShader;
 
 class cwRenderPipeline 
 {
@@ -40,6 +41,10 @@ public:
 	CWVOID reset();
 	CWBOOL addEntity(cwEntity* pEntity);
 	CWBOOL addEntity(cwEntity* pEntity, cwEffect* pEffect);
+	CWBOOL full();
+
+	inline CWVOID setShader(cwShader* pShader) { m_pShader = pShader; }
+	inline cwShader* getShader() const { return m_pShader; }
 
 	CWVOID render();
 
@@ -49,6 +54,8 @@ protected:
 protected:
 	std::vector<cwRenderBatch> m_nVecBatch;
 	CWUINT m_iBatchIndex;
+
+	cwShader* m_pShader;
 
 };
 

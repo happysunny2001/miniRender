@@ -17,50 +17,27 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_STAGE_LAYER_H__
-#define __CW_STAGE_LAYER_H__
+#ifndef __CW_HOMOGENEOUS_CAMERA_H__
+#define __CW_HOMOGENEOUS_CAMERA_H__
 
 #include "Base/cwMacros.h"
-#include "Base/cwUtils.h"
-#include "cwRenderPipeline.h"
-
-#include <unordered_map>
-#include <vector>
+#include "cwCamera.h"
 
 NS_MINIR_BEGIN
 
-class cwShader;
-class cwEntity;
-class cwEffect;
-
-class cwStageLayer
+class cwHomogeneousCamera : public cwCamera
 {
 public:
-	cwStageLayer();
-	~cwStageLayer();
+	static cwHomogeneousCamera* create();
 
-	eStageLayerType getType() const { return m_eType; }
-	CWVOID setType(eStageLayerType eType) { m_eType = eType; }
+	cwHomogeneousCamera();
 
-	CWVOID reset();
-	CWVOID begin(std::vector<cwEntity*>& vecEntities, cwEffect* pEffect);
-	CWVOID render();
-	CWVOID end();
+	virtual CWBOOL init() override;
+
+	virtual CWVOID updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ) override;
+	virtual CWVOID updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ) override;
 
 protected:
-	cwRenderPipeline* getPipeline(cwEntity* pEntity);
-	cwRenderPipeline* getUnusePipeline(cwShader* pShader);
-
-	CWVOID addEntities(std::vector<cwEntity*>& vecEntities);
-	CWVOID addEntities(std::vector<cwEntity*>& vecEntities, cwEffect* pEffect);
-
-protected:
-	eStageLayerType m_eType;
-
-	cwRenderPipeline m_nPipeline[CW_STAGE_PIPELINE_SIZE];
-	CWUINT m_iPipeLineIndex;
-
-	std::unordered_map<cwShader*, cwRenderPipeline*> m_nMapPipeline;
 
 };
 

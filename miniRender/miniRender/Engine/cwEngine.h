@@ -26,8 +26,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Base/cwVector.h"
+#include "Base/cwMap.h"
 #include "Repertory/cwRepertory.h"
 #include "Ref/cwRef.h"
+
+#include <unordered_map>
 
 NS_MINIR_BEGIN
 
@@ -46,6 +49,7 @@ public:
 	CWVOID mainLoop(CWFLOAT dt);
 
 	cwCamera* getDefaultCamera();
+	cwCamera* getCamera(const CWSTRING& strName);
 	CWBOOL removeCamera(cwCamera* pCamera);
 	inline cwCamera* getCurrentCamera() const { return m_pCurrCamera; }
 	CWVOID setCurrCamera(cwCamera* pCamera);
@@ -58,6 +62,8 @@ public:
 	virtual CWVOID render(cwEntity* pEntity);
 	virtual CWVOID render(cwEntity* pEntity, cwEffect* pEffect);
 
+	virtual CWVOID loadRenderer(const CWSTRING& strConfFile);
+
 protected:
 	static cwEngine* create();
 
@@ -67,10 +73,8 @@ protected:
 	virtual CWBOOL init();
 	virtual CWVOID buildDefaultCamera();
 	virtual CWVOID configShaderLight();
-	virtual CWVOID buildRenderer();
 
 	virtual CWVOID render();
-	virtual CWVOID deferParseRenderer();
 
 	friend class cwRepertory;
 
@@ -78,7 +82,9 @@ protected:
 	cwScene* m_pCurrScene;
 	cwCamera* m_pCurrCamera;
 	cwShader*m_pCurrShader;
-	cwVector<cwCamera*> m_nVecCameras;
+	//cwVector<cwCamera*> m_nVecCameras;
+	cwCamera* m_pDefaultCamera;
+	cwMap<CWSTRING, cwCamera*> m_nMapCameras;
 
 	cwRenderer* m_pRenderer;
 

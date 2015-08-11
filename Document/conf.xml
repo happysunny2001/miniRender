@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Renderer>
+	<StageList>
+		<Stage Name="S1" Type="normal" Enable="true"> <!-- stage Type:[normal, specific], default value:[normal]. Enable:[true,false], default value:[true] -->
+			<Camera Name="default" /> <!-- camera name, if empty, that means it will generate by StageRoutine object. default value:[default] -->
+			<ViewPort Name="default" TopLeftX=0 TopLeftY=0 Width=-1 Height=-1 MinDepth=0 MaxDepth=1.0 /><!-- view port for the stage, format[minx, miny, width, height, mindepth, maxdepth]. default value:[0,0,-1,-1,0,1.0],-1 means use the scrren dimensions. -->
+			<RenderTarget Type="backbuffer" Width=1.0 Height=1.0/> <!-- [backbuffer, texture, stencil], default value:[backbuffer], if type is texture, then width and height is the size -->
+			<StageRoutine></StageRoutine> <!-- if specified, then the routine object will do some task on the stage. -->
+			<Sort Opaque="NearToFar" Transparent="FarToNear"/> <!-- Sort algorithm for opaque and transparent object. values:[NearToFar, FarToNear] -->
+			
+			<!--stage entity list, the entities have no parent, and draw at last.-->
+			<EntityList>
+				<Entity Type="Quad" VertexType="PosNormal"> <!-- type:now support[Quad, Box], VertexType:[PosColor, PosNormal, PosNormalTex] -->
+					<Position x="" y="" z="" /> <!--position , in world space.-->
+					<Scale x="" y="" z="" />
+					<Rotation x="" y="" z="" />
+					<Material>
+						<Ambient r="1.0" g="1.0" b="1.0" a="1.0" />
+						<Diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+						<Specular r="1.0" g="1.0" b="1.0" a="1.0" />
+						<Reflect r="1.0" g="1.0" b="1.0" a="1.0" />
+						<DiffuseTexture Type="[Local,Stage]" File="" /> <!-- if Type=Local, then file is the texture file path, if Type=Stage, then File is the Stage's RenderTarget which is Texture. -->
+					</Material>
+
+					<Effect Name="" ShaderType="default" Shader="" Tech="">
+					</Effect> 
+				</Entity>
+			</EntityList>
+
+			<!-- optional, fliter entity base on some algorithm, if not exist, a default layer will create privately.
+				filter type:
+							normal:get all visible entity from scene
+							self:only add the Geometries from GeometryList element
+			-->
+			<Layer Filter=""/> 
+
+			<Effect Name="" Type="default" Shader="" Tech=""> <!-- Stage default effect name, if specified, then all entities in the stage will omit their own effect and use the default effect.default value:[empty string]. Type:[default,specific],if default, then user the engine default shader, else it will load shader by it's name. Shader: the name of shader, if Type=default, then it's value means the index of default shaders. -->
+				<Param>
+					<ShaderParam Name="" Type=""/> <!-- param name:the name of the parameter object, empty name is ok, just for mark. type:[Float, FloatArray, Texture] -->
+					<Value Type=""> <!-- value type:[Raw,PhysicalPath,ConfPath]. Data:if type is Raw, then Data is "1.0,2.0,3.0", must float value; if type is PhysicalPath, Data is the Texture Physical path(test.png); if type is ConfPath, Data is the stage name, then will binding the stage's render target as a texture to the parameter. -->
+						<Data></Data>
+					</Value>
+				</Param>
+			</Effect> 
+		</Stage>
+	</StageList>
+</Renderer>
+
+
+stage init flow
+1.call StageRoutine.init to initialize the stage
+2.get camera object by name
+3.if render to texture, then build render target object
+4.build sort object
+5.build layer object
+6.get effect object and build it's parameter objects
+
+stage main flow
+1.if StageRoutine exist, call StageRoutine.begin for update
+2.recv entity list which for render
+3.add entity to layer
+4.for every layer, sort it's entity
+5.compute camera property
+6.if effect exist, binding effect, set effect parameter and camera parameter
+7.set view port
+8.binding render target
+9.for every layer, create opaque entity draw batch, add batch to pipeline
+10.for every layer, create transparent entity draw batch, add batch to pipeline
+11.call StageRoutine.end
+
+PS:stage can nest, the child stage can use parent's property if it's not have it, and for every frame, parent will draw nothing, only child stage perform the draw call.
+
+batch structure
+{
+	effect
+	entity
+}
+
+pipeline
+{
+	batch_list
+}
+

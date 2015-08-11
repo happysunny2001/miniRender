@@ -251,22 +251,6 @@ CWVOID cwRenderNode::update(CWFLOAT dt)
 
 CWVOID cwRenderNode::render()
 {
-	if (m_bVisible) {
-		this->transform();
-		this->renderSelf();
-		this->renderChildren();
-	}
-}
-
-CWVOID cwRenderNode::renderChildren()
-{
-	for (auto it = m_nVecChildren.begin(); it != m_nVecChildren.end(); ++it) {
-		(*it)->render();
-	}
-}
-
-CWVOID cwRenderNode::renderSelf()
-{
 
 }
 

@@ -32,6 +32,7 @@ LightTerrainDemo::~LightTerrainDemo()
 
 void LightTerrainDemo::gameBegin()
 {
+	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderLightTerrainDemo.xml");
 	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 50.0f, -200.0f);
 
 	LightTerrainDemoScene* pScene = LightTerrainDemoScene::create();

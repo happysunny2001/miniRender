@@ -48,7 +48,9 @@ public:
 	inline const CWSTRING& getName() const { return m_strName; }
 
 	inline const CWSTRING& getCameraName() const { return m_strCameraName; }
+	inline CWVOID setCameraName(const CWSTRING& strCameraName) { m_strCameraName = strCameraName; }
 	inline cwCamera* getCamera() const { return m_pCamera; }
+	CWVOID setCamera(cwCamera* pCamera);
 
 	inline cwViewPort* getViewPort() const { return m_pViewPort; }
 	inline cwRenderTexture* getRenderTexture() const { return m_pRenderTarget; }
@@ -69,8 +71,6 @@ protected:
 	CWVOID setViewPort(cwViewPort* pView);
 	CWVOID setRenderTexture(cwRenderTexture* pRenderTexture);
 
-	cwRenderPipeline* getPipeline(cwEntity* pEntity);
-
 	friend class cwStageParser;
 
 protected:
@@ -86,13 +86,8 @@ protected:
 
 	cwEffect* m_pStageEffect;
 
-	//cwRenderPipeline m_nPipeline[CW_STAGE_PIPELINE_SIZE];
-	//CWUINT m_iPipeLineIndex;
-
 	std::vector<cwEntity*> m_nVecStageEntities;
 	std::vector<cwStageLayer*> m_nVecLayer;
-
-	//std::unordered_map<cwShader*, cwRenderPipeline*> m_nMapPipeline;
 
 };
 

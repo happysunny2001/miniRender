@@ -78,9 +78,4 @@ CWVOID cwEntity::setMaterial(cwMaterial* pMaterial)
 	m_pMaterial = pMaterial;
 }
 
-CWVOID cwEntity::renderSelf()
-{
-	cwRepertory::getInstance().getEngine()->render(this);
-}
-
 NS_MINIR_END

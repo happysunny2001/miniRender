@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Entity/cwEntity.h"
 #include "Material/cwMaterial.h"
 #include "Camera/cwCamera.h"
+#include "Camera/cwHomogeneousCamera.h"
 #include "Device/cwDevice.h"
 #include "Ref/cwAutoReleasePool.h"
 #include "Event/cwEventManager.h"
@@ -52,7 +53,8 @@ cwEngine::cwEngine():
 m_pCurrScene(nullptr),
 m_pCurrCamera(nullptr),
 m_pCurrShader(nullptr),
-m_pRenderer(nullptr)
+m_pRenderer(nullptr),
+m_pDefaultCamera(nullptr)
 {
 
 }
@@ -63,29 +65,25 @@ cwEngine::~cwEngine()
 	CW_SAFE_RELEASE_NULL(m_pRenderer);
 	m_pCurrCamera = nullptr;
 	m_pCurrShader = nullptr;
+	m_pDefaultCamera = nullptr;
 }
 
 CWBOOL cwEngine::init()
 {
 	buildDefaultCamera();
-	buildRenderer();
 	return true;
 }
 
-CWVOID cwEngine::buildRenderer()
+CWVOID cwEngine::loadRenderer(const CWSTRING& strConfFile)
 {
-	cwRendererParser* pRendererParser = static_cast<cwRendererParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParerRenderer));
-	if (pRendererParser) {
-		CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath("Render/render01.xml");
-		m_pRenderer = pRendererParser->parse(strFilePath);
-		CW_SAFE_RETAIN(m_pRenderer);	
-	}
-}
+	CW_SAFE_RELEASE_NULL(m_pRenderer);
 
-CWVOID cwEngine::deferParseRenderer()
-{
 	cwRendererParser* pRendererParser = static_cast<cwRendererParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParerRenderer));
 	if (pRendererParser) {
+		CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strConfFile);
+		m_pRenderer = pRendererParser->parse(strFilePath);
+		CW_SAFE_RETAIN(m_pRenderer);
+
 		pRendererParser->deferParse(m_pRenderer);
 	}
 }
@@ -110,21 +108,38 @@ CWVOID cwEngine::mainLoop(CWFLOAT dt)
 
 CWVOID cwEngine::buildDefaultCamera()
 {
-	m_nVecCameras.pushBack(cwCamera::create());
+	//m_nVecCameras.pushBack(cwCamera::create());
+
+	cwCamera* pDefCamera = cwCamera::create();
+	pDefCamera->setName("default");
+	m_nMapCameras.insert(pDefCamera->getName(), pDefCamera);
+
+	cwHomogeneousCamera* pHomoCamera = cwHomogeneousCamera::create();
+	pHomoCamera->setName("Homo");
+	m_nMapCameras.insert(pHomoCamera->getName(), pHomoCamera);
+
+	m_pDefaultCamera = m_nMapCameras.find("default")->second;
 }
 
 cwCamera* cwEngine::getDefaultCamera()
 {
-	if (m_nVecCameras.empty()) return nullptr;
-	return m_nVecCameras.at(0);
+	return m_pDefaultCamera;
+}
+
+cwCamera* cwEngine::getCamera(const CWSTRING& strName)
+{
+	if (m_nMapCameras.find(strName) != m_nMapCameras.end()) {
+		return m_nMapCameras.find(strName)->second;
+	}
+
+	return nullptr;
 }
 
 CWBOOL cwEngine::removeCamera(cwCamera* pCamera)
 {
 	if (!pCamera) return false;
-	//last camera can't remove
-	if (m_nVecCameras.size() == 1) return false;
-	m_nVecCameras.erase(pCamera, true);
+
+	m_nMapCameras.erase(pCamera->getName());
 	return true;
 }
 
@@ -142,17 +157,9 @@ CWVOID cwEngine::setCurrCamera(cwCamera* pCamera)
 CWVOID cwEngine::render()
 {
 	m_pCurrCamera = getDefaultCamera();
-	//cwRepertory::getInstance().getDevice()->beginDraw();
-
-	//if (m_pCurrScene) {
-	//	m_pCurrScene->render();
-	//}
 
 	if (m_pRenderer)
 		m_pRenderer->render();
-
-	//cwRepertory::getInstance().getDevice()->endDraw();
-	//cwRepertory::getInstance().getDevice()->swap();
 
 	m_pCurrCamera = nullptr;
 }

@@ -17,53 +17,44 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_STAGE_LAYER_H__
-#define __CW_STAGE_LAYER_H__
-
-#include "Base/cwMacros.h"
-#include "Base/cwUtils.h"
-#include "cwRenderPipeline.h"
-
-#include <unordered_map>
-#include <vector>
+#include "cwHomogeneousCamera.h"
 
 NS_MINIR_BEGIN
 
-class cwShader;
-class cwEntity;
-class cwEffect;
-
-class cwStageLayer
+cwHomogeneousCamera* cwHomogeneousCamera::create()
 {
-public:
-	cwStageLayer();
-	~cwStageLayer();
+	cwHomogeneousCamera* pCamera = new cwHomogeneousCamera();
+	if (pCamera && pCamera->init()) {
+		pCamera->autorelease();
+		return pCamera;
+	}
 
-	eStageLayerType getType() const { return m_eType; }
-	CWVOID setType(eStageLayerType eType) { m_eType = eType; }
+	CW_SAFE_RELEASE_NULL(pCamera);
+	return nullptr;
+}
 
-	CWVOID reset();
-	CWVOID begin(std::vector<cwEntity*>& vecEntities, cwEffect* pEffect);
-	CWVOID render();
-	CWVOID end();
+cwHomogeneousCamera::cwHomogeneousCamera()
+{
 
-protected:
-	cwRenderPipeline* getPipeline(cwEntity* pEntity);
-	cwRenderPipeline* getUnusePipeline(cwShader* pShader);
+}
 
-	CWVOID addEntities(std::vector<cwEntity*>& vecEntities);
-	CWVOID addEntities(std::vector<cwEntity*>& vecEntities, cwEffect* pEffect);
+CWBOOL cwHomogeneousCamera::init()
+{
+	m_nViewMatrix.identity();
+	m_nProjMatrix.identity();
+	m_nViewProjMatrix.identity();
 
-protected:
-	eStageLayerType m_eType;
+	return CWTRUE;
+}
 
-	cwRenderPipeline m_nPipeline[CW_STAGE_PIPELINE_SIZE];
-	CWUINT m_iPipeLineIndex;
+CWVOID cwHomogeneousCamera::updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ)
+{
+	
+}
 
-	std::unordered_map<cwShader*, cwRenderPipeline*> m_nMapPipeline;
-
-};
+CWVOID cwHomogeneousCamera::updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
+{
+	
+}
 
 NS_MINIR_END
-
-#endif

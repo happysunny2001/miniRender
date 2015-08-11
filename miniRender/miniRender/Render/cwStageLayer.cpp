@@ -56,54 +56,65 @@ CWVOID cwStageLayer::addEntities(std::vector<cwEntity*>& vecEntities, cwEffect* 
 {
 	cwRenderPipeline* pPipeline = &(m_nPipeline[m_iPipeLineIndex++]);
 	pPipeline->reset();
+	pPipeline->setShader(pEffect->getShader());
 
 	for (auto pEntity : vecEntities) {
 		pEntity->transform();
 
-		CWBOOL bRet = pPipeline->addEntity(pEntity);
+		CWBOOL bRet = pPipeline->addEntity(pEntity, pEffect);
 		if (!bRet) {
-			if (m_iPipeLineIndex >= CW_STAGE_PIPELINE_SIZE)
-				break;
-			else {
+			if (m_iPipeLineIndex < CW_STAGE_PIPELINE_SIZE) {
 				pPipeline = &(m_nPipeline[m_iPipeLineIndex++]);
 				pPipeline->reset();
+				pPipeline->setShader(pEffect->getShader());
 			}
+			else
+				break;
 		}
 	}
 }
 
 CWVOID cwStageLayer::addEntities(std::vector<cwEntity*>& vecEntities)
 {
-	cwRenderPipeline* pPipeline = &(m_nPipeline[m_iPipeLineIndex++]);
-	pPipeline->reset();
-
 	for (auto pEntity : vecEntities) {
 		pEntity->transform();
 
-		CWBOOL bRet = pPipeline->addEntity(pEntity, nullptr);
-		if (!bRet) {
-			if (m_iPipeLineIndex >= CW_STAGE_PIPELINE_SIZE)
-				break;
-			else {
-				pPipeline = &(m_nPipeline[m_iPipeLineIndex++]);
-				pPipeline->reset();
-			}
-		}
+		cwRenderPipeline* pPiepline = getPipeline(pEntity);
+		if (pPiepline)
+			pPiepline->addEntity(pEntity);
 	}
 }
 
 cwRenderPipeline* cwStageLayer::getPipeline(cwEntity* pEntity)
 {
+	cwRenderPipeline* pPipeLine = nullptr;
 	cwShader* pShader = pEntity->getEffect()->getShader();
 	if (m_nMapPipeline.find(pShader) != m_nMapPipeline.end()) {
-		return m_nMapPipeline[pShader];
+		pPipeLine = m_nMapPipeline[pShader];
 	}
 	else {
-		if (m_iPipeLineIndex < CW_STAGE_PIPELINE_SIZE) {
-			cwRenderPipeline* pPipeline = &(m_nPipeline[m_iPipeLineIndex++]);
-			m_nMapPipeline[pShader] = pPipeline;
-			return pPipeline;
-		}
+		pPipeLine = getUnusePipeline(pShader);
+	}
+
+	if (pPipeLine && pPipeLine->full()) {
+		m_nMapPipeline.erase(pShader);
+		pPipeLine = nullptr;
+
+		pPipeLine = getUnusePipeline(pShader);
+	}
+
+	return pPipeLine;
+}
+
+cwRenderPipeline* cwStageLayer::getUnusePipeline(cwShader* pShader)
+{
+	if (m_iPipeLineIndex < CW_STAGE_PIPELINE_SIZE) {
+		cwRenderPipeline* pPipeLine = &(m_nPipeline[m_iPipeLineIndex++]);
+		m_nMapPipeline[pShader] = pPipeLine;
+
+		pPipeLine->reset();
+		pPipeLine->setShader(pShader);
+		return pPipeLine;
 	}
 
 	return nullptr;

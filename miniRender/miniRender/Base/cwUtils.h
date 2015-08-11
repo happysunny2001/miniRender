@@ -51,6 +51,7 @@ typedef enum{
 	ceEleDescPosColor, //position + color
 	ceEleDescPosNormal, //position + normal
 	ceEleDescPosNormalTex, //position + normal + texture
+	ceEleDescPosTex, //position + color + texture
 }ceElementDesc;
 
 typedef enum {
@@ -264,8 +265,8 @@ typedef enum {
 #define CW_SHIFT MK_SHIFT
 #define CW_UINT_MAX 0xFFFFFFFF
 
-#define CW_PIPELINE_BATCH_SIZE 512
-#define CW_STAGE_PIPELINE_SIZE 32
+#define CW_PIPELINE_BATCH_SIZE 1024
+#define CW_STAGE_PIPELINE_SIZE 16
 
 NS_MINIR_END
 

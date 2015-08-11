@@ -36,6 +36,7 @@ cwRenderPipeline::~cwRenderPipeline()
 CWVOID cwRenderPipeline::reset()
 {
 	m_iBatchIndex = 0;
+	m_pShader = nullptr;
 }
 
 cwRenderBatch* cwRenderPipeline::getNextAvailableBatch()
@@ -65,6 +66,11 @@ CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity, cwEffect* pEffect)
 	pBatch->m_pEntity = pEntity;
 	pBatch->m_pEffect = pEffect;
 	return CWTRUE;
+}
+
+CWBOOL cwRenderPipeline::full()
+{
+	return m_iBatchIndex >= m_nVecBatch.size();
 }
 
 CWVOID cwRenderPipeline::render()

@@ -432,6 +432,9 @@
     <ClInclude Include="Render\cwStageLayer.h">
       <Filter>源文件\Render</Filter>
     </ClInclude>
+    <ClInclude Include="Camera\cwHomogeneousCamera.h">
+      <Filter>源文件\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -679,6 +682,9 @@
     </ClCompile>
     <ClCompile Include="Render\cwStageLayer.cpp">
       <Filter>源文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera\cwHomogeneousCamera.cpp">
+      <Filter>源文件\Camera</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -34,6 +34,7 @@
     <ClInclude Include="Blend\cwBlend.h" />
     <ClInclude Include="Buffer\cwBuffer.h" />
     <ClInclude Include="Camera\cwCamera.h" />
+    <ClInclude Include="Camera\cwHomogeneousCamera.h" />
     <ClInclude Include="cwMiniRender.h" />
     <ClInclude Include="Device\cwDevice.h" />
     <ClInclude Include="Effect\cwEffect.h" />
@@ -125,6 +126,7 @@
     <ClCompile Include="Blend\cwBlend.cpp" />
     <ClCompile Include="Buffer\cwBuffer.cpp" />
     <ClCompile Include="Camera\cwCamera.cpp" />
+    <ClCompile Include="Camera\cwHomogeneousCamera.cpp" />
     <ClCompile Include="Device\cwDevice.cpp" />
     <ClCompile Include="Effect\cwEffect.cpp" />
     <ClCompile Include="Effect\cwEffectFloatParameter.cpp" />

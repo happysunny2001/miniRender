@@ -75,15 +75,18 @@ CWVOID LightTerrainDemoScene::buildEntity()
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosNormalTex);
 
 	cwTexture* pTexTerrain = cwRepertory::getInstance().getTextureManager()->getTexture("Textures/grass.dds");
-	cwShader* pShader = repertory.getShaderManager()->getDefShader(CW_SHADER_DEF_LIGHTINGTEX);
+	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderLightingTex);
+	cwEffect* pEffect = cwEffect::create();
+	pEffect->setShader(pShader);
+
 	cwMaterial* pMaterial = cwMaterial::create();
-	pMaterial->setShader(pShader);
 	if (pTexTerrain) {
 		pMaterial->setDiffuseTexture(pTexTerrain);
 	}
 
 	cwEntity* pTerrain = cwEntity::create();
 	pTerrain->setMaterial(pMaterial);
+	pTerrain->setEffect(pEffect);
 	pTerrain->setRenderObject(pRenderObj);
 	pTerrain->setPosition(cwVector3D::ZERO);
 	this->addChild(pTerrain);
@@ -107,18 +110,22 @@ CWVOID LightTerrainDemoScene::buildLightEntity()
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosColor);
 
-	cwShader* pShader = repertory.getShaderManager()->getDefShader(CW_SHADER_DEF_COLOR);
+	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderColor);
+	cwEffect* pEffect = cwEffect::create();
+	pEffect->setShader(pShader);
+
 	cwMaterial* pMaterial = cwMaterial::create();
-	pMaterial->setShader(pShader);
 
 	m_pPointLightEntity = cwEntity::create();
 	m_pPointLightEntity->setMaterial(pMaterial);
+	m_pPointLightEntity->setEffect(pEffect);
 	m_pPointLightEntity->setRenderObject(pObjLight);
 	m_pPointLightEntity->setPosition(cwVector3D::ZERO);
 	this->addChild(m_pPointLightEntity);
 
 	m_pSpotLightEntity = cwEntity::create();
 	m_pSpotLightEntity->setMaterial(pMaterial);
+	m_pSpotLightEntity->setEffect(pEffect);
 	m_pSpotLightEntity->setRenderObject(pObjLight);
 	m_pSpotLightEntity->setPosition(cwVector3D::ZERO);
 	this->addChild(m_pSpotLightEntity);

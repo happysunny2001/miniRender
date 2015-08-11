@@ -59,34 +59,30 @@ cwCamera::~cwCamera()
 
 }
 
-bool cwCamera::init()
+CWBOOL cwCamera::init()
 {
-	return true;
+	return CWTRUE;
 }
 
-bool cwCamera::init(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
+CWBOOL cwCamera::init(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
 {
 	updateProjMatrix(fFov, fAspect, fNearZ, fFarZ);
-	return true;
+	return CWTRUE;
 }
 
-void cwCamera::updateViewMatrix()
+CWVOID cwCamera::updateViewMatrix()
 {
 	m_nViewMatrix.lookAt(m_nPos, m_nUp, m_nTarget);
+	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;
 }
 
-cwMatrix4X4 cwCamera::getViewProjMatrix() const
-{
-	return m_nViewMatrix*m_nProjMatrix;
-}
-
-void cwCamera::updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ)
+CWVOID cwCamera::updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ)
 {
 	m_nPos = cwVector3D(fPosX, fPosY, fPosZ);
 	updateViewMatrix();
 }
 
-void cwCamera::updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
+CWVOID cwCamera::updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
 {
 	m_fFov = fFov;
 	m_fAspect = fAspect;
@@ -94,6 +90,7 @@ void cwCamera::updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, C
 	m_fFarZ = fFarZ;
 
 	m_nProjMatrix.perspectiveFov(m_fFov, m_fAspect, m_fNearZ, m_fFarZ);
+	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;
 }
 
 NS_MINIR_END

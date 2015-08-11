@@ -90,6 +90,16 @@ bool cwD3D11LayoutsManager::init()
 		}
 	}
 
+	{
+		cwLayouts* pLayout = cwD3D11Layouts::create(
+			m_pElementDescManager->getElement(ceEleDescPosTex),
+			static_cast<cwD3D11Shader*>(shaderManager->getShader(fileSystem->getFullFilePath("effect/D3D11/colorTex.fx")))
+			);
+		if (pLayout) {
+			m_mapLayouts.insert(ceEleDescPosTex, pLayout);
+		}
+	}
+
 	return true;
 }
 
