@@ -81,14 +81,17 @@ CWVOID LoadTxtDemoScene::buildEntity()
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormal), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosNormal);
 
-	cwShader* pShader = repertory.getShaderManager()->getDefShader(CW_SHADER_DEF_LIGHTING);
+	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderLighting);
+	cwEffect* pEffect = cwEffect::create();
+	pEffect->setShader(pShader);
+
 	cwMaterial* pMaterial = cwMaterial::create();
-	pMaterial->setShader(pShader);
 
 	m_pCar = cwEntity::create();
 	m_pCar->setMaterial(pMaterial);
 	m_pCar->setRenderObject(pRenderObj);
 	m_pCar->setPosition(cwVector3D::ZERO);
+	m_pCar->setEffect(pEffect);
 	CW_SAFE_RETAIN(m_pCar);
 
 	this->addChild(m_pCar);

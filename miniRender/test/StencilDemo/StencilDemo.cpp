@@ -17,39 +17,39 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "LoadTxtDemo.h"
-#include "LoadTxtDemoScene.h"
+#include "StencilDemo.h"
+#include "StencilDemoScene.h"
 
-LoadTxtDemo::LoadTxtDemo()
+StencilDemo::StencilDemo()
 {
 
 }
 
-LoadTxtDemo::~LoadTxtDemo()
+StencilDemo::~StencilDemo()
 {
 
 }
 
-CWVOID LoadTxtDemo::gameBegin()
+CWVOID StencilDemo::gameBegin()
 {
 	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 2.0f, -20.0f);
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 100.0f, -150.0f);
 
-	LoadTxtDemoScene* pScene = LoadTxtDemoScene::create();
+	StencilDemoScene* pScene = StencilDemoScene::create();
 	cwRepertory::getInstance().getEngine()->setScene(pScene);
 }
 
-CWVOID LoadTxtDemo::gameEnd()
+CWVOID StencilDemo::gameEnd()
 {
 
 }
 
-CWVOID LoadTxtDemo::gameBeginBackGround()
+CWVOID StencilDemo::gameBeginBackGround()
 {
 
 }
 
-CWVOID LoadTxtDemo::gameEndBackGround()
+CWVOID StencilDemo::gameEndBackGround()
 {
 
 }

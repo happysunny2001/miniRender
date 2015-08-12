@@ -17,39 +17,42 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "LoadTxtDemo.h"
-#include "LoadTxtDemoScene.h"
+#ifndef __STENCIL_DEMO_SCENE_H__
+#define __STENCIL_DEMO_SCENE_H__
 
-LoadTxtDemo::LoadTxtDemo()
+#include "cwMiniRender.h"
+NS_USING_MINIR;
+
+class StencilDemoScene : public cwScene
 {
+public:
+	static StencilDemoScene* create();
 
-}
+	StencilDemoScene();
+	virtual ~StencilDemoScene();
 
-LoadTxtDemo::~LoadTxtDemo()
-{
+	virtual CWBOOL init() override;
 
-}
+	virtual CWVOID onTouchDown(cwTouch* pTouch) override;
+	virtual CWVOID onTouchUp(cwTouch* pTouch) override;
+	virtual CWVOID onTouchMoving(cwTouch* pTouch) override;
 
-CWVOID LoadTxtDemo::gameBegin()
-{
-	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 2.0f, -20.0f);
+protected:
+	CWVOID buildEntity();
+	CWVOID buildGround();
+	CWVOID buildCar();
+	CWVOID buildLights();
 
-	LoadTxtDemoScene* pScene = LoadTxtDemoScene::create();
-	cwRepertory::getInstance().getEngine()->setScene(pScene);
-}
+	cwStaticRenderObject* createRenderObj(cwGeometryGenerator::cwMeshData& mesh);
 
-CWVOID LoadTxtDemo::gameEnd()
-{
+protected:
+	CWFLOAT m_fLastX;
+	CWFLOAT m_fLastY;
+	CWFLOAT m_fTheta;
+	CWFLOAT m_fPhi;
+	CWFLOAT m_fRadius;
+	CWBOOL m_bTouchDown;
 
-}
+};
 
-CWVOID LoadTxtDemo::gameBeginBackGround()
-{
-
-}
-
-CWVOID LoadTxtDemo::gameEndBackGround()
-{
-
-}
+#endif

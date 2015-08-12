@@ -9,14 +9,14 @@
 		</Stage>
 
 		<Stage Name="S2" Type="normal" Enable="true">
-			<Camera Name="default" />
+			<Camera Name="Homo" />
 			<ViewPort Name="default" TopLeftX="0" TopLeftY="0" Width="-1" Height="-1" MinDepth="0" MaxDepth="1.0" />
 			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" />
 			<Layer Filter="self"/> 
 			<EntityList>
 				<Entity Type="Quad" VertexType="PosTex">
 					<Position x="0" y="0" z="0" />
-					<Scale x="10" y="10" z="1.0" />
+					<Scale x="1.0" y="1.0" z="1.0" />
 					<Rotation x="0" y="0" z="0" />
 					<Material>
 						<Ambient r="1.0" g="1.0" b="1.0" a="1.0" />

@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{476FF767-C0EB-4FF3-842D-77CF20D6B7A7}</ProjectGuid>
+    <ProjectGuid>{3E1C6602-CD8F-44AD-95BF-87D644340129}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>LoadTxtDemo</RootNamespace>
+    <RootNamespace>StencilDemo</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -68,7 +68,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)external\platform\windows\directx11\include;$(SolutionDir)miniRender;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)external\tinyxml2;$(SolutionDir)external\platform\windows\directx11\include;$(SolutionDir)miniRender;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\x64\Debug;$(SolutionDir)external\platform\windows\directx11\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -145,13 +145,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="LoadTxtDemo.cpp" />
-    <ClCompile Include="LoadTxtDemoScene.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="StencilDemo.cpp" />
+    <ClCompile Include="StencilDemoScene.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LoadTxtDemo.h" />
-    <ClInclude Include="LoadTxtDemoScene.h" />
+    <ClInclude Include="StencilDemo.h" />
+    <ClInclude Include="StencilDemoScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

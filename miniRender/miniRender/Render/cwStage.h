@@ -25,6 +25,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwVector.h"
 #include "ViewPort/cwViewPort.h"
 #include "Texture/cwRenderTexture.h"
+#include "Blend/cwBlend.h"
+#include "Stencil/cwStencil.h"
 #include "Parser/cwStageParser.h"
 #include "cwRenderPipeline.h"
 
@@ -85,6 +87,8 @@ protected:
 	cwRenderTexture* m_pRenderTarget;
 
 	cwEffect* m_pStageEffect;
+	cwBlend* m_pStageBlend;
+	cwStencil* m_pStageStencil;
 
 	std::vector<cwEntity*> m_nVecStageEntities;
 	std::vector<cwStageLayer*> m_nVecLayer;

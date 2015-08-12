@@ -35,7 +35,9 @@ m_bEnable(CWTRUE),
 m_eType(eStageTypeNormal),
 m_pViewPort(nullptr),
 m_pRenderTarget(nullptr),
-m_pStageEffect(nullptr)
+m_pStageEffect(nullptr),
+m_pStageBlend(nullptr),
+m_pStageStencil(nullptr)
 {
 
 }
@@ -116,6 +118,8 @@ CWVOID cwStage::render()
 
 	cwRepertory::getInstance().getDevice()->setViewPort(m_pViewPort);
 	cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTarget);
+	cwRepertory::getInstance().getDevice()->setBlend(m_pStageBlend);
+	cwRepertory::getInstance().getDevice()->setStencil(m_pStageStencil);
 	cwRepertory::getInstance().getDevice()->beginDraw();
 
 	for (auto pLayer : m_nVecLayer) {

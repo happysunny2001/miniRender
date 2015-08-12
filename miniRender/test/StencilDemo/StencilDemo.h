@@ -17,39 +17,26 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "LoadTxtDemo.h"
-#include "LoadTxtDemoScene.h"
+#ifndef __STENCIL_DEMO_H__
+#define __STENCIL_DEMO_H__
 
-LoadTxtDemo::LoadTxtDemo()
+#include "cwMiniRender.h"
+NS_USING_MINIR;
+
+class StencilDemo : public cwApplication
 {
+public:
+	StencilDemo();
+	virtual ~StencilDemo();
 
-}
+	virtual CWVOID gameBegin() override;
+	virtual CWVOID gameEnd() override;
 
-LoadTxtDemo::~LoadTxtDemo()
-{
+	virtual CWVOID gameBeginBackGround() override;
+	virtual CWVOID gameEndBackGround() override;
 
-}
+protected:
 
-CWVOID LoadTxtDemo::gameBegin()
-{
-	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 2.0f, -20.0f);
+};
 
-	LoadTxtDemoScene* pScene = LoadTxtDemoScene::create();
-	cwRepertory::getInstance().getEngine()->setScene(pScene);
-}
-
-CWVOID LoadTxtDemo::gameEnd()
-{
-
-}
-
-CWVOID LoadTxtDemo::gameBeginBackGround()
-{
-
-}
-
-CWVOID LoadTxtDemo::gameEndBackGround()
-{
-
-}
+#endif
