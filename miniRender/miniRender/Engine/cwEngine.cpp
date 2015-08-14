@@ -78,7 +78,7 @@ CWVOID cwEngine::loadRenderer(const CWSTRING& strConfFile)
 {
 	CW_SAFE_RELEASE_NULL(m_pRenderer);
 
-	cwRendererParser* pRendererParser = static_cast<cwRendererParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParerRenderer));
+	cwRendererParser* pRendererParser = static_cast<cwRendererParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserRenderer));
 	if (pRendererParser) {
 		CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strConfFile);
 		m_pRenderer = pRendererParser->parse(strFilePath);

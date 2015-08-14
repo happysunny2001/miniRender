@@ -39,7 +39,7 @@ cwRendererParser* cwRendererParser::create()
 
 cwRenderer* cwRendererParser::parse(const CWSTRING& strFileName)
 {
-	cwStageParser* pStageParser = static_cast<cwStageParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParerStage));
+	cwStageParser* pStageParser = static_cast<cwStageParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserStage));
 	if (!pStageParser) return nullptr;
 
 	tinyxml2::XMLDocument doc;
@@ -88,7 +88,7 @@ CWVOID cwRendererParser::deferParse(cwRenderer* pRenderer)
 	tinyxml2::XMLElement* pRendererElement = doc.FirstChildElement("Renderer");
 	if (!pRendererElement) return;
 
-	cwStageParser* pStageParser = static_cast<cwStageParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParerStage));
+	cwStageParser* pStageParser = static_cast<cwStageParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserStage));
 	if (!pStageParser) return;
 
 	tinyxml2::XMLElement* pStageListElement = pRendererElement->FirstChildElement("StageList");

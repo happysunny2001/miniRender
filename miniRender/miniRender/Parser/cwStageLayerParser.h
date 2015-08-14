@@ -17,58 +17,33 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwRenderTexture.h"
-#include "Base/cwColor.h"
+#include "Base/cwMacros.h"
+#include "Ref/cwRef.h"
+#include "Render/cwStageLayer.h"
+#include "tinyxml2.h"
+
+#include <functional>
 
 NS_MINIR_BEGIN
 
-bool cwRenderTexture::init(CWFLOAT fWidth, CWFLOAT fHeight)
+class cwStageLayerParser : public cwRef
 {
-	m_fWidth = fWidth;
-	m_fHeight = fHeight;
-	m_nClearColor = cwColor::black;
+public:
+	static cwStageLayerParser* create();
 
-	return onResize(true);
-}
+	cwStageLayerParser();
 
-bool cwRenderTexture::onResize(bool bForce)
-{
-	return true;
-}
+	cwStageLayer* parse(tinyxml2::XMLElement* pStageLayerData);
 
-CWHANDLE cwRenderTexture::getRenderTargetPtr()
-{
-	return NULL;
-}
+protected:
+	CWVOID parseElement(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
+	CWVOID parseAttribute(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
+	CWVOID parseBlend(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
+	CWVOID parseStencil(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
 
-CWHANDLE cwRenderTexture::getTexturePtr()
-{
-	return NULL;
-}
+protected:
+	std::unordered_map <CWSTRING, std::function<CWVOID(cwStageLayer*, tinyxml2::XMLElement*)>> m_nMapParser;
 
-CWHANDLE cwRenderTexture::getTextureMultiThreadPtr()
-{
-	return NULL;
-}
-
-void cwRenderTexture::beginResize()
-{
-
-}
-
-CWVOID cwRenderTexture::binding()
-{
-
-}
-
-CWVOID cwRenderTexture::beginDraw(CWBOOL bClearColor, CWBOOL bClearDepth, CWBOOL bClearStencil)
-{
-
-}
-
-CWVOID cwRenderTexture::endDraw()
-{
-
-}
+};
 
 NS_MINIR_END

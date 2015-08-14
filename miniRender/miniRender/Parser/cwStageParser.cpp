@@ -18,6 +18,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwStageParser.h"
+#include "cwEntityParser.h"
+#include "cwStageLayerParser.h"
+#include "cwParserManager.h"
 #include "Render/cwStage.h"
 #include "Render/cwStageLayer.h"
 #include "Device/cwDevice.h"
@@ -26,8 +29,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Texture/cwRenderTexture.h"
 #include "Texture/cwTextureManager.h"
 #include "Engine/cwEngine.h"
-#include "cwEntityParser.h"
-#include "cwParserManager.h"
 
 NS_MINIR_BEGIN
 
@@ -96,15 +97,8 @@ CWVOID cwStageParser::parseAttribute(cwStage* pStage, tinyxml2::XMLElement* pSta
 	}
 	
 
-	const CWCHAR* pcEnable = pStageData->Attribute("Enable");
-	if (pcEnable) {
-		if (strncmp(pcEnable, "true", 4) == 0) {
-			pStage->setEnable(true);
-		}
-		else if (strncmp(pcEnable, "false", 5) == 0) {
-			pStage->setEnable(false);
-		}
-	}
+	const char* pcEnable = pStageData->Attribute("Enable");
+	pStage->setEnable(cwRepertory::getInstance().getParserManager()->getBool(pcEnable));
 }
 
 CWVOID cwStageParser::parseCamera(cwStage* pStage, tinyxml2::XMLElement* pCameraData)
@@ -147,8 +141,9 @@ CWVOID cwStageParser::parseRenderTarget(cwStage* pStage, tinyxml2::XMLElement* p
 	const CWCHAR* pcType = pRenderTarget->Attribute("Type");
 	if (!pcType) return;
 
-	if (strncmp(pcType, "backbuffer", 10) == 0)
-		return;
+	if (strncmp(pcType, "backbuffer", 10) == 0) {
+
+	}
 	else if (strncmp(pcType, "texture", 7) == 0) {
 		CWFLOAT fWidth = pRenderTarget->FloatAttribute("Width");
 		CWFLOAT fHeight = pRenderTarget->FloatAttribute("Height");
@@ -158,22 +153,30 @@ CWVOID cwStageParser::parseRenderTarget(cwStage* pStage, tinyxml2::XMLElement* p
 			pStage->setRenderTexture(pRenderTexture);
 		}
 	}
+
+	cwParserManager* pParserManager = cwRepertory::getInstance().getParserManager();
+
+	const char* pcIsClearColor = pRenderTarget->Attribute("IsClearColor");
+	if (pcIsClearColor)
+		pStage->setIsClearColor(pParserManager->getBool(pcIsClearColor));
+
+	const char* pcIsClearDepth = pRenderTarget->Attribute("IsClearDepth");
+	if (pcIsClearDepth)
+		pStage->setIsClearDepth(pParserManager->getBool(pcIsClearDepth));
+
+	const char* pcIsClearStencil = pRenderTarget->Attribute("IsClearStencil");
+	if (pcIsClearStencil)
+		pStage->setIsClearStencil(pParserManager->getBool(pcIsClearStencil));
 }
 
 CWVOID cwStageParser::parseLayer(cwStage* pStage, tinyxml2::XMLElement* pLayerData)
 {
-	cwStageLayer* pStageLayer = new cwStageLayer();
-	if (!pStageLayer) return;
+	cwStageLayerParser* pStageLayerParser = static_cast<cwStageLayerParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserStageLayer));
+	if (!pStageLayerParser) return;
 
-	const CWCHAR* pcFilter = pLayerData->Attribute("Filter");
-	if (strncmp(pcFilter, "normal", 6) == 0) {
-		pStageLayer->setType(eStageLayerNormal);
-	}
-	else if (strncmp(pcFilter, "self", 4) == 0) {
-		pStageLayer->setType(eStageLayerSelf);
-	}
-
-	pStage->addStageLayer(pStageLayer);
+	cwStageLayer* pStageLayer = pStageLayerParser->parse(pLayerData);
+	if (pStageLayer)
+		pStage->addStageLayer(pStageLayer);
 }
 
 CWVOID cwStageParser::deferParse(cwStage* pStage, tinyxml2::XMLElement* pStageElement)
@@ -182,7 +185,7 @@ CWVOID cwStageParser::deferParse(cwStage* pStage, tinyxml2::XMLElement* pStageEl
 
 	tinyxml2::XMLElement* pEntityListElement = pStageElement->FirstChildElement("EntityList");
 	if (pEntityListElement) {
-		cwEntityParser* pEntityParser = static_cast<cwEntityParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParerEntity));
+		cwEntityParser* pEntityParser = static_cast<cwEntityParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserEntity));
 
 		if (pEntityParser) {
 			tinyxml2::XMLElement* pEntityElement = pEntityListElement->FirstChildElement("Entity");

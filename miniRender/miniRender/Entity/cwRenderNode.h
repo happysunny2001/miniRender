@@ -70,7 +70,8 @@ public:
 	virtual CWVOID setVisible(CWBOOL b);
 	CWBOOL getVisible() const { return m_bVisible; }
 
-	eSceneObjectType getType() const { return m_eType; }
+	inline eSceneObjectType getType() const { return m_eType; }
+	inline CWVOID setType(eSceneObjectType eType) { m_eType = eType; }
 
 	virtual CWVOID setEffect(cwEffect* pEffect);
 	inline cwEffect* getEffect() const { return m_pEffect; }

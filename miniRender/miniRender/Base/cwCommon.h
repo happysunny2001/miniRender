@@ -17,58 +17,21 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwRenderTexture.h"
-#include "Base/cwColor.h"
+#ifndef __CW_COMMON_H__
+#define __CW_COMMON_H__
+
+#include "cwMacros.h"
+#include "cwBasicType.h"
 
 NS_MINIR_BEGIN
 
-bool cwRenderTexture::init(CWFLOAT fWidth, CWFLOAT fHeight)
+class cwCommon
 {
-	m_fWidth = fWidth;
-	m_fHeight = fHeight;
-	m_nClearColor = cwColor::black;
+public:
+	static CWBYTE parseHexStringByte(const CWSTRING& strHex);
 
-	return onResize(true);
-}
-
-bool cwRenderTexture::onResize(bool bForce)
-{
-	return true;
-}
-
-CWHANDLE cwRenderTexture::getRenderTargetPtr()
-{
-	return NULL;
-}
-
-CWHANDLE cwRenderTexture::getTexturePtr()
-{
-	return NULL;
-}
-
-CWHANDLE cwRenderTexture::getTextureMultiThreadPtr()
-{
-	return NULL;
-}
-
-void cwRenderTexture::beginResize()
-{
-
-}
-
-CWVOID cwRenderTexture::binding()
-{
-
-}
-
-CWVOID cwRenderTexture::beginDraw(CWBOOL bClearColor, CWBOOL bClearDepth, CWBOOL bClearStencil)
-{
-
-}
-
-CWVOID cwRenderTexture::endDraw()
-{
-
-}
+};
 
 NS_MINIR_END
+
+#endif

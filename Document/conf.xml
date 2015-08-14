@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Renderer>
 	<StageList>
-		<Stage Name="S1" Type="normal" Enable="true"> <!-- stage Type:[normal, specific], default value:[normal]. Enable:[true,false], default value:[true] -->
+		<!-- stage Type:[normal, specific], default value:[normal]. Enable:[True,False], default value:[true] -->
+		<Stage Name="S1" Type="normal" Enable="True"> 
+
+			<RenderState Type="Default">
+			</RenderState>
+
 			<Camera Name="default" /> <!-- camera name, if empty, that means it will generate by StageRoutine object. default value:[default,Homo], Homo means homogeneous coordinates, the camera's view-projection matrix is identity. -->
 			<ViewPort Name="default" TopLeftX=0 TopLeftY=0 Width=-1 Height=-1 MinDepth=0 MaxDepth=1.0 /><!-- view port for the stage, format[minx, miny, width, height, mindepth, maxdepth]. default value:[0,0,-1,-1,0,1.0],-1 means use the scrren dimensions. -->
-			<RenderTarget Type="backbuffer" Width=1.0 Height=1.0/> <!-- [backbuffer, texture, stencil], default value:[backbuffer], if type is texture, then width and height is the size -->
+			
+			<!-- Type:[backbuffer, texture], default value:[backbuffer], if type is texture, then width and height is the size
+				 IsClearColor,IsClearDepth,IsClearStencil:[True,False],default True
+			-->
+			<RenderTarget Type="backbuffer" Width=1.0 Height=1.0 IsClearColor="" IsClearDepth="" IsClearStencil="" /> 
+
 			<StageRoutine></StageRoutine> <!-- if specified, then the routine object will do some task on the stage. -->
 			<Sort Opaque="NearToFar" Transparent="FarToNear"/> <!-- Sort algorithm for opaque and transparent object. values:[NearToFar, FarToNear] -->
 			
@@ -28,11 +38,40 @@
 			</EntityList>
 
 			<!-- optional, fliter entity base on some algorithm, if not exist, a default layer will create privately.
-				filter type:
-							normal:get all visible entity from scene
-							self:only add the Geometries from GeometryList element
+				EntityType: the entity type for render, default is Entity
+							Entity : get all visible entities from scene
+							Mirror : get Mirror entities from scene
+							Stage : only add the Geometries from stage's GeometryList element
+				Transparent:[Yes,No], whether or not add transparent entity,default No
 			-->
-			<Layer Filter=""/> 
+			<Layer EntityType="Entity" Transparent="No"> 
+				<!--
+					Layer Blend configuration
+					Src:[Zero,One,SrcColor,InvSrcColor,SrcAlpha,InvSrcAlpha,DestAlpha,InvDestAlpha,DestColor,InvDestColor,SrcAlphaSat,BlendFactor,InvBlendFactor,Src1Color,InvSrc1Color,Src1Alpha,InvSrc1Alpha]
+					Oper:[Add,Sub,RevSub,Min,Max]
+				-->
+				<Blend>
+					<RGB Src="" Dest="" Oper="" />
+					<Alpha Src="" Dest="" Oper="" />
+				</Blend>
+				
+				<!--
+					Layer Stencil configuration
+					Enable:[True,False]
+					DepthBuffer-WriteMask:[Zero,All]
+					Func:[Never,Less,Equal,LessEqual,Greater,NotEqual,GreaterEqual,Always]
+					StencilBuffer-ReadMask:0x00-0xff
+					StencilBuffer-WriteMask:0x00-0xff
+					Front-Failed:[Keep,Zero,Replace,IncrSat,DecrSat,Invert,Incr,Decr]
+					Front-DepthFailed,Front-Pass,Back-Failed,Back-DepthFailed,Back-Pass:same as Front-Failed
+				-->
+				<Stencil>
+					<DepthBuffer Enable="" WriteMask="" Func=""/>
+					<StencilBuffer Enable="" ReadMask="" WriteMask=""/>
+					<Front Failed="" DepthFailed="" Pass="" Func="" />
+					<Back Failed="" DepthFailed="" Pass="" Func="" />
+				</Stencil>
+			</Layer>
 
 			<Effect Name="" Type="default" Shader="" Tech=""> <!-- Stage default effect name, if specified, then all entities in the stage will omit their own effect and use the default effect.default value:[empty string]. Type:[default,specific],if default, then user the engine default shader, else it will load shader by it's name. Shader: the name of shader, if Type=default, then it's value means the index of default shaders. -->
 				<Param>

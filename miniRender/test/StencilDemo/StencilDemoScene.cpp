@@ -100,13 +100,14 @@ CWVOID StencilDemoScene::buildEntity()
 {
 	buildGround();
 	buildCar();
+	buildMirror();
 }
 
 CWVOID StencilDemoScene::buildGround()
 {
 	cwGeometryGenerator::cwMeshData mesh;
 	cwRepertory::getInstance().getGeoGenerator()->generateGrid(100.0f, 100.0f, 10, 10, mesh);
-	cwStaticRenderObject* pGroundObj = createRenderObj(mesh);
+	m_pPlaneObj = createRenderObj(mesh);
 
 	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getDefShader(eDefShaderLightingTex);
 	cwEffect* pEffect = cwEffect::create();
@@ -117,7 +118,7 @@ CWVOID StencilDemoScene::buildGround()
 	pMaterial->scaleDiffuseTexture(cwVector2D(5.0f, 5.0f));
 
 	cwEntity* pEntityGround = cwEntity::create();
-	pEntityGround->setRenderObject(pGroundObj);
+	pEntityGround->setRenderObject(m_pPlaneObj);
 	pEntityGround->setMaterial(pMaterial);
 	pEntityGround->setEffect(pEffect);
 	this->addChild(pEntityGround);
@@ -155,6 +156,30 @@ CWVOID StencilDemoScene::buildCar()
 	pCar->setEffect(pEffect);
 
 	this->addChild(pCar);
+}
+
+CWVOID StencilDemoScene::buildMirror()
+{
+	cwMaterial* pMaterial = cwMaterial::create(
+		cwVector4D(0.3f, 0.9f, 0.3f, 1.0f),
+		cwVector4D(0.6f, 0.6f, 0.6f, 0.5f),
+		cwVector4D(0.6f, 0.6f, 0.6f, 16.0f),
+		cwVector4D::ZERO);
+
+	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getDefShader(eDefShaderLighting);
+	cwEffect* pEffect = cwEffect::create();
+	pEffect->setShader(pShader);
+
+	cwEntity* pEntityMirror = cwEntity::create();
+	pEntityMirror->setRenderObject(m_pPlaneObj);
+	pEntityMirror->setMaterial(pMaterial);
+	pEntityMirror->setEffect(pEffect);
+	pEntityMirror->setType(eSceneObjectMirror);
+	pEntityMirror->setPosition(-49.9f, 25.0f, 0);
+	pEntityMirror->setRotation(0, 0, -cwMathUtil::cwPI*0.5f);
+	pEntityMirror->setScale(0.5f, 0.5f, 0.5f);
+
+	this->addChild(pEntityMirror);
 }
 
 CWVOID StencilDemoScene::buildLights()

@@ -244,19 +244,24 @@ typedef enum {
 	eSceneObjectNode = 1,
 	eSceneObjectEntity,
 	eSceneObjectScene,
+	eSceneObjectMirror,
 }eSceneObjectType;
 
 typedef enum {
-	eParerStage = 0,
-	eParerRenderer,
-	eParerEntity,
-	eParerTypeMax
-}eParerType;
+	eParserStage = 0,
+	eParserRenderer,
+	eParserEntity,
+	eParserBlend,
+	eParserStencil,
+	eParserStageLayer,
+	eParserTypeMax
+}eParserType;
 
 typedef enum {
-	eStageLayerNormal = 1,
-	eStageLayerSelf,
-}eStageLayerType;
+	eStageLayerFliterEntity = 1,
+	eStageLayerFliterMirror,
+	eStageLayerFliterStage,
+}eStageLayerFliterType;
 
 #define CW_CONTROL MK_CONTROL
 #define CW_LBUTTON MK_LBUTTON

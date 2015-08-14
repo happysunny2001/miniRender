@@ -22,6 +22,7 @@
     <ClInclude Include="..\external\tinyxml2\tinyxml2.h" />
     <ClInclude Include="Base\cwBasicType.h" />
     <ClInclude Include="Base\cwColor.h" />
+    <ClInclude Include="Base\cwCommon.h" />
     <ClInclude Include="Base\cwFuncNode.h" />
     <ClInclude Include="Base\cwMacros.h" />
     <ClInclude Include="Base\cwMap.h" />
@@ -70,10 +71,13 @@
     <ClInclude Include="Math\cwVector2D.h" />
     <ClInclude Include="Math\cwVector3D.h" />
     <ClInclude Include="Math\cwVector4D.h" />
+    <ClInclude Include="Parser\cwBlendParser.h" />
     <ClInclude Include="Parser\cwEntityParser.h" />
     <ClInclude Include="Parser\cwParserManager.h" />
     <ClInclude Include="Parser\cwRendererParser.h" />
+    <ClInclude Include="Parser\cwStageLayerParser.h" />
     <ClInclude Include="Parser\cwStageParser.h" />
+    <ClInclude Include="Parser\cwStencilParser.h" />
     <ClInclude Include="Platform\cwFileSystem.h" />
     <ClInclude Include="Platform\cwPlatform.h" />
     <ClInclude Include="Platform\D3D\D3D11\Blend\cwD3D11Blend.h" />
@@ -122,6 +126,7 @@
   <ItemGroup>
     <ClCompile Include="..\external\tinyxml2\tinyxml2.cpp" />
     <ClCompile Include="Base\cwColor.cpp" />
+    <ClCompile Include="Base\cwCommon.cpp" />
     <ClCompile Include="Base\cwRunTime.cpp" />
     <ClCompile Include="Blend\cwBlend.cpp" />
     <ClCompile Include="Buffer\cwBuffer.cpp" />
@@ -158,10 +163,13 @@
     <ClCompile Include="Math\cwVector2D.cpp" />
     <ClCompile Include="Math\cwVector3D.cpp" />
     <ClCompile Include="Math\cwVector4D.cpp" />
+    <ClCompile Include="Parser\cwBlendParser.cpp" />
     <ClCompile Include="Parser\cwEntityParser.cpp" />
     <ClCompile Include="Parser\cwParserManager.cpp" />
     <ClCompile Include="Parser\cwRendererParser.cpp" />
+    <ClCompile Include="Parser\cwStageLayerParser.cpp" />
     <ClCompile Include="Parser\cwStageParser.cpp" />
+    <ClCompile Include="Parser\cwStencilParser.cpp" />
     <ClCompile Include="Platform\cwFileSystem.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Blend\cwD3D11Blend.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11IndexBuffer.cpp" />

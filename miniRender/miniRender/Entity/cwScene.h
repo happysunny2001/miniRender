@@ -44,7 +44,7 @@ public:
 	virtual CWVOID removeLight(cwLight* pLight);
 	const cwVector<cwLight*>& getLights() const;
 
-	std::vector<cwEntity*>& getVisibleEntities(cwCamera* pCamera);
+	std::vector<cwEntity*>& getVisibleEntities(cwCamera* pCamera, eSceneObjectType eType=eSceneObjectEntity);
 
 protected:
 	cwVector<cwLight*> m_nVecLights;

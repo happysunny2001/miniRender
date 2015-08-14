@@ -32,6 +32,8 @@ NS_MINIR_BEGIN
 class cwShader;
 class cwEntity;
 class cwEffect;
+class cwBlend;
+class cwStencil;
 
 class cwStageLayer
 {
@@ -39,13 +41,19 @@ public:
 	cwStageLayer();
 	~cwStageLayer();
 
-	eStageLayerType getType() const { return m_eType; }
-	CWVOID setType(eStageLayerType eType) { m_eType = eType; }
+	eStageLayerFliterType getFliterType() const { return m_eFilterType; }
+	CWVOID setFliterType(eStageLayerFliterType eType) { m_eFilterType = eType; }
 
 	CWVOID reset();
 	CWVOID begin(std::vector<cwEntity*>& vecEntities, cwEffect* pEffect);
 	CWVOID render();
 	CWVOID end();
+
+	cwBlend* getBlennd() const { return m_pStageBlend; }
+	CWVOID setBlend(cwBlend* pBlend) { m_pStageBlend = pBlend; }
+
+	cwStencil* getStencil() const { return m_pStageStencil; }
+	CWVOID setStencil(cwStencil* pStencil) { m_pStageStencil = pStencil; }
 
 protected:
 	cwRenderPipeline* getPipeline(cwEntity* pEntity);
@@ -55,7 +63,11 @@ protected:
 	CWVOID addEntities(std::vector<cwEntity*>& vecEntities, cwEffect* pEffect);
 
 protected:
-	eStageLayerType m_eType;
+	eStageLayerFliterType m_eFilterType;
+	CWBOOL m_bTransparent;
+
+	cwBlend* m_pStageBlend;
+	cwStencil* m_pStageStencil;
 
 	cwRenderPipeline m_nPipeline[CW_STAGE_PIPELINE_SIZE];
 	CWUINT m_iPipeLineIndex;

@@ -42,7 +42,7 @@ public:
 	virtual CWHANDLE getTextureMultiThreadPtr();
 
 	virtual CWVOID binding();
-	virtual CWVOID beginDraw();
+	virtual CWVOID beginDraw(CWBOOL bClearColor = CWTRUE, CWBOOL bClearDepth = CWTRUE, CWBOOL bClearStencil = CWTRUE);
 	virtual CWVOID endDraw();
 
 	inline CWVOID setClearColor(const cwVector4D& color) { m_nClearColor = color; }

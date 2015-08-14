@@ -53,7 +53,7 @@ public:
 	virtual CWVOID setViewPort(cwViewPort* pViewPort);
 	virtual CWVOID createRenderState() = 0;
 
-	virtual CWVOID beginDraw() = 0;
+	virtual CWVOID beginDraw(CWBOOL bClearColor = CWTRUE, CWBOOL bClearDepth = CWTRUE, CWBOOL bClearStencil = CWTRUE) = 0;
 	virtual CWVOID endDraw() = 0;
 	virtual CWVOID swap() = 0;
 

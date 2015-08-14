@@ -17,58 +17,33 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwRenderTexture.h"
-#include "Base/cwColor.h"
+#include "cwCommon.h"
+#include <algorithm>
 
 NS_MINIR_BEGIN
 
-bool cwRenderTexture::init(CWFLOAT fWidth, CWFLOAT fHeight)
+CWBYTE cwCommon::parseHexStringByte(const CWSTRING& strHex)
 {
-	m_fWidth = fWidth;
-	m_fHeight = fHeight;
-	m_nClearColor = cwColor::black;
+	static CWBYTE baseData[23] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0, 0, 0, 0, 10, 11, 12, 13, 14, 15};
 
-	return onResize(true);
-}
+	CWBYTE ret = 0;
 
-bool cwRenderTexture::onResize(bool bForce)
-{
-	return true;
-}
+	CWSTRING strLower = strHex;
+	std::transform(strLower.begin(), strLower.end(), strLower.begin(), ::tolower);
 
-CWHANDLE cwRenderTexture::getRenderTargetPtr()
-{
-	return NULL;
-}
+	auto nPos = strLower.find('x');
+	if (nPos == std::string::npos) return ret;
+	if (nPos + 2 >= strLower.size()) return ret;
 
-CWHANDLE cwRenderTexture::getTexturePtr()
-{
-	return NULL;
-}
+	CWUINT indexUpper = strLower[nPos+1]-'0';
+	if (indexUpper < 23)
+		ret |= baseData[indexUpper] << 4;
 
-CWHANDLE cwRenderTexture::getTextureMultiThreadPtr()
-{
-	return NULL;
-}
+	CWUINT indexLower = strLower[nPos + 2] - '0';
+	if (indexLower < 23)
+		ret |= baseData[indexLower];
 
-void cwRenderTexture::beginResize()
-{
-
-}
-
-CWVOID cwRenderTexture::binding()
-{
-
-}
-
-CWVOID cwRenderTexture::beginDraw(CWBOOL bClearColor, CWBOOL bClearDepth, CWBOOL bClearStencil)
-{
-
-}
-
-CWVOID cwRenderTexture::endDraw()
-{
-
+	return ret;
 }
 
 NS_MINIR_END

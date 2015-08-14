@@ -36,8 +36,9 @@ m_eType(eStageTypeNormal),
 m_pViewPort(nullptr),
 m_pRenderTarget(nullptr),
 m_pStageEffect(nullptr),
-m_pStageBlend(nullptr),
-m_pStageStencil(nullptr)
+m_bClearColor(CWTRUE),
+m_bClearDepth(CWTRUE),
+m_bClearStencil(CWTRUE)
 {
 
 }
@@ -99,12 +100,24 @@ CWVOID cwStage::begin()
 	if (!pScene) return;
 
 	for (auto pLayer : m_nVecLayer) {
-		if (pLayer->getType() == eStageLayerNormal) {
+		eStageLayerFliterType eFilterType = pLayer->getFliterType();
+
+		switch (eFilterType) {
+		case eStageLayerFliterStage:
+			pLayer->begin(m_nVecStageEntities, m_pStageEffect);
+			break;
+		case eStageLayerFliterEntity:
+		{
 			std::vector<cwEntity*>& vecEntity = pScene->getVisibleEntities(nullptr);
 			pLayer->begin(vecEntity, m_pStageEffect);
 		}
-		else if (pLayer->getType() == eStageLayerSelf) {
-			pLayer->begin(m_nVecStageEntities, m_pStageEffect);
+			break;
+		case eStageLayerFliterMirror:
+		{
+			std::vector<cwEntity*>& vecEntity = pScene->getVisibleEntities(nullptr, eSceneObjectMirror);
+			pLayer->begin(vecEntity, m_pStageEffect);
+		}
+			break;
 		}
 	}
 }
@@ -118,9 +131,7 @@ CWVOID cwStage::render()
 
 	cwRepertory::getInstance().getDevice()->setViewPort(m_pViewPort);
 	cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTarget);
-	cwRepertory::getInstance().getDevice()->setBlend(m_pStageBlend);
-	cwRepertory::getInstance().getDevice()->setStencil(m_pStageStencil);
-	cwRepertory::getInstance().getDevice()->beginDraw();
+	cwRepertory::getInstance().getDevice()->beginDraw(m_bClearColor, m_bClearDepth, m_bClearStencil);
 
 	for (auto pLayer : m_nVecLayer) {
 		pLayer->render();

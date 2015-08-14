@@ -278,7 +278,7 @@ void cwD3D11Device::createRenderState()
 	m_eRenderState = eRenderStateSolid;
 }
 
-void cwD3D11Device::beginDraw()
+void cwD3D11Device::beginDraw(CWBOOL bClearColor, CWBOOL bClearDepth, CWBOOL bClearStencil)
 {
 	if (m_bRefreshRenderTarget && m_pCurrRenderTarget) {
 		m_pCurrRenderTarget->binding();
@@ -288,7 +288,7 @@ void cwD3D11Device::beginDraw()
 		m_pCurrViewPort->binding();
 	}
 
-	m_pCurrRenderTarget->beginDraw();
+	m_pCurrRenderTarget->beginDraw(bClearColor, bClearDepth, bClearStencil);
 }
 
 void cwD3D11Device::endDraw()

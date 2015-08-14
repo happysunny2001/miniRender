@@ -24,6 +24,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwUtils.h"
 #include "Ref/cwRef.h"
 
+#include <unordered_map>
+
 NS_MINIR_BEGIN
 
 class cwParserManager : public cwRef
@@ -35,10 +37,14 @@ public:
 	virtual~ cwParserManager();
 
 	virtual CWBOOL init();
-	inline cwRef* getParser(eParerType eType) { return m_nArrParser[eType]; }
+	inline cwRef* getParser(eParserType eType) { return m_nArrParser[eType]; }
+
+	CWBOOL getBool(const CWSTRING& strBool);
 
 protected:
-	cwRef* m_nArrParser[eParerTypeMax];
+	cwRef* m_nArrParser[eParserTypeMax];
+
+	std::unordered_map<CWSTRING, CWBOOL> m_nMapBool;
 
 };
 

@@ -17,58 +17,35 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwRenderTexture.h"
-#include "Base/cwColor.h"
+#ifndef __CW_BLEND_PARSER_H__
+#define __CW_BLEND_PARSER_H__
+
+#include "Base/cwMacros.h"
+#include "Base/cwBasicType.h"
+#include "Base/cwUtils.h"
+#include "Ref/cwRef.h"
+#include "Blend/cwBlend.h"
+#include "tinyxml2.h"
+
+#include <unordered_map>
 
 NS_MINIR_BEGIN
 
-bool cwRenderTexture::init(CWFLOAT fWidth, CWFLOAT fHeight)
+class cwBlendParser : public cwRef
 {
-	m_fWidth = fWidth;
-	m_fHeight = fHeight;
-	m_nClearColor = cwColor::black;
+public:
+	static cwBlendParser* create();
 
-	return onResize(true);
-}
+	cwBlendParser();
 
-bool cwRenderTexture::onResize(bool bForce)
-{
-	return true;
-}
+	cwBlend* parse(tinyxml2::XMLElement* pBlendData);
 
-CWHANDLE cwRenderTexture::getRenderTargetPtr()
-{
-	return NULL;
-}
+protected:
+	unordered_map<CWSTRING, eBlendFactor> m_nMapBlendFactor;
+	unordered_map<CWSTRING, eBlendOp> m_nMapBlendOp;
 
-CWHANDLE cwRenderTexture::getTexturePtr()
-{
-	return NULL;
-}
-
-CWHANDLE cwRenderTexture::getTextureMultiThreadPtr()
-{
-	return NULL;
-}
-
-void cwRenderTexture::beginResize()
-{
-
-}
-
-CWVOID cwRenderTexture::binding()
-{
-
-}
-
-CWVOID cwRenderTexture::beginDraw(CWBOOL bClearColor, CWBOOL bClearDepth, CWBOOL bClearStencil)
-{
-
-}
-
-CWVOID cwRenderTexture::endDraw()
-{
-
-}
+};
 
 NS_MINIR_END
+
+#endif

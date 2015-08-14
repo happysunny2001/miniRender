@@ -41,6 +41,7 @@ protected:
 	CWVOID buildEntity();
 	CWVOID buildGround();
 	CWVOID buildCar();
+	CWVOID buildMirror();
 	CWVOID buildLights();
 
 	cwStaticRenderObject* createRenderObj(cwGeometryGenerator::cwMeshData& mesh);
@@ -52,6 +53,8 @@ protected:
 	CWFLOAT m_fPhi;
 	CWFLOAT m_fRadius;
 	CWBOOL m_bTouchDown;
+
+	cwStaticRenderObject* m_pPlaneObj;
 
 };
 

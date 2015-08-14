@@ -68,7 +68,7 @@ const cwVector<cwLight*>& cwScene::getLights() const
 	return m_nVecLights;
 }
 
-std::vector<cwEntity*>& cwScene::getVisibleEntities(cwCamera* pCamera)
+std::vector<cwEntity*>& cwScene::getVisibleEntities(cwCamera* pCamera, eSceneObjectType eType)
 {
 	m_nVecVisibleEntity.clear();
 
@@ -77,7 +77,7 @@ std::vector<cwEntity*>& cwScene::getVisibleEntities(cwCamera* pCamera)
 
 	while (!m_nVecStack.empty()) {
 		cwRenderNode* pLast = m_nVecStack.back();
-		if (pLast->getType() == eSceneObjectEntity)
+		if (pLast->getType() == eType)
 			m_nVecVisibleEntity.push_back(static_cast<cwEntity*>(pLast));
 
 		m_nVecStack.pop_back();

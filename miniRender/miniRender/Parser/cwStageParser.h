@@ -49,6 +49,7 @@ protected:
 	CWVOID parseRenderTarget(cwStage* pStage, tinyxml2::XMLElement* pStageData);
 	CWVOID parseLayer(cwStage* pStage, tinyxml2::XMLElement* pStageData);
 
+protected:
 	std::unordered_map <CWSTRING, std::function<CWVOID(cwStage*, tinyxml2::XMLElement*)>> m_nMapParser;
 
 };

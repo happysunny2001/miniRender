@@ -13,3 +13,5 @@ miniRender/x64/Debug/miniRender.lib
 *.ilk
 *.sdf
 miniRender/miniRender.sdf
+*.bak
+Document/conf.xml.bak

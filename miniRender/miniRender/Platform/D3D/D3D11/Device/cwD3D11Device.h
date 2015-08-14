@@ -47,7 +47,7 @@ public:
 	virtual cwViewPort* createViewPort(CWFLOAT fTopLeftX, CWFLOAT fTopLeftY, CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fMinDepth = 0.0f, CWFLOAT fMaxDepth = 1.0f) override;
 	virtual CWVOID createRenderState() override;
 
-	virtual CWVOID beginDraw() override;
+	virtual CWVOID beginDraw(CWBOOL bClearColor, CWBOOL bClearDepth, CWBOOL bClearStencil) override;
 	virtual CWVOID endDraw() override;
 	virtual CWVOID swap() override;
 

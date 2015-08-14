@@ -2,17 +2,17 @@
 <Renderer>
 	<StageList>
 
-		<Stage Name="S1" Type="normal" Enable="true">
+		<Stage Name="S1" Type="normal" Enable="True">
 			<Camera Name="default" />
 			<ViewPort Name="default" TopLeftX="0" TopLeftY="0" Width="-1" Height="-1" MinDepth="0" MaxDepth="1.0" />
 			<RenderTarget Type="texture" Width="1.0" Height="1.0" />
 		</Stage>
 
-		<Stage Name="S2" Type="normal" Enable="true">
+		<Stage Name="S2" Type="normal" Enable="True">
 			<Camera Name="Homo" />
 			<ViewPort Name="default" TopLeftX="0" TopLeftY="0" Width="-1" Height="-1" MinDepth="0" MaxDepth="1.0" />
 			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" />
-			<Layer Filter="self"/> 
+			<Layer EntityType="Stage"/> 
 			<EntityList>
 				<Entity Type="Quad" VertexType="PosTex">
 					<Position x="0" y="0" z="0" />

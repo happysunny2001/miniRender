@@ -20,18 +20,26 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwStageLayer.h"
 #include "Entity/cwEntity.h"
 #include "Effect/cwEffect.h"
+#include "Repertory/cwRepertory.h"
+#include "Device/cwDevice.h"
+#include "Blend/cwBlend.h"
+#include "Stencil/cwStencil.h"
 
 NS_MINIR_BEGIN
 
 cwStageLayer::cwStageLayer():
-m_eType(eStageLayerNormal)
+m_eFilterType(eStageLayerFliterEntity),
+m_bTransparent(CWFALSE),
+m_pStageBlend(nullptr),
+m_pStageStencil(nullptr)
 {
 
 }
 
 cwStageLayer::~cwStageLayer()
 {
-
+	CW_SAFE_RELEASE_NULL(m_pStageBlend);
+	CW_SAFE_RELEASE_NULL(m_pStageStencil);
 }
 
 CWVOID cwStageLayer::reset()
@@ -50,6 +58,21 @@ CWVOID cwStageLayer::begin(std::vector<cwEntity*>& vecEntities, cwEffect* pEffec
 	else {
 		addEntities(vecEntities, pEffect);
 	}
+}
+
+CWVOID cwStageLayer::render()
+{
+	cwRepertory::getInstance().getDevice()->setBlend(m_pStageBlend);
+	cwRepertory::getInstance().getDevice()->setStencil(m_pStageStencil);
+
+	for (CWUINT i = 0; i < m_iPipeLineIndex; ++i) {
+		m_nPipeline[i].render();
+	}
+}
+
+CWVOID cwStageLayer::end()
+{
+
 }
 
 CWVOID cwStageLayer::addEntities(std::vector<cwEntity*>& vecEntities, cwEffect* pEffect)
@@ -118,18 +141,6 @@ cwRenderPipeline* cwStageLayer::getUnusePipeline(cwShader* pShader)
 	}
 
 	return nullptr;
-}
-
-CWVOID cwStageLayer::render()
-{
-	for (CWUINT i = 0; i < m_iPipeLineIndex; ++i) {
-		m_nPipeline[i].render();
-	}
-}
-
-CWVOID cwStageLayer::end()
-{
-
 }
 
 NS_MINIR_END

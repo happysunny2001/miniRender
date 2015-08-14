@@ -25,8 +25,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwVector.h"
 #include "ViewPort/cwViewPort.h"
 #include "Texture/cwRenderTexture.h"
-#include "Blend/cwBlend.h"
-#include "Stencil/cwStencil.h"
 #include "Parser/cwStageParser.h"
 #include "cwRenderPipeline.h"
 
@@ -57,6 +55,10 @@ public:
 	inline cwViewPort* getViewPort() const { return m_pViewPort; }
 	inline cwRenderTexture* getRenderTexture() const { return m_pRenderTarget; }
 
+	inline CWVOID setIsClearColor(CWBOOL bClear) { m_bClearColor = bClear; }
+	inline CWVOID setIsClearDepth(CWBOOL bClear) { m_bClearDepth = bClear; }
+	inline CWVOID setIsClearStencil(CWBOOL bClear) { m_bClearStencil = bClear; }
+
 	CWVOID reset();
 	CWVOID begin();
 	CWVOID render();
@@ -85,10 +87,11 @@ protected:
 	
 	cwViewPort* m_pViewPort;
 	cwRenderTexture* m_pRenderTarget;
+	CWBOOL m_bClearColor;
+	CWBOOL m_bClearDepth;
+	CWBOOL m_bClearStencil;
 
 	cwEffect* m_pStageEffect;
-	cwBlend* m_pStageBlend;
-	cwStencil* m_pStageStencil;
 
 	std::vector<cwEntity*> m_nVecStageEntities;
 	std::vector<cwStageLayer*> m_nVecLayer;

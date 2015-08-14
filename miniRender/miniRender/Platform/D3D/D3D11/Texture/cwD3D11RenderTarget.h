@@ -45,7 +45,7 @@ public:
 	virtual CWHANDLE getTextureMultiThreadPtr() override;
 
 	virtual CWVOID binding() override;
-	virtual CWVOID beginDraw() override;
+	virtual CWVOID beginDraw(CWBOOL bClearColor = CWTRUE, CWBOOL bClearDepth = CWTRUE, CWBOOL bClearStencil = CWTRUE) override;
 	virtual CWVOID endDraw() override;
 
 	virtual CWVOID buildDepthStencilBuffer(CWUINT iWidth, CWUINT iHeight);

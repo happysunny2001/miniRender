@@ -435,6 +435,18 @@
     <ClInclude Include="Camera\cwHomogeneousCamera.h">
       <Filter>源文件\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="Parser\cwBlendParser.h">
+      <Filter>源文件\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser\cwStencilParser.h">
+      <Filter>源文件\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser\cwStageLayerParser.h">
+      <Filter>源文件\Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="Base\cwCommon.h">
+      <Filter>源文件\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -685,6 +697,18 @@
     </ClCompile>
     <ClCompile Include="Camera\cwHomogeneousCamera.cpp">
       <Filter>源文件\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser\cwBlendParser.cpp">
+      <Filter>源文件\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser\cwStencilParser.cpp">
+      <Filter>源文件\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser\cwStageLayerParser.cpp">
+      <Filter>源文件\Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\cwCommon.cpp">
+      <Filter>源文件\Base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -139,17 +139,25 @@ CWVOID cwD3D11RenderTarget::binding()
 	pDevice->getD3D11DeviceContext()->OMSetRenderTargets(1, arrTargetView, m_pDepthStencilView);
 }
 
-CWVOID cwD3D11RenderTarget::beginDraw()
+CWVOID cwD3D11RenderTarget::beginDraw(CWBOOL bClearColor, CWBOOL bClearDepth, CWBOOL bClearStencil)
 {
 	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
-	pDevice->getD3D11DeviceContext()->ClearRenderTargetView(m_pRenderTarget, (const CWFLOAT*)&m_nClearColor);
-	pDevice->getD3D11DeviceContext()->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	if (bClearColor)
+		pDevice->getD3D11DeviceContext()->ClearRenderTargetView(m_pRenderTarget, (const CWFLOAT*)&m_nClearColor);
+
+	CWUINT nBit = 0;
+	if (bClearDepth)
+		nBit |= D3D11_CLEAR_DEPTH;
+	if (bClearStencil)
+		nBit |= D3D11_CLEAR_STENCIL;
+
+	pDevice->getD3D11DeviceContext()->ClearDepthStencilView(m_pDepthStencilView, nBit, 1.0f, 0);
 }
 
 CWVOID cwD3D11RenderTarget::endDraw()
 {
-	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
-	CW_HR(pDevice->getSwapChain()->Present(0, 0));
+	//cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+	//CW_HR(pDevice->getSwapChain()->Present(0, 0));
 }
 
 NS_MINIR_END
