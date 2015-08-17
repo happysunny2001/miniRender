@@ -29,13 +29,13 @@ CWBYTE cwCommon::parseHexStringByte(const CWSTRING& strHex)
 	CWBYTE ret = 0;
 
 	CWSTRING strLower = strHex;
-	std::transform(strLower.begin(), strLower.end(), strLower.begin(), ::tolower);
+	std::transform(strLower.begin(), strLower.end(), strLower.begin(), ::toupper);
 
-	auto nPos = strLower.find('x');
+	auto nPos = strLower.find('X');
 	if (nPos == std::string::npos) return ret;
 	if (nPos + 2 >= strLower.size()) return ret;
 
-	CWUINT indexUpper = strLower[nPos+1]-'0';
+	CWUINT indexUpper = strLower[nPos + 1] - '0';
 	if (indexUpper < 23)
 		ret |= baseData[indexUpper] << 4;
 

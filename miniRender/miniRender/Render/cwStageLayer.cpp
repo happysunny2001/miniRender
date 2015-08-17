@@ -42,6 +42,20 @@ cwStageLayer::~cwStageLayer()
 	CW_SAFE_RELEASE_NULL(m_pStageStencil);
 }
 
+CWVOID cwStageLayer::setBlend(cwBlend* pBlend)
+{
+	CW_SAFE_RETAIN(pBlend);
+	CW_SAFE_RELEASE_NULL(m_pStageBlend);
+	m_pStageBlend = pBlend;
+}
+
+CWVOID cwStageLayer::setStencil(cwStencil* pStencil)
+{
+	CW_SAFE_RETAIN(pStencil);
+	CW_SAFE_RELEASE_NULL(m_pStageStencil);
+	m_pStageStencil = pStencil;
+}
+
 CWVOID cwStageLayer::reset()
 {
 	m_iPipeLineIndex = 0;

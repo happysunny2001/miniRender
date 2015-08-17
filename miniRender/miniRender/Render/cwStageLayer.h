@@ -50,10 +50,10 @@ public:
 	CWVOID end();
 
 	cwBlend* getBlennd() const { return m_pStageBlend; }
-	CWVOID setBlend(cwBlend* pBlend) { m_pStageBlend = pBlend; }
+	CWVOID setBlend(cwBlend* pBlend);
 
 	cwStencil* getStencil() const { return m_pStageStencil; }
-	CWVOID setStencil(cwStencil* pStencil) { m_pStageStencil = pStencil; }
+	CWVOID setStencil(cwStencil* pStencil);
 
 protected:
 	cwRenderPipeline* getPipeline(cwEntity* pEntity);
