@@ -169,7 +169,11 @@ CWVOID cwApplication::onResize(CWUINT width, CWUINT height)
 	CWFLOAT farZ = repertory.getFloat(gValueFarZ);
 	CWFLOAT aspect = (CWFLOAT)width / (CWFLOAT)height;
 
-	repertory.getEngine()->getDefaultCamera()->updateProjMatrix(fov, aspect, nearZ, farZ);
+	//repertory.getEngine()->getDefaultCamera()->updateProjMatrix(fov, aspect, nearZ, farZ);
+	cwCamera* pCamera = repertory.getEngine()->getCamera("default");
+	if (pCamera) {
+		pCamera->updateProjMatrix(fov, aspect, nearZ, farZ);
+	}
 }
 
 CWVOID cwApplication::onResize()

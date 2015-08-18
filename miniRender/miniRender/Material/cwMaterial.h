@@ -89,9 +89,6 @@ public:
 	virtual void updateDiffuseTexture();
 	const cwMatrix4X4& getDiffuseTrans() const { return m_nDiffuseTrans; }
 
-	virtual void setBlend(cwBlend* pBlendOp);
-	inline const cwBlend* getBlend() const { return m_pBlendOp; }
-
 	inline CWVOID* getColorData() { return &m_nMatData;  }
 	inline CWUINT getColorDataSize() { return sizeof(matColor); }
 
@@ -100,7 +97,6 @@ public:
 
 public:
 	matColor m_nMatData;
-	cwBlend* m_pBlendOp;          //blend object
 
 	//the diffuse texture and it's transform matrix
 	cwTexture* m_pDiffuseTexture;

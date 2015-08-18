@@ -471,13 +471,17 @@ void cwD3D11Device::setBlend(const cwBlend* pBlendOper)
 void cwD3D11Device::setStencil(const cwStencil* pStencil)
 {
 	if (!pStencil) {
+		if (!m_pStencil) return;
 		m_pD3D11DeviceContext->OMSetDepthStencilState(0, 0);
+		m_pStencil = nullptr;
 		return;
 	}
 
 	ID3D11DepthStencilState* pState = static_cast<ID3D11DepthStencilState*>(const_cast<CWVOID*>(pStencil->getStencilHandlePtr()));
 	if (!pState) return;
 	m_pD3D11DeviceContext->OMSetDepthStencilState(pState, pStencil->getStencilRef());
+
+	m_pStencil = const_cast<cwStencil*>(pStencil);
 }
 
 cwTexture* cwD3D11Device::createTexture(const CWSTRING& strFileName)
@@ -521,25 +525,25 @@ void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPo
 	this->drawIndexed(pRenderObj->getIndexBuffer()->getIndexCount(), 0, 0);
 }
 
-void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
-{
-	if (!pEntity || !pCamera) return;
-
-	cwShader* pShader = cwRepertory::getInstance().getEngine()->getCurrShader();
-
-	cwMaterial* pMaterial = pEntity->getMaterial();
-	if (pMaterial)
-		pMaterial->configShader(pShader);
-
-	setShaderWorldTrans(pShader, pEntity->getTransformMatrix(), pCamera);
-
-	cwRenderObject* pRenderObj = pEntity->getRenderObj();
-	assert(pRenderObj != nullptr);
-	if (pShader)
-		draw(pShader, pEntity->getEffect()->getTech(), pRenderObj);
-
-	pEntity->render();
-}
+//void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
+//{
+//	if (!pEntity || !pCamera) return;
+//
+//	cwShader* pShader = cwRepertory::getInstance().getEngine()->getCurrShader();
+//
+//	cwMaterial* pMaterial = pEntity->getMaterial();
+//	if (pMaterial)
+//		pMaterial->configShader(pShader);
+//
+//	setShaderWorldTrans(pShader, pEntity->getTransformMatrix(), pCamera);
+//
+//	cwRenderObject* pRenderObj = pEntity->getRenderObj();
+//	assert(pRenderObj != nullptr);
+//	if (pShader)
+//		draw(pShader, pEntity->getEffect()->getTech(), pRenderObj);
+//
+//	pEntity->render();
+//}
 
 void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera)
 {

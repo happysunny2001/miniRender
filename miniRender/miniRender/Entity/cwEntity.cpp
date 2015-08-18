@@ -25,6 +25,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Light/cwLight.h"
 #include "Shader/cwShader.h"
 #include "Engine/cwEngine.h"
+#include "Blend/cwBlend.h"
+#include "Stencil/cwStencil.h"
 
 NS_MINIR_BEGIN
 
@@ -42,7 +44,9 @@ cwEntity* cwEntity::create()
 
 cwEntity::cwEntity():
 m_pRenderObj(nullptr),
-m_pMaterial(nullptr)
+m_pMaterial(nullptr),
+m_pBlend(nullptr),
+m_pStencil(nullptr)
 {
 	m_eType = eSceneObjectEntity;
 }
@@ -51,6 +55,8 @@ cwEntity::~cwEntity()
 {
 	CW_SAFE_RELEASE_NULL(m_pRenderObj);
 	CW_SAFE_RELEASE_NULL(m_pMaterial);
+	CW_SAFE_RELEASE_NULL(m_pBlend);
+	CW_SAFE_RELEASE_NULL(m_pStencil);
 }
 
 CWBOOL cwEntity::init()
@@ -76,6 +82,24 @@ CWVOID cwEntity::setMaterial(cwMaterial* pMaterial)
 	CW_SAFE_RETAIN(pMaterial);
 	CW_SAFE_RELEASE_NULL(m_pMaterial);
 	m_pMaterial = pMaterial;
+}
+
+CWVOID cwEntity::setBlend(cwBlend* pBlend)
+{
+	if (m_pBlend == pBlend) return;
+
+	CW_SAFE_RETAIN(pBlend);
+	CW_SAFE_RELEASE_NULL(m_pBlend);
+	m_pBlend = pBlend;
+}
+
+CWVOID cwEntity::setStencil(cwStencil* pStencil)
+{
+	if (m_pStencil == pStencil) return;
+
+	CW_SAFE_RETAIN(pStencil);
+	CW_SAFE_RELEASE_NULL(m_pStencil);
+	m_pStencil = pStencil;
 }
 
 NS_MINIR_END

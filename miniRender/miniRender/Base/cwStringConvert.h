@@ -33,6 +33,10 @@ public:
 	static CWWSTRING convertToWideChar(const CWSTRING& str);
 	static CWWSTRING createFPSString(const CWWSTRING& title, CWUINT iFPS);
 	static CWSTRING convertToMultiByte(const CWWSTRING& str);
+	static CWVOID ltrim(CWSTRING& str);
+	static CWVOID rtrim(CWSTRING& str);
+	static CWVOID trim(CWSTRING& str);
+	static CWVOID split(CWSTRING& str, const CWSTRING& strSep, std::vector<CWSTRING>& vecRet);
 
 protected:
 };

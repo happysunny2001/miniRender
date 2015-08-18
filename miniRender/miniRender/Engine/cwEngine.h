@@ -51,17 +51,8 @@ public:
 	cwCamera* getDefaultCamera();
 	cwCamera* getCamera(const CWSTRING& strName);
 	CWBOOL removeCamera(cwCamera* pCamera);
-	inline cwCamera* getCurrentCamera() const { return m_pCurrCamera; }
-	CWVOID setCurrCamera(cwCamera* pCamera);
-
-	virtual CWVOID setCurrShader(cwShader* pShader);
-	inline cwShader* getCurrShader() const { return m_pCurrShader; }
 
 	inline cwRenderer* getRenderer() const { return m_pRenderer; }
-
-	virtual CWVOID render(cwEntity* pEntity);
-	virtual CWVOID render(cwEntity* pEntity, cwEffect* pEffect);
-
 	virtual CWVOID loadRenderer(const CWSTRING& strConfFile);
 
 protected:
@@ -72,7 +63,6 @@ protected:
 
 	virtual CWBOOL init();
 	virtual CWVOID buildDefaultCamera();
-	virtual CWVOID configShaderLight();
 
 	virtual CWVOID render();
 
@@ -80,9 +70,7 @@ protected:
 
 protected:
 	cwScene* m_pCurrScene;
-	cwCamera* m_pCurrCamera;
-	cwShader*m_pCurrShader;
-	//cwVector<cwCamera*> m_nVecCameras;
+
 	cwCamera* m_pDefaultCamera;
 	cwMap<CWSTRING, cwCamera*> m_nMapCameras;
 

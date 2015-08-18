@@ -18,8 +18,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwBlendParser.h"
+#include "Base/cwStringConvert.h"
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
+#include "cwParserManager.h"
 
 NS_MINIR_BEGIN
 
@@ -66,6 +68,27 @@ cwBlend* cwBlendParser::parse(tinyxml2::XMLElement* pBlendData)
 	if (!pBlendData) return nullptr;
 
 	BlendData blendData;
+
+	const char* pcEnable = pBlendData->Attribute("Enable");
+	if (pcEnable) {
+		blendData.bEnable = cwRepertory::getInstance().getParserManager()->getBool(pcEnable);
+	}
+
+	const char* pcColorEnable = pBlendData->Attribute("ColorEnable");
+	if (pcColorEnable) {
+		std::vector<CWSTRING> vecSplit;
+		CWSTRING strSplit(pcColorEnable);
+		cwStringConvert::trim(strSplit);
+		cwStringConvert::split(strSplit, "|", vecSplit);
+
+		CWBYTE uColorEnable = 0;
+		for (auto strColor : vecSplit) {
+			uColorEnable |= cwRepertory::getInstance().getParserManager()->getColorEnable(strColor);
+		}
+
+		blendData.uColorEnable = uColorEnable;
+	}
+
 	tinyxml2::XMLElement* pRGBElement = pBlendData->FirstChildElement("RGB");
 	if (pRGBElement) {
 		const char* pcSrc = pRGBElement->Attribute("Src");

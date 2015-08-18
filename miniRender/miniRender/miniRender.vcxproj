@@ -43,6 +43,7 @@
     <ClInclude Include="Effect\cwEffectParameter.h" />
     <ClInclude Include="Engine\cwEngine.h" />
     <ClInclude Include="Entity\cwEntity.h" />
+    <ClInclude Include="Entity\cwMirror.h" />
     <ClInclude Include="Entity\cwRenderNode.h" />
     <ClInclude Include="Entity\cwScene.h" />
     <ClInclude Include="Event\cwEvent.h" />
@@ -128,6 +129,7 @@
     <ClCompile Include="Base\cwColor.cpp" />
     <ClCompile Include="Base\cwCommon.cpp" />
     <ClCompile Include="Base\cwRunTime.cpp" />
+    <ClCompile Include="Base\cwStringConvert.cpp" />
     <ClCompile Include="Blend\cwBlend.cpp" />
     <ClCompile Include="Buffer\cwBuffer.cpp" />
     <ClCompile Include="Camera\cwCamera.cpp" />
@@ -138,6 +140,7 @@
     <ClCompile Include="Effect\cwEffectParameter.cpp" />
     <ClCompile Include="Engine\cwEngine.cpp" />
     <ClCompile Include="Entity\cwEntity.cpp" />
+    <ClCompile Include="Entity\cwMirror.cpp" />
     <ClCompile Include="Entity\cwRenderNode.cpp" />
     <ClCompile Include="Entity\cwScene.cpp" />
     <ClCompile Include="Event\cwEvent.cpp" />

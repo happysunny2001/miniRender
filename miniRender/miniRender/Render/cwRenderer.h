@@ -29,6 +29,9 @@ NS_MINIR_BEGIN
 
 class cwStage;
 class cwCamera;
+class cwRenderBatch;
+class cwShader;
+class cwEffect;
 
 class cwRenderer : public cwRef
 {
@@ -40,6 +43,7 @@ public:
 
 	virtual CWBOOL init();
 	virtual CWVOID setCurrCamera(cwCamera* pCamera);
+	virtual CWVOID setCurrShader(cwShader* pShader);
 	virtual CWVOID addStage(cwStage* pStage);
 	virtual cwStage* getStage(const CWSTRING& strName);
 
@@ -47,15 +51,19 @@ public:
 	CWVOID setFullPath(const CWSTRING& strPath) { m_strFullPath = strPath; }
 
 	virtual CWVOID render();
+	virtual CWVOID render(cwRenderBatch* pBatch);
 
 protected:
 	virtual CWVOID render(cwStage* pStage);
+	virtual CWVOID configLight();
 
 protected:
 	CWSTRING m_strFullPath;
 
 	std::vector<cwStage*> m_nVecStage;
+
 	cwCamera* m_pCurrCamera;
+	cwShader* m_pCurrShader;
 
 };
 

@@ -17,50 +17,47 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_RENDER_PIPELINE_H__
-#define __CW_RENDER_PIPELINE_H__
-
-#include "Base/cwMacros.h"
-#include "Base/cwUtils.h"
-#include "cwRenderBatch.h"
-
-#include <vector>
+#include "cwStringConvert.h"
 
 NS_MINIR_BEGIN
 
-class cwEntity;
-class cwEffect;
-class cwShader;
-
-class cwRenderPipeline 
+CWVOID cwStringConvert::ltrim(CWSTRING& str)
 {
-public:
-	cwRenderPipeline();
-	~cwRenderPipeline();
-	
-	CWVOID reset();
-	CWBOOL addEntity(cwEntity* pEntity);
-	CWBOOL addEntity(cwEntity* pEntity, const cwMatrix4X4& nMat);
-	CWBOOL addEntity(cwEntity* pEntity, cwEffect* pEffect);
-	CWBOOL addEntity(cwEntity* pEntity, cwEffect* pEffect, const cwMatrix4X4& nMat);
-	CWBOOL full();
+	str.erase(0, str.find_first_not_of(' '));
+}
 
-	inline CWVOID setShader(cwShader* pShader) { m_pShader = pShader; }
-	inline cwShader* getShader() const { return m_pShader; }
+CWVOID cwStringConvert::rtrim(CWSTRING& str)
+{
+	str.erase(str.find_last_not_of(' ')+1);
+}
 
-	CWVOID render();
+CWVOID cwStringConvert::trim(CWSTRING& str)
+{
+	str.erase(0, str.find_first_not_of(' '));
+	str.erase(str.find_last_not_of(' ') + 1);
+}
 
-protected:
-	cwRenderBatch* getNextAvailableBatch();
+CWVOID cwStringConvert::split(CWSTRING& str, const CWSTRING& strSep, std::vector<CWSTRING>& vecRet)
+{
+	if (str.empty()) return;
 
-protected:
-	std::vector<cwRenderBatch> m_nVecBatch;
-	CWUINT m_iBatchIndex;
+	std::string::size_type pos = str.find_first_not_of(strSep);
+	while (pos != std::string::npos) {
+		string tmp;
+		std::string::size_type sepPos = str.find(strSep, pos);
+		if (sepPos != std::string::npos) {
+			tmp = str.substr(pos, sepPos - pos);
+			pos = sepPos + strSep.length();
+		}
+		else {
+			tmp = str.substr(pos);
+			pos = sepPos;
+		}
 
-	cwShader* m_pShader;
-
-};
+		if (!tmp.empty()) {
+			vecRet.push_back(tmp);
+		}
+	}
+}
 
 NS_MINIR_END
-
-#endif

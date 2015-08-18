@@ -75,10 +75,7 @@ public:
 	virtual CWVOID setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) override;
 
 	virtual CWVOID clearPixelShaderResource() override;
-
 	virtual CWVOID render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) override;
-	virtual CWVOID render(cwEntity* pEntity, cwCamera* pCamera) override;
-	
 	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj) override;
 
 public:

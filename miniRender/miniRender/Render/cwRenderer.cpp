@@ -18,9 +18,16 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwRenderer.h"
-#include "cwStage.h"
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
+#include "Entity/cwScene.h"
+#include "Entity/cwEntity.h"
+#include "Engine/cwEngine.h"
+#include "Shader/cwShader.h"
+#include "Material/cwMaterial.h"
+#include "Effect/cwEffect.h"
+#include "cwStage.h"
+#include "cwRenderBatch.h"
 
 NS_MINIR_BEGIN
 
@@ -37,7 +44,8 @@ cwRenderer* cwRenderer::create()
 }
 
 cwRenderer::cwRenderer():
-m_pCurrCamera(nullptr)
+m_pCurrCamera(nullptr),
+m_pCurrShader(nullptr)
 {
 
 }
@@ -49,6 +57,7 @@ cwRenderer::~cwRenderer()
 	}
 
 	m_pCurrCamera = nullptr;
+	m_pCurrShader = nullptr;
 }
 
 CWBOOL cwRenderer::init()
@@ -61,6 +70,12 @@ CWVOID cwRenderer::setCurrCamera(cwCamera* pCamera)
 	m_pCurrCamera = pCamera;
 }
 
+CWVOID cwRenderer::setCurrShader(cwShader* pShader)
+{
+	m_pCurrShader = pShader;
+	configLight();
+}
+
 CWVOID cwRenderer::addStage(cwStage* pStage)
 {
 	m_nVecStage.push_back(pStage);
@@ -68,6 +83,9 @@ CWVOID cwRenderer::addStage(cwStage* pStage)
 
 CWVOID cwRenderer::render()
 {
+	m_pCurrCamera = nullptr;
+	m_pCurrShader = nullptr;
+
 	for (auto pStage : m_nVecStage) {
 		this->render(pStage);
 	}
@@ -84,6 +102,28 @@ CWVOID cwRenderer::render(cwStage* pStage)
 	pStage->end();
 }
 
+CWVOID cwRenderer::render(cwRenderBatch* pBatch)
+{
+	if (!pBatch) return;
+	if (!pBatch->m_pEntity) return;
+
+	cwRenderObject* pRenderObj = pBatch->m_pEntity->getRenderObj();
+	if (!pRenderObj) return;
+
+	cwMaterial* pMaterial = pBatch->m_pEntity->getMaterial();
+	if (pMaterial)
+		pMaterial->configShader(m_pCurrShader);
+
+	cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+
+	pDevice->setBlend(pBatch->m_pEntity->getBlend());
+	pDevice->setStencil(pBatch->m_pEntity->getStencil());
+	pDevice->setShaderWorldTrans(m_pCurrShader, pBatch->m_nWorldTrans, m_pCurrCamera);
+	pDevice->draw(m_pCurrShader, pBatch->m_nStrTech, pRenderObj);
+
+	pBatch->m_pEntity->render();
+}
+
 cwStage* cwRenderer::getStage(const CWSTRING& strName)
 {
 	for (auto pStage : m_nVecStage) {
@@ -91,6 +131,23 @@ cwStage* cwRenderer::getStage(const CWSTRING& strName)
 	}
 
 	return nullptr;
+}
+
+CWVOID cwRenderer::configLight()
+{
+	if (!m_pCurrShader) return;
+	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
+	if (!pCurrScene) return;
+	if (pCurrScene->getLights().empty()) return;
+	if (!m_pCurrShader->hasVariable(eShaderParamLight) || !m_pCurrShader->hasVariable(eShaderParamLightCnt)) return;
+
+	CWUINT index = 0;
+	const cwVector<cwLight*>& vecLight = pCurrScene->getLights();
+	for (auto it = vecLight.begin(); it != vecLight.end(); ++it, ++index) {
+		m_pCurrShader->setVariableData(eShaderParamLight, index, (*it)->data(), 0, (*it)->size());
+	}
+
+	m_pCurrShader->setVariableInt(eShaderParamLightCnt, (CWINT)(vecLight.size()));
 }
 
 NS_MINIR_END

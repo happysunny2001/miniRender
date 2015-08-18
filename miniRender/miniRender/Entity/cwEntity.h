@@ -33,6 +33,8 @@ class cwEffects;
 class cwCamera;
 class cwMaterial;
 class cwLight;
+class cwBlend;
+class cwStencil;
 
 class CW_DLL cwEntity : public cwRenderNode
 {
@@ -50,9 +52,18 @@ public:
 	virtual CWVOID setMaterial(cwMaterial* pMaterial);
 	inline cwMaterial* getMaterial() { return m_pMaterial; }
 
+	virtual CWVOID setBlend(cwBlend* pBlend);
+	inline cwBlend* getBlend() { return m_pBlend; }
+
+	virtual CWVOID setStencil(cwStencil* pStencil);
+	inline cwStencil* getStencil() { return m_pStencil; }
+
 protected:
 	cwMaterial* m_pMaterial;
 	cwRenderObject* m_pRenderObj;
+
+	cwBlend* m_pBlend;
+	cwStencil* m_pStencil;
 
 };
 

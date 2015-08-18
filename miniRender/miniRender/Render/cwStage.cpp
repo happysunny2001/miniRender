@@ -26,6 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Entity/cwEntity.h"
 #include "Device/cwDevice.h"
 #include "cwStageLayer.h"
+#include "cwRenderer.h"
 
 NS_MINIR_BEGIN
 
@@ -124,9 +125,9 @@ CWVOID cwStage::begin()
 
 CWVOID cwStage::render()
 {
-	cwRepertory::getInstance().getEngine()->setCurrCamera(m_pCamera);
+	cwRepertory::getInstance().getEngine()->getRenderer()->setCurrCamera(m_pCamera);
 	if (m_pStageEffect) {
-		cwRepertory::getInstance().getEngine()->setCurrShader(m_pStageEffect->getShader());
+		//config effect parameter
 	}
 
 	cwRepertory::getInstance().getDevice()->setViewPort(m_pViewPort);

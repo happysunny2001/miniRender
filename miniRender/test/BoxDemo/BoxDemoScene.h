@@ -34,7 +34,6 @@ public:
 	virtual bool init() override;
 
 	virtual void update(CWFLOAT dt) override;
-	virtual CWVOID render() override;
 
 	virtual void onTouchDown(cwTouch* pTouch) override;
 	virtual void onTouchUp(cwTouch* pTouch) override;

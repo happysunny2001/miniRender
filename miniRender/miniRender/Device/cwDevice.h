@@ -84,10 +84,7 @@ public:
 	virtual CWVOID setRenderTarget(cwRenderTexture* pRenderTexture);
 
 	virtual CWVOID clearPixelShaderResource() = 0;
-
 	virtual CWVOID render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) = 0;
-	virtual CWVOID render(cwEntity* pEntity, cwCamera* pCamera) = 0;
-
 	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj) = 0;
 
 	inline CWBOOL getEnableMsaa4X() const { return m_bEnableMsaa4x; }
@@ -102,6 +99,7 @@ protected:
 	cwVector4D m_fvClearColor;
 	eRenderState m_eRenderState;
 	cwBlend* m_pBlendState; //current blend state, just for record
+	cwStencil* m_pStencil;
 	CWBOOL m_bEnableMsaa4x;
 
 	cwRenderTexture* m_pRenderTargetBkBuffer;

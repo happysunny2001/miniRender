@@ -40,11 +40,13 @@ public:
 	inline cwRef* getParser(eParserType eType) { return m_nArrParser[eType]; }
 
 	CWBOOL getBool(const CWSTRING& strBool);
+	eColorWriteEnable getColorEnable(const CWSTRING& strColor);
 
 protected:
 	cwRef* m_nArrParser[eParserTypeMax];
 
 	std::unordered_map<CWSTRING, CWBOOL> m_nMapBool;
+	std::unordered_map<CWSTRING, eColorWriteEnable> m_nMapColorEnable;
 
 };
 

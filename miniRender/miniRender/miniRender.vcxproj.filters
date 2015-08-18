@@ -447,6 +447,9 @@
     <ClInclude Include="Base\cwCommon.h">
       <Filter>源文件\Base</Filter>
     </ClInclude>
+    <ClInclude Include="Entity\cwMirror.h">
+      <Filter>源文件\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -709,6 +712,12 @@
     </ClCompile>
     <ClCompile Include="Base\cwCommon.cpp">
       <Filter>源文件\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Base\cwStringConvert.cpp">
+      <Filter>源文件\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\cwMirror.cpp">
+      <Filter>源文件\Entity</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

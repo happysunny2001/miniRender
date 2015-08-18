@@ -47,10 +47,11 @@
 			<Layer EntityType="Entity" Transparent="No"> 
 				<!--
 					Layer Blend configuration
+					Enable:[True,False], ColorEnable:[None,Red,Green,Blue,Alpha,All], you can use Red|Green style for bit or operation.
 					Src:[Zero,One,SrcColor,InvSrcColor,SrcAlpha,InvSrcAlpha,DestAlpha,InvDestAlpha,DestColor,InvDestColor,SrcAlphaSat,BlendFactor,InvBlendFactor,Src1Color,InvSrc1Color,Src1Alpha,InvSrc1Alpha]
 					Oper:[Add,Sub,RevSub,Min,Max]
 				-->
-				<Blend>
+				<Blend Enable="" ColorEnable="">
 					<RGB Src="" Dest="" Oper="" />
 					<Alpha Src="" Dest="" Oper="" />
 				</Blend>

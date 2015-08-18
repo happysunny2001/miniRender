@@ -19,6 +19,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwRenderPipeline.h"
 #include "Entity/cwEntity.h"
+#include "Repertory/cwRepertory.h"
+#include "Render/cwRenderer.h"
+#include "Engine/cwEngine.h"
+#include "Effect/cwEffect.h"
 
 NS_MINIR_BEGIN
 
@@ -55,6 +59,20 @@ CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity)
 
 	pBatch->m_pEntity = pEntity;
 	pBatch->m_pEffect = pEntity->getEffect();
+	pBatch->m_nStrTech = pBatch->m_pEffect->getTech();
+	pBatch->m_nWorldTrans = pEntity->getTransformMatrix();
+	return CWTRUE;
+}
+
+CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity, const cwMatrix4X4& nMat)
+{
+	cwRenderBatch* pBatch = getNextAvailableBatch();
+	if (!pBatch) return CWFALSE;
+
+	pBatch->m_pEntity = pEntity;
+	pBatch->m_pEffect = pEntity->getEffect();
+	pBatch->m_nStrTech = pBatch->m_pEffect->getTech();
+	pBatch->m_nWorldTrans = pEntity->getTransformMatrix()*nMat;
 	return CWTRUE;
 }
 
@@ -64,7 +82,21 @@ CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity, cwEffect* pEffect)
 	if (!pBatch) return CWFALSE;
 
 	pBatch->m_pEntity = pEntity;
-	pBatch->m_pEffect = pEffect;
+	pBatch->m_pEffect = nullptr;
+	pBatch->m_nStrTech = pEffect->getTech();
+	pBatch->m_nWorldTrans = pEntity->getTransformMatrix();
+	return CWTRUE;
+}
+
+CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity, cwEffect* pEffect, const cwMatrix4X4& nMat)
+{
+	cwRenderBatch* pBatch = getNextAvailableBatch();
+	if (!pBatch) return CWFALSE;
+
+	pBatch->m_pEntity = pEntity;
+	pBatch->m_pEffect = nullptr;
+	pBatch->m_nStrTech = pEffect->getTech();
+	pBatch->m_nWorldTrans = pEntity->getTransformMatrix()*nMat;
 	return CWTRUE;
 }
 
@@ -75,6 +107,8 @@ CWBOOL cwRenderPipeline::full()
 
 CWVOID cwRenderPipeline::render()
 {
+	cwRepertory::getInstance().getEngine()->getRenderer()->setCurrShader(m_pShader);
+
 	for (CWUINT i = 0; i < m_iBatchIndex; ++i) {
 		m_nVecBatch[i].render();
 	}

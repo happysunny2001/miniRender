@@ -57,14 +57,14 @@ bool cwD3D11Blend::init(const BlendData& blendData)
 
 	m_nBlendDesc.AlphaToCoverageEnable = FALSE;
 	m_nBlendDesc.IndependentBlendEnable = FALSE;
-	m_nBlendDesc.RenderTarget[0].BlendEnable = TRUE;
+	m_nBlendDesc.RenderTarget[0].BlendEnable = blendData.bEnable;
 	m_nBlendDesc.RenderTarget[0].SrcBlend = cwD3D11Device::getBlendFactor(blendData.srcBlend);
 	m_nBlendDesc.RenderTarget[0].DestBlend = cwD3D11Device::getBlendFactor(blendData.dstBlend); 
 	m_nBlendDesc.RenderTarget[0].BlendOp = cwD3D11Device::getBlendOp(blendData.blendOp);
 	m_nBlendDesc.RenderTarget[0].SrcBlendAlpha = cwD3D11Device::getBlendFactor(blendData.srcBlendAlpha);
 	m_nBlendDesc.RenderTarget[0].DestBlendAlpha = cwD3D11Device::getBlendFactor(blendData.dstBlendAlpha);
 	m_nBlendDesc.RenderTarget[0].BlendOpAlpha = cwD3D11Device::getBlendOp(blendData.blendOpAlpha); 
-	m_nBlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	m_nBlendDesc.RenderTarget[0].RenderTargetWriteMask = blendData.uColorEnable;
 
 	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
 	CW_HR(pD3D11Device->getD3D11Device()->CreateBlendState(&m_nBlendDesc, &m_pBlendState));

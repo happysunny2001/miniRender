@@ -61,8 +61,7 @@ cwMaterial* cwMaterial::create(
 }
 
 cwMaterial::cwMaterial():
-m_pDiffuseTexture(nullptr),
-m_pBlendOp(nullptr)
+m_pDiffuseTexture(nullptr)
 {
 	m_nMatData.m_nAmbient  = cwVector4D(1.0f, 1.0f, 1.0f, 1.0f);
 	m_nMatData.m_nDiffuse  = cwVector4D(1.0f, 1.0f, 1.0f, 1.0f);
@@ -76,7 +75,6 @@ m_pBlendOp(nullptr)
 
 cwMaterial::~cwMaterial()
 {
-	CW_SAFE_RELEASE_NULL(m_pBlendOp);
 	CW_SAFE_RELEASE_NULL(m_pDiffuseTexture);
 }
 
@@ -176,14 +174,6 @@ void cwMaterial::updateDiffuseTexture()
 	m_nDiffuseTrans.m41 = m_nDiffTextureTrans.x; m_nDiffuseTrans.m42 = m_nDiffTextureTrans.y; m_nDiffuseTrans.m43 = 0;    m_nDiffuseTrans.m44 = 1.0f;
 }
 
-void cwMaterial::setBlend(cwBlend* pBlendOp)
-{
-	if (m_pBlendOp == pBlendOp) return;
-	CW_SAFE_RETAIN(pBlendOp);
-	CW_SAFE_RELEASE_NULL(m_pBlendOp);
-	m_pBlendOp = pBlendOp;
-}
-
 void cwMaterial::configEffect(cwEffect* pEffect)
 {
 	if (!pEffect) return;
@@ -192,8 +182,6 @@ void cwMaterial::configEffect(cwEffect* pEffect)
 
 	pShader->setVariableData(eShaderParamMaterial, this->getColorData(), 0, this->getColorDataSize());
 	pShader->setVariableTexture(eShaderParamTexture0, this->getDiffuseTexture());
-
-	cwRepertory::getInstance().getDevice()->setBlend(this->getBlend());
 }
 
 CWVOID cwMaterial::configShader(cwShader* pShader)
@@ -202,8 +190,6 @@ CWVOID cwMaterial::configShader(cwShader* pShader)
 		pShader->setVariableData(eShaderParamMaterial, this->getColorData(), 0, this->getColorDataSize());
 		pShader->setVariableTexture(eShaderParamTexture0, this->getDiffuseTexture());
 	}
-
-	cwRepertory::getInstance().getDevice()->setBlend(this->getBlend());
 }
 
 NS_MINIR_END

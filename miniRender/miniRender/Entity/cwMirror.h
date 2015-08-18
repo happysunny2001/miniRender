@@ -17,47 +17,33 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_RENDER_PIPELINE_H__
-#define __CW_RENDER_PIPELINE_H__
+#ifndef __CW_MIRROR_H__
+#define __CW_MIRROR_H__
 
 #include "Base/cwMacros.h"
-#include "Base/cwUtils.h"
-#include "cwRenderBatch.h"
-
-#include <vector>
+#include "Math/cwMath.h"
+#include "cwEntity.h"
 
 NS_MINIR_BEGIN
 
-class cwEntity;
-class cwEffect;
-class cwShader;
-
-class cwRenderPipeline 
+class cwMirror : public cwEntity
 {
 public:
-	cwRenderPipeline();
-	~cwRenderPipeline();
-	
-	CWVOID reset();
-	CWBOOL addEntity(cwEntity* pEntity);
-	CWBOOL addEntity(cwEntity* pEntity, const cwMatrix4X4& nMat);
-	CWBOOL addEntity(cwEntity* pEntity, cwEffect* pEffect);
-	CWBOOL addEntity(cwEntity* pEntity, cwEffect* pEffect, const cwMatrix4X4& nMat);
-	CWBOOL full();
+	static cwMirror* create();
 
-	inline CWVOID setShader(cwShader* pShader) { m_pShader = pShader; }
-	inline cwShader* getShader() const { return m_pShader; }
+	cwMirror();
+	virtual ~cwMirror();
 
-	CWVOID render();
+	virtual CWBOOL init() override;
+
+	virtual CWVOID setReflectPlane(const cwPlane& plane);
 
 protected:
-	cwRenderBatch* getNextAvailableBatch();
+	virtual CWVOID buildBlend();
 
 protected:
-	std::vector<cwRenderBatch> m_nVecBatch;
-	CWUINT m_iBatchIndex;
-
-	cwShader* m_pShader;
+	cwPlane m_nReflectPlane;
+	cwMatrix4X4 m_nMatReflect;
 
 };
 

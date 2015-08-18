@@ -17,50 +17,30 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_RENDER_PIPELINE_H__
-#define __CW_RENDER_PIPELINE_H__
-
-#include "Base/cwMacros.h"
-#include "Base/cwUtils.h"
-#include "cwRenderBatch.h"
-
-#include <vector>
+#include "cwMirror.h"
 
 NS_MINIR_BEGIN
 
-class cwEntity;
-class cwEffect;
-class cwShader;
-
-class cwRenderPipeline 
+cwMirror* cwMirror::create()
 {
-public:
-	cwRenderPipeline();
-	~cwRenderPipeline();
-	
-	CWVOID reset();
-	CWBOOL addEntity(cwEntity* pEntity);
-	CWBOOL addEntity(cwEntity* pEntity, const cwMatrix4X4& nMat);
-	CWBOOL addEntity(cwEntity* pEntity, cwEffect* pEffect);
-	CWBOOL addEntity(cwEntity* pEntity, cwEffect* pEffect, const cwMatrix4X4& nMat);
-	CWBOOL full();
+	cwMirror* pMirror = new cwMirror();
+	if (pMirror && pMirror->init()) {
+		pMirror->autorelease();
+		return pMirror;
+	}
 
-	inline CWVOID setShader(cwShader* pShader) { m_pShader = pShader; }
-	inline cwShader* getShader() const { return m_pShader; }
+	CW_SAFE_DELETE(pMirror);
+	return nullptr;
+}
 
-	CWVOID render();
+cwMirror::cwMirror()
+{
 
-protected:
-	cwRenderBatch* getNextAvailableBatch();
+}
 
-protected:
-	std::vector<cwRenderBatch> m_nVecBatch;
-	CWUINT m_iBatchIndex;
+cwMirror::~cwMirror()
+{
 
-	cwShader* m_pShader;
-
-};
+}
 
 NS_MINIR_END
-
-#endif

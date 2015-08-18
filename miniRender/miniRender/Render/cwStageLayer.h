@@ -72,6 +72,8 @@ protected:
 	cwRenderPipeline m_nPipeline[CW_STAGE_PIPELINE_SIZE];
 	CWUINT m_iPipeLineIndex;
 
+	cwMatrix4X4 m_nMatWorldTrans;
+
 	std::unordered_map<cwShader*, cwRenderPipeline*> m_nMapPipeline;
 
 };

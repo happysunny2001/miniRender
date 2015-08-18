@@ -219,6 +219,15 @@ typedef enum {
 }eRenderTextureType;
 
 typedef enum {
+	eColorWriteEnableNone = 0,
+	eColorWriteEnableRed = 1,
+	eColorWriteEnableGreen = 2,
+	eColorWriteEnableBlue = 4,
+	eColorWriteEnableAlpha = 8,
+	eColorWriteEnableAll = (eColorWriteEnableRed | eColorWriteEnableGreen | eColorWriteEnableBlue | eColorWriteEnableAlpha),
+}eColorWriteEnable;
+
+typedef enum {
 	eShaderParamWorldViewProj = 0,
 	eShaderParamWorld         = 1,
 	eShaderParamWorldInvTrans = 2,

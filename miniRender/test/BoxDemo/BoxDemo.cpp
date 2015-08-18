@@ -40,6 +40,7 @@ void BoxDemo::gameBegin()
 {
 	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderScreenQuad.xml");
 	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 2.0f, -20.0f);
+
 	buildScene();
 }
 

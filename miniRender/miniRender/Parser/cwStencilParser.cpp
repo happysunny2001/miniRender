@@ -68,8 +68,6 @@ cwStencil* cwStencilParser::parse(tinyxml2::XMLElement* pStencilData)
 	StencilData stencilData;
 	memset(&stencilData, 0, sizeof(StencilData));
 
-	
-
 	tinyxml2::XMLElement* pDepthElement = pStencilData->FirstChildElement("DepthBuffer");
 	if (pDepthElement) {
 		const char* pcEnable = pDepthElement->Attribute("Enable");

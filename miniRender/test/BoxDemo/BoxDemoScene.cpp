@@ -122,29 +122,6 @@ void BoxDemoScene::update(CWFLOAT dt)
 	}
 }
 
-CWVOID BoxDemoScene::render()
-{
-	//if (m_bVisible) {
-	//	this->transform();
-
-	//	cwRepertory::getInstance().getDevice()->setClearColor(cwColor::blue);
-	//	cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTex);
-	//	cwRepertory::getInstance().getDevice()->beginDraw();
-	//	this->renderSelf();
-	//	this->renderChildren();
-	//	cwRepertory::getInstance().getDevice()->endDraw();
-
-
-	//	cwRepertory::getInstance().getDevice()->setClearColor(cwColor::sliver);
-	//	cwRepertory::getInstance().getDevice()->setRenderTarget(nullptr);
-	//	cwRepertory::getInstance().getDevice()->beginDraw();
-	//	m_pTerrain->transform();
-	//	cwRepertory::getInstance().getEngine()->render(m_pTerrain);
-	//	cwRepertory::getInstance().getDevice()->endDraw();
-	//	cwRepertory::getInstance().getDevice()->swap();
-	//}
-}
-
 void BoxDemoScene::buildPlane()
 {
 	cwRepertory& repertory = cwRepertory::getInstance();
@@ -167,7 +144,6 @@ void BoxDemoScene::buildPlane()
 
 	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderLightingTex);
 	cwMaterial* pMaterial = cwMaterial::create();
-	//pMaterial->setShader(pShader);
 	pMaterial->setDiffuseTexture(m_pRenderTex);
 	cwEffect* pEffect = cwEffect::create();
 	pEffect->setShader(pShader);
@@ -177,7 +153,6 @@ void BoxDemoScene::buildPlane()
 	m_pTerrain->setRenderObject(pRenderObj);
 	m_pTerrain->setPosition(cwVector3D::ZERO);
 	m_pTerrain->setEffect(pEffect);
-	//this->addChild(m_pTerrain);
 	CW_SAFE_RETAIN(m_pTerrain);
 
 	cwLight* pLightDirectional = cwLight::createDirectionalLight(

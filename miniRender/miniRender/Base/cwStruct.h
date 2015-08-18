@@ -71,6 +71,8 @@ typedef struct CW_BUFFER_DESC
 
 typedef struct BlendData
 {
+	CWBOOL bEnable;
+	CWBYTE uColorEnable;
 	eBlendFactor srcBlend;
 	eBlendFactor dstBlend;
 	eBlendOp blendOp;
@@ -79,6 +81,8 @@ typedef struct BlendData
 	eBlendOp blendOpAlpha;
 
 	BlendData() {
+		bEnable = CWTRUE;
+		uColorEnable = eColorWriteEnableAll;
 		srcBlend = eBlendFactorOne;
 		dstBlend = eBlendFactorZero;
 		blendOp  = eBlendOpAdd;
@@ -118,11 +122,11 @@ typedef struct BlendData
 
 typedef struct StencilData
 {
-	bool depthEnable;
+	CWBOOL depthEnable;
 	eDepthWriteMask depthWriteMask;
 	eComparison depthFunc;
 
-	bool stencilEnable;
+	CWBOOL stencilEnable;
 	CWBYTE stencilReadMask;
 	CWBYTE stencilWriteMask;
 

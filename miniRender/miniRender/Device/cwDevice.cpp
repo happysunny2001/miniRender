@@ -37,14 +37,16 @@ m_pCurrRenderTarget(nullptr),
 m_bRefreshRenderTarget(false),
 m_pDefaultViewPort(nullptr),
 m_pCurrViewPort(nullptr),
-m_bRefreshViewPort(false)
+m_bRefreshViewPort(false),
+m_pStencil(nullptr)
 {
 
 }
 
 cwDevice::~cwDevice()
 {
-	//m_pBlendState = nullptr;
+	m_pBlendState = nullptr;
+	m_pStencil = nullptr;
 	CW_SAFE_RELEASE_NULL(m_pDefaultViewPort);
 	CW_SAFE_RELEASE_NULL(m_pCurrViewPort);
 

@@ -45,8 +45,15 @@ cwParserManager::cwParserManager()
 		m_nArrParser[i] = nullptr;
 	}
 
-	m_nMapBool["True"] = CWTRUE;
+	m_nMapBool["True"]  = CWTRUE;
 	m_nMapBool["False"] = CWFALSE;
+
+	m_nMapColorEnable["None"]  = eColorWriteEnableNone;
+	m_nMapColorEnable["Red"]   = eColorWriteEnableRed;
+	m_nMapColorEnable["Green"] = eColorWriteEnableGreen;
+	m_nMapColorEnable["Blue"]  = eColorWriteEnableBlue;
+	m_nMapColorEnable["Alpha"] = eColorWriteEnableAlpha;
+	m_nMapColorEnable["All"]   = eColorWriteEnableAll;
 }
 
 cwParserManager::~cwParserManager()
@@ -85,6 +92,13 @@ CWBOOL cwParserManager::getBool(const CWSTRING& strBool)
 		return m_nMapBool[strBool];
 
 	return CWFALSE;
+}
+
+eColorWriteEnable cwParserManager::getColorEnable(const CWSTRING& strColor)
+{
+	if (m_nMapColorEnable.find(strColor) != m_nMapColorEnable.end())
+		return m_nMapColorEnable[strColor];
+	return eColorWriteEnableNone;
 }
 
 NS_MINIR_END
