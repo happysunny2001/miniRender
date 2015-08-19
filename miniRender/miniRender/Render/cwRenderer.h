@@ -27,6 +27,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
+#define CW_RENDERER_LIST_POOL_SIZE 128
+
 class cwStage;
 class cwCamera;
 class cwRenderBatch;
@@ -35,6 +37,14 @@ class cwEffect;
 
 class cwRenderer : public cwRef
 {
+public:
+	struct sRendererListNode
+	{
+		cwStage* m_pStage;
+		struct sRendererListNode* prev;
+		struct sRendererListNode* next;
+	};
+
 public:
 	static cwRenderer* create();
 
@@ -45,22 +55,35 @@ public:
 	virtual CWVOID setCurrCamera(cwCamera* pCamera);
 	virtual CWVOID setCurrShader(cwShader* pShader);
 	virtual CWVOID addStage(cwStage* pStage);
+	virtual CWVOID addStageRealTime(cwStage* pStage);
 	virtual cwStage* getStage(const CWSTRING& strName);
+	inline cwStage* getCurrRenderStage() const { return m_pCurrRenderStage; }
 
 	const CWSTRING& getFullPath() const { return m_strFullPath; }
 	CWVOID setFullPath(const CWSTRING& strPath) { m_strFullPath = strPath; }
 
+	virtual CWVOID begin();
 	virtual CWVOID render();
+	virtual CWVOID end();
+
 	virtual CWVOID render(cwRenderBatch* pBatch);
 
 protected:
 	virtual CWVOID render(cwStage* pStage);
 	virtual CWVOID configLight();
 
+	sRendererListNode* getAvaiableListNode();
+	sRendererListNode* buildStageList();
+
 protected:
 	CWSTRING m_strFullPath;
 
 	std::vector<cwStage*> m_nVecStage;
+	cwStage* m_pCurrRenderStage;
+
+	sRendererListNode m_nListNodePool[CW_RENDERER_LIST_POOL_SIZE];
+	CWUINT m_iListPoolIndex;
+	sRendererListNode* m_pRenderListHead;
 
 	cwCamera* m_pCurrCamera;
 	cwShader* m_pCurrShader;

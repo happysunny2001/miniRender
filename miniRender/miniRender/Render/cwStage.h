@@ -67,15 +67,14 @@ public:
 	CWVOID addStageEntity(cwEntity* pEntity);
 	CWVOID addStageLayer(cwStageLayer* pLayer);
 	CWUINT getStageLayerCount() const;
+	cwStageLayer* getStageLayer(CWUINT index);
 
-protected:
 	CWVOID setName(const CWSTRING& strName) { m_strName = strName; }
 	CWVOID setType(eStageType eType) { m_eType = eType; }
 	CWVOID setEnable(CWBOOL bEnable) { m_bEnable = bEnable; }
 	CWVOID setViewPort(cwViewPort* pView);
 	CWVOID setRenderTexture(cwRenderTexture* pRenderTexture);
-
-	friend class cwStageParser;
+	CWVOID setRefreshRenderTarget(CWBOOL bRefresh);
 
 protected:
 	CWBOOL m_bEnable;
@@ -87,6 +86,7 @@ protected:
 	
 	cwViewPort* m_pViewPort;
 	cwRenderTexture* m_pRenderTarget;
+	CWBOOL m_bRefreshRenderTarget;
 	CWBOOL m_bClearColor;
 	CWBOOL m_bClearDepth;
 	CWBOOL m_bClearStencil;

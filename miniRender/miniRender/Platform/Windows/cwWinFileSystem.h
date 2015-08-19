@@ -26,6 +26,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
 
+#include <windows.h>
+
 NS_MINIR_BEGIN
 
 class CW_DLL cwWinFileSystem : public cwFileSystem

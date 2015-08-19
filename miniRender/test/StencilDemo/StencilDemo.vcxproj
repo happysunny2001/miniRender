@@ -73,8 +73,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)external\tinyxml2;$(SolutionDir)external\platform\windows\directx11\include;$(SolutionDir)miniRender;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\x64\Debug;$(SolutionDir)external\platform\windows\directx11\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)miniRender;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\x64\Debug;$(SolutionDir)miniRender\external\platform\windows\directx11\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

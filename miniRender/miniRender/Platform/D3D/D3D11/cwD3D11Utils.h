@@ -22,6 +22,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #ifdef _CW_D3D11_
 
+#include <d3d11.h>
+#include <d3dx11effect.h>
+#include <d3dx11async.h>
+#include <DxErr.h>
+#include <xnamath.h>
+
 #define CW_HR(x) \
 do{\
 	HRESULT hr = (x); \

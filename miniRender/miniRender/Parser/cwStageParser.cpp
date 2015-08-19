@@ -67,6 +67,14 @@ cwStage* cwStageParser::parse(tinyxml2::XMLElement* pStageData)
 		pChildNode = pChildNode->NextSiblingElement();
 	}
 
+	tinyxml2::XMLElement* pRenderTargetElement = pStageData->FirstChildElement("RenderTarget");
+	if (pRenderTargetElement) {
+		pStage->setRefreshRenderTarget(CWTRUE);
+	}
+	else {
+		pStage->setRefreshRenderTarget(CWFALSE);
+	}
+
 	return pStage;
 }
 

@@ -31,7 +31,8 @@ cwStageLayer::cwStageLayer():
 m_eFilterType(eStageLayerFliterEntity),
 m_bTransparent(CWFALSE),
 m_pStageBlend(nullptr),
-m_pStageStencil(nullptr)
+m_pStageStencil(nullptr),
+m_eRenderState(eRenderStateSolid)
 {
 
 }
@@ -76,8 +77,9 @@ CWVOID cwStageLayer::begin(std::vector<cwEntity*>& vecEntities, cwEffect* pEffec
 
 CWVOID cwStageLayer::render()
 {
-	cwRepertory::getInstance().getDevice()->setBlend(m_pStageBlend);
-	cwRepertory::getInstance().getDevice()->setStencil(m_pStageStencil);
+	//cwRepertory::getInstance().getDevice()->setBlend(m_pStageBlend);
+	//cwRepertory::getInstance().getDevice()->setStencil(m_pStageStencil);
+	cwRepertory::getInstance().getDevice()->setRenderState(m_eRenderState);
 
 	for (CWUINT i = 0; i < m_iPipeLineIndex; ++i) {
 		m_nPipeline[i].render();
@@ -98,7 +100,7 @@ CWVOID cwStageLayer::addEntities(std::vector<cwEntity*>& vecEntities, cwEffect* 
 	for (auto pEntity : vecEntities) {
 		pEntity->transform();
 
-		CWBOOL bRet = pPipeline->addEntity(pEntity, pEffect);
+		CWBOOL bRet = pPipeline->addEntity(pEntity, this);
 		if (!bRet) {
 			if (m_iPipeLineIndex < CW_STAGE_PIPELINE_SIZE) {
 				pPipeline = &(m_nPipeline[m_iPipeLineIndex++]);
@@ -118,7 +120,7 @@ CWVOID cwStageLayer::addEntities(std::vector<cwEntity*>& vecEntities)
 
 		cwRenderPipeline* pPiepline = getPipeline(pEntity);
 		if (pPiepline)
-			pPiepline->addEntity(pEntity);
+			pPiepline->addEntity(pEntity, this);
 	}
 }
 

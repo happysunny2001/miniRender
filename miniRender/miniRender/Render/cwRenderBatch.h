@@ -28,6 +28,8 @@ NS_MINIR_BEGIN
 
 class cwEffect;
 class cwEntity;
+class cwBlend;
+class cwStencil;
 
 class cwRenderBatch
 {
@@ -40,6 +42,8 @@ public:
 
 public:
 	cwEffect* m_pEffect;
+	cwBlend* m_pBlend;
+	cwStencil* m_pStencil;
 	cwEntity* m_pEntity;
 	CWSTRING m_nStrTech;
 	cwMatrix4X4 m_nWorldTrans;

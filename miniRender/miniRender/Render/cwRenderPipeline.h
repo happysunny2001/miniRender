@@ -31,6 +31,7 @@ NS_MINIR_BEGIN
 class cwEntity;
 class cwEffect;
 class cwShader;
+class cwStageLayer;
 
 class cwRenderPipeline 
 {
@@ -39,10 +40,7 @@ public:
 	~cwRenderPipeline();
 	
 	CWVOID reset();
-	CWBOOL addEntity(cwEntity* pEntity);
-	CWBOOL addEntity(cwEntity* pEntity, const cwMatrix4X4& nMat);
-	CWBOOL addEntity(cwEntity* pEntity, cwEffect* pEffect);
-	CWBOOL addEntity(cwEntity* pEntity, cwEffect* pEffect, const cwMatrix4X4& nMat);
+	CWBOOL addEntity(cwEntity* pEntity, cwStageLayer* pStageLayer);
 	CWBOOL full();
 
 	inline CWVOID setShader(cwShader* pShader) { m_pShader = pShader; }

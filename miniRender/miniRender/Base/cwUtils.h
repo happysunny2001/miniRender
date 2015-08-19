@@ -23,11 +23,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifdef _CW_D3D11_
 
 #pragma warning(disable:4005)
-#include <d3d11.h>
-#include <d3dx11effect.h>
-#include <d3dx11async.h>
-#include <DxErr.h>
-#include <xnamath.h>
+//#include <d3d11.h>
+//#include <d3dx11effect.h>
+//#include <d3dx11async.h>
+//#include <DxErr.h>
+//#include <xnamath.h>
 
 #include <string>
 #include <vector>
@@ -40,6 +40,7 @@ using namespace std;
 NS_MINIR_BEGIN
 
 typedef enum {
+	eRenderStateNone = 0,
 	eRenderStateSolid,
 	eRenderStateWire,
 	eRenderStateNoCull,

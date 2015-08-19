@@ -26,6 +26,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
+class cwBlend;
+class cwStencil;
+class cwStage;
+
 class cwMirror : public cwEntity
 {
 public:
@@ -35,15 +39,22 @@ public:
 	virtual ~cwMirror();
 
 	virtual CWBOOL init() override;
+	virtual CWVOID render() override;
 
 	virtual CWVOID setReflectPlane(const cwPlane& plane);
 
 protected:
 	virtual CWVOID buildBlend();
+	virtual CWVOID buildStencil();
+	virtual CWVOID buildStage();
 
 protected:
 	cwPlane m_nReflectPlane;
 	cwMatrix4X4 m_nMatReflect;
+
+	cwBlend* m_pBlendTransparent;
+	cwStencil* m_pStencilDrawRef;
+	cwStage* m_pStage;
 
 };
 

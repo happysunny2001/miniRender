@@ -29,6 +29,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwStage.h"
 #include "cwRenderBatch.h"
 
+#include "utlist.h"
+
 NS_MINIR_BEGIN
 
 cwRenderer* cwRenderer::create()
@@ -45,7 +47,10 @@ cwRenderer* cwRenderer::create()
 
 cwRenderer::cwRenderer():
 m_pCurrCamera(nullptr),
-m_pCurrShader(nullptr)
+m_pCurrShader(nullptr),
+m_iListPoolIndex(0),
+m_pRenderListHead(nullptr),
+m_pCurrRenderStage(nullptr)
 {
 
 }
@@ -58,6 +63,8 @@ cwRenderer::~cwRenderer()
 
 	m_pCurrCamera = nullptr;
 	m_pCurrShader = nullptr;
+	m_pRenderListHead = nullptr;
+	m_pCurrRenderStage = nullptr;
 }
 
 CWBOOL cwRenderer::init()
@@ -81,15 +88,49 @@ CWVOID cwRenderer::addStage(cwStage* pStage)
 	m_nVecStage.push_back(pStage);
 }
 
-CWVOID cwRenderer::render()
+CWVOID cwRenderer::addStageRealTime(cwStage* pStage)
+{
+	if (!pStage) return;
+	if (!m_pCurrRenderStage) return;
+
+	cwRenderer::sRendererListNode* pNode = nullptr;
+	DL_SEARCH_SCALAR(m_pRenderListHead, pNode, m_pStage, m_pCurrRenderStage);
+	if (pNode) {
+		sRendererListNode* pNewNode = getAvaiableListNode();
+		if (pNewNode) {
+			pNewNode->m_pStage = pStage;
+
+			if (pNode->next)
+				DL_PREPEND_ELEM(m_pRenderListHead, pNode->next, pNewNode);
+			else
+				DL_APPEND(m_pRenderListHead, pNewNode);
+		}
+	}
+}
+
+CWVOID cwRenderer::begin()
 {
 	m_pCurrCamera = nullptr;
 	m_pCurrShader = nullptr;
+	m_pCurrRenderStage = nullptr;
 
-	for (auto pStage : m_nVecStage) {
-		this->render(pStage);
+	m_pRenderListHead = buildStageList();
+}
+
+CWVOID cwRenderer::render()
+{
+	if (m_pRenderListHead) {
+		sRendererListNode* pElement = nullptr;
+
+		DL_FOREACH(m_pRenderListHead, pElement) {
+			m_pCurrRenderStage = pElement->m_pStage;
+			this->render(m_pCurrRenderStage);
+		}
 	}
+}
 
+CWVOID cwRenderer::end()
+{
 	cwRepertory::getInstance().getDevice()->swap();
 }
 
@@ -116,8 +157,8 @@ CWVOID cwRenderer::render(cwRenderBatch* pBatch)
 
 	cwDevice* pDevice = cwRepertory::getInstance().getDevice();
 
-	pDevice->setBlend(pBatch->m_pEntity->getBlend());
-	pDevice->setStencil(pBatch->m_pEntity->getStencil());
+	pDevice->setBlend(pBatch->m_pBlend);
+	pDevice->setStencil(pBatch->m_pStencil);
 	pDevice->setShaderWorldTrans(m_pCurrShader, pBatch->m_nWorldTrans, m_pCurrCamera);
 	pDevice->draw(m_pCurrShader, pBatch->m_nStrTech, pRenderObj);
 
@@ -131,6 +172,27 @@ cwStage* cwRenderer::getStage(const CWSTRING& strName)
 	}
 
 	return nullptr;
+}
+
+cwRenderer::sRendererListNode* cwRenderer::getAvaiableListNode()
+{
+	if (m_iListPoolIndex >= CW_RENDERER_LIST_POOL_SIZE) return nullptr;
+	return &(m_nListNodePool[m_iListPoolIndex++]);
+}
+
+cwRenderer::sRendererListNode* cwRenderer::buildStageList()
+{
+	m_iListPoolIndex = 0;
+	sRendererListNode* pHead = nullptr;
+	for (auto pStage : m_nVecStage) {
+		sRendererListNode* pNode = getAvaiableListNode();
+		if (pNode) {
+			pNode->m_pStage = pStage;
+			DL_APPEND(pHead, pNode);
+		}
+	}
+
+	return pHead;
 }
 
 CWVOID cwRenderer::configLight()

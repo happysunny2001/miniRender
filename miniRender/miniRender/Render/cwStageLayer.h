@@ -55,6 +55,11 @@ public:
 	cwStencil* getStencil() const { return m_pStageStencil; }
 	CWVOID setStencil(cwStencil* pStencil);
 
+	inline CWVOID setRenderState(eRenderState eState) { m_eRenderState = eState; }
+
+	inline const cwMatrix4X4& getWorldTrans() const { return m_nMatWorldTrans; }
+	inline CWVOID setWorldTrans(const cwMatrix4X4& mat) { m_nMatWorldTrans = mat; }
+
 protected:
 	cwRenderPipeline* getPipeline(cwEntity* pEntity);
 	cwRenderPipeline* getUnusePipeline(cwShader* pShader);
@@ -68,6 +73,7 @@ protected:
 
 	cwBlend* m_pStageBlend;
 	cwStencil* m_pStageStencil;
+	eRenderState m_eRenderState;
 
 	cwRenderPipeline m_nPipeline[CW_STAGE_PIPELINE_SIZE];
 	CWUINT m_iPipeLineIndex;

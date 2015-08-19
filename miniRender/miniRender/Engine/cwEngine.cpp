@@ -139,8 +139,11 @@ CWBOOL cwEngine::removeCamera(cwCamera* pCamera)
 
 CWVOID cwEngine::render()
 {
-	if (m_pRenderer)
+	if (m_pRenderer) {
+		m_pRenderer->begin();
 		m_pRenderer->render();
+		m_pRenderer->end();
+	}
 }
 
 NS_MINIR_END

@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\external\tinyxml2\tinyxml2.h" />
     <ClInclude Include="Base\cwBasicType.h" />
     <ClInclude Include="Base\cwColor.h" />
     <ClInclude Include="Base\cwCommon.h" />
@@ -53,6 +52,22 @@
     <ClInclude Include="Event\cwTouchEvent.h" />
     <ClInclude Include="Event\cwTouchEventListener.h" />
     <ClInclude Include="Event\Interface\cwTouchEventInterface.h" />
+    <ClInclude Include="external\json\include\json\assertions.h" />
+    <ClInclude Include="external\json\include\json\autolink.h" />
+    <ClInclude Include="external\json\include\json\config.h" />
+    <ClInclude Include="external\json\include\json\features.h" />
+    <ClInclude Include="external\json\include\json\forwards.h" />
+    <ClInclude Include="external\json\include\json\json.h" />
+    <ClInclude Include="external\json\include\json\reader.h" />
+    <ClInclude Include="external\json\include\json\value.h" />
+    <ClInclude Include="external\json\include\json\version.h" />
+    <ClInclude Include="external\json\include\json\writer.h" />
+    <ClInclude Include="external\json\lib_json\json_tool.h" />
+    <ClInclude Include="external\tinyxml2\tinyxml2.h" />
+    <ClInclude Include="external\uthash\include\utarray.h" />
+    <ClInclude Include="external\uthash\include\uthash.h" />
+    <ClInclude Include="external\uthash\include\utlist.h" />
+    <ClInclude Include="external\uthash\include\utstring.h" />
     <ClInclude Include="Generator\cwGeometryGenerator.h" />
     <ClInclude Include="Layouts\cwLayouts.h" />
     <ClInclude Include="Layouts\cwLayoutsManager.h" />
@@ -125,7 +140,6 @@
     <ClInclude Include="ViewPort\cwViewPort.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\external\tinyxml2\tinyxml2.cpp" />
     <ClCompile Include="Base\cwColor.cpp" />
     <ClCompile Include="Base\cwCommon.cpp" />
     <ClCompile Include="Base\cwRunTime.cpp" />
@@ -148,6 +162,10 @@
     <ClCompile Include="Event\cwEventManager.cpp" />
     <ClCompile Include="Event\cwTouchEvent.cpp" />
     <ClCompile Include="Event\cwTouchEventListener.cpp" />
+    <ClCompile Include="external\json\lib_json\json_reader.cpp" />
+    <ClCompile Include="external\json\lib_json\json_value.cpp" />
+    <ClCompile Include="external\json\lib_json\json_writer.cpp" />
+    <ClCompile Include="external\tinyxml2\tinyxml2.cpp" />
     <ClCompile Include="Generator\cwGeometryGenerator.cpp" />
     <ClCompile Include="Layouts\cwLayouts.cpp" />
     <ClCompile Include="Layouts\cwLayoutsManager.cpp" />
@@ -215,6 +233,11 @@
     <ClCompile Include="Timer\cwTimer.cpp" />
     <ClCompile Include="ViewPort\cwViewPort.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="external\json\lib_json\json_valueiterator.inl" />
+    <None Include="external\json\lib_json\sconscript" />
+    <None Include="external\json\lib_json\version.h.in" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{84AEC896-7279-4487-BE7A-B703CDB8A8B5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -270,8 +293,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)external\tinyxml2;$(SolutionDir)external\uthash\include;$(SolutionDir)external\platform\windows\directx11\include;$(SolutionDir)miniRender;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)external\platform\windows\directx11\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)miniRender\external\json\include;$(SolutionDir)miniRender\external\tinyxml2;$(SolutionDir)miniRender\external\uthash\include;$(SolutionDir)miniRender\external\platform\windows\directx11\include;$(SolutionDir)miniRender;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)miniRender\external\platform\windows\directx11\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

@@ -46,6 +46,13 @@
 			-->
 			<Layer EntityType="Entity" Transparent="No"> 
 				<!--
+					layer render state
+					Type:[BuildIn,Create]. BuildIn:use the build-in render state which name is the 'Name' attribute value. Create:create new render state object.
+					Name:[Solid,Wire,NoCull,CW]. 
+				-->
+				<RenderState Type="BuildIn" Name="">
+				</RenderState>
+				<!--
 					Layer Blend configuration
 					Enable:[True,False], ColorEnable:[None,Red,Green,Blue,Alpha,All], you can use Red|Green style for bit or operation.
 					Src:[Zero,One,SrcColor,InvSrcColor,SrcAlpha,InvSrcAlpha,DestAlpha,InvDestAlpha,DestColor,InvDestColor,SrcAlphaSat,BlendFactor,InvBlendFactor,Src1Color,InvSrc1Color,Src1Alpha,InvSrc1Alpha]
@@ -72,16 +79,22 @@
 					<Front Failed="" DepthFailed="" Pass="" Func="" />
 					<Back Failed="" DepthFailed="" Pass="" Func="" />
 				</Stencil>
+				
+				<!-- Stage default effect name, if specified, then all entities in the stage will omit their own effect and use the default effect.default value:[empty string]. 
+					Type:[default,specific],if default, then user the engine default shader, else it will load shader by it's name. 
+					Shader: the name of shader, if Type=default, then it's value means the index of default shaders. 
+				-->
+				<Effect Name="" Type="default" Shader="" Tech=""> 
+					<Param>
+						<ShaderParam Name="" Type=""/> <!-- param name:the name of the parameter object, empty name is ok, just for mark. type:[Float, FloatArray, Texture] -->
+						<Value Type=""> <!-- value type:[Raw,PhysicalPath,ConfPath]. Data:if type is Raw, then Data is "1.0,2.0,3.0", must float value; if type is PhysicalPath, Data is the Texture Physical path(test.png); if type is ConfPath, Data is the stage name, then will binding the stage's render target as a texture to the parameter. -->
+							<Data></Data>
+						</Value>
+					</Param>
+				</Effect> 
 			</Layer>
 
-			<Effect Name="" Type="default" Shader="" Tech=""> <!-- Stage default effect name, if specified, then all entities in the stage will omit their own effect and use the default effect.default value:[empty string]. Type:[default,specific],if default, then user the engine default shader, else it will load shader by it's name. Shader: the name of shader, if Type=default, then it's value means the index of default shaders. -->
-				<Param>
-					<ShaderParam Name="" Type=""/> <!-- param name:the name of the parameter object, empty name is ok, just for mark. type:[Float, FloatArray, Texture] -->
-					<Value Type=""> <!-- value type:[Raw,PhysicalPath,ConfPath]. Data:if type is Raw, then Data is "1.0,2.0,3.0", must float value; if type is PhysicalPath, Data is the Texture Physical path(test.png); if type is ConfPath, Data is the stage name, then will binding the stage's render target as a texture to the parameter. -->
-						<Data></Data>
-					</Value>
-				</Param>
-			</Effect> 
+			
 		</Stage>
 	</StageList>
 </Renderer>

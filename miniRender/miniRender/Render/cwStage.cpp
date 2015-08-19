@@ -30,7 +30,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwStage::cwStage() : 
+cwStage::cwStage() :
 m_pCamera(nullptr),
 m_bEnable(CWTRUE),
 m_eType(eStageTypeNormal),
@@ -39,7 +39,8 @@ m_pRenderTarget(nullptr),
 m_pStageEffect(nullptr),
 m_bClearColor(CWTRUE),
 m_bClearDepth(CWTRUE),
-m_bClearStencil(CWTRUE)
+m_bClearStencil(CWTRUE),
+m_bRefreshRenderTarget(CWTRUE)
 {
 
 }
@@ -78,6 +79,11 @@ CWVOID cwStage::setRenderTexture(cwRenderTexture* pRenderTexture)
 	CW_SAFE_RETAIN(pRenderTexture);
 	CW_SAFE_RELEASE_NULL(m_pRenderTarget);
 	m_pRenderTarget = pRenderTexture;
+}
+
+CWVOID cwStage::setRefreshRenderTarget(CWBOOL bRefresh)
+{
+	m_bRefreshRenderTarget = bRefresh;
 }
 
 CWVOID cwStage::setCamera(cwCamera* pCamera)
@@ -131,8 +137,10 @@ CWVOID cwStage::render()
 	}
 
 	cwRepertory::getInstance().getDevice()->setViewPort(m_pViewPort);
-	cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTarget);
-	cwRepertory::getInstance().getDevice()->beginDraw(m_bClearColor, m_bClearDepth, m_bClearStencil);
+	if (m_bRefreshRenderTarget) {
+		cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTarget);
+		cwRepertory::getInstance().getDevice()->beginDraw(m_bClearColor, m_bClearDepth, m_bClearStencil);
+	}
 
 	for (auto pLayer : m_nVecLayer) {
 		pLayer->render();
@@ -164,6 +172,12 @@ CWVOID cwStage::addStageLayer(cwStageLayer* pLayer)
 CWUINT cwStage::getStageLayerCount() const
 {
 	return static_cast<CWUINT>(m_nVecLayer.size());
+}
+
+cwStageLayer* cwStage::getStageLayer(CWUINT index)
+{
+	if (index >= m_nVecLayer.size()) return nullptr;
+	return m_nVecLayer[index];
 }
 
 NS_MINIR_END

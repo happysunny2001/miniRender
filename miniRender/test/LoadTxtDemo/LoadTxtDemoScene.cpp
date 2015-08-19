@@ -140,8 +140,8 @@ CWVOID LoadTxtDemoScene::onTouchUp(cwTouch* pTouch)
 CWVOID LoadTxtDemoScene::onTouchMoving(cwTouch* pTouch)
 {
 	if (m_bTouchDown) {
-		CWFLOAT dx = XMConvertToRadians(pTouch->getScreenPos().x - m_fLastX);
-		CWFLOAT dy = XMConvertToRadians(pTouch->getScreenPos().y - m_fLastY);
+		CWFLOAT dx = cwMathUtil::angleRadian(pTouch->getScreenPos().x - m_fLastX);
+		CWFLOAT dy = cwMathUtil::angleRadian(pTouch->getScreenPos().y - m_fLastY);
 
 		m_fTheta -= dx;
 		m_fPhi += dy;

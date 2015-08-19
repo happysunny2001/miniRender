@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Render/cwRenderer.h"
 #include "Engine/cwEngine.h"
 #include "Effect/cwEffect.h"
+#include "cwStageLayer.h"
 
 NS_MINIR_BEGIN
 
@@ -52,51 +53,26 @@ cwRenderBatch* cwRenderPipeline::getNextAvailableBatch()
 	return nullptr;
 }
 
-CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity)
+CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity, cwStageLayer* pStageLayer)
 {
 	cwRenderBatch* pBatch = getNextAvailableBatch();
 	if (!pBatch) return CWFALSE;
 
 	pBatch->m_pEntity = pEntity;
 	pBatch->m_pEffect = pEntity->getEffect();
-	pBatch->m_nStrTech = pBatch->m_pEffect->getTech();
-	pBatch->m_nWorldTrans = pEntity->getTransformMatrix();
-	return CWTRUE;
-}
+	pBatch->m_nStrTech = pEntity->getEffect()->getTech();
 
-CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity, const cwMatrix4X4& nMat)
-{
-	cwRenderBatch* pBatch = getNextAvailableBatch();
-	if (!pBatch) return CWFALSE;
+	if (pStageLayer->getBlennd())
+		pBatch->m_pBlend = pStageLayer->getBlennd();
+	else
+		pBatch->m_pBlend = pEntity->getBlend();
 
-	pBatch->m_pEntity = pEntity;
-	pBatch->m_pEffect = pEntity->getEffect();
-	pBatch->m_nStrTech = pBatch->m_pEffect->getTech();
-	pBatch->m_nWorldTrans = pEntity->getTransformMatrix()*nMat;
-	return CWTRUE;
-}
+	if (pStageLayer->getStencil())
+		pBatch->m_pStencil = pStageLayer->getStencil();
+	else
+		pBatch->m_pStencil = pEntity->getStencil();
 
-CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity, cwEffect* pEffect)
-{
-	cwRenderBatch* pBatch = getNextAvailableBatch();
-	if (!pBatch) return CWFALSE;
-
-	pBatch->m_pEntity = pEntity;
-	pBatch->m_pEffect = nullptr;
-	pBatch->m_nStrTech = pEffect->getTech();
-	pBatch->m_nWorldTrans = pEntity->getTransformMatrix();
-	return CWTRUE;
-}
-
-CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity, cwEffect* pEffect, const cwMatrix4X4& nMat)
-{
-	cwRenderBatch* pBatch = getNextAvailableBatch();
-	if (!pBatch) return CWFALSE;
-
-	pBatch->m_pEntity = pEntity;
-	pBatch->m_pEffect = nullptr;
-	pBatch->m_nStrTech = pEffect->getTech();
-	pBatch->m_nWorldTrans = pEntity->getTransformMatrix()*nMat;
+	pBatch->m_nWorldTrans = pEntity->getTransformMatrix()*pStageLayer->getWorldTrans();
 	return CWTRUE;
 }
 

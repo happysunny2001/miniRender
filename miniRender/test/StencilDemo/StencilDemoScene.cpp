@@ -78,8 +78,8 @@ CWVOID StencilDemoScene::onTouchUp(cwTouch* pTouch)
 CWVOID StencilDemoScene::onTouchMoving(cwTouch* pTouch)
 {
 	if (m_bTouchDown) {
-		CWFLOAT dx = XMConvertToRadians(pTouch->getScreenPos().x - m_fLastX);
-		CWFLOAT dy = XMConvertToRadians(pTouch->getScreenPos().y - m_fLastY);
+		CWFLOAT dx = cwMathUtil::angleRadian(pTouch->getScreenPos().x - m_fLastX);
+		CWFLOAT dy = cwMathUtil::angleRadian(pTouch->getScreenPos().y - m_fLastY);
 
 		m_fTheta -= dx;
 		m_fPhi += dy;
@@ -170,14 +170,15 @@ CWVOID StencilDemoScene::buildMirror()
 	cwEffect* pEffect = cwEffect::create();
 	pEffect->setShader(pShader);
 
-	cwEntity* pEntityMirror = cwEntity::create();
+	cwMirror* pEntityMirror = cwMirror::create();
 	pEntityMirror->setRenderObject(m_pPlaneObj);
 	pEntityMirror->setMaterial(pMaterial);
 	pEntityMirror->setEffect(pEffect);
-	pEntityMirror->setType(eSceneObjectMirror);
+	//pEntityMirror->setType(eSceneObjectMirror);
 	pEntityMirror->setPosition(-49.9f, 25.0f, 0);
 	pEntityMirror->setRotation(0, 0, -cwMathUtil::cwPI*0.5f);
 	pEntityMirror->setScale(0.5f, 0.5f, 0.5f);
+	pEntityMirror->setReflectPlane(cwPlane(cwVector3D(-1.0f, 0, 0), -49));
 
 	this->addChild(pEntityMirror);
 }

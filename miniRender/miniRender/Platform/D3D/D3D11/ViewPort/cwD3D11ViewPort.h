@@ -25,6 +25,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #ifdef _CW_D3D11_
 
+#include "Platform/D3D/D3D11/cwD3D11Utils.h"
+
 NS_MINIR_BEGIN
 
 class cwD3D11ViewPort : public cwViewPort

@@ -375,9 +375,6 @@
     <ClInclude Include="Scheduler\cwScheduleInterface.h">
       <Filter>源文件\Scheduler</Filter>
     </ClInclude>
-    <ClInclude Include="..\external\tinyxml2\tinyxml2.h">
-      <Filter>源文件\External\tinyxml2</Filter>
-    </ClInclude>
     <ClInclude Include="Render\cwStage.h">
       <Filter>源文件\Render</Filter>
     </ClInclude>
@@ -449,6 +446,54 @@
     </ClInclude>
     <ClInclude Include="Entity\cwMirror.h">
       <Filter>源文件\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="external\json\include\json\assertions.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="external\json\include\json\autolink.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="external\json\include\json\config.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="external\json\include\json\features.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="external\json\include\json\forwards.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="external\json\include\json\json.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="external\json\include\json\reader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="external\json\include\json\value.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="external\json\include\json\version.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="external\json\include\json\writer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="external\json\lib_json\json_tool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="external\tinyxml2\tinyxml2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="external\uthash\include\utarray.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="external\uthash\include\uthash.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="external\uthash\include\utlist.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="external\uthash\include\utstring.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -641,9 +686,6 @@
     <ClCompile Include="Scheduler\cwScheduleInterface.cpp">
       <Filter>源文件\Scheduler</Filter>
     </ClCompile>
-    <ClCompile Include="..\external\tinyxml2\tinyxml2.cpp">
-      <Filter>源文件\External\tinyxml2</Filter>
-    </ClCompile>
     <ClCompile Include="Render\cwStage.cpp">
       <Filter>源文件\Render</Filter>
     </ClCompile>
@@ -719,5 +761,24 @@
     <ClCompile Include="Entity\cwMirror.cpp">
       <Filter>源文件\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="external\json\lib_json\json_reader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="external\json\lib_json\json_value.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="external\json\lib_json\json_writer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="external\tinyxml2\tinyxml2.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="external\json\lib_json\json_valueiterator.inl">
+      <Filter>头文件</Filter>
+    </None>
+    <None Include="external\json\lib_json\sconscript" />
+    <None Include="external\json\lib_json\version.h.in" />
   </ItemGroup>
 </Project>
