@@ -42,7 +42,7 @@ m_nMax(ptMax)
 cwAABB::cwAABB(cwPoint3D* p, int n)
 {
     m_eType = eShapeAABB;
-    compute(p, n);
+    update(p, n);
 }
 
 cwAABB::cwAABB(const cwAABB& box):
@@ -125,7 +125,7 @@ void cwAABB::add(const cwAABB& box)
     if(box.m_nMax.z > m_nMax.z) m_nMax.z = box.m_nMax.z;
 }
 
-void cwAABB::compute(cwPoint3D* p, int n)
+void cwAABB::update(cwPoint3D* p, int n)
 {
     if(!p) return;
     this->empty();
@@ -135,7 +135,7 @@ void cwAABB::compute(cwPoint3D* p, int n)
     }
 }
 
-void cwAABB::compute(const cwAABB& box, const cwMatrix4X4& m)
+void cwAABB::update(const cwAABB& box, const cwMatrix4X4& m)
 {
     m_nMin = m_nMax = m.getTranslation();
     

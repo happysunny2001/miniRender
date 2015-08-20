@@ -22,8 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Ref/cwRef.h"
-
-#include <vector>
+#include "Base/cwVector.h"
 
 NS_MINIR_BEGIN
 
@@ -78,7 +77,7 @@ protected:
 protected:
 	CWSTRING m_strFullPath;
 
-	std::vector<cwStage*> m_nVecStage;
+	cwVector<cwStage*> m_nVecStage;
 	cwStage* m_pCurrRenderStage;
 
 	sRendererListNode m_nListNodePool[CW_RENDERER_LIST_POOL_SIZE];

@@ -126,6 +126,8 @@
     <ClInclude Include="Render\cwRenderPipeline.h" />
     <ClInclude Include="Render\cwStage.h" />
     <ClInclude Include="Render\cwStageLayer.h" />
+    <ClInclude Include="Render\Generator\cwRenderGenerator.h" />
+    <ClInclude Include="Render\Generator\cwStageMirrorGenerator.h" />
     <ClInclude Include="Repertory\cwRepertory.h" />
     <ClInclude Include="Scheduler\cwScheduleInterface.h" />
     <ClInclude Include="Scheduler\cwSchedulerManager.h" />
@@ -221,6 +223,8 @@
     <ClCompile Include="Render\cwRenderPipeline.cpp" />
     <ClCompile Include="Render\cwStage.cpp" />
     <ClCompile Include="Render\cwStageLayer.cpp" />
+    <ClCompile Include="Render\Generator\cwRenderGenerator.cpp" />
+    <ClCompile Include="Render\Generator\cwStageMirrorGenerator.cpp" />
     <ClCompile Include="Repertory\cwRepertory.cpp" />
     <ClCompile Include="Scheduler\cwScheduleInterface.cpp" />
     <ClCompile Include="Scheduler\cwSchedulerManager.cpp" />

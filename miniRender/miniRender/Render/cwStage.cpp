@@ -27,8 +27,20 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "cwStageLayer.h"
 #include "cwRenderer.h"
+#include "Generator/cwRenderGenerator.h"
 
 NS_MINIR_BEGIN
+
+cwStage* cwStage::create()
+{
+	cwStage* pStage = new cwStage();
+	if (pStage) {
+		pStage->autorelease();
+		return pStage;
+	}
+
+	return nullptr;
+}
 
 cwStage::cwStage() :
 m_pCamera(nullptr),
@@ -52,15 +64,9 @@ cwStage::~cwStage()
 	CW_SAFE_RELEASE_NULL(m_pRenderTarget);
 	CW_SAFE_RELEASE_NULL(m_pStageEffect);
 
-	for (auto pEntity : m_nVecStageEntities) {
-		CW_SAFE_RELEASE_NULL(pEntity);
-	}
-	m_nVecStageEntities.clear();
-
-	for (auto pLayer : m_nVecLayer) {
-		CW_SAFE_DELETE(pLayer);
-	}
-	m_nVecLayer.clear();
+	clearStageEntity();
+	clearStageLayer(CWTRUE);
+	clearStageGenerator();
 }
 
 CWVOID cwStage::setViewPort(cwViewPort* pView)
@@ -84,6 +90,13 @@ CWVOID cwStage::setRenderTexture(cwRenderTexture* pRenderTexture)
 CWVOID cwStage::setRefreshRenderTarget(CWBOOL bRefresh)
 {
 	m_bRefreshRenderTarget = bRefresh;
+}
+
+CWVOID cwStage::addRenderGenerator(cwRenderGenerator* pGenerator)
+{
+	if (pGenerator) {
+		m_nVecGenerator.pushBack(pGenerator);
+	}
 }
 
 CWVOID cwStage::setCamera(cwCamera* pCamera)
@@ -115,13 +128,13 @@ CWVOID cwStage::begin()
 			break;
 		case eStageLayerFliterEntity:
 		{
-			std::vector<cwEntity*>& vecEntity = pScene->getVisibleEntities(nullptr);
+			cwVector<cwEntity*>& vecEntity = pScene->getVisibleEntities(nullptr);
 			pLayer->begin(vecEntity, m_pStageEffect);
 		}
 			break;
 		case eStageLayerFliterMirror:
 		{
-			std::vector<cwEntity*>& vecEntity = pScene->getVisibleEntities(nullptr, eSceneObjectMirror);
+			cwVector<cwEntity*>& vecEntity = pScene->getVisibleEntities(nullptr, eSceneObjectMirror);
 			pLayer->begin(vecEntity, m_pStageEffect);
 		}
 			break;
@@ -154,19 +167,22 @@ CWVOID cwStage::end()
 	}
 
 	cwRepertory::getInstance().getDevice()->endDraw();
+
+	for (auto pGenerator : m_nVecGenerator) {
+		pGenerator->generate();
+	}
 }
 
 CWVOID cwStage::addStageEntity(cwEntity* pEntity)
 {
 	if (!pEntity) return;
-	m_nVecStageEntities.push_back(pEntity);
-	CW_SAFE_RETAIN(pEntity);
+	m_nVecStageEntities.pushBack(pEntity);
 }
 
 CWVOID cwStage::addStageLayer(cwStageLayer* pLayer)
 {
 	if (!pLayer) return;
-	m_nVecLayer.push_back(pLayer);
+	m_nVecLayer.pushBack(pLayer);
 }
 
 CWUINT cwStage::getStageLayerCount() const
@@ -177,7 +193,22 @@ CWUINT cwStage::getStageLayerCount() const
 cwStageLayer* cwStage::getStageLayer(CWUINT index)
 {
 	if (index >= m_nVecLayer.size()) return nullptr;
-	return m_nVecLayer[index];
+	return m_nVecLayer.at(index);
+}
+
+CWVOID cwStage::clearStageLayer(CWBOOL bClear)
+{
+	m_nVecLayer.clear();
+}
+
+CWVOID cwStage::clearStageGenerator()
+{
+	m_nVecGenerator.clear();
+}
+
+CWVOID cwStage::clearStageEntity()
+{
+	m_nVecStageEntities.clear();
 }
 
 NS_MINIR_END

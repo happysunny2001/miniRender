@@ -22,6 +22,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Base/cwUtils.h"
+#include "Base/cwVector.h"
+#include "Ref/cwRef.h"
 #include "cwRenderPipeline.h"
 
 #include <unordered_map>
@@ -35,17 +37,18 @@ class cwEffect;
 class cwBlend;
 class cwStencil;
 
-class cwStageLayer
+class cwStageLayer : public cwRef
 {
 public:
-	cwStageLayer();
+	static cwStageLayer* create();
+
 	~cwStageLayer();
 
 	eStageLayerFliterType getFliterType() const { return m_eFilterType; }
 	CWVOID setFliterType(eStageLayerFliterType eType) { m_eFilterType = eType; }
 
 	CWVOID reset();
-	CWVOID begin(std::vector<cwEntity*>& vecEntities, cwEffect* pEffect);
+	CWVOID begin(cwVector<cwEntity*>& vecEntities, cwEffect* pEffect);
 	CWVOID render();
 	CWVOID end();
 
@@ -61,11 +64,14 @@ public:
 	inline CWVOID setWorldTrans(const cwMatrix4X4& mat) { m_nMatWorldTrans = mat; }
 
 protected:
+	cwStageLayer();
+
+protected:
 	cwRenderPipeline* getPipeline(cwEntity* pEntity);
 	cwRenderPipeline* getUnusePipeline(cwShader* pShader);
 
-	CWVOID addEntities(std::vector<cwEntity*>& vecEntities);
-	CWVOID addEntities(std::vector<cwEntity*>& vecEntities, cwEffect* pEffect);
+	CWVOID addEntities(cwVector<cwEntity*>& vecEntities);
+	CWVOID addEntities(cwVector<cwEntity*>& vecEntities, cwEffect* pEffect);
 
 protected:
 	eStageLayerFliterType m_eFilterType;

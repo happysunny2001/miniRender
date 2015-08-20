@@ -41,8 +41,8 @@ public:
     void empty();
     void add(const cwPoint3D& p);
     void add(const cwAABB& box);
-    void compute(cwPoint3D* p, int n);
-    void compute(const cwAABB& box, const cwMatrix4X4& m);
+    void update(cwPoint3D* p, int n);
+	void update(const cwAABB& box, const cwMatrix4X4& m);
     
     cwVector3D size() const;
     cwVector3D center() const;

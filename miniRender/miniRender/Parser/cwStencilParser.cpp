@@ -136,7 +136,15 @@ cwStencil* cwStencilParser::parse(tinyxml2::XMLElement* pStencilData)
 			stencilData.backStencilFunc = m_nMapComparison[pcFunc];
 	}
 
-	return cwRepertory::getInstance().getDevice()->createStencil(stencilData);
+	cwStencil* pStencil = cwRepertory::getInstance().getDevice()->createStencil(stencilData);
+	CWUINT iValue = 0;
+	const char* pcValue = pStencilData->Attribute("Value");
+	if (pcValue) {
+		iValue = atoi(pcValue);
+	}
+	pStencil->setStencilRef(iValue);
+
+	return pStencil;
 }
 
 NS_MINIR_END

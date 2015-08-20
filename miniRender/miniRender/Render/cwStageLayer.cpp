@@ -27,6 +27,17 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
+cwStageLayer* cwStageLayer::create()
+{
+	cwStageLayer* pStageLayer = new cwStageLayer();
+	if (pStageLayer) {
+		pStageLayer->autorelease();
+		return pStageLayer;
+	}
+
+	return nullptr;
+}
+
 cwStageLayer::cwStageLayer():
 m_eFilterType(eStageLayerFliterEntity),
 m_bTransparent(CWFALSE),
@@ -63,7 +74,7 @@ CWVOID cwStageLayer::reset()
 	m_nMapPipeline.clear();
 }
 
-CWVOID cwStageLayer::begin(std::vector<cwEntity*>& vecEntities, cwEffect* pEffect)
+CWVOID cwStageLayer::begin(cwVector<cwEntity*>& vecEntities, cwEffect* pEffect)
 {
 	reset();
 
@@ -77,8 +88,6 @@ CWVOID cwStageLayer::begin(std::vector<cwEntity*>& vecEntities, cwEffect* pEffec
 
 CWVOID cwStageLayer::render()
 {
-	//cwRepertory::getInstance().getDevice()->setBlend(m_pStageBlend);
-	//cwRepertory::getInstance().getDevice()->setStencil(m_pStageStencil);
 	cwRepertory::getInstance().getDevice()->setRenderState(m_eRenderState);
 
 	for (CWUINT i = 0; i < m_iPipeLineIndex; ++i) {
@@ -91,7 +100,7 @@ CWVOID cwStageLayer::end()
 
 }
 
-CWVOID cwStageLayer::addEntities(std::vector<cwEntity*>& vecEntities, cwEffect* pEffect)
+CWVOID cwStageLayer::addEntities(cwVector<cwEntity*>& vecEntities, cwEffect* pEffect)
 {
 	cwRenderPipeline* pPipeline = &(m_nPipeline[m_iPipeLineIndex++]);
 	pPipeline->reset();
@@ -113,7 +122,7 @@ CWVOID cwStageLayer::addEntities(std::vector<cwEntity*>& vecEntities, cwEffect* 
 	}
 }
 
-CWVOID cwStageLayer::addEntities(std::vector<cwEntity*>& vecEntities)
+CWVOID cwStageLayer::addEntities(cwVector<cwEntity*>& vecEntities)
 {
 	for (auto pEntity : vecEntities) {
 		pEntity->transform();

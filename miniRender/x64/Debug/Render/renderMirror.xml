@@ -8,34 +8,24 @@
 			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" />
 		</Stage>
 
-		<Stage Name="S2" Type="normal" Enable="true">
+		<Stage Name="S2" Type="normal" Enable="true" Generator="Mirror">
 			<Camera Name="default" />
 			<ViewPort Name="default" TopLeftX="0" TopLeftY="0" Width="-1" Height="-1" MinDepth="0" MaxDepth="1.0" />
 			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" IsClearColor="False" IsClearDepth="False" IsClearStencil="False" />
 
 			<Layer EntityType="Mirror" Transparent="No"> 
-				<!--<Blend Enable="False" ColorEnable="None">
+				<Blend Enable="False" ColorEnable="None">
 					<RGB Src="One" Dest="Zero" Oper="Add" />
 					<Alpha Src="One" Dest="Zero" Oper="Add" />
 				</Blend>
 
-				<Stencil>
+				<Stencil Value="1">
 					<DepthBuffer Enable="True" WriteMask="Zero" Func="Less"/>
 					<StencilBuffer Enable="True" ReadMask="0xff" WriteMask="0xff"/>
 					<Front Failed="Keep" DepthFailed="Keep" Pass="Replace" Func="Always" />
 					<Back Failed="Keep" DepthFailed="Keep" Pass="Replace" Func="Always" />
-				</Stencil>-->
-			</Layer>
-			<!--
-			<Layer EntityType="Entity" Transparent="No"> 
-				<Stencil>
-					<DepthBuffer Enable="True" WriteMask="All" Func="Less"/>
-					<StencilBuffer Enable="True" ReadMask="0xff" WriteMask="0xff"/>
-					<Front Failed="Keep" DepthFailed="Keep" Pass="Keep" Func="Equal" />
-					<Back Failed="Keep" DepthFailed="Keep" Pass="Keep" Func="Equal" />
 				</Stencil>
-			</Layer>-->
-
+			</Layer>
 		</Stage>
 
 	</StageList>

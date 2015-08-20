@@ -57,9 +57,7 @@ m_pCurrRenderStage(nullptr)
 
 cwRenderer::~cwRenderer()
 {
-	for (auto pStage : m_nVecStage) {
-		CW_SAFE_DELETE(pStage);
-	}
+	m_nVecStage.clear();
 
 	m_pCurrCamera = nullptr;
 	m_pCurrShader = nullptr;
@@ -85,7 +83,7 @@ CWVOID cwRenderer::setCurrShader(cwShader* pShader)
 
 CWVOID cwRenderer::addStage(cwStage* pStage)
 {
-	m_nVecStage.push_back(pStage);
+	m_nVecStage.pushBack(pStage);
 }
 
 CWVOID cwRenderer::addStageRealTime(cwStage* pStage)

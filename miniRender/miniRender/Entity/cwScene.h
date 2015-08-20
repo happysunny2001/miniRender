@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #define __CW_SCENE_H__
 
 #include "Base/cwMacros.h"
+#include "Base/cwVector.h"
 #include "cwRenderNode.h"
 #include "Base/cwVector.h"
 #include "Light/cwLight.h"
@@ -44,11 +45,11 @@ public:
 	virtual CWVOID removeLight(cwLight* pLight);
 	const cwVector<cwLight*>& getLights() const;
 
-	std::vector<cwEntity*>& getVisibleEntities(cwCamera* pCamera, eSceneObjectType eType=eSceneObjectEntity);
+	cwVector<cwEntity*>& getVisibleEntities(cwCamera* pCamera, eSceneObjectType eType = eSceneObjectEntity);
 
 protected:
 	cwVector<cwLight*> m_nVecLights;
-	std::vector<cwEntity*> m_nVecVisibleEntity;
+	cwVector<cwEntity*> m_nVecVisibleEntity;
 
 };
 

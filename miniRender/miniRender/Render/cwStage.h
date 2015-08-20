@@ -27,6 +27,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Texture/cwRenderTexture.h"
 #include "Parser/cwStageParser.h"
 #include "cwRenderPipeline.h"
+#include "Ref/cwRef.h"
 
 #include <unordered_map>
 
@@ -36,11 +37,13 @@ class cwCamera;
 class cwEffect;
 class cwShader;
 class cwStageLayer;
+class cwRenderGenerator;
 
-class CW_DLL cwStage
+class CW_DLL cwStage : public cwRef
 {
 public:
-	cwStage();
+	static cwStage* create();
+
 	~cwStage();
 
 	inline CWBOOL getEnable() const { return m_bEnable; }
@@ -68,6 +71,9 @@ public:
 	CWVOID addStageLayer(cwStageLayer* pLayer);
 	CWUINT getStageLayerCount() const;
 	cwStageLayer* getStageLayer(CWUINT index);
+	CWVOID clearStageLayer(CWBOOL bClear=CWTRUE);
+	CWVOID clearStageGenerator();
+	CWVOID clearStageEntity();
 
 	CWVOID setName(const CWSTRING& strName) { m_strName = strName; }
 	CWVOID setType(eStageType eType) { m_eType = eType; }
@@ -75,6 +81,10 @@ public:
 	CWVOID setViewPort(cwViewPort* pView);
 	CWVOID setRenderTexture(cwRenderTexture* pRenderTexture);
 	CWVOID setRefreshRenderTarget(CWBOOL bRefresh);
+	CWVOID addRenderGenerator(cwRenderGenerator* pGenerator);
+	
+protected:
+	cwStage();
 
 protected:
 	CWBOOL m_bEnable;
@@ -92,9 +102,10 @@ protected:
 	CWBOOL m_bClearStencil;
 
 	cwEffect* m_pStageEffect;
+	cwVector<cwRenderGenerator*> m_nVecGenerator;
 
-	std::vector<cwEntity*> m_nVecStageEntities;
-	std::vector<cwStageLayer*> m_nVecLayer;
+	cwVector<cwEntity*> m_nVecStageEntities;
+	cwVector<cwStageLayer*> m_nVecLayer;
 
 };
 

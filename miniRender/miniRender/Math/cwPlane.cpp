@@ -25,7 +25,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwPlane::cwPlane()
+cwPlane::cwPlane():
+m_fD(0)
 {
     m_eType = eShapePlane;
 }
@@ -70,6 +71,14 @@ float cwPlane::closestPoint(const cwPoint3D& p, cwVector3D& ret) const
     float f = m_fD - p.dot(m_nNormal);
     ret = p + f*m_nNormal;
     return f;
+}
+
+void cwPlane::update(const cwMatrix4X4& mat)
+{
+	cwVector3D vecTrans = mat.getTranslation();
+	m_nNormal *= mat;
+	m_nNormal.normalize();
+	m_fD = m_nNormal.dot(vecTrans);
 }
 
 bool cwPlane::intersection(const cwShape& other) const

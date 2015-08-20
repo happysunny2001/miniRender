@@ -39,6 +39,7 @@ class cwRay;
 class cwCircle;
 class cwPlane;
 class cwAABB;
+class cwMatrix4X4;
 
 class CW_DLL cwShape
 {

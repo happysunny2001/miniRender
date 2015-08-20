@@ -17,39 +17,46 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_MIRROR_H__
-#define __CW_MIRROR_H__
+#ifndef __CW_STAGE_MIRROR_GENERATOR_H__
+#define __CW_STAGE_MIRROR_GENERATOR_H__
 
 #include "Base/cwMacros.h"
-#include "Math/cwMath.h"
-#include "cwEntity.h"
+#include "Base/cwVector.h"
+#include "cwRenderGenerator.h"
+
+#include <vector>
 
 NS_MINIR_BEGIN
 
-class cwBlend;
-class cwStencil;
-class cwStage;
+#define CW_MIRROR_CNT 10
 
-class cwMirror : public cwEntity
+class cwStage;
+class cwStageLayer;
+class cwStencil;
+class cwBlend;
+
+class cwStageMirrorGenerator : public cwRenderGenerator
 {
 public:
-	static cwMirror* create();
+	static cwStageMirrorGenerator* create();
 
-	cwMirror();
-	virtual ~cwMirror();
-
-	virtual CWBOOL init() override;
-	virtual CWVOID transform() override;
-
-	virtual CWVOID setReflectPlane(const cwPlane& plane);
-	inline const cwMatrix4X4& getReclectMatrix() const { return m_nMatReflect; }
+	virtual ~cwStageMirrorGenerator();
+	virtual CWVOID generate() override;
 
 protected:
-	CWVOID updatePlane();
+	cwStageMirrorGenerator();
+
+	CWVOID buildStage();
+	CWVOID buildStencil();
+	CWVOID buildBlend();
 
 protected:
-	cwPlane m_nReflectPlane;
-	cwMatrix4X4 m_nMatReflect;
+	cwBlend* m_pBlendTransparent;
+	cwStencil* m_pStencilDrawRef;
+
+	cwStage* m_pStage;
+	cwStageLayer* m_pMirrorStageLayer;
+	cwVector<cwStageLayer*> m_nVecEntityStageLayer;
 
 };
 

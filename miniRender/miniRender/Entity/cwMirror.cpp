@@ -43,150 +43,42 @@ cwMirror* cwMirror::create()
 	return nullptr;
 }
 
-cwMirror::cwMirror():
-m_pBlendTransparent(nullptr),
-m_pStencilDrawRef(nullptr),
-m_pStage(nullptr)
+cwMirror::cwMirror()
 {
 
 }
 
 cwMirror::~cwMirror()
 {
-	CW_SAFE_RELEASE_NULL(m_pBlendTransparent);
-	CW_SAFE_RELEASE_NULL(m_pStencilDrawRef);
-	CW_SAFE_DELETE(m_pStage);
+
 }
 
 CWBOOL cwMirror::init()
 {
 	if (!cwEntity::init()) return CWFALSE;
 
-	buildBlend();
-	buildStencil();
-	buildStage();
-
 	m_eType = eSceneObjectMirror;
+	m_nReflectPlane.m_nNormal.zero();
+	m_nReflectPlane.m_nNormal.y = 1.0f;
 
 	return CWTRUE;
 }
 
-CWVOID cwMirror::buildBlend()
+CWVOID cwMirror::transform()
 {
-	BlendData blendNotDraw;
-	blendNotDraw.bEnable       = CWFALSE;
-	blendNotDraw.srcBlend      = eBlendFactorOne;
-	blendNotDraw.dstBlend      = eBlendFactorZero;
-	blendNotDraw.blendOp       = eBlendOpAdd;
-	blendNotDraw.srcBlendAlpha = eBlendFactorOne;
-	blendNotDraw.dstBlendAlpha = eBlendFactorZero;
-	blendNotDraw.blendOpAlpha  = eBlendOpAdd;
-	blendNotDraw.uColorEnable  = eColorWriteEnableNone;
-
-	cwBlend* pBlendNotDraw = cwRepertory::getInstance().getDevice()->createBlend(blendNotDraw);
-	this->setBlend(pBlendNotDraw);
-
-	BlendData blendTrans;
-	blendTrans.bEnable = CWTRUE;
-	blendTrans.srcBlend = eBlendFactorSrcAlpha;
-	blendTrans.dstBlend = eBlendFactorInvSrcAlpha;
-	blendTrans.blendOp = eBlendOpAdd;
-	blendTrans.srcBlendAlpha = eBlendFactorOne;
-	blendTrans.dstBlendAlpha = eBlendFactorZero;
-	blendTrans.blendOpAlpha = eBlendOpAdd;
-	blendTrans.uColorEnable = eColorWriteEnableAll;
-
-	m_pBlendTransparent = cwRepertory::getInstance().getDevice()->createBlend(blendTrans);
-	CW_SAFE_RETAIN(m_pBlendTransparent);
-}
-
-CWVOID cwMirror::buildStencil()
-{
-	StencilData stencilMask;
-	stencilMask.depthEnable      = CWTRUE;
-	stencilMask.depthWriteMask   = eDepthWriteMaskZero;
-	stencilMask.depthFunc        = eComparisonLess;
-	stencilMask.stencilEnable    = CWTRUE;
-	stencilMask.stencilReadMask  = 0xff;
-	stencilMask.stencilWriteMask = 0xff;
-
-	stencilMask.frontStencilFailOp      = eStencilOpKeep;
-	stencilMask.frontStencilDepthFailOp = eStencilOpKeep;
-	stencilMask.frontStencilPassOp      = eStencilOpReplace;
-	stencilMask.frontStencilFunc        = eComparisonAlways;
-
-	stencilMask.backStencilFailOp      = eStencilOpKeep;
-	stencilMask.backStencilDepthFailOp = eStencilOpKeep;
-	stencilMask.backStencilPassOp      = eStencilOpReplace;
-	stencilMask.backStencilFunc        = eComparisonAlways;
-
-	cwStencil* pStencilMask = cwRepertory::getInstance().getDevice()->createStencil(stencilMask);
-	pStencilMask->setStencilRef(1);
-	this->setStencil(pStencilMask);
-
-	StencilData stencilDrawRef;
-	stencilDrawRef.depthEnable      = CWTRUE;
-	stencilDrawRef.depthWriteMask   = eDepthWriteMaskAll;
-	stencilDrawRef.depthFunc        = eComparisonLess;
-	stencilDrawRef.stencilEnable    = CWTRUE;
-	stencilDrawRef.stencilReadMask  = 0xff;
-	stencilDrawRef.stencilWriteMask = 0xff;
-
-	stencilDrawRef.frontStencilFailOp      = eStencilOpKeep;
-	stencilDrawRef.frontStencilDepthFailOp = eStencilOpKeep;
-	stencilDrawRef.frontStencilPassOp      = eStencilOpKeep;
-	stencilDrawRef.frontStencilFunc        = eComparisonEqual;
-
-	stencilDrawRef.backStencilFailOp      = eStencilOpKeep;
-	stencilDrawRef.backStencilDepthFailOp = eStencilOpKeep;
-	stencilDrawRef.backStencilPassOp      = eStencilOpKeep;
-	stencilDrawRef.backStencilFunc        = eComparisonEqual;
-	m_pStencilDrawRef = cwRepertory::getInstance().getDevice()->createStencil(stencilDrawRef);
-	m_pStencilDrawRef->setStencilRef(1);
-	CW_SAFE_RETAIN(m_pStencilDrawRef);
+	cwRenderNode::transform();
 }
 
 CWVOID cwMirror::setReflectPlane(const cwPlane& plane)
 {
 	m_nReflectPlane = plane;
 	m_nMatReflect.reflect(m_nReflectPlane);
-
-	if (m_pStage) {
-		cwStageLayer* pStageLayer = m_pStage->getStageLayer(0);
-		if (pStageLayer) {
-			pStageLayer->setWorldTrans(m_nMatReflect);
-		}
-	}
 }
 
-CWVOID cwMirror::buildStage()
+CWVOID cwMirror::updatePlane()
 {
-	m_pStage = new cwStage();
-	cwStageLayer* pStageLayerEntity = new cwStageLayer();
-	cwStageLayer* pStageLayerMirror = new cwStageLayer();
-
-	if (!m_pStage) return;
-
-	m_pStage->setRefreshRenderTarget(CWFALSE);
-	m_pStage->setName("MirrorStage");
-	m_pStage->setCamera(cwRepertory::getInstance().getEngine()->getDefaultCamera());
-
-	pStageLayerEntity->setFliterType(eStageLayerFliterEntity);
-	pStageLayerEntity->setStencil(m_pStencilDrawRef);
-	pStageLayerEntity->setWorldTrans(m_nMatReflect);
-	pStageLayerEntity->setRenderState(eRenderStateCW);
-	m_pStage->addStageLayer(pStageLayerEntity);
-
-	pStageLayerMirror->setFliterType(eStageLayerFliterMirror);
-	pStageLayerMirror->setBlend(m_pBlendTransparent);
-	m_pStage->addStageLayer(pStageLayerMirror);
-}
-
-CWVOID cwMirror::render()
-{
-	cwStage* pCurrStage = cwRepertory::getInstance().getEngine()->getRenderer()->getCurrRenderStage();
-	if (m_pStage != pCurrStage)
-		cwRepertory::getInstance().getEngine()->getRenderer()->addStageRealTime(m_pStage);
+	m_nReflectPlane.update(m_nTrans);
+	m_nMatReflect.reflect(m_nReflectPlane);
 }
 
 NS_MINIR_END

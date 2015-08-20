@@ -29,6 +29,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Texture/cwRenderTexture.h"
 #include "Texture/cwTextureManager.h"
 #include "Engine/cwEngine.h"
+#include "Render/Generator/cwRenderGenerator.h"
 
 NS_MINIR_BEGIN
 
@@ -56,7 +57,7 @@ cwStage* cwStageParser::parse(tinyxml2::XMLElement* pStageData)
 {
 	if (!pStageData) return nullptr;
 
-	cwStage* pStage = new cwStage();
+	cwStage* pStage = cwStage::create();
 	if (!pStage) return nullptr;
 
 	parseElement(pStage, pStageData);
@@ -103,19 +104,23 @@ CWVOID cwStageParser::parseAttribute(cwStage* pStage, tinyxml2::XMLElement* pSta
 			pStage->setType(eStageTypeSpecific);
 		}
 	}
-	
 
 	const char* pcEnable = pStageData->Attribute("Enable");
 	pStage->setEnable(cwRepertory::getInstance().getParserManager()->getBool(pcEnable));
+
+	const char* pcGenerator = pStageData->Attribute("Generator");
+	if (pcGenerator) {
+		cwRenderGenerator* pGenerator = cwRenderGenerator::createRenderGenerator(pcGenerator);
+		if (pGenerator) {
+			pStage->addRenderGenerator(pGenerator);
+		}
+	}
 }
 
 CWVOID cwStageParser::parseCamera(cwStage* pStage, tinyxml2::XMLElement* pCameraData)
 {
 	const CWCHAR* pcCameraName = pCameraData->Attribute("Name");
 	pStage->setCameraName(pcCameraName);
-	//if (pcCameraName && strncmp(pcCameraName, "default", 7) != 0) {
-	//	//set camera object
-	//}
 }
 
 CWVOID cwStageParser::parseViewPort(cwStage* pStage, tinyxml2::XMLElement* pViewPortData)
@@ -210,7 +215,7 @@ CWVOID cwStageParser::deferParse(cwStage* pStage, tinyxml2::XMLElement* pStageEl
 
 	//add default stage layer
 	if (pStage->getStageLayerCount() == 0) {
-		cwStageLayer* pStageLayer = new cwStageLayer();
+		cwStageLayer* pStageLayer = cwStageLayer::create();
 		pStage->addStageLayer(pStageLayer);
 	}
 

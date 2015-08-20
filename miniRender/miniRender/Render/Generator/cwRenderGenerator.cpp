@@ -17,42 +17,15 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_MIRROR_H__
-#define __CW_MIRROR_H__
-
-#include "Base/cwMacros.h"
-#include "Math/cwMath.h"
-#include "cwEntity.h"
+#include "cwRenderGenerator.h"
+#include "cwStageMirrorGenerator.h"
 
 NS_MINIR_BEGIN
 
-class cwBlend;
-class cwStencil;
-class cwStage;
-
-class cwMirror : public cwEntity
+cwRenderGenerator* cwRenderGenerator::createRenderGenerator(const CWSTRING& strType)
 {
-public:
-	static cwMirror* create();
-
-	cwMirror();
-	virtual ~cwMirror();
-
-	virtual CWBOOL init() override;
-	virtual CWVOID transform() override;
-
-	virtual CWVOID setReflectPlane(const cwPlane& plane);
-	inline const cwMatrix4X4& getReclectMatrix() const { return m_nMatReflect; }
-
-protected:
-	CWVOID updatePlane();
-
-protected:
-	cwPlane m_nReflectPlane;
-	cwMatrix4X4 m_nMatReflect;
-
-};
+	if (strType == CW_STAGE_GEN_MIRROR) return cwStageMirrorGenerator::create();
+	return nullptr;
+}
 
 NS_MINIR_END
-
-#endif

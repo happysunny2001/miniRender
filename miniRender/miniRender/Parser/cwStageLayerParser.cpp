@@ -47,7 +47,7 @@ cwStageLayer* cwStageLayerParser::parse(tinyxml2::XMLElement* pStageLayerData)
 {
 	if (!pStageLayerData) return nullptr;
 
-	cwStageLayer* pStageLayer = new cwStageLayer();
+	cwStageLayer* pStageLayer = cwStageLayer::create();
 	if (!pStageLayer) return nullptr;
 
 	parseElement(pStageLayer, pStageLayerData);
