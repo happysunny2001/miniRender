@@ -501,6 +501,33 @@
     <ClInclude Include="Render\Generator\cwStageMirrorGenerator.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Render\ProcessingUnit\cwPURender.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerBlend.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerStencil.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser\cwPUStageLayerParser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerWorldTrans.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\cwDirectionalLight.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\cwPointLight.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Light\cwSpotLight.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -783,6 +810,33 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Render\Generator\cwStageMirrorGenerator.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ProcessingUnit\cwPURender.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerBlend.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerStencil.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser\cwPUStageLayerParser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerWorldTrans.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\cwDirectionalLight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\cwPointLight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\cwSpotLight.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -178,7 +178,7 @@ CWVOID StencilDemoScene::buildMirror()
 	pEntityMirror->setPosition(-49.9f, 25.0f, 0);
 	pEntityMirror->setRotation(0, 0, -cwMathUtil::cwPI*0.5f);
 	pEntityMirror->setScale(0.5f, 0.5f, 0.5f);
-	pEntityMirror->setReflectPlane(cwPlane(cwVector3D(-1.0f, 0, 0), -49));
+	//pEntityMirror->setReflectPlane(cwPlane(cwVector3D(-1.0f, 0, 0), -49));
 
 	this->addChild(pEntityMirror);
 }

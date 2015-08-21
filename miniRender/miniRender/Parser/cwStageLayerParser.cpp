@@ -19,9 +19,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwStageLayerParser.h"
 #include "Repertory/cwRepertory.h"
-#include "Parser/cwParserManager.h"
-#include "cwBlendParser.h"
-#include "cwStencilParser.h"
+#include "Render/ProcessingUnit/cwPUStageLayer.h"
+#include "cwParserManager.h"
+//#include "cwBlendParser.h"
+//#include "cwStencilParser.h"
+#include "cwPUStageLayerParser.h"
 
 NS_MINIR_BEGIN
 
@@ -38,9 +40,10 @@ cwStageLayerParser* cwStageLayerParser::create()
 
 cwStageLayerParser::cwStageLayerParser()
 {
-	m_nMapParser["Layer"]   = CW_CALLBACK_2(cwStageLayerParser::parseAttribute, this);
-	m_nMapParser["Blend"]   = CW_CALLBACK_2(cwStageLayerParser::parseBlend, this);
-	m_nMapParser["Stencil"] = CW_CALLBACK_2(cwStageLayerParser::parseStencil, this);
+	m_nMapParser["Layer"] = CW_CALLBACK_2(cwStageLayerParser::parseAttribute, this);
+	m_nMapParser["PU"]    = CW_CALLBACK_2(cwStageLayerParser::parsePU, this);
+	//m_nMapParser["Blend"]   = CW_CALLBACK_2(cwStageLayerParser::parseBlend, this);
+	//m_nMapParser["Stencil"] = CW_CALLBACK_2(cwStageLayerParser::parseStencil, this);
 }
 
 cwStageLayer* cwStageLayerParser::parse(tinyxml2::XMLElement* pStageLayerData)
@@ -85,26 +88,37 @@ CWVOID cwStageLayerParser::parseAttribute(cwStageLayer* pStageLayer, tinyxml2::X
 	}
 }
 
-CWVOID cwStageLayerParser::parseBlend(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData)
+CWVOID cwStageLayerParser::parsePU(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData)
 {
-	cwBlendParser* pBlendParser = static_cast<cwBlendParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserBlend));
-	if (!pBlendParser) return;
+	if (!pStageLayer || !pStageLayerData) return;
 
-	cwBlend* pBlend = pBlendParser->parse(pStageLayerData);
-	if (pBlend) {
-		pStageLayer->setBlend(pBlend);
-	}
+	cwPUStageLayerParser* pPUParser = static_cast<cwPUStageLayerParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserStageLayerPU));
+	if (!pPUParser) return;
+
+	cwVector<cwPUStageLayer*> vecPU = pPUParser->parse(pStageLayerData);
+	pStageLayer->setPUList(vecPU);
 }
 
-CWVOID cwStageLayerParser::parseStencil(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData)
-{
-	cwStencilParser* pStencilParser = static_cast<cwStencilParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserStencil));
-	if (!pStencilParser) return;
-
-	cwStencil* pStencil = pStencilParser->parse(pStageLayerData);
-	if (pStencil) {
-		pStageLayer->setStencil(pStencil);
-	}
-}
+//CWVOID cwStageLayerParser::parseBlend(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData)
+//{
+//	cwBlendParser* pBlendParser = static_cast<cwBlendParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserBlend));
+//	if (!pBlendParser) return;
+//
+//	cwBlend* pBlend = pBlendParser->parse(pStageLayerData);
+//	if (pBlend) {
+//		pStageLayer->setBlend(pBlend);
+//	}
+//}
+//
+//CWVOID cwStageLayerParser::parseStencil(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData)
+//{
+//	cwStencilParser* pStencilParser = static_cast<cwStencilParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserStencil));
+//	if (!pStencilParser) return;
+//
+//	cwStencil* pStencil = pStencilParser->parse(pStageLayerData);
+//	if (pStencil) {
+//		pStageLayer->setStencil(pStencil);
+//	}
+//}
 
 NS_MINIR_END

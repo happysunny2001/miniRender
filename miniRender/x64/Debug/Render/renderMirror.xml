@@ -14,17 +14,19 @@
 			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" IsClearColor="False" IsClearDepth="False" IsClearStencil="False" />
 
 			<Layer EntityType="Mirror" Transparent="No"> 
-				<Blend Enable="False" ColorEnable="None">
-					<RGB Src="One" Dest="Zero" Oper="Add" />
-					<Alpha Src="One" Dest="Zero" Oper="Add" />
-				</Blend>
+				<PU>
+					<Blend Enable="False" ColorEnable="None">
+						<RGB Src="One" Dest="Zero" Oper="Add" />
+						<Alpha Src="One" Dest="Zero" Oper="Add" />
+					</Blend>
 
-				<Stencil Value="1">
-					<DepthBuffer Enable="True" WriteMask="Zero" Func="Less"/>
-					<StencilBuffer Enable="True" ReadMask="0xff" WriteMask="0xff"/>
-					<Front Failed="Keep" DepthFailed="Keep" Pass="Replace" Func="Always" />
-					<Back Failed="Keep" DepthFailed="Keep" Pass="Replace" Func="Always" />
-				</Stencil>
+					<Stencil Value="1">
+						<DepthBuffer Enable="True" WriteMask="Zero" Func="Less"/>
+						<StencilBuffer Enable="True" ReadMask="0xff" WriteMask="0xff"/>
+						<Front Failed="Keep" DepthFailed="Keep" Pass="Replace" Func="Always" />
+						<Back Failed="Keep" DepthFailed="Keep" Pass="Replace" Func="Always" />
+					</Stencil>
+				</PU>
 			</Layer>
 		</Stage>
 

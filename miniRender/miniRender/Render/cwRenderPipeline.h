@@ -43,6 +43,9 @@ public:
 	CWBOOL addEntity(cwEntity* pEntity, cwStageLayer* pStageLayer);
 	CWBOOL full();
 
+	inline std::vector<cwRenderBatch>& getRenderBatch() { return m_nVecBatch; }
+	CWUINT getBatchCount() const { return m_iBatchIndex; }
+
 	inline CWVOID setShader(cwShader* pShader) { m_pShader = pShader; }
 	inline cwShader* getShader() const { return m_pShader; }
 

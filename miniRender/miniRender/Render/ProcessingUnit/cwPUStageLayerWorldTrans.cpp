@@ -17,34 +17,51 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "Base/cwMacros.h"
-#include "Ref/cwRef.h"
+#include "cwPUStageLayerWorldTrans.h"
 #include "Render/cwStageLayer.h"
-#include "tinyxml2.h"
-
-#include <functional>
+#include "Render/cwRenderPipeline.h"
+#include "Render/cwRenderBatch.h"
 
 NS_MINIR_BEGIN
 
-class cwStageLayerParser : public cwRef
+cwPUStageLayerWorldTrans* cwPUStageLayerWorldTrans::create()
 {
-public:
-	static cwStageLayerParser* create();
+	cwPUStageLayerWorldTrans* pPUStageLayer = new cwPUStageLayerWorldTrans();
+	if (pPUStageLayer) {
+		pPUStageLayer->autorelease();
+		return pPUStageLayer;
+	}
 
-	cwStageLayerParser();
+	return nullptr;
+}
 
-	cwStageLayer* parse(tinyxml2::XMLElement* pStageLayerData);
+cwPUStageLayerWorldTrans::cwPUStageLayerWorldTrans()
+{
+	m_eType = ePUStageLayerWorldTrans;
+}
 
-protected:
-	CWVOID parseElement(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parseAttribute(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	//CWVOID parseBlend(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	//CWVOID parseStencil(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parsePU(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
+cwPUStageLayerWorldTrans::~cwPUStageLayerWorldTrans()
+{
 
-protected:
-	std::unordered_map <CWSTRING, std::function<CWVOID(cwStageLayer*, tinyxml2::XMLElement*)>> m_nMapParser;
+}
 
-};
+CWVOID cwPUStageLayerWorldTrans::begin()
+{
+	if (!m_pStageLayer) return;
+
+	std::unordered_map<cwShader*, cwRenderPipeline*>& renderPipelines = m_pStageLayer->getRenderPipeline();
+	for (auto pipeline : renderPipelines) {
+		std::vector<cwRenderBatch>& renderBatches = pipeline.second->getRenderBatch();
+		CWUINT iCount = pipeline.second->getBatchCount();
+		for (CWUINT i = 0; i < iCount; ++i) {
+			renderBatches[i].m_nWorldTrans *= m_nMatWorldTrans;
+		}
+	}
+}
+
+CWVOID cwPUStageLayerWorldTrans::end()
+{
+
+}
 
 NS_MINIR_END

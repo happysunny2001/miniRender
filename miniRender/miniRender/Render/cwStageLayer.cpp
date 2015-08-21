@@ -24,6 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "Blend/cwBlend.h"
 #include "Stencil/cwStencil.h"
+#include "ProcessingUnit/cwPUStageLayer.h"
 
 NS_MINIR_BEGIN
 
@@ -41,8 +42,6 @@ cwStageLayer* cwStageLayer::create()
 cwStageLayer::cwStageLayer():
 m_eFilterType(eStageLayerFliterEntity),
 m_bTransparent(CWFALSE),
-m_pStageBlend(nullptr),
-m_pStageStencil(nullptr),
 m_eRenderState(eRenderStateSolid)
 {
 
@@ -50,22 +49,34 @@ m_eRenderState(eRenderStateSolid)
 
 cwStageLayer::~cwStageLayer()
 {
-	CW_SAFE_RELEASE_NULL(m_pStageBlend);
-	CW_SAFE_RELEASE_NULL(m_pStageStencil);
+	m_nVecPU.clear();
 }
 
-CWVOID cwStageLayer::setBlend(cwBlend* pBlend)
+CWVOID cwStageLayer::setPUList(cwVector<cwPUStageLayer*>& vecPU)
 {
-	CW_SAFE_RETAIN(pBlend);
-	CW_SAFE_RELEASE_NULL(m_pStageBlend);
-	m_pStageBlend = pBlend;
+	m_nVecPU.clear();
+
+	for (auto pPU : vecPU) {
+		pPU->setStageLayer(this);
+		m_nVecPU.pushBack(pPU);
+	}
 }
 
-CWVOID cwStageLayer::setStencil(cwStencil* pStencil)
+CWVOID cwStageLayer::addPU(cwPUStageLayer* pPUStageLayer)
 {
-	CW_SAFE_RETAIN(pStencil);
-	CW_SAFE_RELEASE_NULL(m_pStageStencil);
-	m_pStageStencil = pStencil;
+	if (pPUStageLayer) {
+		pPUStageLayer->setStageLayer(this);
+		m_nVecPU.pushBack(pPUStageLayer);
+	}
+}
+
+cwPUStageLayer* cwStageLayer::getPU(ePURenderType eType)
+{
+	for (auto pPU : m_nVecPU) {
+		if (pPU->getType() == eType) return pPU;
+	}
+
+	return nullptr;
 }
 
 CWVOID cwStageLayer::reset()
@@ -84,6 +95,10 @@ CWVOID cwStageLayer::begin(cwVector<cwEntity*>& vecEntities, cwEffect* pEffect)
 	else {
 		addEntities(vecEntities, pEffect);
 	}
+
+	for (auto pPU : m_nVecPU) {
+		pPU->begin();
+	}
 }
 
 CWVOID cwStageLayer::render()
@@ -97,7 +112,9 @@ CWVOID cwStageLayer::render()
 
 CWVOID cwStageLayer::end()
 {
-
+	for (auto pPU : m_nVecPU) {
+		pPU->end();
+	}
 }
 
 CWVOID cwStageLayer::addEntities(cwVector<cwEntity*>& vecEntities, cwEffect* pEffect)

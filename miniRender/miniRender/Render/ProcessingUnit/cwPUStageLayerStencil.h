@@ -17,34 +17,35 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "Base/cwMacros.h"
-#include "Ref/cwRef.h"
-#include "Render/cwStageLayer.h"
-#include "tinyxml2.h"
+#ifndef __CW_PU_STAGE_LAYER_STENCIL_H__
+#define __CW_PU_STAGE_LAYER_STENCIL_H__
 
-#include <functional>
+#include "Base/cwMacros.h"
+#include "Base/cwBasicType.h"
+#include "cwPUStageLayer.h"
 
 NS_MINIR_BEGIN
 
-class cwStageLayerParser : public cwRef
+class cwStencil;
+
+class cwPUStageLayerStencil : public cwPUStageLayer
 {
 public:
-	static cwStageLayerParser* create();
+	static cwPUStageLayerStencil* create();
 
-	cwStageLayerParser();
+	cwPUStageLayerStencil();
+	virtual ~cwPUStageLayerStencil();
 
-	cwStageLayer* parse(tinyxml2::XMLElement* pStageLayerData);
+	virtual CWVOID begin() override;
+	virtual CWVOID end() override;
 
-protected:
-	CWVOID parseElement(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parseAttribute(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	//CWVOID parseBlend(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	//CWVOID parseStencil(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parsePU(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
+	CWVOID setStencil(cwStencil* pStencil);
 
 protected:
-	std::unordered_map <CWSTRING, std::function<CWVOID(cwStageLayer*, tinyxml2::XMLElement*)>> m_nMapParser;
+	cwStencil* m_pStencil;
 
 };
 
 NS_MINIR_END
+
+#endif

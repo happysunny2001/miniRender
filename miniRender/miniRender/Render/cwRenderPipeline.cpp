@@ -62,17 +62,17 @@ CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity, cwStageLayer* pStageLayer)
 	pBatch->m_pEffect = pEntity->getEffect();
 	pBatch->m_nStrTech = pEntity->getEffect()->getTech();
 
-	if (pStageLayer->getBlennd())
-		pBatch->m_pBlend = pStageLayer->getBlennd();
-	else
+	//if (pStageLayer->getBlennd())
+	//	pBatch->m_pBlend = pStageLayer->getBlennd();
+	//else
 		pBatch->m_pBlend = pEntity->getBlend();
 
-	if (pStageLayer->getStencil())
-		pBatch->m_pStencil = pStageLayer->getStencil();
-	else
+	//if (pStageLayer->getStencil())
+	//	pBatch->m_pStencil = pStageLayer->getStencil();
+	//else
 		pBatch->m_pStencil = pEntity->getStencil();
 
-	pBatch->m_nWorldTrans = pEntity->getTransformMatrix()*pStageLayer->getWorldTrans();
+		pBatch->m_nWorldTrans = pEntity->getTransformMatrix();// *pStageLayer->getWorldTrans();
 	return CWTRUE;
 }
 

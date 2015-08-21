@@ -264,6 +264,7 @@ typedef enum {
 	eParserBlend,
 	eParserStencil,
 	eParserStageLayer,
+	eParserStageLayerPU,
 	eParserTypeMax
 }eParserType;
 
@@ -272,6 +273,13 @@ typedef enum {
 	eStageLayerFliterMirror,
 	eStageLayerFliterStage,
 }eStageLayerFliterType;
+
+typedef enum {
+	ePUNone = 0,
+	ePUStageLayerBlend = 1,
+	ePUStageLayerStencil,
+	ePUStageLayerWorldTrans,
+}ePURenderType;
 
 #define CW_CONTROL MK_CONTROL
 #define CW_LBUTTON MK_LBUTTON

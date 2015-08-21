@@ -21,14 +21,18 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Engine/cwEngine.h"
 #include "Device/cwDevice.h"
-#include "Render/cwStage.h"
-#include "Render/cwStageLayer.h"
-#include "Render/cwRenderer.h"
 #include "Stencil/cwStencil.h"
 #include "Blend/cwBlend.h"
 #include "Entity/cwScene.h"
 #include "Entity/cwEntity.h"
 #include "Entity/cwMirror.h"
+#include "Render/cwStage.h"
+#include "Render/cwStageLayer.h"
+#include "Render/cwRenderer.h"
+#include "Render/ProcessingUnit/cwPUStageLayer.h"
+#include "Render/ProcessingUnit/cwPUStageLayerStencil.h"
+#include "Render/ProcessingUnit/cwPUStageLayerBlend.h"
+#include "Render/ProcessingUnit/cwPUStageLayerWorldTrans.h"
 
 NS_MINIR_BEGIN
 
@@ -77,10 +81,13 @@ CWVOID cwStageMirrorGenerator::generate()
 	for (auto pEntity : vecEntity) {
 		cwStageLayer* pStageLayer = m_nVecEntityStageLayer.at(iIndex);
 		cwMirror* pMirror = static_cast<cwMirror*>(pEntity);
-		pStageLayer->setWorldTrans(pMirror->getReclectMatrix());
+		cwPUStageLayerWorldTrans* pPUStageLayerWorldTrans = static_cast<cwPUStageLayerWorldTrans*>(pStageLayer->getPU(ePUStageLayerWorldTrans));
+
+		if (pPUStageLayerWorldTrans) {
+			pPUStageLayerWorldTrans->setWorldTrans(pMirror->getReclectMatrix());
+		}
 
 		m_pStage->addStageLayer(pStageLayer);
-		
 		if (++iIndex >= vecEntity.size()) break;
 	}
 
@@ -105,15 +112,30 @@ CWVOID cwStageMirrorGenerator::buildStage()
 		cwStageLayer* pStageLayerEntity = cwStageLayer::create();
 		if (pStageLayerEntity) {
 			pStageLayerEntity->setFliterType(eStageLayerFliterEntity);
-			pStageLayerEntity->setStencil(m_pStencilDrawRef);
+
+			cwPUStageLayerStencil* pPUStageLayerStencil = cwPUStageLayerStencil::create();
+			if (pPUStageLayerStencil) {
+				pPUStageLayerStencil->setStencil(m_pStencilDrawRef);
+				pStageLayerEntity->addPU(pPUStageLayerStencil);
+			}
+
+			cwPUStageLayerWorldTrans* pPUStageLayerWorldTrans = cwPUStageLayerWorldTrans::create();
+			if (pPUStageLayerWorldTrans) {
+				pStageLayerEntity->addPU(pPUStageLayerWorldTrans);
+			}
+
 			pStageLayerEntity->setRenderState(eRenderStateCW);
 
 			m_nVecEntityStageLayer.pushBack(pStageLayerEntity);
 		}
 	}
 
+	cwPUStageLayerBlend* pPUStageLayerBlend = cwPUStageLayerBlend::create();
+	if (pPUStageLayerBlend) {
+		pPUStageLayerBlend->setBlend(m_pBlendTransparent);
+		m_pMirrorStageLayer->addPU(pPUStageLayerBlend);
+	}
 	m_pMirrorStageLayer->setFliterType(eStageLayerFliterMirror);
-	m_pMirrorStageLayer->setBlend(m_pBlendTransparent);
 }
 
 CWVOID cwStageMirrorGenerator::buildStencil()

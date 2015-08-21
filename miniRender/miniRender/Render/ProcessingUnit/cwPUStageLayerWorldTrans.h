@@ -17,34 +17,34 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "Base/cwMacros.h"
-#include "Ref/cwRef.h"
-#include "Render/cwStageLayer.h"
-#include "tinyxml2.h"
+#ifndef __CW_PU_STAGE_LAYER_WORLD_TRANS_H__
+#define __CW_PU_STAGE_LAYER_WORLD_TRANS_H__
 
-#include <functional>
+#include "Base/cwMacros.h"
+#include "Base/cwBasicType.h"
+#include "Math/cwMath.h"
+#include "cwPUStageLayer.h"
 
 NS_MINIR_BEGIN
 
-class cwStageLayerParser : public cwRef
+class cwPUStageLayerWorldTrans : public cwPUStageLayer
 {
 public:
-	static cwStageLayerParser* create();
+	static cwPUStageLayerWorldTrans* create();
 
-	cwStageLayerParser();
+	cwPUStageLayerWorldTrans();
+	virtual ~cwPUStageLayerWorldTrans();
 
-	cwStageLayer* parse(tinyxml2::XMLElement* pStageLayerData);
+	virtual CWVOID begin() override;
+	virtual CWVOID end() override;
 
-protected:
-	CWVOID parseElement(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parseAttribute(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	//CWVOID parseBlend(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	//CWVOID parseStencil(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parsePU(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
+	inline CWVOID setWorldTrans(const cwMatrix4X4& mat) { m_nMatWorldTrans = mat; }
 
 protected:
-	std::unordered_map <CWSTRING, std::function<CWVOID(cwStageLayer*, tinyxml2::XMLElement*)>> m_nMapParser;
+	cwMatrix4X4 m_nMatWorldTrans;
 
 };
 
 NS_MINIR_END
+
+#endif

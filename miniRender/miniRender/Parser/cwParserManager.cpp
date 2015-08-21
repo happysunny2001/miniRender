@@ -24,6 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwBlendParser.h"
 #include "cwStencilParser.h"
 #include "cwStageLayerParser.h"
+#include "cwPUStageLayerParser.h"
 
 NS_MINIR_BEGIN
 
@@ -82,6 +83,9 @@ CWBOOL cwParserManager::init()
 
 	m_nArrParser[eParserStageLayer] = cwStageLayerParser::create();
 	CW_SAFE_RETAIN(m_nArrParser[eParserStageLayer]);
+
+	m_nArrParser[eParserStageLayerPU] = cwPUStageLayerParser::create();
+	CW_SAFE_RETAIN(m_nArrParser[eParserStageLayerPU]);
 
 	return CWTRUE;
 }

@@ -66,7 +66,21 @@ CWBOOL cwMirror::init()
 
 CWVOID cwMirror::transform()
 {
-	cwRenderNode::transform();
+	if (m_bTransDirty) {
+		cwMatrix4X4 matTranslate, matScale, matRot;
+		matTranslate.setTranslation(m_nPos);
+		matScale.setScale(m_nScale);
+		matRot.setRotation(m_nRot);
+		m_nTrans = matScale * matRot * matTranslate;
+
+		updatePlane();
+
+		m_bTransDirty = CWFALSE;
+	}
+
+	if (m_pParent) {
+		m_nTrans = m_nTrans * m_pParent->getTransformMatrix();
+	}
 }
 
 CWVOID cwMirror::setReflectPlane(const cwPlane& plane)

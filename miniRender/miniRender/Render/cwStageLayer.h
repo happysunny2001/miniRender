@@ -36,6 +36,7 @@ class cwEntity;
 class cwEffect;
 class cwBlend;
 class cwStencil;
+class cwPUStageLayer;
 
 class cwStageLayer : public cwRef
 {
@@ -52,16 +53,13 @@ public:
 	CWVOID render();
 	CWVOID end();
 
-	cwBlend* getBlennd() const { return m_pStageBlend; }
-	CWVOID setBlend(cwBlend* pBlend);
-
-	cwStencil* getStencil() const { return m_pStageStencil; }
-	CWVOID setStencil(cwStencil* pStencil);
+	CWVOID setPUList(cwVector<cwPUStageLayer*>& vecPU);
+	CWVOID addPU(cwPUStageLayer* pPUStageLayer);
+	cwPUStageLayer* getPU(ePURenderType eType);
 
 	inline CWVOID setRenderState(eRenderState eState) { m_eRenderState = eState; }
 
-	inline const cwMatrix4X4& getWorldTrans() const { return m_nMatWorldTrans; }
-	inline CWVOID setWorldTrans(const cwMatrix4X4& mat) { m_nMatWorldTrans = mat; }
+	inline std::unordered_map<cwShader*, cwRenderPipeline*>& getRenderPipeline() { return m_nMapPipeline; }
 
 protected:
 	cwStageLayer();
@@ -77,14 +75,12 @@ protected:
 	eStageLayerFliterType m_eFilterType;
 	CWBOOL m_bTransparent;
 
-	cwBlend* m_pStageBlend;
-	cwStencil* m_pStageStencil;
+	cwVector<cwPUStageLayer*> m_nVecPU;
+
 	eRenderState m_eRenderState;
 
 	cwRenderPipeline m_nPipeline[CW_STAGE_PIPELINE_SIZE];
 	CWUINT m_iPipeLineIndex;
-
-	cwMatrix4X4 m_nMatWorldTrans;
 
 	std::unordered_map<cwShader*, cwRenderPipeline*> m_nMapPipeline;
 

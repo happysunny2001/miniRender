@@ -17,34 +17,19 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "Base/cwMacros.h"
-#include "Ref/cwRef.h"
-#include "Render/cwStageLayer.h"
-#include "tinyxml2.h"
-
-#include <functional>
+#include "cwPUStageLayer.h"
 
 NS_MINIR_BEGIN
 
-class cwStageLayerParser : public cwRef
+cwPUStageLayer::cwPUStageLayer():
+m_pStageLayer(nullptr)
 {
-public:
-	static cwStageLayerParser* create();
 
-	cwStageLayerParser();
+}
 
-	cwStageLayer* parse(tinyxml2::XMLElement* pStageLayerData);
-
-protected:
-	CWVOID parseElement(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parseAttribute(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	//CWVOID parseBlend(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	//CWVOID parseStencil(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parsePU(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-
-protected:
-	std::unordered_map <CWSTRING, std::function<CWVOID(cwStageLayer*, tinyxml2::XMLElement*)>> m_nMapParser;
-
-};
+cwPUStageLayer::~cwPUStageLayer()
+{
+	m_pStageLayer = nullptr;
+}
 
 NS_MINIR_END

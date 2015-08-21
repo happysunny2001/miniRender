@@ -71,7 +71,10 @@
     <ClInclude Include="Generator\cwGeometryGenerator.h" />
     <ClInclude Include="Layouts\cwLayouts.h" />
     <ClInclude Include="Layouts\cwLayoutsManager.h" />
+    <ClInclude Include="Light\cwDirectionalLight.h" />
     <ClInclude Include="Light\cwLight.h" />
+    <ClInclude Include="Light\cwPointLight.h" />
+    <ClInclude Include="Light\cwSpotLight.h" />
     <ClInclude Include="Material\cwMaterial.h" />
     <ClInclude Include="Math\cwAABB.h" />
     <ClInclude Include="Math\cwCircle.h" />
@@ -90,6 +93,7 @@
     <ClInclude Include="Parser\cwBlendParser.h" />
     <ClInclude Include="Parser\cwEntityParser.h" />
     <ClInclude Include="Parser\cwParserManager.h" />
+    <ClInclude Include="Parser\cwPUStageLayerParser.h" />
     <ClInclude Include="Parser\cwRendererParser.h" />
     <ClInclude Include="Parser\cwStageLayerParser.h" />
     <ClInclude Include="Parser\cwStageParser.h" />
@@ -128,6 +132,11 @@
     <ClInclude Include="Render\cwStageLayer.h" />
     <ClInclude Include="Render\Generator\cwRenderGenerator.h" />
     <ClInclude Include="Render\Generator\cwStageMirrorGenerator.h" />
+    <ClInclude Include="Render\ProcessingUnit\cwPURender.h" />
+    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayer.h" />
+    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerBlend.h" />
+    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerStencil.h" />
+    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerWorldTrans.h" />
     <ClInclude Include="Repertory\cwRepertory.h" />
     <ClInclude Include="Scheduler\cwScheduleInterface.h" />
     <ClInclude Include="Scheduler\cwSchedulerManager.h" />
@@ -171,7 +180,10 @@
     <ClCompile Include="Generator\cwGeometryGenerator.cpp" />
     <ClCompile Include="Layouts\cwLayouts.cpp" />
     <ClCompile Include="Layouts\cwLayoutsManager.cpp" />
+    <ClCompile Include="Light\cwDirectionalLight.cpp" />
     <ClCompile Include="Light\cwLight.cpp" />
+    <ClCompile Include="Light\cwPointLight.cpp" />
+    <ClCompile Include="Light\cwSpotLight.cpp" />
     <ClCompile Include="Material\cwMaterial.cpp" />
     <ClCompile Include="Math\cwAABB.cpp" />
     <ClCompile Include="Math\cwCircle.cpp" />
@@ -189,6 +201,7 @@
     <ClCompile Include="Parser\cwBlendParser.cpp" />
     <ClCompile Include="Parser\cwEntityParser.cpp" />
     <ClCompile Include="Parser\cwParserManager.cpp" />
+    <ClCompile Include="Parser\cwPUStageLayerParser.cpp" />
     <ClCompile Include="Parser\cwRendererParser.cpp" />
     <ClCompile Include="Parser\cwStageLayerParser.cpp" />
     <ClCompile Include="Parser\cwStageParser.cpp" />
@@ -225,6 +238,11 @@
     <ClCompile Include="Render\cwStageLayer.cpp" />
     <ClCompile Include="Render\Generator\cwRenderGenerator.cpp" />
     <ClCompile Include="Render\Generator\cwStageMirrorGenerator.cpp" />
+    <ClCompile Include="Render\ProcessingUnit\cwPURender.cpp" />
+    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayer.cpp" />
+    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerBlend.cpp" />
+    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerStencil.cpp" />
+    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerWorldTrans.cpp" />
     <ClCompile Include="Repertory\cwRepertory.cpp" />
     <ClCompile Include="Scheduler\cwScheduleInterface.cpp" />
     <ClCompile Include="Scheduler\cwSchedulerManager.cpp" />

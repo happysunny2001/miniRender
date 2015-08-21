@@ -307,7 +307,7 @@ void cwMatrix4X4::perspectiveFov(float fFovY, float fAspect, float fNearZ, float
 void cwMatrix4X4::reflect(const cwPlane& plane)
 {
 	const cwVector3D& n = plane.m_nNormal;
-	float d = plane.m_fD;
+	float d = -plane.m_fD;
 
 	m11 = 1.0f - 2.0f*n.x*n.x; m12 = -2.0f*n.x*n.y;       m13 = -2.0f*n.x*n.z;       m14 = 0;
 	m21 = -2.0f*n.x*n.y;       m22 = 1.0f - 2.0f*n.y*n.y; m23 = -2.0f*n.y*n.z;       m24 = 0;

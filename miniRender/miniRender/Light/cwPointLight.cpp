@@ -17,34 +17,52 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "Base/cwMacros.h"
-#include "Ref/cwRef.h"
-#include "Render/cwStageLayer.h"
-#include "tinyxml2.h"
-
-#include <functional>
+#include "cwPointLight.h"
 
 NS_MINIR_BEGIN
 
-class cwStageLayerParser : public cwRef
+cwPointLight* cwPointLight::create(
+const cwVector4D& position,
+const cwVector4D& ambient,
+const cwVector4D& diffuse,
+const cwVector4D& specular,
+const cwVector4D& attenuation)
 {
-public:
-	static cwStageLayerParser* create();
+	cwPointLight* pLight = new cwPointLight();
+	if (pLight && pLight->init(position, ambient, diffuse, specular, attenuation)) {
+		pLight->autorelease();
+		return pLight;
+	}
 
-	cwStageLayerParser();
+	CW_SAFE_DELETE(pLight);
+	return nullptr;
+}
 
-	cwStageLayer* parse(tinyxml2::XMLElement* pStageLayerData);
+cwPointLight::cwPointLight()
+{
 
-protected:
-	CWVOID parseElement(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parseAttribute(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	//CWVOID parseBlend(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	//CWVOID parseStencil(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parsePU(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
+}
 
-protected:
-	std::unordered_map <CWSTRING, std::function<CWVOID(cwStageLayer*, tinyxml2::XMLElement*)>> m_nMapParser;
+cwPointLight::~cwPointLight()
+{
 
-};
+}
+
+CWBOOL cwPointLight::init(
+	const cwVector4D& position,
+	const cwVector4D& ambient,
+	const cwVector4D& diffuse,
+	const cwVector4D& specular,
+	const cwVector4D& attenuation)
+{
+	this->setPosition(position);
+	this->setAmbient(ambient);
+	this->setDiffuse(diffuse);
+	this->setSpecular(specular);
+	this->setAttenuation(attenuation);
+	this->setRange(attenuation.w);
+
+	return CWTRUE;
+}
 
 NS_MINIR_END

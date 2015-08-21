@@ -17,34 +17,30 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "Base/cwMacros.h"
-#include "Ref/cwRef.h"
-#include "Render/cwStageLayer.h"
-#include "tinyxml2.h"
+#ifndef __CW_PU_RENDER_H__
+#define __CW_PU_RENDER_H__
 
-#include <functional>
+#include "Base/cwMacros.h"
+#include "Base/cwBasicType.h"
+#include "Base/cwUtils.h"
+#include "Ref/cwRef.h"
 
 NS_MINIR_BEGIN
 
-class cwStageLayerParser : public cwRef
+class cwPURender : public cwRef
 {
 public:
-	static cwStageLayerParser* create();
+	cwPURender();
 
-	cwStageLayerParser();
+	virtual CWVOID begin() = 0;
+	virtual CWVOID end() = 0;
 
-	cwStageLayer* parse(tinyxml2::XMLElement* pStageLayerData);
-
-protected:
-	CWVOID parseElement(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parseAttribute(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	//CWVOID parseBlend(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	//CWVOID parseStencil(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parsePU(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
+	ePURenderType getType() const { return m_eType; }
 
 protected:
-	std::unordered_map <CWSTRING, std::function<CWVOID(cwStageLayer*, tinyxml2::XMLElement*)>> m_nMapParser;
-
+	ePURenderType m_eType;
 };
 
 NS_MINIR_END
+
+#endif

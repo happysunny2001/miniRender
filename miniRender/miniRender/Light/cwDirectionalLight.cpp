@@ -17,34 +17,48 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "Base/cwMacros.h"
-#include "Ref/cwRef.h"
-#include "Render/cwStageLayer.h"
-#include "tinyxml2.h"
-
-#include <functional>
+#include "cwDirectionalLight.h"
 
 NS_MINIR_BEGIN
 
-class cwStageLayerParser : public cwRef
+cwDirectionalLight* cwDirectionalLight::create(
+const cwVector4D& direction,
+		const cwVector4D& ambient,
+		const cwVector4D& diffuse,
+		const cwVector4D& specular)
 {
-public:
-	static cwStageLayerParser* create();
+	cwDirectionalLight* pLight = new cwDirectionalLight();
+	if (pLight && pLight->init(direction, ambient, diffuse, specular)) {
+		pLight->autorelease();
+		return pLight;
+	}
 
-	cwStageLayerParser();
+	CW_SAFE_DELETE(pLight);
+	return nullptr;
+}
 
-	cwStageLayer* parse(tinyxml2::XMLElement* pStageLayerData);
+cwDirectionalLight::cwDirectionalLight()
+{
 
-protected:
-	CWVOID parseElement(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parseAttribute(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	//CWVOID parseBlend(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	//CWVOID parseStencil(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parsePU(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
+}
 
-protected:
-	std::unordered_map <CWSTRING, std::function<CWVOID(cwStageLayer*, tinyxml2::XMLElement*)>> m_nMapParser;
+cwDirectionalLight::~cwDirectionalLight()
+{
+	
+}
 
-};
+CWBOOL cwDirectionalLight::init(
+	const cwVector4D& direction,
+	const cwVector4D& ambient,
+	const cwVector4D& diffuse,
+	const cwVector4D& specular)
+{
+	this->setDirection(direction);
+	this->setAmbient(ambient);
+	this->setDiffuse(diffuse);
+	this->setSpecular(specular);
+
+	return CWTRUE;
+}
 
 NS_MINIR_END
