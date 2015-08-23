@@ -33,12 +33,23 @@ public:
 
 	virtual CWBOOL init() override;
 
+	virtual CWVOID onTouchDown(cwTouch* pTouch) override;
+	virtual CWVOID onTouchUp(cwTouch* pTouch) override;
+	virtual CWVOID onTouchMoving(cwTouch* pTouch) override;
+
 protected:
 	CWVOID buildEntity();
 	CWVOID buildLightEntity();
 	CWVOID buildLight();
 
 protected:
+	CWFLOAT m_fLastX;
+	CWFLOAT m_fLastY;
+	CWFLOAT m_fTheta;
+	CWFLOAT m_fPhi;
+	CWFLOAT m_fRadius;
+	CWBOOL m_bTouchDown;
+
 	cwEntity* m_pPointLightEntity;
 	cwEntity* m_pSpotLightEntity;
 

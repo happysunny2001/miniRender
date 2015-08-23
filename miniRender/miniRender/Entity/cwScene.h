@@ -25,6 +25,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwRenderNode.h"
 #include "Base/cwVector.h"
 #include "Light/cwLight.h"
+#include "Light/cwDirectionalLight.h"
+#include "Light/cwPointLight.h"
+#include "Light/cwSpotLight.h"
 
 NS_MINIR_BEGIN
 
@@ -41,14 +44,28 @@ public:
 
 	virtual CWBOOL init() override;
 
-	virtual CWVOID addLight(cwLight* pLight);
-	virtual CWVOID removeLight(cwLight* pLight);
-	const cwVector<cwLight*>& getLights() const;
+	//virtual CWVOID addLight(cwLight* pLight);
+	//virtual CWVOID removeLight(cwLight* pLight);
+	//const cwVector<cwLight*>& getLights() const;
+
+	virtual CWVOID addDirectionalLight(cwDirectionalLight* pLight);
+	virtual CWVOID addPointLight(cwPointLight* pLight);
+	virtual CWVOID addSpotLight(cwSpotLight* pLight);
+
+	virtual CWVOID removeDirectionalLight(cwLight* pLight);
+	virtual CWVOID removePointLight(cwLight* pLight);
+	virtual CWVOID removeSpotLight(cwLight* pLight);
+
+	const cwVector<cwLight*>& getDirectionalLights() const;
+	const cwVector<cwLight*>& getPointLights() const;
+	const cwVector<cwLight*>& getSpotLights() const;
 
 	cwVector<cwEntity*>& getVisibleEntities(cwCamera* pCamera, eSceneObjectType eType = eSceneObjectEntity);
 
 protected:
-	cwVector<cwLight*> m_nVecLights;
+	cwVector<cwLight*> m_nVecDirectionalLights;
+	cwVector<cwLight*> m_nVecPointLights;
+	cwVector<cwLight*> m_nVecSpotLights;
 	cwVector<cwEntity*> m_nVecVisibleEntity;
 
 };

@@ -1,29 +1,20 @@
-//***************************************************************************************
-// color.fx by Frank Luna (C) 2011 All Rights Reserved.
-//
-// Transforms and colors geometry.
-//***************************************************************************************
+#include "material.fx"
 
 cbuffer cbPerObject
 {
 	float4x4 gMatWorldViewProj; 
 };
 
-cbuffer cbPerFrame
-{
-	float4x4 fmat;
-};
-
 struct VertexIn
 {
 	float3 PosL  : POSITION;
-    float4 Color : COLOR;
+	float2 Tex   : TEXCOORD;
 };
 
 struct VertexOut
 {
 	float4 PosH  : SV_POSITION;
-    float4 Color : COLOR;
+	float2 Tex   : TEXCOORD;
 };
 
 VertexOut VS(VertexIn vin)
@@ -32,16 +23,14 @@ VertexOut VS(VertexIn vin)
 	
 	// Transform to homogeneous clip space.
 	vout.PosH = mul(float4(vin.PosL, 1.0f), gMatWorldViewProj);
-	
-	// Just pass vertex color into the pixel shader.
-	vout.Color = vin.Color;
+	vout.Tex   = vin.Tex;
     
 	return vout;
 }
 
 float4 PS(VertexOut pin) : SV_Target
 {
-	return pin.Color;
+	return gTexture0.Sample( samAnisotropic, pin.Tex );
 }
 
 technique11 ColorTech

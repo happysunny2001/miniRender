@@ -7,7 +7,6 @@
 cbuffer cbPerObject
 {
 	float4x4 gMatWorldViewProj; 
-	float4x4 gg;
 };
 
 cbuffer cbPerFrame
@@ -35,14 +34,14 @@ VertexOut VS(VertexIn vin)
 	vout.PosH = mul(float4(vin.PosL, 1.0f), gMatWorldViewProj);
 	
 	// Just pass vertex color into the pixel shader.
-    vout.Color = vin.Color;
+	vout.Color = vin.Color;
     
-    return vout;
+	return vout;
 }
 
 float4 PS(VertexOut pin) : SV_Target
 {
-    return pin.Color;
+	return pin.Color;
 }
 
 technique11 ColorTech
@@ -50,7 +49,7 @@ technique11 ColorTech
     pass P0
     {
         SetVertexShader( CompileShader( vs_5_0, VS() ) );
-		SetGeometryShader( NULL );
+	SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PS() ) );
     }
 }

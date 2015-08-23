@@ -174,23 +174,21 @@ CWVOID StencilDemoScene::buildMirror()
 	pEntityMirror->setRenderObject(m_pPlaneObj);
 	pEntityMirror->setMaterial(pMaterial);
 	pEntityMirror->setEffect(pEffect);
-	//pEntityMirror->setType(eSceneObjectMirror);
 	pEntityMirror->setPosition(-49.9f, 25.0f, 0);
 	pEntityMirror->setRotation(0, 0, -cwMathUtil::cwPI*0.5f);
 	pEntityMirror->setScale(0.5f, 0.5f, 0.5f);
-	//pEntityMirror->setReflectPlane(cwPlane(cwVector3D(-1.0f, 0, 0), -49));
 
 	this->addChild(pEntityMirror);
 }
 
 CWVOID StencilDemoScene::buildLights()
 {
-	cwLight* pLightDirectional = cwLight::createDirectionalLight(
-		cwVector3D(1.0f, -1.0f, 0.0f),
+	cwDirectionalLight* pLightDirectional = cwDirectionalLight::create(
+		cwVector4D(1.0f, -1.0f, 0.0f, 0.0f),
+		cwVector4D(0.2f, 0.2f, 0.2f, 1.0f),
 		cwVector4D(0.5f, 0.5f, 0.5f, 1.0f),
-		cwVector4D(0.8f, 0.8f, 0.8f, 1.0f),
 		cwVector4D(0.1f, 0.1f, 0.1f, 1.0f));
-	this->addLight(pLightDirectional);
+	this->addDirectionalLight(pLightDirectional);
 }
 
 cwStaticRenderObject* StencilDemoScene::createRenderObj(cwGeometryGenerator::cwMeshData& mesh)

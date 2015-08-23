@@ -1,12 +1,5 @@
 #include "lightUtil.fx"
 
-cbuffer cbPerFrame
-{
-	TypelessLight gLightList[8];  //maxumun supported light count is 8
-	int gLightCount;              //current active light count
-	float3 gEyePosWorld;	      //camera position in world space
-};
-
 cbuffer cbPerObject
 {
 	float4x4 gMatWorld;
@@ -49,21 +42,26 @@ float4 PS(VertexOut pIn) : SV_Target
 
 	//light result
 	float4 A, D, S;
+	int i;
 
-	for(int i = 0; i < gLightCount; ++i) {
-		switch(gLightList[i].type) {
-			case 1:
-				ProcessDirectionalLight(gMaterial, (DirectionalLight)gLightList[i], pIn.NormalW, toEyeW, A, D, S);
-				break;
-			case 2:
-				ProcessPointLight(gMaterial, (PointLight)gLightList[i], pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
-				break;
-			case 3:
-				processSpotLight(gMaterial, (SpotLight)gLightList[i], pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
-				break;
-			default:
-				break;
-		}
+	for(i = 0; i < gDirectionalLightCount; ++i) {
+		ProcessDirectionalLight(gMaterial, gDirectionalLight[i], pIn.NormalW, toEyeW, A, D, S);
+
+		ambient += A;
+		diffuse += D;
+		spec    += S;
+	}
+
+	for(i = 0; i < gPointLightCount; ++i) {
+		ProcessPointLight(gMaterial, gPointLight[i], pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
+
+		ambient += A;
+		diffuse += D;
+		spec    += S;
+	}
+
+	for(i = 0; i < gSpotLightCount; ++i) {
+		processSpotLight(gMaterial, gSpotLight[i], pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
 
 		ambient += A;
 		diffuse += D;
@@ -80,7 +78,7 @@ technique11 LightTech
     pass P0
     {
         SetVertexShader( CompileShader( vs_5_0, VS() ) );
-		SetGeometryShader( NULL );
+	SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PS() ) );
     }
 }

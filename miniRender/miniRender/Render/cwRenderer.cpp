@@ -198,16 +198,70 @@ CWVOID cwRenderer::configLight()
 	if (!m_pCurrShader) return;
 	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
 	if (!pCurrScene) return;
-	if (pCurrScene->getLights().empty()) return;
-	if (!m_pCurrShader->hasVariable(eShaderParamLight) || !m_pCurrShader->hasVariable(eShaderParamLightCnt)) return;
 
-	CWUINT index = 0;
-	const cwVector<cwLight*>& vecLight = pCurrScene->getLights();
-	for (auto it = vecLight.begin(); it != vecLight.end(); ++it, ++index) {
-		m_pCurrShader->setVariableData(eShaderParamLight, index, (*it)->data(), 0, (*it)->size());
+	configDirectionalLight();
+	configPointLight();
+	configSpotLight();
+}
+
+CWVOID cwRenderer::configDirectionalLight()
+{
+	if (!m_pCurrShader->hasVariable(eShaderParamDirectionalLight) || 
+		!m_pCurrShader->hasVariable(eShaderParamDirectionalLightCnt)) return;
+
+	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
+	const cwVector<cwLight*>& vecLight = pCurrScene->getDirectionalLights();
+	if (vecLight.empty()) {
+		m_pCurrShader->setVariableInt(eShaderParamDirectionalLightCnt, 0);
+		return;
 	}
 
-	m_pCurrShader->setVariableInt(eShaderParamLightCnt, (CWINT)(vecLight.size()));
+	CWUINT index = 0;
+	for (auto it = vecLight.begin(); it != vecLight.end(); ++it, ++index) {
+		m_pCurrShader->setVariableData(eShaderParamDirectionalLight, index, (*it)->data(), 0, (*it)->size());
+	}
+
+	m_pCurrShader->setVariableInt(eShaderParamDirectionalLightCnt, (CWINT)(vecLight.size()));
+}
+
+CWVOID cwRenderer::configPointLight()
+{
+	if (!m_pCurrShader->hasVariable(eShaderParamPointLight) ||
+		!m_pCurrShader->hasVariable(eShaderParamPointLightCnt)) return;
+
+	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
+	const cwVector<cwLight*>& vecLight = pCurrScene->getPointLights();
+	if (vecLight.empty()) {
+		m_pCurrShader->setVariableInt(eShaderParamPointLightCnt, 0);
+		return;
+	}
+
+	CWUINT index = 0;
+	for (auto it = vecLight.begin(); it != vecLight.end(); ++it, ++index) {
+		m_pCurrShader->setVariableData(eShaderParamPointLight, index, (*it)->data(), 0, (*it)->size());
+	}
+
+	m_pCurrShader->setVariableInt(eShaderParamPointLightCnt, (CWINT)(vecLight.size()));
+}
+
+CWVOID cwRenderer::configSpotLight()
+{
+	if (!m_pCurrShader->hasVariable(eShaderParamSpotLight) ||
+		!m_pCurrShader->hasVariable(eShaderParamSpotLightCnt)) return;
+
+	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
+	const cwVector<cwLight*>& vecLight = pCurrScene->getSpotLights();
+	if (vecLight.empty()) {
+		m_pCurrShader->setVariableInt(eShaderParamSpotLightCnt, 0);
+		return;
+	}
+
+	CWUINT index = 0;
+	for (auto it = vecLight.begin(); it != vecLight.end(); ++it, ++index) {
+		m_pCurrShader->setVariableData(eShaderParamSpotLight, index, (*it)->data(), 0, (*it)->size());
+	}
+
+	m_pCurrShader->setVariableInt(eShaderParamSpotLightCnt, (CWINT)(vecLight.size()));
 }
 
 NS_MINIR_END

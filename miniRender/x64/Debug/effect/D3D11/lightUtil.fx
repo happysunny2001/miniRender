@@ -3,44 +3,29 @@
 //Light Util
 //support directional light, point light, spot light
 
-//material structure
-//struct Material
-//{
-//	float4 ambient;
-//	float4 diffuse;
-//	float4 specular; //w:Spec Power
-//	float4 reflect;
-//};
-
 //directional light structure
 struct DirectionalLight
 {
-	float3 direction;
-	float type;
+	float4 direction;
 	float4 ambient;
 	float4 diffuse;
 	float4 specular;
-	float4 pad1;
-	float4 pad2;
 };
 
 //point light structure
 struct PointLight
 {
-	float3 position;
-	float type;
+	float4 position;
 	float4 ambient;
 	float4 diffuse;
 	float4 specular;
 	float4 att; //x,y,z:attenuation A0, A1, A2; w:range
-	float4 pad;
 };
 
 //spot light structure
 struct SpotLight
 {
-	float3 position;
-	float type;
+	float4 position;
 	float4 ambient;
 	float4 diffuse;
 	float4 specular;
@@ -48,15 +33,21 @@ struct SpotLight
 	float4 spotDirection; //x, y, z:spot light position; w:spot
 };
 
-struct TypelessLight
+cbuffer cbPerFrame
 {
-	float3 pad0;
-	float type;
-	float4 pad1;
-	float4 pad2;
-	float4 pad3;
-	float4 pad4;
-	float4 pad5;
+	DirectionalLight gDirectionalLight[2];  //maxumun supported directional light count is 2
+	int gDirectionalLightCount;             //current active directional light count
+
+	PointLight gPointLight[5];              //maxumun supported point light count is 5
+	int gPointLightCount;                   //current active point light count
+
+	SpotLight gSpotLight[3];                //maxumun supported spot light count is 3
+	int gSpotLightCount;			//current active spot light count
+};
+
+cbuffer cbPerFrame
+{
+	float3 gEyePosWorld;	      //camera position in world space
 };
 
 //parameters
@@ -72,12 +63,12 @@ void ProcessDirectionalLight(Material mat, DirectionalLight light, float3 normal
 	specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	ambient = mat.ambient * light.ambient;
-	float3 lightVec = -light.direction;
+	float3 lightVec = -light.direction.xyz;
 	float diffuseFactor = dot(lightVec, normal);
 
 	if(diffuseFactor > 0) {
 		diffuse = diffuseFactor * mat.diffuse * light.diffuse;
-		float3 refVec = reflect(light.direction, normal);
+		float3 refVec = reflect(light.direction.xyz, normal);
 		float specFactor = pow(max(dot(refVec, toEye), 0.0f), mat.specular.w);
 		specular = specFactor * mat.specular * light.specular;
 	}
@@ -97,7 +88,7 @@ void ProcessPointLight(Material mat, PointLight light, float3 pos, float3 normal
 	specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	//vector from vertex to point light position
-	float3 lightVec = light.position - pos;
+	float3 lightVec = light.position.xyz - pos;
 	float len = length(lightVec);
 	//light source is to far to affect the vertex
 	if(len > light.att.w)
@@ -129,7 +120,7 @@ void processSpotLight(Material mat, SpotLight light, float3 pos, float3 normal, 
 	specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	//vector from vertex to point light position
-	float3 lightVec = light.position - pos;
+	float3 lightVec = light.position.xyz - pos;
 	float len = length(lightVec);
 	//light source is to far to affect the vertex
 	if(len > light.att.w)

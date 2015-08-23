@@ -2,10 +2,6 @@
 
 cbuffer cbPerFrame
 {
-	TypelessLight gLightList[8];  //maxumun supported light count is 8
-	int gLightCount;              //current active light count
-
-	float3 gEyePosWorld;	      //camera position in world space
 	float  gFogStart;             //start fog distance
 	float  gFogRange;             //fog range
 	float4 gFogColor;             //fog color
@@ -16,7 +12,6 @@ cbuffer cbPerObject
 	float4x4 gMatWorld;
 	float4x4 gMatWorldInvTranspose; //transform normal
 	float4x4 gMatWorldViewProj;
-//	float4x4 gDiffTexTransform;     //transform texture coordinate
 	Material gMaterial;             //material of object
 };
 
@@ -67,21 +62,26 @@ float4 PS(VertexOut pIn, uniform bool gAlphaClip, uniform bool gFogEnable) : SV_
 
 	//light result
 	float4 A, D, S;
+	int i;
 
-	for(int i = 0; i < gLightCount; ++i) {
-		switch(gLightList[i].type) {
-			case 1:
-				ProcessDirectionalLight(gMaterial, (DirectionalLight)gLightList[i], pIn.NormalW, toEyeW, A, D, S);
-				break;
-			case 2:
-				ProcessPointLight(gMaterial, (PointLight)gLightList[i], pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
-				break;
-			case 3:
-				processSpotLight(gMaterial, (SpotLight)gLightList[i], pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
-				break;
-			default:
-				break;
-		}
+	for(i = 0; i < gDirectionalLightCount; ++i) {
+		ProcessDirectionalLight(gMaterial, gDirectionalLight[i], pIn.NormalW, toEyeW, A, D, S);
+
+		ambient += A;
+		diffuse += D;
+		spec    += S;
+	}
+
+	for(i = 0; i < gPointLightCount; ++i) {
+		ProcessPointLight(gMaterial, gPointLight[i], pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
+
+		ambient += A;
+		diffuse += D;
+		spec    += S;
+	}
+
+	for(i = 0; i < gSpotLightCount; ++i) {
+		processSpotLight(gMaterial, gSpotLight[i], pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
 
 		ambient += A;
 		diffuse += D;

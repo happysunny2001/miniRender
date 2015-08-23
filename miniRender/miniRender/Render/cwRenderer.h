@@ -70,6 +70,9 @@ public:
 protected:
 	virtual CWVOID render(cwStage* pStage);
 	virtual CWVOID configLight();
+	virtual CWVOID configDirectionalLight();
+	virtual CWVOID configPointLight();
+	virtual CWVOID configSpotLight();
 
 	sRendererListNode* getAvaiableListNode();
 	sRendererListNode* buildStageList();

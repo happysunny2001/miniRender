@@ -79,7 +79,6 @@ void BoxDemo::buildEntity()
 
 	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderColor);
 	cwMaterial* pMaterial = cwMaterial::create();
-	//pMaterial->setShader(pShader);
 	cwEffect* pEffect = cwEffect::create();
 	pEffect->setShader(pShader);
 
@@ -114,7 +113,7 @@ void BoxDemo::buildScene()
 
 	m_pScene->addChild(m_pEntityBox01);
 	m_pEntityBox01->addChild(m_pEntityBox02);
-//	m_pScene->addChild(m_pEntityBox02);
+	m_pScene->addChild(m_pEntityBox02);
 	m_pScene->addChild(m_pEntityAxis);
 
 	cwRepertory::getInstance().getEngine()->setScene(m_pScene);

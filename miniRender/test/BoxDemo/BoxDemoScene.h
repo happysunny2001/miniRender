@@ -39,8 +39,6 @@ public:
 	virtual void onTouchUp(cwTouch* pTouch) override;
 	virtual void onTouchMoving(cwTouch* pTouch) override;
 
-	void buildPlane();
-
 protected:
 	CWFLOAT m_fLastX;
 	CWFLOAT m_fLastY;
@@ -52,9 +50,6 @@ protected:
 	CWINT m_iCount;
 
 	bool m_bTouchDown;
-
-	cwRenderTexture* m_pRenderTex;
-	cwEntity* m_pTerrain;
 
 };
 

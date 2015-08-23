@@ -61,4 +61,14 @@ CWBOOL cwDirectionalLight::init(
 	return CWTRUE;
 }
 
+CWUINT cwDirectionalLight::size() const
+{
+	return sizeof(cwVector4D)* 4;
+}
+
+CWVOID* cwDirectionalLight::data() const
+{
+	return (CWVOID*)&(this->m_nDirection);
+}
+
 NS_MINIR_END

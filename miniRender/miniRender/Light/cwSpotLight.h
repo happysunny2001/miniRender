@@ -24,10 +24,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwBasicType.h"
 #include "Math/cwMath.h"
 #include "Ref/cwRef.h"
+#include "cwLight.h"
 
 NS_MINIR_BEGIN
 
-class cwSpotLight : public cwRef
+class cwSpotLight : public cwLight
 {
 public:
 	static cwSpotLight* create(
@@ -80,6 +81,9 @@ public:
 
 	inline CWVOID setSpotLightExponent(CWFLOAT f) { m_nSpotDirection.w = f; }
 	CWFLOAT getSpotLightExponent() const { return m_nSpotDirection.w; }
+
+	virtual CWUINT size() const override;
+	virtual CWVOID* data() const override;
 
 protected:
 	cwVector4D m_nPosition;

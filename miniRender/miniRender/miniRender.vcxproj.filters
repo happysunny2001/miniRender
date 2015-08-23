@@ -243,9 +243,6 @@
     <ClInclude Include="Layouts\cwLayoutsManager.h">
       <Filter>源文件\Layouts</Filter>
     </ClInclude>
-    <ClInclude Include="Light\cwLight.h">
-      <Filter>源文件\Light</Filter>
-    </ClInclude>
     <ClInclude Include="Material\cwMaterial.h">
       <Filter>源文件\Material</Filter>
     </ClInclude>
@@ -528,6 +525,9 @@
     <ClInclude Include="Light\cwSpotLight.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Light\cwLight.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -604,9 +604,6 @@
     </ClCompile>
     <ClCompile Include="Layouts\cwLayoutsManager.cpp">
       <Filter>源文件\Layouts</Filter>
-    </ClCompile>
-    <ClCompile Include="Light\cwLight.cpp">
-      <Filter>源文件\Light</Filter>
     </ClCompile>
     <ClCompile Include="Material\cwMaterial.cpp">
       <Filter>源文件\Material</Filter>
@@ -837,6 +834,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Light\cwSpotLight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\cwLight.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

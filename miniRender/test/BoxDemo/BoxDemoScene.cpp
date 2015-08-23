@@ -36,16 +36,14 @@ BoxDemoScene* BoxDemoScene::create()
 BoxDemoScene::BoxDemoScene():
 m_bTouchDown(false),
 m_fTime(0),
-m_iCount(0),
-m_pRenderTex(nullptr),
-m_pTerrain(nullptr)
+m_iCount(0)
 {
 
 }
 
 BoxDemoScene::~BoxDemoScene()
 {
-	CW_SAFE_RELEASE_NULL(m_pTerrain);
+
 }
 
 bool BoxDemoScene::init()
@@ -63,9 +61,6 @@ bool BoxDemoScene::init()
 	m_fTheta = 0.1f;
 	m_fPhi = -cwMathUtil::cwPIx2 / 8.0f;
 	m_fRadius = 20.0f;
-
-	m_pRenderTex = cwRepertory::getInstance().getTextureManager()->createRenderTexture(1.0f, 1.0f);
-	buildPlane();
 
 	return true;
 }
@@ -120,45 +115,4 @@ void BoxDemoScene::update(CWFLOAT dt)
 			this->clearScheduler();
 		}
 	}
-}
-
-void BoxDemoScene::buildPlane()
-{
-	cwRepertory& repertory = cwRepertory::getInstance();
-
-	cwGeometryGenerator::cwMeshData mesh;
-	repertory.getGeoGenerator()->generateGrid(200.0f, 200.0f, 10, 10, mesh);
-
-	vector<cwVertexPosNormalTex> vecVertex(mesh.nVertex.size());
-	for (int i = 0; i < mesh.nVertex.size(); ++i) {
-		vecVertex[i].pos = mesh.nVertex[i].pos;
-		vecVertex[i].pos.y = 0;
-		vecVertex[i].normal = cwVector3D(0, 1.0, 0);
-		vecVertex[i].tex = mesh.nVertex[i].tex;
-	}
-
-	cwRenderObject* pRenderObj = cwStaticRenderObject::create(
-		ePrimitiveTypeTriangleList,
-		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTex), static_cast<CWUINT>(mesh.nVertex.size()),
-		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosNormalTex);
-
-	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderLightingTex);
-	cwMaterial* pMaterial = cwMaterial::create();
-	pMaterial->setDiffuseTexture(m_pRenderTex);
-	cwEffect* pEffect = cwEffect::create();
-	pEffect->setShader(pShader);
-
-	m_pTerrain = cwEntity::create();
-	m_pTerrain->setMaterial(pMaterial);
-	m_pTerrain->setRenderObject(pRenderObj);
-	m_pTerrain->setPosition(cwVector3D::ZERO);
-	m_pTerrain->setEffect(pEffect);
-	CW_SAFE_RETAIN(m_pTerrain);
-
-	cwLight* pLightDirectional = cwLight::createDirectionalLight(
-		cwVector3D(0, -1.0, 0),
-		cwVector4D(0.1f, 0.1f, 0.1f, 1.0f),
-		cwVector4D(0.1f, 0.1f, 0.1f, 1.0f),
-		cwVector4D(0.1f, 0.1f, 0.1f, 1.0f));
-	this->addLight(pLightDirectional);
 }

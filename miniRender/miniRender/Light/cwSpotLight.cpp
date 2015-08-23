@@ -69,4 +69,14 @@ CWBOOL cwSpotLight::init(
 	return CWTRUE;
 }
 
+CWUINT cwSpotLight::size() const
+{
+	return sizeof(cwVector4D)* 6;
+}
+
+CWVOID* cwSpotLight::data() const
+{
+	return (CWVOID*)&(this->m_nPosition);
+}
+
 NS_MINIR_END

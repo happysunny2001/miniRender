@@ -99,29 +99,29 @@ CWVOID LoadTxtDemoScene::buildEntity()
 
 CWVOID LoadTxtDemoScene::buildLight()
 {
-	cwLight* pLightDirectional = cwLight::createDirectionalLight(
-		cwVector3D(0, -1.0, 0),
+	cwDirectionalLight* pLightDirectional = cwDirectionalLight::create(
+		cwVector4D(0, -1.0, 0, 0),
 		cwVector4D(0.1f, 0.1f, 0.1f, 1.0f),
 		cwVector4D(0.1f, 0.1f, 0.1f, 1.0f),
 		cwVector4D(0.1f, 0.1f, 0.1f, 1.0f));
-	this->addLight(pLightDirectional);
+	this->addDirectionalLight(pLightDirectional);
 
-	cwLight* pLightPoint = cwLight::createPointLight(
-		cwVector3D(30.0f, 80.0f, 0),
+	cwPointLight* pLightPoint = cwPointLight::create(
+		cwVector4D(30.0f, 80.0f, 0, 0),
 		cwVector4D(0.1f, 0.1f, 0.1f, 1.0f),
 		cwVector4D(0.2f, 0.2f, 0.2f, 1.0f),
 		cwVector4D(0.2f, 0.2f, 0.2f, 1.0f),
-		cwVector3D(0.0f, 0.03f, 0.0f), 1000.0f);
-	this->addLight(pLightPoint);
+		cwVector4D(0.0f, 0.03f, 0.0f, 1000.0f));
+	this->addPointLight(pLightPoint);
 
-	cwLight* pLightSpot = cwLight::createSpotLight(
-		cwVector3D(-20.0f, 50.0f, 0),
+	cwSpotLight* pLightSpot = cwSpotLight::create(
+		cwVector4D(-20.0f, 50.0f, 0, 0),
 		cwVector4D(0.1f, 0.1f, 0.1f, 1.0f),
 		cwVector4D(0.7f, 0.7f, 0.7f, 1.0f),
 		cwVector4D(0.7f, 0.7f, 0.7f, 1.0f),
-		cwVector3D(0.0f, 0.1f, 0.0f), 1000.0f,
-		cwVector3D(0, -1.0, 0), 10.0f);
-	this->addLight(pLightSpot);
+		cwVector4D(0.0f, 0.1f, 0.0f, 1000.0f),
+		cwVector4D(0, -1.0, 0, 10.0f));
+	this->addSpotLight(pLightSpot);
 }
 
 CWVOID LoadTxtDemoScene::onTouchDown(cwTouch* pTouch)

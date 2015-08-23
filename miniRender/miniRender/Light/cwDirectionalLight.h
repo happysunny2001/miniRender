@@ -24,10 +24,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwBasicType.h"
 #include "Math/cwMath.h"
 #include "Ref/cwRef.h"
+#include "cwLight.h"
 
 NS_MINIR_BEGIN
 
-class CW_DLL cwDirectionalLight : public cwRef
+class CW_DLL cwDirectionalLight : public cwLight
 {
 public:
 	static cwDirectionalLight* create(
@@ -56,6 +57,9 @@ public:
 
 	inline CWVOID setSpecular(const cwVector4D& color) { m_nSpecular = color; }
 	inline const cwVector4D& getSpecular() const { return m_nSpecular; }
+
+	virtual CWUINT size() const override;
+	virtual CWVOID* data() const override;
 
 protected:
 	cwVector4D m_nDirection;
