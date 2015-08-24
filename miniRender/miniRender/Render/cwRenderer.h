@@ -66,10 +66,10 @@ public:
 	virtual CWVOID end();
 
 	virtual CWVOID render(cwRenderBatch* pBatch);
+	virtual CWVOID configLight();
 
 protected:
 	virtual CWVOID render(cwStage* pStage);
-	virtual CWVOID configLight();
 	virtual CWVOID configDirectionalLight();
 	virtual CWVOID configPointLight();
 	virtual CWVOID configSpotLight();

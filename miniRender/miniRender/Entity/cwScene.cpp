@@ -50,24 +50,6 @@ CWBOOL cwScene::init()
 	return CWTRUE;
 }
 
-//CWVOID cwScene::addLight(cwLight* pLight)
-//{
-//	if (!pLight) return;
-//	if (m_nVecLights.contains(pLight)) return;
-//	m_nVecLights.pushBack(pLight);
-//}
-//
-//CWVOID cwScene::removeLight(cwLight* pLight)
-//{
-//	if (!pLight) return;
-//	m_nVecLights.erase(pLight);
-//}
-//
-//const cwVector<cwLight*>& cwScene::getLights() const
-//{
-//	return m_nVecLights;
-//}
-
 CWVOID cwScene::addDirectionalLight(cwDirectionalLight* pLight)
 {
 	if (!pLight) return;
@@ -89,35 +71,35 @@ CWVOID cwScene::addSpotLight(cwSpotLight* pLight)
 	m_nVecSpotLights.pushBack(pLight);
 }
 
-CWVOID cwScene::removeDirectionalLight(cwLight* pLight)
+CWVOID cwScene::removeDirectionalLight(cwDirectionalLight* pLight)
 {
 	if (!pLight) return;
 	m_nVecDirectionalLights.erase(pLight);
 }
 
-CWVOID cwScene::removePointLight(cwLight* pLight)
+CWVOID cwScene::removePointLight(cwPointLight* pLight)
 {
 	if (!pLight) return;
 	m_nVecPointLights.erase(pLight);
 }
 
-CWVOID cwScene::removeSpotLight(cwLight* pLight)
+CWVOID cwScene::removeSpotLight(cwSpotLight* pLight)
 {
 	if (!pLight) return;
 	m_nVecSpotLights.erase(pLight);
 }
 
-const cwVector<cwLight*>& cwScene::getDirectionalLights() const
+const cwVector<cwDirectionalLight*>& cwScene::getDirectionalLights() const
 {
 	return m_nVecDirectionalLights;
 }
 
-const cwVector<cwLight*>& cwScene::getPointLights() const
+const cwVector<cwPointLight*>& cwScene::getPointLights() const
 {
 	return m_nVecPointLights;
 }
 
-const cwVector<cwLight*>& cwScene::getSpotLights() const
+const cwVector<cwSpotLight*>& cwScene::getSpotLights() const
 {
 	return m_nVecSpotLights;
 }

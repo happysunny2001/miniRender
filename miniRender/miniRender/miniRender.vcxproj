@@ -135,6 +135,7 @@
     <ClInclude Include="Render\ProcessingUnit\cwPURender.h" />
     <ClInclude Include="Render\ProcessingUnit\cwPUStageLayer.h" />
     <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerBlend.h" />
+    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerLightTrans.h" />
     <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerStencil.h" />
     <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerWorldTrans.h" />
     <ClInclude Include="Repertory\cwRepertory.h" />
@@ -241,6 +242,7 @@
     <ClCompile Include="Render\ProcessingUnit\cwPURender.cpp" />
     <ClCompile Include="Render\ProcessingUnit\cwPUStageLayer.cpp" />
     <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerBlend.cpp" />
+    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerLightTrans.cpp" />
     <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerStencil.cpp" />
     <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerWorldTrans.cpp" />
     <ClCompile Include="Repertory\cwRepertory.cpp" />

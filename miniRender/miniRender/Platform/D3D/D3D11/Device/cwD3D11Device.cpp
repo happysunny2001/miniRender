@@ -114,14 +114,19 @@ bool cwD3D11Device::initDevice()
 #if CW_DEBUG
 	devFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
+
+	D3D_FEATURE_LEVEL inFeatureLevel[] = {
+		D3D_FEATURE_LEVEL_11_0
+	};
+
 	D3D_FEATURE_LEVEL featureLevel;
 	CW_HR(D3D11CreateDevice(
 		NULL,
 		D3D_DRIVER_TYPE_HARDWARE, 
 		NULL, 
 		devFlags, 
-		NULL, 
-		0, 
+		inFeatureLevel,
+		1, 
 		D3D11_SDK_VERSION,
 		&m_pD3D11Device,
 		&featureLevel,

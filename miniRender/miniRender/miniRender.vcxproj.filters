@@ -528,6 +528,9 @@
     <ClInclude Include="Light\cwLight.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerLightTrans.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -837,6 +840,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Light\cwLight.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerLightTrans.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

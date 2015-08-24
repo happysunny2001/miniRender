@@ -33,6 +33,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Render/ProcessingUnit/cwPUStageLayerStencil.h"
 #include "Render/ProcessingUnit/cwPUStageLayerBlend.h"
 #include "Render/ProcessingUnit/cwPUStageLayerWorldTrans.h"
+#include "Render/ProcessingUnit/cwPUStageLayerLightTrans.h"
 
 NS_MINIR_BEGIN
 
@@ -81,10 +82,15 @@ CWVOID cwStageMirrorGenerator::generate()
 	for (auto pEntity : vecEntity) {
 		cwStageLayer* pStageLayer = m_nVecEntityStageLayer.at(iIndex);
 		cwMirror* pMirror = static_cast<cwMirror*>(pEntity);
-		cwPUStageLayerWorldTrans* pPUStageLayerWorldTrans = static_cast<cwPUStageLayerWorldTrans*>(pStageLayer->getPU(ePUStageLayerWorldTrans));
 
+		cwPUStageLayerWorldTrans* pPUStageLayerWorldTrans = static_cast<cwPUStageLayerWorldTrans*>(pStageLayer->getPU(ePUStageLayerWorldTrans));
 		if (pPUStageLayerWorldTrans) {
 			pPUStageLayerWorldTrans->setWorldTrans(pMirror->getReclectMatrix());
+		}
+
+		cwPUStageLayerLightTrans* pPUStageLayerLightTrans = static_cast<cwPUStageLayerLightTrans*>(pStageLayer->getPU(ePUStageLayerLightTrans));
+		if (pPUStageLayerLightTrans) {
+			pPUStageLayerLightTrans->setLightTrans(pMirror->getReclectMatrix());
 		}
 
 		m_pStage->addStageLayer(pStageLayer);
@@ -122,6 +128,11 @@ CWVOID cwStageMirrorGenerator::buildStage()
 			cwPUStageLayerWorldTrans* pPUStageLayerWorldTrans = cwPUStageLayerWorldTrans::create();
 			if (pPUStageLayerWorldTrans) {
 				pStageLayerEntity->addPU(pPUStageLayerWorldTrans);
+			}
+
+			cwPUStageLayerLightTrans* pPUStageLayerLightTrans = cwPUStageLayerLightTrans::create();
+			if (pPUStageLayerLightTrans) {
+				pStageLayerEntity->addPU(pPUStageLayerLightTrans);
 			}
 
 			pStageLayerEntity->setRenderState(eRenderStateCW);

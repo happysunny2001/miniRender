@@ -210,7 +210,7 @@ CWVOID cwRenderer::configDirectionalLight()
 		!m_pCurrShader->hasVariable(eShaderParamDirectionalLightCnt)) return;
 
 	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
-	const cwVector<cwLight*>& vecLight = pCurrScene->getDirectionalLights();
+	const cwVector<cwDirectionalLight*>& vecLight = pCurrScene->getDirectionalLights();
 	if (vecLight.empty()) {
 		m_pCurrShader->setVariableInt(eShaderParamDirectionalLightCnt, 0);
 		return;
@@ -230,7 +230,7 @@ CWVOID cwRenderer::configPointLight()
 		!m_pCurrShader->hasVariable(eShaderParamPointLightCnt)) return;
 
 	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
-	const cwVector<cwLight*>& vecLight = pCurrScene->getPointLights();
+	const cwVector<cwPointLight*>& vecLight = pCurrScene->getPointLights();
 	if (vecLight.empty()) {
 		m_pCurrShader->setVariableInt(eShaderParamPointLightCnt, 0);
 		return;
@@ -250,7 +250,7 @@ CWVOID cwRenderer::configSpotLight()
 		!m_pCurrShader->hasVariable(eShaderParamSpotLightCnt)) return;
 
 	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
-	const cwVector<cwLight*>& vecLight = pCurrScene->getSpotLights();
+	const cwVector<cwSpotLight*>& vecLight = pCurrScene->getSpotLights();
 	if (vecLight.empty()) {
 		m_pCurrShader->setVariableInt(eShaderParamSpotLightCnt, 0);
 		return;
