@@ -77,7 +77,9 @@ m_pSolidRenderState(NULL),
 m_pWireRenderState(NULL),
 m_pNoCullRenderState(NULL),
 m_pCullCWRenderState(NULL),
+#if CW_DEBUG
 m_pD3D11Debug(NULL),
+#endif
 m_pMaterialDefault(nullptr)
 {
 	initBlendBaseData();
@@ -101,10 +103,12 @@ cwD3D11Device::~cwD3D11Device()
 	CW_SAFE_RELEASE_NULL(m_pRenderTargetBkBuffer);
 	CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
 
+#if CW_DEBUG
 	if (m_pD3D11Debug) {
 		m_pD3D11Debug->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 		m_pD3D11Debug = NULL;
 	}
+#endif
 }
 
 bool cwD3D11Device::initDevice()
@@ -115,23 +119,47 @@ bool cwD3D11Device::initDevice()
 	devFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-	D3D_FEATURE_LEVEL inFeatureLevel[] = {
-		D3D_FEATURE_LEVEL_11_0
+	D3D_FEATURE_LEVEL inFeatureLevel[] =
+	{
+		D3D_FEATURE_LEVEL_11_0,
+		D3D_FEATURE_LEVEL_10_1,
+		D3D_FEATURE_LEVEL_10_0,
 	};
 
+	D3D_DRIVER_TYPE driverTypes[] =
+	{
+		D3D_DRIVER_TYPE_HARDWARE,
+		D3D_DRIVER_TYPE_WARP,
+		D3D_DRIVER_TYPE_REFERENCE,
+	};
+	UINT numDriverTypes = ARRAYSIZE(driverTypes);
+
 	D3D_FEATURE_LEVEL featureLevel;
-	CW_HR(D3D11CreateDevice(
-		NULL,
-		D3D_DRIVER_TYPE_HARDWARE, 
-		NULL, 
-		devFlags, 
-		inFeatureLevel,
-		1, 
-		D3D11_SDK_VERSION,
-		&m_pD3D11Device,
-		&featureLevel,
-		&m_pD3D11DeviceContext
-		));
+	HRESULT hr = S_OK;
+
+	for (UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++) {
+		D3D_DRIVER_TYPE driverType = driverTypes[driverTypeIndex];
+
+		hr = D3D11CreateDevice(
+			NULL,
+			driverType,
+			NULL,
+			devFlags,
+			inFeatureLevel,
+			3,
+			D3D11_SDK_VERSION,
+			&m_pD3D11Device,
+			&featureLevel,
+			&m_pD3D11DeviceContext
+			);
+
+		if (SUCCEEDED(hr))
+			break;
+	}
+
+	if (FAILED(hr)) {
+		DXTrace(__FILE__, __LINE__, hr, L"D3D11CreateDevice error", true);
+	}
 
 	if (featureLevel != D3D_FEATURE_LEVEL_11_0) {
 		MessageBox(NULL, L"error create d3d11 device!", L"error", MB_OK);
@@ -142,7 +170,9 @@ bool cwD3D11Device::initDevice()
 	CW_HR(m_pD3D11Device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 4, &m_uiM4xMsaaQuality));
 	assert(m_uiM4xMsaaQuality > 0);
 
+#if CW_DEBUG
 	CW_HR(m_pD3D11Device->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&m_pD3D11Debug)));
+#endif
 
 	CWUINT winWidth  = cwRepertory::getInstance().getUInt(gValueWinWidth);
 	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);

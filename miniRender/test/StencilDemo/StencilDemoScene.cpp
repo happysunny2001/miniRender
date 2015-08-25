@@ -161,7 +161,7 @@ CWVOID StencilDemoScene::buildCar()
 CWVOID StencilDemoScene::buildMirror()
 {
 	cwMaterial* pMaterial = cwMaterial::create(
-		cwVector4D(0.3f, 0.9f, 0.3f, 1.0f),
+		cwVector4D(0.9f, 0.9f, 0.9f, 1.0f),
 		cwVector4D(0.6f, 0.6f, 0.6f, 0.5f),
 		cwVector4D(0.6f, 0.6f, 0.6f, 16.0f),
 		cwVector4D::ZERO);
@@ -170,15 +170,25 @@ CWVOID StencilDemoScene::buildMirror()
 	cwEffect* pEffect = cwEffect::create();
 	pEffect->setShader(pShader);
 
-	cwMirror* pEntityMirror = cwMirror::create();
-	pEntityMirror->setRenderObject(m_pPlaneObj);
-	pEntityMirror->setMaterial(pMaterial);
-	pEntityMirror->setEffect(pEffect);
-	pEntityMirror->setPosition(-49.9f, 25.0f, 0);
-	pEntityMirror->setRotation(0, 0, -cwMathUtil::cwPI*0.5f);
-	pEntityMirror->setScale(0.5f, 0.5f, 0.5f);
+	//cwMirror* pEntityMirrorLeft = cwMirror::create();
+	//pEntityMirrorLeft->setRenderObject(m_pPlaneObj);
+	//pEntityMirrorLeft->setMaterial(pMaterial);
+	//pEntityMirrorLeft->setEffect(pEffect);
+	//pEntityMirrorLeft->setPosition(-49.9f, 25.0f, 0);
+	//pEntityMirrorLeft->setRotation(0, 0, -cwMathUtil::cwPI*0.5f);
+	//pEntityMirrorLeft->setScale(0.5f, 0.5f, 0.5f);
 
-	this->addChild(pEntityMirror);
+	//this->addChild(pEntityMirrorLeft);
+
+	cwMirror* pEntityMirrorRight = cwMirror::create();
+	pEntityMirrorRight->setRenderObject(m_pPlaneObj);
+	pEntityMirrorRight->setMaterial(pMaterial);
+	pEntityMirrorRight->setEffect(pEffect);
+	pEntityMirrorRight->setPosition(49.9f, 25.0f, 0);
+	pEntityMirrorRight->setRotation(0, 0, cwMathUtil::cwPI*0.5f);
+	pEntityMirrorRight->setScale(0.5f, 0.5f, 0.5f);
+
+	this->addChild(pEntityMirrorRight);
 }
 
 CWVOID StencilDemoScene::buildLights()

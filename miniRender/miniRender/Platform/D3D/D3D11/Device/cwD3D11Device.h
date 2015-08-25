@@ -102,7 +102,9 @@ protected:
 	ID3D11Device* m_pD3D11Device;
 	ID3D11DeviceContext* m_pD3D11DeviceContext;
 	IDXGISwapChain* m_pDxgiSwapChain;
+#if CW_DEBUG
 	ID3D11Debug* m_pD3D11Debug;
+#endif
 	CWUINT m_uiM4xMsaaQuality;
 
 	ID3D11RasterizerState* m_pSolidRenderState;
