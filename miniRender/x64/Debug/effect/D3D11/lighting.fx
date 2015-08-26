@@ -1,24 +1,17 @@
 #include "lightUtil.fx"
-
-cbuffer cbPerObject
-{
-	float4x4 gMatWorld;
-	float4x4 gMatWorldInvTranspose; //transform normal
-	float4x4 gMatWorldViewProj;
-	Material gMaterial;             //material of object
-};
+#include "util.fx"
 
 struct VertexIn
 {
 	float3 PosL    : POSITION;
-    float3 NormalL : NORMAL;
+	float3 NormalL : NORMAL;
 };
 
 struct VertexOut
 {
 	float4 PosH    : SV_POSITION; //vertex position in homogeneous space
-    float3 PosW    : POSITION;    //vertex position in world space
-    float3 NormalW : NORMAL;      //vertex normal in world space
+	float3 PosW    : POSITION;    //vertex position in world space
+	float3 NormalW : NORMAL;      //vertex normal in world space
 };
 
 VertexOut VS(VertexIn vIn)

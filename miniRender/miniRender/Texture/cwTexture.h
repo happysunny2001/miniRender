@@ -31,7 +31,13 @@ class CW_DLL cwTexture : public cwRef
 public:
 	cwTexture() {}
 	virtual ~cwTexture() {}
+
 	virtual CWHANDLE getTexturePtr() = 0;
+	virtual const CWSTRING& getName() const;
+	inline CWVOID setName(const CWSTRING& name) { m_nStrName = name; }
+
+protected:
+	CWSTRING m_nStrName;
 
 };
 

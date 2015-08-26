@@ -17,36 +17,39 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_D3D11TEXTURE_H__
-#define __CW_D3D11TEXTURE_H__
+#include "GeometryShaderDemo.h"
+#include "GeometryShaderDemoScene.h"
 
-#ifdef _CW_D3D11_
-
-#include "Base/cwUtils.h"
-#include "Base/cwBasicType.h"
-#include "Texture/cwTexture.h"
-#include "Platform/D3D/D3D11/cwD3D11Utils.h"
-
-NS_MINIR_BEGIN
-
-class CW_DLL cwD3D11Texture : public cwTexture
+GeometryShaderDemo::GeometryShaderDemo()
 {
-public:
-	static cwD3D11Texture* create(const CWSTRING& strFileName);
 
-	cwD3D11Texture();
-	virtual ~cwD3D11Texture();
+}
 
-	virtual CWBOOL init(const CWSTRING& strFileName);
-	virtual CWHANDLE getTexturePtr() override;
+GeometryShaderDemo::~GeometryShaderDemo()
+{
 
-protected:
-	ID3D11ShaderResourceView* m_pShaderResource;
+}
 
-};
+CWVOID GeometryShaderDemo::gameBegin()
+{
+	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 150.0f, -200.0f);
 
-NS_MINIR_END
+	GeometryShaderDemoScene* pScene = GeometryShaderDemoScene::create();
+	cwRepertory::getInstance().getEngine()->setScene(pScene);
+}
 
-#endif
+CWVOID GeometryShaderDemo::gameEnd()
+{
 
-#endif
+}
+
+CWVOID GeometryShaderDemo::gameBeginBackGround()
+{
+
+}
+
+CWVOID GeometryShaderDemo::gameEndBackGround()
+{
+
+}

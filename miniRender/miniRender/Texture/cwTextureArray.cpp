@@ -17,36 +17,23 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_D3D11TEXTURE_H__
-#define __CW_D3D11TEXTURE_H__
-
-#ifdef _CW_D3D11_
-
-#include "Base/cwUtils.h"
-#include "Base/cwBasicType.h"
-#include "Texture/cwTexture.h"
-#include "Platform/D3D/D3D11/cwD3D11Utils.h"
+#include "cwTextureArray.h"
 
 NS_MINIR_BEGIN
 
-class CW_DLL cwD3D11Texture : public cwTexture
+CWBOOL cwTextureArray::init(const std::vector<CWSTRING>& vecFiles)
 {
-public:
-	static cwD3D11Texture* create(const CWSTRING& strFileName);
+	m_nVecFiles = vecFiles;
 
-	cwD3D11Texture();
-	virtual ~cwD3D11Texture();
+	return CWTRUE;
+}
 
-	virtual CWBOOL init(const CWSTRING& strFileName);
-	virtual CWHANDLE getTexturePtr() override;
+const CWSTRING& cwTextureArray::getName() const
+{
+	static CWSTRING strNone = "None";
 
-protected:
-	ID3D11ShaderResourceView* m_pShaderResource;
-
-};
+	if (m_nVecFiles.empty()) return strNone;
+	return m_nVecFiles[0];
+}
 
 NS_MINIR_END
-
-#endif
-
-#endif

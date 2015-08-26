@@ -1,9 +1,5 @@
 #include "material.fx"
-
-cbuffer cbPerObject
-{
-	float4x4 gMatWorldViewProj; 
-};
+#include "util.fx"
 
 struct VertexIn
 {

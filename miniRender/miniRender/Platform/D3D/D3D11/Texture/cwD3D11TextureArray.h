@@ -17,64 +17,35 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#ifndef __CW_D3D11_TEXTURE_ARRAY_H__
+#define __CW_D3D11_TEXTURE_ARRAY_H__
+
 #ifdef _CW_D3D11_
 
-#include "cwD3D11Texture.h"
-#include "Base/cwStringConvert.h"
-#include "Repertory/cwRepertory.h"
-#include "Device/cwDevice.h"
-#include "Platform/Windows/cwWinUtils.h"
-#include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
+#include "Base/cwMacros.h"
+#include "Texture/cwTextureArray.h"
 #include "Platform/D3D/D3D11/cwD3D11Utils.h"
 
 NS_MINIR_BEGIN
 
-cwD3D11Texture* cwD3D11Texture::create(const string& strFileName)
+class cwD3D11TextureArray : public cwTextureArray
 {
-	cwD3D11Texture* pTexture = new cwD3D11Texture();
-	if (pTexture && pTexture->init(strFileName)) {
-		pTexture->autorelease();
-		return pTexture;
-	}
+public:
+	static cwD3D11TextureArray* create(const std::vector<CWSTRING>& vecFiles);
 
-	CW_SAFE_DELETE(pTexture);
-	return nullptr;
-}
+	cwD3D11TextureArray();
+	virtual ~cwD3D11TextureArray();
 
-cwD3D11Texture::cwD3D11Texture() :
-m_pShaderResource(nullptr)
-{
+	virtual CWBOOL init(const std::vector<CWSTRING>& vecFiles) override;
+	virtual CWHANDLE getTexturePtr() override;
 
-}
+protected:
+	ID3D11ShaderResourceView* m_pShaderResource;
 
-cwD3D11Texture::~cwD3D11Texture()
-{
-	CW_RELEASE_COM(m_pShaderResource);
-}
-
-bool cwD3D11Texture::init(const CWSTRING& strFileName)
-{
-	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
-	wstring wstrName = cwStringConvert::convertToWideChar(strFileName);
-
-	CW_HR(D3DX11CreateShaderResourceViewFromFile(
-		pD3D11Device->getD3D11Device(),
-		wstrName.c_str(),
-		NULL,
-		NULL, 
-		&m_pShaderResource, 
-		NULL));
-
-	m_nStrName = strFileName;
-
-	return CWTRUE;
-}
-
-CWHANDLE cwD3D11Texture::getTexturePtr()
-{
-	return (CWHANDLE)m_pShaderResource;
-}
+};
 
 NS_MINIR_END
 
-#endif
+#endif //end _CW_D3D11_
+
+#endif //end __CW_D3D11_TEXTURE_ARRAY_H__

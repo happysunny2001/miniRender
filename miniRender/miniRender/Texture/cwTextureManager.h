@@ -35,14 +35,15 @@ class CW_DLL cwTextureManager : public cwRef
 public:
 	virtual ~cwTextureManager();
 
-	cwTexture* getTexture(const string& strName);
-	void removeTexture(const string& strName);
+	cwTexture* getTexture(const CWSTRING& strName);
+	cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles);
+	CWVOID removeTexture(const CWSTRING& strName);
 
-	cwRenderTexture* createRenderTexture(float fWidth, float fHeight, eRenderTextureType eType=eRenderTextureShader);
-	void removeRenderTexture(cwRenderTexture* pTex);
+	cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader);
+	CWVOID removeRenderTexture(cwRenderTexture* pTex);
 
-	void beginResize();
-	void onResize();
+	CWVOID beginResize();
+	CWVOID onResize();
 
 protected:
 	static cwTextureManager* create();

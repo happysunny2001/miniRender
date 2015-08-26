@@ -61,6 +61,22 @@ void cwTextureManager::removeTexture(const string& strName)
 	m_mapTexture.erase(strName);
 }
 
+cwTexture* cwTextureManager::createTextureArray(const std::vector<CWSTRING>& vecFiles)
+{
+	if (vecFiles.empty()) return nullptr;
+
+	auto itFind = m_mapTexture.find(vecFiles[0]);
+	if (itFind != m_mapTexture.end()) return itFind->second;
+
+	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createTextureArray(vecFiles);
+	if (pTex) {
+		m_mapTexture.insert(vecFiles[0], pTex);
+		return pTex;
+	}
+
+	return nullptr;
+}
+
 cwRenderTexture* cwTextureManager::createRenderTexture(float fWidth, float fHeight, eRenderTextureType eType)
 {
 	cwRenderTexture* pRenderTex = cwRepertory::getInstance().getDevice()->createRenderTexture(fWidth, fHeight, eType);

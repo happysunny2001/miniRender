@@ -47,6 +47,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/D3D/D3D11/Texture/cwD3D11RenderTarget.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11RenderTexture.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11RenderTextureMultiThread.h"
+#include "Platform/D3D/D3D11/Texture/cwD3D11TextureArray.h"
 #include "Platform/D3D/D3D11/Blend/cwD3D11Blend.h"
 #include "Platform/D3D/D3D11/Shader/cwD3D11Shader.h"
 #include "Platform/D3D/D3D11/ViewPort/cwD3D11ViewPort.h"
@@ -540,6 +541,11 @@ cwRenderTexture* cwD3D11Device::createRenderTexture(float fWidth, float fHeight,
 	return nullptr;
 }
 
+cwTexture* cwD3D11Device::createTextureArray(const std::vector<CWSTRING>& vecFiles)
+{
+	return cwD3D11TextureArray::create(vecFiles);
+}
+
 void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera)
 {
 	if (!pRenderObj || !pShader || !pCamera) return;
@@ -559,26 +565,6 @@ void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPo
 	pShader->apply(0, 0);
 	this->drawIndexed(pRenderObj->getIndexBuffer()->getIndexCount(), 0, 0);
 }
-
-//void cwD3D11Device::render(cwEntity* pEntity, cwCamera* pCamera)
-//{
-//	if (!pEntity || !pCamera) return;
-//
-//	cwShader* pShader = cwRepertory::getInstance().getEngine()->getCurrShader();
-//
-//	cwMaterial* pMaterial = pEntity->getMaterial();
-//	if (pMaterial)
-//		pMaterial->configShader(pShader);
-//
-//	setShaderWorldTrans(pShader, pEntity->getTransformMatrix(), pCamera);
-//
-//	cwRenderObject* pRenderObj = pEntity->getRenderObj();
-//	assert(pRenderObj != nullptr);
-//	if (pShader)
-//		draw(pShader, pEntity->getEffect()->getTech(), pRenderObj);
-//
-//	pEntity->render();
-//}
 
 void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera)
 {
@@ -601,6 +587,7 @@ void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& tr
 		const cwMatrix4X4& matViewProj = pCamera->getViewProjMatrix();
 		cwMatrix4X4 worldViewProj = trans*matViewProj;
 		pShader->setVariableMatrix(eShaderParamWorldViewProj, reinterpret_cast<CWFLOAT*>(&worldViewProj));
+		pShader->setVariableMatrix(eShaderParamViewProj, (CWFLOAT*)(&matViewProj));
 	}
 
 	const cwVector3D& pos = pCamera->getPos();

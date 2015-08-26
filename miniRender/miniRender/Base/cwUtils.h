@@ -230,6 +230,7 @@ typedef enum {
 
 typedef enum {
 	eShaderParamWorldViewProj = 0,
+	eShaderParamViewProj,
 	eShaderParamWorld,
 	eShaderParamWorldInvTrans,
 	eShaderParamMaterial, 

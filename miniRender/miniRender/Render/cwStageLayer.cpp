@@ -44,7 +44,7 @@ m_eFilterType(eStageLayerFliterEntity),
 m_bTransparent(CWFALSE),
 m_eRenderState(eRenderStateSolid)
 {
-
+	reset();
 }
 
 cwStageLayer::~cwStageLayer()

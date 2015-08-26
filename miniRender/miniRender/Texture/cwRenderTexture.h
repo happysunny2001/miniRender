@@ -32,10 +32,10 @@ NS_MINIR_BEGIN
 class cwRenderTexture : public cwTexture
 {
 public:
-	virtual bool init(CWFLOAT fWidth, CWFLOAT fHeight);
+	virtual CWBOOL init(CWFLOAT fWidth, CWFLOAT fHeight);
 
-	virtual void beginResize();
-	virtual bool onResize(bool bForce=false);
+	virtual CWVOID beginResize();
+	virtual CWBOOL onResize(CWBOOL bForce = false);
 	
 	virtual CWHANDLE getRenderTargetPtr();
 	virtual CWHANDLE getTexturePtr() override;

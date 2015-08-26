@@ -3,27 +3,18 @@
 //
 // Transforms and colors geometry.
 //***************************************************************************************
-
-cbuffer cbPerObject
-{
-	float4x4 gMatWorldViewProj; 
-};
-
-cbuffer cbPerFrame
-{
-	float4x4 fmat;
-};
+#include "util.fx"
 
 struct VertexIn
 {
 	float3 PosL  : POSITION;
-    float4 Color : COLOR;
+	float4 Color : COLOR;
 };
 
 struct VertexOut
 {
 	float4 PosH  : SV_POSITION;
-    float4 Color : COLOR;
+	float4 Color : COLOR;
 };
 
 VertexOut VS(VertexIn vin)

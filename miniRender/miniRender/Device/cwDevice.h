@@ -39,6 +39,7 @@ class cwBlend;
 class cwStencil;
 class cwRenderTexture;
 class cwViewPort;
+class cwTextureArray;
 
 class CW_DLL cwDevice
 {
@@ -73,6 +74,7 @@ public:
 
 	virtual cwTexture* createTexture(const CWSTRING& strFileName) = 0;
 	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) = 0;
+	virtual cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles) = 0;
 
 	virtual CWVOID setVertexBuffer(cwBuffer* pVertexBuffer) = 0;
 	virtual CWVOID setIndexBuffer(cwBuffer* pIndexBuffer) = 0;

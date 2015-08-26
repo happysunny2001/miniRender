@@ -22,18 +22,18 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-bool cwRenderTexture::init(CWFLOAT fWidth, CWFLOAT fHeight)
+CWBOOL cwRenderTexture::init(CWFLOAT fWidth, CWFLOAT fHeight)
 {
 	m_fWidth = fWidth;
 	m_fHeight = fHeight;
 	m_nClearColor = cwColor::black;
 
-	return onResize(true);
+	return onResize(CWTRUE);
 }
 
-bool cwRenderTexture::onResize(bool bForce)
+CWBOOL cwRenderTexture::onResize(CWBOOL bForce)
 {
-	return true;
+	return CWTRUE;
 }
 
 CWHANDLE cwRenderTexture::getRenderTargetPtr()

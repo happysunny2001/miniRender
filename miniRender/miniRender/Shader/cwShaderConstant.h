@@ -30,6 +30,7 @@ NS_MINIR_BEGIN
 #define CW_SIG_COLOR    "COLOR"
 
 #define CW_SHADER_MAT_WORLDVIEWPROJ     "gMatWorldViewProj"
+#define CW_SHADER_MAT_VIEWPROJ          "gViewProj"
 #define CW_SHADER_MAT_WORLD             "gMatWorld"
 #define CW_SHADER_MAT_WORLD_INV_TRANS   "gMatWorldInvTranspose"
 #define CW_SHADER_MATERIAL              "gMaterial"

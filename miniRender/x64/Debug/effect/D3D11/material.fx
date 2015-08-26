@@ -16,6 +16,25 @@ SamplerState samAnisotropic
 	AddressV = WRAP;
 };
 
+SamplerState samLinear
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = WRAP;
+	AddressV = WRAP;
+};
+
+cbuffer cbFog
+{
+	float  gFogStart;             //start fog distance
+	float  gFogRange;             //fog range
+	float4 gFogColor;             //fog color
+};
+
+cbuffer cbMaterial
+{
+	Material gMaterial;             //material of object
+};
+
 Texture2D gTexture0;
 Texture2D gTexture1;
 Texture2D gTexture2;

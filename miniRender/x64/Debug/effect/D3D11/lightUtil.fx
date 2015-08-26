@@ -33,7 +33,7 @@ struct SpotLight
 	float4 spotDirection; //x, y, z:spot light position; w:spot
 };
 
-cbuffer cbPerFrame
+cbuffer cbLighting
 {
 	DirectionalLight gDirectionalLight[2];  //maxumun supported directional light count is 2
 	int gDirectionalLightCount;             //current active directional light count
@@ -43,11 +43,6 @@ cbuffer cbPerFrame
 
 	SpotLight gSpotLight[3];                //maxumun supported spot light count is 3
 	int gSpotLightCount;			//current active spot light count
-};
-
-cbuffer cbPerFrame
-{
-	float3 gEyePosWorld;	      //camera position in world space
 };
 
 //parameters

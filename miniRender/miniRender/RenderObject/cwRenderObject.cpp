@@ -45,8 +45,10 @@ bool cwRenderObject::init(
 	CWVOID* pIndexData, CWUINT uIndexCnt, ceElementDesc eLayout)
 {
 	m_nTopology = topology;
-	m_pIndexBuffer = cwRepertory::getInstance().getDevice()->createIndexBuffer(pIndexData, sizeof(CWUINT), uIndexCnt);
-	CW_SAFE_RETAIN(m_pIndexBuffer);
+	if (pIndexData) {
+		m_pIndexBuffer = cwRepertory::getInstance().getDevice()->createIndexBuffer(pIndexData, sizeof(CWUINT), uIndexCnt);
+		CW_SAFE_RETAIN(m_pIndexBuffer);
+	}
 	m_pLayout = cwRepertory::getInstance().getLayoutManager()->getLayouts(eLayout);
 
 	if (!m_pIndexBuffer || !m_pLayout) return false;

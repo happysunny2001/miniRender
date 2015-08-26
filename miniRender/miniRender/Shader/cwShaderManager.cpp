@@ -39,7 +39,8 @@ cwShader* cwShaderManager::loadShader(const CWSTRING& strFile)
 	auto itFind = m_nMapShader.find(strFile);
 	if (itFind != m_nMapShader.end()) return itFind->second;
 
-	cwShader* pShader = cwRepertory::getInstance().getDevice()->createShader(strFile);
+	CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strFile);
+	cwShader* pShader = cwRepertory::getInstance().getDevice()->createShader(strFilePath);
 	if (pShader) {
 		m_nMapShader.insert(strFile, pShader);
 		return pShader;
@@ -76,6 +77,7 @@ CWVOID cwShaderManager::loadDefaultShader()
 CWVOID cwShaderManager::buildShaderParam()
 {
 	m_strShaderParam[eShaderParamWorldViewProj]       = CW_SHADER_MAT_WORLDVIEWPROJ;
+	m_strShaderParam[eShaderParamViewProj]			  = CW_SHADER_MAT_VIEWPROJ;
 	m_strShaderParam[eShaderParamWorld]               = CW_SHADER_MAT_WORLD;
 	m_strShaderParam[eShaderParamWorldInvTrans]       = CW_SHADER_MAT_WORLD_INV_TRANS;
 	m_strShaderParam[eShaderParamMaterial]            = CW_SHADER_MATERIAL;

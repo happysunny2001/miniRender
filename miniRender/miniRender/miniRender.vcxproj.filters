@@ -531,6 +531,12 @@
     <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerLightTrans.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Texture\cwTextureArray.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11TextureArray.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -843,6 +849,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerLightTrans.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\cwTextureArray.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11TextureArray.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
