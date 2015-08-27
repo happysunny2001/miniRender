@@ -28,7 +28,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwD3D11Blend* cwD3D11Blend::create(const BlendData& blendData)
+cwD3D11Blend* cwD3D11Blend::create(const cwBlendData& blendData)
 {
 	cwD3D11Blend* pBlend = new cwD3D11Blend();
 	if (pBlend && pBlend->init(blendData)) {
@@ -51,12 +51,12 @@ cwD3D11Blend::~cwD3D11Blend()
 	CW_RELEASE_COM(m_pBlendState);
 }
 
-bool cwD3D11Blend::init(const BlendData& blendData)
+bool cwD3D11Blend::init(const cwBlendData& blendData)
 {
 	memset(&m_nBlendDesc, 0, sizeof(m_nBlendDesc));
 
-	m_nBlendDesc.AlphaToCoverageEnable = FALSE;
-	m_nBlendDesc.IndependentBlendEnable = FALSE;
+	m_nBlendDesc.AlphaToCoverageEnable = blendData.bAlphaToCoverage;
+	m_nBlendDesc.IndependentBlendEnable = blendData.bIndependentBlend;
 	m_nBlendDesc.RenderTarget[0].BlendEnable = blendData.bEnable;
 	m_nBlendDesc.RenderTarget[0].SrcBlend = cwD3D11Device::getBlendFactor(blendData.srcBlend);
 	m_nBlendDesc.RenderTarget[0].DestBlend = cwD3D11Device::getBlendFactor(blendData.dstBlend); 

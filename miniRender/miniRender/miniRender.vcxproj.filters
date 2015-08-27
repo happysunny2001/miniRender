@@ -537,6 +537,12 @@
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11TextureArray.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Effect\cwEffectTextureParameter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect\cwEffectMatrixParameter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -855,6 +861,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11TextureArray.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect\cwEffectTextureParameter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect\cwEffectMatrixParameter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

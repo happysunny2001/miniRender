@@ -33,7 +33,7 @@ public:
 	cwStencil() :m_uStencilRef(0){}
 	virtual ~cwStencil() {}
 
-	virtual bool init(const StencilData& stencilData) = 0;
+	virtual bool init(const cwStencilData& stencilData) = 0;
 
 	virtual CWHANDLE getStencilHandlePtr() const { return nullptr; }
 	

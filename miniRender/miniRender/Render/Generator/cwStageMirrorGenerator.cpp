@@ -151,7 +151,7 @@ CWVOID cwStageMirrorGenerator::buildStage()
 
 CWVOID cwStageMirrorGenerator::buildStencil()
 {
-	StencilData stencilDrawRef;
+	cwStencilData stencilDrawRef;
 	stencilDrawRef.depthEnable = CWTRUE;
 	stencilDrawRef.depthWriteMask = eDepthWriteMaskAll;
 	stencilDrawRef.depthFunc = eComparisonLess;
@@ -175,7 +175,7 @@ CWVOID cwStageMirrorGenerator::buildStencil()
 
 CWVOID cwStageMirrorGenerator::buildBlend()
 {
-	BlendData blendTrans;
+	cwBlendData blendTrans;
 	blendTrans.bEnable = CWTRUE;
 	blendTrans.srcBlend = eBlendFactorSrcAlpha;
 	blendTrans.dstBlend = eBlendFactorInvSrcAlpha;

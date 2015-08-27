@@ -34,7 +34,7 @@ public:
 	cwBlend();
 	virtual ~cwBlend();
 
-	virtual bool init(const BlendData& blendData) = 0;
+	virtual bool init(const cwBlendData& blendData) = 0;
 
 	virtual const CWVOID* getBlendHandlePtr() const { return nullptr; }
 

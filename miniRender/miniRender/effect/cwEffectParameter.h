@@ -21,6 +21,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #define __CW_EFFECT_PARAMETER_H__
 
 #include "Base/cwMacros.h"
+#include "Base/cwBasicType.h"
+#include "Shader/cwShader.h"
 #include "Ref/cwRef.h"
 
 NS_MINIR_BEGIN
@@ -28,9 +30,11 @@ NS_MINIR_BEGIN
 class cwEffectParameter : public cwRef
 {
 public:
-	virtual CWVOID binding();
+	virtual CWVOID binding(cwShader* pShader) = 0;
+	inline CWVOID setParameterName(const CWSTRING& strName) { m_nStrParamName = strName; }
 
-protected:
+public:
+	CWSTRING m_nStrParamName;
 
 };
 

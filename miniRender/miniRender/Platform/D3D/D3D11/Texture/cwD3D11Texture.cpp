@@ -55,7 +55,7 @@ cwD3D11Texture::~cwD3D11Texture()
 bool cwD3D11Texture::init(const CWSTRING& strFileName)
 {
 	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
-	wstring wstrName = cwStringConvert::convertToWideChar(strFileName);
+	CWWSTRING wstrName = cwStringConvert::convertToWideChar(strFileName);
 
 	CW_HR(D3DX11CreateShaderResourceViewFromFile(
 		pD3D11Device->getD3D11Device(),

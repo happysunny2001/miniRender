@@ -39,7 +39,7 @@ cwRenderObject::~cwRenderObject()
 	CW_SAFE_RELEASE_NULL(m_pIndexBuffer);
 }
 
-bool cwRenderObject::init(
+CWBOOL cwRenderObject::init(
 	ePrimitiveType topology,
 	CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
 	CWVOID* pIndexData, CWUINT uIndexCnt, ceElementDesc eLayout)
@@ -48,12 +48,14 @@ bool cwRenderObject::init(
 	if (pIndexData) {
 		m_pIndexBuffer = cwRepertory::getInstance().getDevice()->createIndexBuffer(pIndexData, sizeof(CWUINT), uIndexCnt);
 		CW_SAFE_RETAIN(m_pIndexBuffer);
+
+		if (!m_pIndexBuffer) return CWFALSE;
 	}
 	m_pLayout = cwRepertory::getInstance().getLayoutManager()->getLayouts(eLayout);
 
-	if (!m_pIndexBuffer || !m_pLayout) return false;
+	if (!m_pLayout) return CWFALSE;
 
-	return true;
+	return CWTRUE;
 }
 
 NS_MINIR_END

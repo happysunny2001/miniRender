@@ -34,12 +34,12 @@ NS_MINIR_BEGIN
 class CW_DLL cwD3D11Blend : public cwBlend
 {
 public:
-	static cwD3D11Blend* create(const BlendData& blendData);
+	static cwD3D11Blend* create(const cwBlendData& blendData);
 
 	cwD3D11Blend();
 	virtual ~cwD3D11Blend();
 
-	virtual bool init(const BlendData& blendData) override;
+	virtual bool init(const cwBlendData& blendData) override;
 
 	virtual const CWVOID* getBlendHandlePtr() const override { return reinterpret_cast<CWVOID*>(m_pBlendState); }
 

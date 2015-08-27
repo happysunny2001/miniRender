@@ -21,8 +21,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #define __CW_EFFECT_H__
 
 #include "Base/cwMacros.h"
+#include "Base/cwVector.h"
 #include "Ref/cwRef.h"
 #include "Shader/cwShader.h"
+#include "cwEffectParameter.h"
 
 NS_MINIR_BEGIN
 
@@ -40,9 +42,14 @@ public:
 	virtual CWVOID setTech(const CWSTRING& strTech);
 	inline const CWSTRING& getTech() const { return m_strTech; }
 
+	CWVOID addParameter(cwEffectParameter* pEffectParameter);
+	virtual CWVOID config();
+
 protected:
 	cwShader* m_pShader;
 	CWSTRING m_strTech;
+
+	cwVector<cwEffectParameter*> m_nVecParameter;
 
 };
 

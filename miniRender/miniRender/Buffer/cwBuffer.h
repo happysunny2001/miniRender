@@ -62,7 +62,7 @@ public:
 	inline CWUINT getStride() const { return m_nStride; }
 	inline CWUINT getOffset() const { return m_nOffset; }
 
-	const CWUINT getIndexCount() const { return m_iIndexCnt; }
+	const CWUINT getElementCount() const { return m_iElementCnt; }
 
 protected:
 	CW_BUFFER_DESC m_nBuffDesc;
@@ -70,7 +70,7 @@ protected:
 
 	CWUINT m_nStride;
 	CWUINT m_nOffset;
-	CWUINT m_iIndexCnt;
+	CWUINT m_iElementCnt;
 
 };
 

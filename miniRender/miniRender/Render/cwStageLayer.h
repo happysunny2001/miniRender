@@ -49,7 +49,7 @@ public:
 	CWVOID setFliterType(eStageLayerFliterType eType) { m_eFilterType = eType; }
 
 	CWVOID reset();
-	CWVOID begin(cwVector<cwEntity*>& vecEntities, cwEffect* pEffect);
+	CWVOID begin(cwVector<cwEntity*>& vecEntities);
 	CWVOID render();
 	CWVOID end();
 
@@ -69,7 +69,6 @@ protected:
 	cwRenderPipeline* getUnusePipeline(cwShader* pShader);
 
 	CWVOID addEntities(cwVector<cwEntity*>& vecEntities);
-	CWVOID addEntities(cwVector<cwEntity*>& vecEntities, cwEffect* pEffect);
 
 protected:
 	eStageLayerFliterType m_eFilterType;

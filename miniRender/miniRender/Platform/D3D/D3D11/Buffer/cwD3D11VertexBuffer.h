@@ -33,10 +33,10 @@ class CW_DLL cwD3D11VertexBuffer : public cwBuffer
 public:
 	static cwD3D11VertexBuffer* create(
 		CWUINT uSize, 
+		CWUINT structureByteStride,
 		CWUINT usage = eBufferUsageImmutable,
 		CWUINT uCpuFlag = eAccessFlagNone,
-		CWUINT miscFlag = 0, 
-		CWUINT structureByteStride = 0);
+		CWUINT miscFlag = 0);
 
 	cwD3D11VertexBuffer();
 	virtual ~cwD3D11VertexBuffer();

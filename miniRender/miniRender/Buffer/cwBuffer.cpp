@@ -40,7 +40,8 @@ cwBuffer* cwBuffer::create(
 }
 
 cwBuffer::cwBuffer():
-m_pDRenderBuffer(nullptr)
+m_pDRenderBuffer(nullptr),
+m_iElementCnt(0)
 {
 
 }
@@ -64,6 +65,9 @@ CWBOOL cwBuffer::init(
 	m_nBuffDesc.MiscFlags = miscFlag;
 	m_nBuffDesc.StructureByteStride = structureByteStride;
 	m_nBuffDesc.Usage = usage;
+
+	if (structureByteStride > 0)
+		m_iElementCnt = uSize / structureByteStride;
 
 	return true;
 }

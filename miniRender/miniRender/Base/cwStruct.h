@@ -69,8 +69,10 @@ typedef struct CW_BUFFER_DESC
 	CWUINT StructureByteStride;
 }CW_BUFFER_DESC;
 
-typedef struct BlendData
+typedef struct cwBlendData
 {
+	CWBOOL bAlphaToCoverage;
+	CWBOOL bIndependentBlend;
 	CWBOOL bEnable;
 	CWBYTE uColorEnable;
 	eBlendFactor srcBlend;
@@ -80,7 +82,9 @@ typedef struct BlendData
 	eBlendFactor dstBlendAlpha;
 	eBlendOp blendOpAlpha;
 
-	BlendData() {
+	cwBlendData() {
+		bAlphaToCoverage = CWFALSE;
+		bIndependentBlend = CWFALSE;
 		bEnable = CWTRUE;
 		uColorEnable = eColorWriteEnableAll;
 		srcBlend = eBlendFactorOne;
@@ -91,7 +95,7 @@ typedef struct BlendData
 		blendOpAlpha  = eBlendOpAdd;
 	}
 
-	BlendData(eBlendFactor src, eBlendFactor dst) {
+	cwBlendData(eBlendFactor src, eBlendFactor dst) {
 		srcBlend = src;
 		dstBlend = dst;
 		blendOp  = eBlendOpAdd;
@@ -100,7 +104,7 @@ typedef struct BlendData
 		blendOpAlpha  = eBlendOpAdd;
 	}
 
-	BlendData(eBlendFactor src, eBlendFactor dst, eBlendOp op) {
+	cwBlendData(eBlendFactor src, eBlendFactor dst, eBlendOp op) {
 		srcBlend = src;
 		dstBlend = dst;
 		blendOp  = op;
@@ -109,7 +113,7 @@ typedef struct BlendData
 		blendOpAlpha  = op;
 	}
 
-	BlendData(eBlendFactor src, eBlendFactor dst, eBlendOp op, eBlendFactor srcAlpha, eBlendFactor dstAlpha, eBlendOp opAlpha) {
+	cwBlendData(eBlendFactor src, eBlendFactor dst, eBlendOp op, eBlendFactor srcAlpha, eBlendFactor dstAlpha, eBlendOp opAlpha) {
 		srcBlend = src;
 		dstBlend = dst;
 		blendOp  = op;
@@ -118,9 +122,9 @@ typedef struct BlendData
 		blendOpAlpha  = opAlpha;
 	}
 
-}BlendData;
+}cwBlendData;
 
-typedef struct StencilData
+typedef struct cwStencilData
 {
 	CWBOOL depthEnable;
 	eDepthWriteMask depthWriteMask;
@@ -139,7 +143,7 @@ typedef struct StencilData
 	eStencilOp backStencilDepthFailOp;
 	eStencilOp backStencilPassOp;
 	eComparison backStencilFunc;
-}StencilData;
+}cwStencilData;
 
 NS_MINIR_END
 

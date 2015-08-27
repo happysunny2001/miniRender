@@ -36,18 +36,18 @@ public:
 	cwRenderObject();
 	virtual ~cwRenderObject();
 
-	virtual bool init(
+	virtual CWBOOL init(
 		ePrimitiveType topology,
 		CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt, 
 		CWVOID* pIndexData, CWUINT uIndexCnt, ceElementDesc eLayout) = 0;
 
-	virtual void preRender() {}
+	virtual CWVOID preRender() {}
 
-	cwLayouts* getInputLayout() { return m_pLayout; }
-	ePrimitiveType getPrimitiveTopology() { return m_nTopology; }
+	inline cwLayouts* getInputLayout() { return m_pLayout; }
+	inline ePrimitiveType getPrimitiveTopology() { return m_nTopology; }
 
-	cwBuffer* getVertexBuffer() { return m_pVertexBuffer; }
-	cwBuffer* getIndexBuffer() { return m_pIndexBuffer; }
+	inline cwBuffer* getVertexBuffer() { return m_pVertexBuffer; }
+	inline cwBuffer* getIndexBuffer() { return m_pIndexBuffer; }
 
 protected:
 	cwBuffer* m_pVertexBuffer;

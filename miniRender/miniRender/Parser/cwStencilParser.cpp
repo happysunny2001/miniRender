@@ -65,8 +65,8 @@ cwStencil* cwStencilParser::parse(tinyxml2::XMLElement* pStencilData)
 {
 	if (!pStencilData) return nullptr;
 
-	StencilData stencilData;
-	memset(&stencilData, 0, sizeof(StencilData));
+	cwStencilData stencilData;
+	memset(&stencilData, 0, sizeof(cwStencilData));
 
 	tinyxml2::XMLElement* pDepthElement = pStencilData->FirstChildElement("DepthBuffer");
 	if (pDepthElement) {

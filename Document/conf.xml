@@ -92,8 +92,10 @@
 					<Effect Name="" Type="default" Shader="" Tech=""> 
 						<Param>
 							<ShaderParam Name="" Type=""/> <!-- param name:the name of the parameter object, empty name is ok, just for mark. type:[Float, FloatArray, Texture] -->
-							<!-- value type:[Raw,PhysicalPath,ConfPath]. 
-								Data:if type is Raw, then Data is "1.0,2.0,3.0", must float value; if type is PhysicalPath, Data is the Texture Physical path(test.png); if type is ConfPath, Data is the stage name, then will binding the stage's render target as a texture to the parameter. -->
+							<!-- value type:[float,texture]. 
+								Data:if type is float, then Data is "1.0", must float value; 
+									 if type is texture, Data is the Texture Physical path; 
+							-->
 							<Value Type=""> 
 								<Data></Data>
 							</Value>

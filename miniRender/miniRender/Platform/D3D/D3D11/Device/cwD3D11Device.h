@@ -63,8 +63,8 @@ public:
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, eBufferUsage usage, CWUINT cpuFlag) override;
 	virtual cwBuffer* createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) override;
 
-	virtual cwBlend* createBlend(const BlendData& blendData) override;
-	virtual cwStencil* createStencil(const StencilData& stencliData) override;
+	virtual cwBlend* createBlend(const cwBlendData& blendData) override;
+	virtual cwStencil* createStencil(const cwStencilData& stencliData) override;
 
 	virtual cwTexture* createTexture(const CWSTRING& strFileName) override;
 	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) override;

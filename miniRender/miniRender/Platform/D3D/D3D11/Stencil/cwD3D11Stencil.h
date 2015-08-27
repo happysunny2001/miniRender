@@ -31,12 +31,12 @@ NS_MINIR_BEGIN
 class CW_DLL cwD3D11Stencil : public cwStencil
 {
 public:
-	static cwD3D11Stencil* create(const StencilData& stencilData);
+	static cwD3D11Stencil* create(const cwStencilData& stencilData);
 
 	cwD3D11Stencil();
 	virtual ~cwD3D11Stencil();
 
-	virtual bool init(const StencilData& stencilData) override;
+	virtual bool init(const cwStencilData& stencilData) override;
 
 	virtual CWHANDLE getStencilHandlePtr() const { return static_cast<CWHANDLE>(m_pDepthStencilState); }
 

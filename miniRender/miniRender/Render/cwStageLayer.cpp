@@ -85,16 +85,11 @@ CWVOID cwStageLayer::reset()
 	m_nMapPipeline.clear();
 }
 
-CWVOID cwStageLayer::begin(cwVector<cwEntity*>& vecEntities, cwEffect* pEffect)
+CWVOID cwStageLayer::begin(cwVector<cwEntity*>& vecEntities)
 {
 	reset();
 
-	if (pEffect == nullptr) {
-		addEntities(vecEntities);
-	}
-	else {
-		addEntities(vecEntities, pEffect);
-	}
+	addEntities(vecEntities);
 
 	for (auto pPU : m_nVecPU) {
 		pPU->begin();
@@ -114,28 +109,6 @@ CWVOID cwStageLayer::end()
 {
 	for (auto pPU : m_nVecPU) {
 		pPU->end();
-	}
-}
-
-CWVOID cwStageLayer::addEntities(cwVector<cwEntity*>& vecEntities, cwEffect* pEffect)
-{
-	cwRenderPipeline* pPipeline = &(m_nPipeline[m_iPipeLineIndex++]);
-	pPipeline->reset();
-	pPipeline->setShader(pEffect->getShader());
-
-	for (auto pEntity : vecEntities) {
-		pEntity->transform();
-
-		CWBOOL bRet = pPipeline->addEntity(pEntity, this);
-		if (!bRet) {
-			if (m_iPipeLineIndex < CW_STAGE_PIPELINE_SIZE) {
-				pPipeline = &(m_nPipeline[m_iPipeLineIndex++]);
-				pPipeline->reset();
-				pPipeline->setShader(pEffect->getShader());
-			}
-			else
-				break;
-		}
 	}
 }
 

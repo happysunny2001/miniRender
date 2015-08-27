@@ -20,6 +20,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwRenderBatch.h"
 #include "Repertory/cwRepertory.h"
 #include "Engine/cwEngine.h"
+#include "Effect/cwEffect.h"
 #include "cwRenderer.h"
 
 NS_MINIR_BEGIN
@@ -44,6 +45,7 @@ CWVOID cwRenderBatch::render()
 {
 	if (m_pEffect) {
 		//config effect parameter
+		m_pEffect->config();
 	}
 
 	cwRepertory::getInstance().getEngine()->getRenderer()->render(this);

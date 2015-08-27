@@ -30,10 +30,10 @@ NS_MINIR_BEGIN
 
 cwD3D11VertexBuffer* cwD3D11VertexBuffer::create(
 	CWUINT uSize,
+	CWUINT structureByteStride,
 	CWUINT usage,
 	CWUINT uCpuFlag,
-	CWUINT miscFlag,
-	CWUINT structureByteStride)
+	CWUINT miscFlag)
 {
 	cwD3D11VertexBuffer* pBuffer = new cwD3D11VertexBuffer();
 	if (pBuffer && pBuffer->init(uSize, usage, cwD3D11Device::getBufferBindFlag(eBufferBindVertex), uCpuFlag, miscFlag, structureByteStride)) {

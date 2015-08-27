@@ -57,13 +57,12 @@ bool cwD3D11LayoutsManager::init()
 	if (!m_pElementDescManager) return false;
 	CW_SAFE_RETAIN(m_pElementDescManager);
 
-	auto fileSystem = cwRepertory::getInstance().getFileSystem();
 	auto shaderManager = cwRepertory::getInstance().getShaderManager();
 
 	{
 		cwLayouts* pLayout = cwD3D11Layouts::create(
 			m_pElementDescManager->getElement(ceEleDescPosColor),
-			static_cast<cwD3D11Shader*>(shaderManager->getShader(fileSystem->getFullFilePath("effect/D3D11/color.fx")))
+			static_cast<cwD3D11Shader*>(shaderManager->getShader("effect/D3D11/color.fx"))
 			);
 		if (pLayout) {
 			m_mapLayouts.insert(ceEleDescPosColor, pLayout);
@@ -73,7 +72,7 @@ bool cwD3D11LayoutsManager::init()
 	{
 		cwLayouts* pLayout = cwD3D11Layouts::create(
 			m_pElementDescManager->getElement(ceEleDescPosNormal),
-			static_cast<cwD3D11Shader*>(shaderManager->getShader(fileSystem->getFullFilePath("effect/D3D11/lighting.fx")))
+			static_cast<cwD3D11Shader*>(shaderManager->getShader("effect/D3D11/lighting.fx"))
 			);
 		if (pLayout) {
 			m_mapLayouts.insert(ceEleDescPosNormal, pLayout);
@@ -83,7 +82,7 @@ bool cwD3D11LayoutsManager::init()
 	{
 		cwLayouts* pLayout = cwD3D11Layouts::create(
 			m_pElementDescManager->getElement(ceEleDescPosNormalTex),
-			static_cast<cwD3D11Shader*>(shaderManager->getShader(fileSystem->getFullFilePath("effect/D3D11/lightingTex.fx")))
+			static_cast<cwD3D11Shader*>(shaderManager->getShader("effect/D3D11/lightingTex.fx"))
 			);
 		if (pLayout) {
 			m_mapLayouts.insert(ceEleDescPosNormalTex, pLayout);
@@ -93,7 +92,7 @@ bool cwD3D11LayoutsManager::init()
 	{
 		cwLayouts* pLayout = cwD3D11Layouts::create(
 			m_pElementDescManager->getElement(ceEleDescPosTex),
-			static_cast<cwD3D11Shader*>(shaderManager->getShader(fileSystem->getFullFilePath("effect/D3D11/colorTex.fx")))
+			static_cast<cwD3D11Shader*>(shaderManager->getShader("effect/D3D11/colorTex.fx"))
 			);
 		if (pLayout) {
 			m_mapLayouts.insert(ceEleDescPosTex, pLayout);

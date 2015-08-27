@@ -30,10 +30,10 @@ NS_MINIR_BEGIN
 
 cwD3D11IndexBuffer* cwD3D11IndexBuffer::create(
 	CWUINT uSize,
+	CWUINT structureByteStride,
 	CWUINT usage,
 	CWUINT uCpuFlag,
-	CWUINT miscFlag,
-	CWUINT structureByteStride)
+	CWUINT miscFlag)
 {
 	cwD3D11IndexBuffer* pBuffer = new cwD3D11IndexBuffer();
 	if (pBuffer && pBuffer->init(uSize, usage, cwD3D11Device::getBufferBindFlag(eBufferBindIndex), uCpuFlag, miscFlag, structureByteStride)) {
@@ -47,7 +47,7 @@ cwD3D11IndexBuffer* cwD3D11IndexBuffer::create(
 
 cwD3D11IndexBuffer::cwD3D11IndexBuffer()
 {
-	m_iIndexCnt = 0;
+	m_iElementCnt = 0;
 }
 
 cwD3D11IndexBuffer::~cwD3D11IndexBuffer()
@@ -69,7 +69,7 @@ bool cwD3D11IndexBuffer::init(
 	CWUINT uD3D11Usage = cwD3D11Device::getBufferUsage(static_cast<eBufferUsage>(usage));
 	if (!cwBuffer::init(uSize, uD3D11Usage, bindFlag, uD3D11CpuFlag, miscFlag, structureByteStride)) return false;
 
-	m_iIndexCnt = uSize / sizeof(CWUINT);
+	m_iElementCnt = uSize / sizeof(CWUINT);
 
 	return true;
 }

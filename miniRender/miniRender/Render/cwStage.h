@@ -101,7 +101,6 @@ protected:
 	CWBOOL m_bClearDepth;
 	CWBOOL m_bClearStencil;
 
-	cwEffect* m_pStageEffect;
 	cwVector<cwRenderGenerator*> m_nVecGenerator;
 
 	cwVector<cwEntity*> m_nVecStageEntities;

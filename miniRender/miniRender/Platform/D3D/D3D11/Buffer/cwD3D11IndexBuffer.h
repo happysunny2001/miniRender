@@ -33,10 +33,10 @@ class CW_DLL cwD3D11IndexBuffer : public cwBuffer
 public:
 	static cwD3D11IndexBuffer* create(
 		CWUINT uSize,
+		CWUINT structureByteStride,
 		CWUINT usage = eBufferUsageImmutable,
 		CWUINT uCpuFlag = eAccessFlagNone,
-		CWUINT miscFlag = 0,
-		CWUINT structureByteStride = 0);
+		CWUINT miscFlag = 0);
 
 	cwD3D11IndexBuffer();
 	virtual ~cwD3D11IndexBuffer();

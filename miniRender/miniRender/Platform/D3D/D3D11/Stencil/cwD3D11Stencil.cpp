@@ -28,7 +28,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwD3D11Stencil* cwD3D11Stencil::create(const StencilData& stencilData)
+cwD3D11Stencil* cwD3D11Stencil::create(const cwStencilData& stencilData)
 {
 	cwD3D11Stencil* pStencil = new cwD3D11Stencil();
 	if (pStencil && pStencil->init(stencilData)) {
@@ -51,7 +51,7 @@ cwD3D11Stencil::~cwD3D11Stencil()
 	CW_RELEASE_COM(m_pDepthStencilState);
 }
 
-bool cwD3D11Stencil::init(const StencilData& stencilData)
+bool cwD3D11Stencil::init(const cwStencilData& stencilData)
 {
 	m_nDepthStencilDesc.DepthEnable = stencilData.depthEnable;
 	m_nDepthStencilDesc.DepthWriteMask = cwD3D11Device::getDepthWriteMask(stencilData.depthWriteMask);// static_cast<D3D11_DEPTH_WRITE_MASK>(depthWriteMask);

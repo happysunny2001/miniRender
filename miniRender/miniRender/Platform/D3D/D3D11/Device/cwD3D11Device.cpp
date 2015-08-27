@@ -376,7 +376,7 @@ cwShader* cwD3D11Device::createShader(const string& strFileName)
 
 cwBuffer* cwD3D11Device::createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt)
 {
-	cwD3D11VertexBuffer* pVertexBuffer = cwD3D11VertexBuffer::create(uStride*uCnt);
+	cwD3D11VertexBuffer* pVertexBuffer = cwD3D11VertexBuffer::create(uStride*uCnt, uStride);
 	if (!pVertexBuffer) return NULL;
 
 	CW_BUFFER_DESC& desc = pVertexBuffer->getBufferDesc();
@@ -426,7 +426,7 @@ cwBuffer* cwD3D11Device::createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUIN
 
 cwBuffer* cwD3D11Device::createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt)
 {
-	cwD3D11IndexBuffer* pIndexBuffer = cwD3D11IndexBuffer::create(uStride*uCnt);
+	cwD3D11IndexBuffer* pIndexBuffer = cwD3D11IndexBuffer::create(uStride*uCnt, uStride);
 	if (!pIndexBuffer) return NULL;
 	
 	CW_BUFFER_DESC& desc = pIndexBuffer->getBufferDesc();
@@ -448,12 +448,12 @@ cwBuffer* cwD3D11Device::createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT
 	return pIndexBuffer;
 }
 
-cwBlend* cwD3D11Device::createBlend(const BlendData& blendData)
+cwBlend* cwD3D11Device::createBlend(const cwBlendData& blendData)
 {
 	return cwD3D11Blend::create(blendData);
 }
 
-cwStencil* cwD3D11Device::createStencil(const StencilData& stencliData)
+cwStencil* cwD3D11Device::createStencil(const cwStencilData& stencliData)
 {
 	return cwD3D11Stencil::create(stencliData);
 }
@@ -546,26 +546,6 @@ cwTexture* cwD3D11Device::createTextureArray(const std::vector<CWSTRING>& vecFil
 	return cwD3D11TextureArray::create(vecFiles);
 }
 
-void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera)
-{
-	if (!pRenderObj || !pShader || !pCamera) return;
-
-	cwMatrix4X4 matWorld;
-	matWorld.setTranslation(worldPos);
-
-	setShaderWorldTrans(pShader, matWorld, pCamera);
-
-	pRenderObj->preRender();
-
-	this->setInputLayout(pRenderObj->getInputLayout());
-	this->setPrimitiveTopology(pRenderObj->getPrimitiveTopology());
-	this->setVertexBuffer(pRenderObj->getVertexBuffer());
-	this->setIndexBuffer(pRenderObj->getIndexBuffer());
-
-	pShader->apply(0, 0);
-	this->drawIndexed(pRenderObj->getIndexBuffer()->getIndexCount(), 0, 0);
-}
-
 void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera)
 {
 	if (!pShader) return;
@@ -594,6 +574,33 @@ void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& tr
 	pShader->setVariableData(eShaderParamEyePosWorld, (CWVOID*)&pos, 0, sizeof(cwVector3D));
 }
 
+void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera)
+{
+	if (!pRenderObj || !pShader || !pCamera) return;
+
+	cwMatrix4X4 matWorld;
+	matWorld.setTranslation(worldPos);
+
+	setShaderWorldTrans(pShader, matWorld, pCamera);
+
+	pRenderObj->preRender();
+
+	this->setInputLayout(pRenderObj->getInputLayout());
+	this->setPrimitiveTopology(pRenderObj->getPrimitiveTopology());
+	this->setVertexBuffer(pRenderObj->getVertexBuffer());
+
+	if (pRenderObj->getIndexBuffer()) {
+		this->setIndexBuffer(pRenderObj->getIndexBuffer());
+
+		pShader->apply(0, 0);
+		m_pD3D11DeviceContext->DrawIndexed(pRenderObj->getIndexBuffer()->getElementCount(), 0, 0);
+	}
+	else {
+		pShader->apply(0, 0);
+		m_pD3D11DeviceContext->Draw(pRenderObj->getVertexBuffer()->getElementCount(), 0);
+	}
+}
+
 void cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj)
 {
 	this->setInputLayout(pRenderObj->getInputLayout());
@@ -616,12 +623,22 @@ void cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObj
 	if (!pTech) return;
 	pTech->GetDesc(&techDesc);
 
-	for (CWUINT i = 0; i < techDesc.Passes; ++i) {
-		this->setVertexBuffer(pRenderObj->getVertexBuffer());
-		this->setIndexBuffer(pRenderObj->getIndexBuffer());
+	if (pRenderObj->getIndexBuffer()) {
+		for (CWUINT i = 0; i < techDesc.Passes; ++i) {
+			this->setVertexBuffer(pRenderObj->getVertexBuffer());
+			this->setIndexBuffer(pRenderObj->getIndexBuffer());
 
-		pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
-		this->drawIndexed(pRenderObj->getIndexBuffer()->getIndexCount(), 0, 0);
+			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
+			m_pD3D11DeviceContext->DrawIndexed(pRenderObj->getIndexBuffer()->getElementCount(), 0, 0);
+		}
+	}
+	else {
+		for (CWUINT i = 0; i < techDesc.Passes; ++i) {
+			this->setVertexBuffer(pRenderObj->getVertexBuffer());
+
+			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
+			m_pD3D11DeviceContext->Draw(pRenderObj->getVertexBuffer()->getElementCount(), 0);
+		}
 	}
 }
 

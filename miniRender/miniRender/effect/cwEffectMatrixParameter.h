@@ -17,60 +17,31 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwEffect.h"
+#ifndef __CW_EFFECT_MATRIX_PARAMETER_H__
+#define __CW_EFFECT_MATRIX_PARAMETER_H__
+
+#include "Base/cwMacros.h"
+#include "Math/cwMath.h"
+#include "cwEffectParameter.h"
 
 NS_MINIR_BEGIN
 
-cwEffect* cwEffect::create()
+class cwEffectMatrixParameter : public cwEffectParameter
 {
-	cwEffect* pEffect = new cwEffect();
-	if (pEffect) {
-		pEffect->autorelease();
-		return pEffect;
-	}
+public:
+	static cwEffectMatrixParameter* create();
 
-	CW_SAFE_DELETE(pEffect);
-	return nullptr;
-}
+	cwEffectMatrixParameter();
+	virtual ~cwEffectMatrixParameter();
 
-cwEffect::cwEffect():
-m_pShader(nullptr)
-{
+	virtual CWVOID binding(cwShader* pShader) override;
+	CWVOID setMatrix(const cwMatrix4X4& mat);
 
-}
+protected:
+	cwMatrix4X4 m_nMat;
 
-cwEffect::~cwEffect()
-{
-	CW_SAFE_RELEASE_NULL(m_pShader);
-	m_nVecParameter.clear();
-}
-
-CWVOID cwEffect::setShader(cwShader* pShader)
-{
-	if (pShader == m_pShader) return;
-	CW_SAFE_RETAIN(pShader);
-	CW_SAFE_RELEASE_NULL(m_pShader);
-	m_pShader = pShader;
-}
-
-CWVOID cwEffect::setTech(const CWSTRING& strTech)
-{
-	m_strTech = strTech;
-}
-
-CWVOID cwEffect::addParameter(cwEffectParameter* pEffectParameter)
-{
-	if (pEffectParameter) {
-		m_nVecParameter.pushBack(pEffectParameter);
-	}
-}
-
-CWVOID cwEffect::config()
-{
-	for (auto pParam : m_nVecParameter) {
-		pParam->binding(m_pShader);
-	}
-}
+};
 
 NS_MINIR_END
 
+#endif

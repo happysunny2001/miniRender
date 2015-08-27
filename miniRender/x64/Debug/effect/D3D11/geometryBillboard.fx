@@ -16,13 +16,13 @@ Texture2DArray gTreeMapArray;
 struct VertexIn
 {
 	float3 PosW  : POSITION;
-	float2 SizeW : SIZE;
+	float2 SizeW : TEXCOORD;
 };
 
 struct VertexOut
 {
 	float3 CenterW : POSITION;
-	float2 SizeW : SIZE;
+	float2 SizeW : TEXCOORD;
 };
 
 struct GeoOut

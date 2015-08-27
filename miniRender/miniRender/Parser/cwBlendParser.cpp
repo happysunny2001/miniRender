@@ -67,7 +67,7 @@ cwBlend* cwBlendParser::parse(tinyxml2::XMLElement* pBlendData)
 {
 	if (!pBlendData) return nullptr;
 
-	BlendData blendData;
+	cwBlendData blendData;
 
 	const char* pcEnable = pBlendData->Attribute("Enable");
 	if (pcEnable) {

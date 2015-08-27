@@ -48,7 +48,6 @@ m_bEnable(CWTRUE),
 m_eType(eStageTypeNormal),
 m_pViewPort(nullptr),
 m_pRenderTarget(nullptr),
-m_pStageEffect(nullptr),
 m_bClearColor(CWTRUE),
 m_bClearDepth(CWTRUE),
 m_bClearStencil(CWTRUE),
@@ -62,7 +61,6 @@ cwStage::~cwStage()
 	CW_SAFE_RELEASE_NULL(m_pCamera);
 	CW_SAFE_RELEASE_NULL(m_pViewPort);
 	CW_SAFE_RELEASE_NULL(m_pRenderTarget);
-	CW_SAFE_RELEASE_NULL(m_pStageEffect);
 
 	clearStageEntity();
 	clearStageLayer(CWTRUE);
@@ -124,18 +122,18 @@ CWVOID cwStage::begin()
 
 		switch (eFilterType) {
 		case eStageLayerFliterStage:
-			pLayer->begin(m_nVecStageEntities, m_pStageEffect);
+			pLayer->begin(m_nVecStageEntities);
 			break;
 		case eStageLayerFliterEntity:
 		{
 			cwVector<cwEntity*>& vecEntity = pScene->getVisibleEntities(nullptr);
-			pLayer->begin(vecEntity, m_pStageEffect);
+			pLayer->begin(vecEntity);
 		}
 			break;
 		case eStageLayerFliterMirror:
 		{
 			cwVector<cwEntity*>& vecEntity = pScene->getVisibleEntities(nullptr, eSceneObjectMirror);
-			pLayer->begin(vecEntity, m_pStageEffect);
+			pLayer->begin(vecEntity);
 		}
 			break;
 		}
@@ -145,10 +143,6 @@ CWVOID cwStage::begin()
 CWVOID cwStage::render()
 {
 	cwRepertory::getInstance().getEngine()->getRenderer()->setCurrCamera(m_pCamera);
-	if (m_pStageEffect) {
-		//config effect parameter
-	}
-
 	cwRepertory::getInstance().getDevice()->setViewPort(m_pViewPort);
 	if (m_bRefreshRenderTarget) {
 		cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTarget);

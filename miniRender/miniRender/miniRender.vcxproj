@@ -39,7 +39,9 @@
     <ClInclude Include="Device\cwDevice.h" />
     <ClInclude Include="Effect\cwEffect.h" />
     <ClInclude Include="Effect\cwEffectFloatParameter.h" />
+    <ClInclude Include="Effect\cwEffectMatrixParameter.h" />
     <ClInclude Include="Effect\cwEffectParameter.h" />
+    <ClInclude Include="Effect\cwEffectTextureParameter.h" />
     <ClInclude Include="Engine\cwEngine.h" />
     <ClInclude Include="Entity\cwEntity.h" />
     <ClInclude Include="Entity\cwMirror.h" />
@@ -165,7 +167,9 @@
     <ClCompile Include="Device\cwDevice.cpp" />
     <ClCompile Include="Effect\cwEffect.cpp" />
     <ClCompile Include="Effect\cwEffectFloatParameter.cpp" />
+    <ClCompile Include="Effect\cwEffectMatrixParameter.cpp" />
     <ClCompile Include="Effect\cwEffectParameter.cpp" />
+    <ClCompile Include="Effect\cwEffectTextureParameter.cpp" />
     <ClCompile Include="Engine\cwEngine.cpp" />
     <ClCompile Include="Entity\cwEntity.cpp" />
     <ClCompile Include="Entity\cwMirror.cpp" />

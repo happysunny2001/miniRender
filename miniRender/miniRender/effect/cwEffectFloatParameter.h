@@ -16,3 +16,30 @@ PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS B
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
+#ifndef __CW_EFFECT_FLOAT_PARAMETER_H__
+#define __CW_EFFECT_FLOAT_PARAMETER_H__
+
+#include "Base/cwMacros.h"
+#include "cwEffectParameter.h"
+
+NS_MINIR_BEGIN
+
+class cwEffectFloatParameter : public cwEffectParameter
+{
+public:
+	static cwEffectFloatParameter* create();
+
+	cwEffectFloatParameter();
+	virtual ~cwEffectFloatParameter();
+
+	virtual CWVOID binding(cwShader* pShader) override;
+
+public:
+	CWFLOAT m_fValue;
+
+};
+
+NS_MINIR_END
+
+#endif
