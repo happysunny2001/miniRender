@@ -35,7 +35,7 @@ public:
 
 	virtual bool init(const cwStencilData& stencilData) = 0;
 
-	virtual CWHANDLE getStencilHandlePtr() const { return nullptr; }
+	virtual CWHANDLE getHandle() const { return nullptr; }
 	
 	CWUINT getStencilRef() const { return m_uStencilRef; }
 	CWVOID setStencilRef(CWUINT ref) { m_uStencilRef = ref; }

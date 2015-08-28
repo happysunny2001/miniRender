@@ -41,7 +41,7 @@ public:
 
 	virtual bool init(const cwBlendData& blendData) override;
 
-	virtual const CWVOID* getBlendHandlePtr() const override { return reinterpret_cast<CWVOID*>(m_pBlendState); }
+	virtual CWHANDLE getHandle() const override { return reinterpret_cast<CWHANDLE>(m_pBlendState); }
 
 protected:
 	D3D11_BLEND_DESC m_nBlendDesc;

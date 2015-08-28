@@ -40,8 +40,7 @@ public:
 	virtual void beginResize() override;
 	virtual bool onResize(bool bForce = false) override;
 
-	virtual CWHANDLE getTexturePtr() override;
-	virtual CWHANDLE getTextureMultiThreadPtr() override;
+	virtual CWHANDLE getHandle() const override;
 
 	virtual CWVOID endDraw() override;
 

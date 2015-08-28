@@ -36,17 +36,17 @@ CWBOOL cwRenderTexture::onResize(CWBOOL bForce)
 	return CWTRUE;
 }
 
-CWHANDLE cwRenderTexture::getRenderTargetPtr()
+CWHANDLE cwRenderTexture::getRenderHandle() const
 {
 	return NULL;
 }
 
-CWHANDLE cwRenderTexture::getTexturePtr()
+CWHANDLE cwRenderTexture::getHandle() const
 {
 	return NULL;
 }
 
-CWHANDLE cwRenderTexture::getTextureMultiThreadPtr()
+CWHANDLE cwRenderTexture::getWritablehandle() const
 {
 	return NULL;
 }

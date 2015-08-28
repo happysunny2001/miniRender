@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #ifdef _CW_D3D11_
 
-#include "cwD3D11RenderTextureMultiThread.h"
+#include "cwD3D11RenderTextureWritable.h"
 #include "Repertory/cwRepertory.h"
 #include "Platform/Windows/cwWinUtils.h"
 #include "Platform/D3D/D3D11/cwD3D11Utils.h"
@@ -27,9 +27,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwD3D11RenderTextureMultiThread* cwD3D11RenderTextureMultiThread::create(CWFLOAT fWidth, CWFLOAT fHeight)
+cwD3D11RenderTextureWritable* cwD3D11RenderTextureWritable::create(CWFLOAT fWidth, CWFLOAT fHeight)
 {
-	cwD3D11RenderTextureMultiThread* pRenderTexture = new cwD3D11RenderTextureMultiThread();
+	cwD3D11RenderTextureWritable* pRenderTexture = new cwD3D11RenderTextureWritable();
 	if (pRenderTexture && pRenderTexture->init(fWidth, fHeight)) {
 		pRenderTexture->autorelease();
 		return pRenderTexture;
@@ -39,23 +39,23 @@ cwD3D11RenderTextureMultiThread* cwD3D11RenderTextureMultiThread::create(CWFLOAT
 	return nullptr;
 }
 
-cwD3D11RenderTextureMultiThread::cwD3D11RenderTextureMultiThread() :
+cwD3D11RenderTextureWritable::cwD3D11RenderTextureWritable() :
 m_pUnorderedAccessView(nullptr)
 {
-	m_eType = eRenderTextureMultiThread;
+	m_eType = eRenderTextureWritable;
 }
 
-cwD3D11RenderTextureMultiThread::~cwD3D11RenderTextureMultiThread()
+cwD3D11RenderTextureWritable::~cwD3D11RenderTextureWritable()
 {
 	CW_RELEASE_COM(m_pUnorderedAccessView);
 }
 
-bool cwD3D11RenderTextureMultiThread::init(CWFLOAT fWidth, CWFLOAT fHeight)
+bool cwD3D11RenderTextureWritable::init(CWFLOAT fWidth, CWFLOAT fHeight)
 {
 	return cwD3D11RenderTexture::init(fWidth, fHeight);
 }
 
-bool cwD3D11RenderTextureMultiThread::onResize(bool bForce)
+bool cwD3D11RenderTextureWritable::onResize(bool bForce)
 {
 	if (!bForce && m_fWidth > 1.0f) return true;
 
@@ -108,7 +108,7 @@ bool cwD3D11RenderTextureMultiThread::onResize(bool bForce)
 	return true;
 }
 
-CWHANDLE cwD3D11RenderTextureMultiThread::getTextureMultiThreadPtr()
+CWHANDLE cwD3D11RenderTextureWritable::getWritablehandle() const
 {
 	return static_cast<CWHANDLE>(m_pUnorderedAccessView);
 }

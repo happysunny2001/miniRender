@@ -252,7 +252,7 @@ void cwD3D11Shader::setVariableTexture(const string& strVariable, cwTexture* pTe
 	auto itVariable = m_mapVariable.find(strVariable);
 	if (itVariable == m_mapVariable.end()) return;
 
-	ID3D11ShaderResourceView* pShaderRes = reinterpret_cast<ID3D11ShaderResourceView*>(pTexture->getTexturePtr());
+	ID3D11ShaderResourceView* pShaderRes = reinterpret_cast<ID3D11ShaderResourceView*>(pTexture->getHandle());
 	if (!pShaderRes) return;
 	ID3DX11EffectVariable* pVariable = itVariable->second;
 	CW_HR(pVariable->AsShaderResource()->SetResource(pShaderRes));
@@ -306,7 +306,7 @@ CWVOID cwD3D11Shader::setVariableFloatArray(eShaderParamIndex eParam, CWFLOAT* p
 CWVOID cwD3D11Shader::setVariableTexture(eShaderParamIndex eParam, cwTexture* pTexture)
 {
 	if (!pTexture) return;
-	ID3D11ShaderResourceView* pShaderRes = reinterpret_cast<ID3D11ShaderResourceView*>(pTexture->getTexturePtr());
+	ID3D11ShaderResourceView* pShaderRes = reinterpret_cast<ID3D11ShaderResourceView*>(pTexture->getHandle());
 	if (!pShaderRes) return;
 
 	if (m_pShaderParam[eParam])

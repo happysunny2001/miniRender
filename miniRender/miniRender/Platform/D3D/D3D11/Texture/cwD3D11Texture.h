@@ -38,7 +38,7 @@ public:
 	virtual ~cwD3D11Texture();
 
 	virtual CWBOOL init(const CWSTRING& strFileName);
-	virtual CWHANDLE getTexturePtr() override;
+	virtual CWHANDLE getHandle() const override;
 
 protected:
 	ID3D11ShaderResourceView* m_pShaderResource;

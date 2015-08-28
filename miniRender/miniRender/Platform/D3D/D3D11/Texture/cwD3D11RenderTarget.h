@@ -41,9 +41,8 @@ public:
 	virtual void beginResize() override;
 	virtual bool onResize(bool bForce=false) override;
 
-	virtual CWHANDLE getRenderTargetPtr() override;
-	virtual CWHANDLE getTexturePtr() override;
-	virtual CWHANDLE getTextureMultiThreadPtr() override;
+	virtual CWHANDLE getRenderHandle() const override;
+	virtual CWHANDLE getHandle() const override;
 
 	virtual CWVOID binding() override;
 	virtual CWVOID beginDraw(CWBOOL bClearColor = CWTRUE, CWBOOL bClearDepth = CWTRUE, CWBOOL bClearStencil = CWTRUE) override;

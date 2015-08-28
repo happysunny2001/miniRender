@@ -36,7 +36,7 @@ public:
 
 	virtual bool init(const cwBlendData& blendData) = 0;
 
-	virtual const CWVOID* getBlendHandlePtr() const { return nullptr; }
+	virtual CWHANDLE getHandle() const { return nullptr; }
 
 	virtual const CWFLOAT* getBlendFactor() { return m_fblendFactor; }
 	virtual void setblendFactor(const CWFLOAT* factors);

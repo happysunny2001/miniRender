@@ -70,7 +70,7 @@ bool cwD3D11Texture::init(const CWSTRING& strFileName)
 	return CWTRUE;
 }
 
-CWHANDLE cwD3D11Texture::getTexturePtr()
+CWHANDLE cwD3D11Texture::getHandle() const
 {
 	return (CWHANDLE)m_pShaderResource;
 }

@@ -116,7 +116,7 @@
     <ClInclude Include="Platform\D3D\D3D11\Stencil\cwD3D11Stencil.h" />
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTarget.h" />
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTexture.h" />
-    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureMultiThread.h" />
+    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureWritable.h" />
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11Texture.h" />
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11TextureArray.h" />
     <ClInclude Include="Platform\D3D\D3D11\ViewPort\cwD3D11ViewPort.h" />
@@ -227,7 +227,7 @@
     <ClCompile Include="Platform\D3D\D3D11\Stencil\cwD3D11Stencil.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTarget.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTexture.cpp" />
-    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureMultiThread.cpp" />
+    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureWritable.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11Texture.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11TextureArray.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\ViewPort\cwD3D11ViewPort.cpp" />

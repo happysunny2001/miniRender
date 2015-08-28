@@ -135,7 +135,7 @@ CWBOOL cwD3D11TextureArray::init(const std::vector<CWSTRING>& vecFiles)
 	return CWTRUE;
 }
 
-CWHANDLE cwD3D11TextureArray::getTexturePtr()
+CWHANDLE cwD3D11TextureArray::getHandle() const
 {
 	return (CWHANDLE)m_pShaderResource;
 }

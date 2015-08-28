@@ -17,8 +17,8 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_D3D11_RENDER_TEXTURE_MULTI_THREAD_H__
-#define __CW_D3D11_RENDER_TEXTURE_MULTI_THREAD_H__
+#ifndef __CW_D3D11_RENDER_TEXTURE_WRITABLE_H__
+#define __CW_D3D11_RENDER_TEXTURE_WRITABLE_H__
 
 #ifdef _CW_D3D11_
 
@@ -27,18 +27,18 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-class cwD3D11RenderTextureMultiThread : public cwD3D11RenderTexture
+class cwD3D11RenderTextureWritable : public cwD3D11RenderTexture
 {
 public:
-	static cwD3D11RenderTextureMultiThread* create(CWFLOAT fWidth, CWFLOAT fHeight);
+	static cwD3D11RenderTextureWritable* create(CWFLOAT fWidth, CWFLOAT fHeight);
 
-	cwD3D11RenderTextureMultiThread();
-	virtual ~cwD3D11RenderTextureMultiThread();
+	cwD3D11RenderTextureWritable();
+	virtual ~cwD3D11RenderTextureWritable();
 
 	virtual bool init(CWFLOAT fWidth, CWFLOAT fHeight) override;
 	virtual bool onResize(bool bForce = false) override;
 
-	virtual CWHANDLE getTextureMultiThreadPtr() override;
+	virtual CWHANDLE getWritablehandle() const override;
 
 protected:
 	ID3D11UnorderedAccessView* m_pUnorderedAccessView;

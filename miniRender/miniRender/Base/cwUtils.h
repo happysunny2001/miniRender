@@ -216,7 +216,7 @@ typedef enum {
 	eRenderTextureNone = 0,
 	eRenderTextureTarget = 1,
 	eRenderTextureShader = 2,
-	eRenderTextureMultiThread = 3,
+	eRenderTextureWritable = 3,
 }eRenderTextureType;
 
 typedef enum {

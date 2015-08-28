@@ -37,9 +37,9 @@ public:
 	virtual CWVOID beginResize();
 	virtual CWBOOL onResize(CWBOOL bForce = false);
 	
-	virtual CWHANDLE getRenderTargetPtr();
-	virtual CWHANDLE getTexturePtr() override;
-	virtual CWHANDLE getTextureMultiThreadPtr();
+	virtual CWHANDLE getRenderHandle() const;
+	virtual CWHANDLE getHandle() const override;
+	virtual CWHANDLE getWritablehandle() const;
 
 	virtual CWVOID binding();
 	virtual CWVOID beginDraw(CWBOOL bClearColor = CWTRUE, CWBOOL bClearDepth = CWTRUE, CWBOOL bClearStencil = CWTRUE);

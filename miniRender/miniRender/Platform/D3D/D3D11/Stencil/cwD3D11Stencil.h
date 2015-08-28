@@ -38,7 +38,7 @@ public:
 
 	virtual bool init(const cwStencilData& stencilData) override;
 
-	virtual CWHANDLE getStencilHandlePtr() const { return static_cast<CWHANDLE>(m_pDepthStencilState); }
+	virtual CWHANDLE getHandle() const { return static_cast<CWHANDLE>(m_pDepthStencilState); }
 
 protected:
 	D3D11_DEPTH_STENCIL_DESC m_nDepthStencilDesc;

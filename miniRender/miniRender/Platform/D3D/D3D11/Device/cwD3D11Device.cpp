@@ -46,7 +46,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/D3D/D3D11/Texture/cwD3D11Texture.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11RenderTarget.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11RenderTexture.h"
-#include "Platform/D3D/D3D11/Texture/cwD3D11RenderTextureMultiThread.h"
+#include "Platform/D3D/D3D11/Texture/cwD3D11RenderTextureWritable.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11TextureArray.h"
 #include "Platform/D3D/D3D11/Blend/cwD3D11Blend.h"
 #include "Platform/D3D/D3D11/Shader/cwD3D11Shader.h"
@@ -492,7 +492,7 @@ void cwD3D11Device::setBlend(const cwBlend* pBlendOper)
 	cwD3D11Blend* pD3DBlendOp = static_cast<cwD3D11Blend*>(const_cast<cwBlend*>(pBlendOper));
 	if (m_pBlendState == pD3DBlendOp) return;
 
-	ID3D11BlendState* pD3D11BlendState = static_cast<ID3D11BlendState*>(const_cast<CWVOID*>(pBlendOper->getBlendHandlePtr()));
+	ID3D11BlendState* pD3D11BlendState = static_cast<ID3D11BlendState*>(pBlendOper->getHandle());
 	if (!pD3D11BlendState) return;
 
 	CWFLOAT f[4] = { 0, 0, 0, 0 };
@@ -513,7 +513,7 @@ void cwD3D11Device::setStencil(const cwStencil* pStencil)
 		return;
 	}
 
-	ID3D11DepthStencilState* pState = static_cast<ID3D11DepthStencilState*>(const_cast<CWVOID*>(pStencil->getStencilHandlePtr()));
+	ID3D11DepthStencilState* pState = static_cast<ID3D11DepthStencilState*>(pStencil->getHandle());
 	if (!pState) return;
 	m_pD3D11DeviceContext->OMSetDepthStencilState(pState, pStencil->getStencilRef());
 
@@ -534,8 +534,8 @@ cwRenderTexture* cwD3D11Device::createRenderTexture(float fWidth, float fHeight,
 		return cwD3D11RenderTarget::create();
 	case eRenderTextureShader:
 		return cwD3D11RenderTexture::create(fWidth, fHeight);
-	case eRenderTextureMultiThread:
-		return cwD3D11RenderTextureMultiThread::create(fWidth, fHeight);
+	case eRenderTextureWritable:
+		return cwD3D11RenderTextureWritable::create(fWidth, fHeight);
 	}
 
 	return nullptr;

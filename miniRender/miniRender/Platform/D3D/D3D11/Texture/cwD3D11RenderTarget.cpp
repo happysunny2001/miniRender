@@ -116,17 +116,12 @@ CWVOID cwD3D11RenderTarget::buildDepthStencilBuffer(CWUINT iWidth, CWUINT iHeigh
 	CW_HR(pDevice->getD3D11Device()->CreateDepthStencilView(m_pDepthStencilBuffer, NULL, &m_pDepthStencilView));
 }
 
-CWHANDLE cwD3D11RenderTarget::getRenderTargetPtr()
+CWHANDLE cwD3D11RenderTarget::getRenderHandle() const
 {
 	return static_cast<CWHANDLE>(m_pRenderTarget);
 }
 
-CWHANDLE cwD3D11RenderTarget::getTexturePtr()
-{
-	return NULL;
-}
-
-CWHANDLE cwD3D11RenderTarget::getTextureMultiThreadPtr()
+CWHANDLE cwD3D11RenderTarget::getHandle() const
 {
 	return NULL;
 }
