@@ -114,52 +114,45 @@ CWVOID cwStage::begin()
 {
 	reset();
 
-	cwScene* pScene = cwRepertory::getInstance().getEngine()->getCurrScene();
-	if (!pScene) return;
-
-	for (auto pLayer : m_nVecLayer) {
-		eStageLayerFliterType eFilterType = pLayer->getFliterType();
-
-		switch (eFilterType) {
-		case eStageLayerFliterStage:
-			pLayer->begin(m_nVecStageEntities);
-			break;
-		case eStageLayerFliterEntity:
-		{
-			cwVector<cwEntity*>& vecEntity = pScene->getVisibleEntities(nullptr);
-			pLayer->begin(vecEntity);
-		}
-			break;
-		case eStageLayerFliterMirror:
-		{
-			cwVector<cwEntity*>& vecEntity = pScene->getVisibleEntities(nullptr, eSceneObjectMirror);
-			pLayer->begin(vecEntity);
-		}
-			break;
-		}
-	}
-}
-
-CWVOID cwStage::render()
-{
 	cwRepertory::getInstance().getEngine()->getRenderer()->setCurrCamera(m_pCamera);
 	cwRepertory::getInstance().getDevice()->setViewPort(m_pViewPort);
 	if (m_bRefreshRenderTarget) {
 		cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTarget);
 		cwRepertory::getInstance().getDevice()->beginDraw(m_bClearColor, m_bClearDepth, m_bClearStencil);
 	}
+}
 
+cwVector<cwEntity*>* cwStage::getRenderEntities(cwCamera* pCamera, eStageLayerFliterType eType)
+{
+	if (eType == eStageLayerFliterStage) return &m_nVecStageEntities;
+
+	cwScene* pScene = cwRepertory::getInstance().getEngine()->getCurrScene();
+	switch (eType) {
+		case eStageLayerFliterEntity:
+			return &(pScene->getVisibleEntities(m_pCamera));
+		case eStageLayerFliterMirror:
+			return &(pScene->getVisibleEntities(m_pCamera, eSceneObjectMirror));
+	}
+
+	return nullptr;
+}
+
+CWVOID cwStage::render()
+{
 	for (auto pLayer : m_nVecLayer) {
+		cwVector<cwEntity*>* vecEntities = getRenderEntities(nullptr, pLayer->getFliterType());
+		if (vecEntities) {
+			pLayer->begin(*vecEntities);
+		}
+
 		pLayer->render();
+
+		pLayer->end();
 	}
 }
 
 CWVOID cwStage::end()
 {
-	for (auto pLayer : m_nVecLayer) {
-		pLayer->end();
-	}
-
 	cwRepertory::getInstance().getDevice()->endDraw();
 
 	for (auto pGenerator : m_nVecGenerator) {

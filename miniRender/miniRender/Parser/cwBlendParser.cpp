@@ -89,6 +89,21 @@ cwBlend* cwBlendParser::parse(tinyxml2::XMLElement* pBlendData)
 		blendData.uColorEnable = uColorEnable;
 	}
 
+	const char* pcAlphaConverage = pBlendData->Attribute("AlphaConverage");
+	if (pcAlphaConverage) {
+		blendData.bAlphaToCoverage = cwRepertory::getInstance().getParserManager()->getBool(pcAlphaConverage);
+	}
+
+	parseRGB(pBlendData, blendData);
+	parseAlpha(pBlendData, blendData);
+
+	return cwRepertory::getInstance().getDevice()->createBlend(blendData);
+}
+
+CWVOID cwBlendParser::parseRGB(tinyxml2::XMLElement* pBlendData, cwBlendData& blendData)
+{
+	if (pBlendData) return;
+
 	tinyxml2::XMLElement* pRGBElement = pBlendData->FirstChildElement("RGB");
 	if (pRGBElement) {
 		const char* pcSrc = pRGBElement->Attribute("Src");
@@ -103,7 +118,10 @@ cwBlend* cwBlendParser::parse(tinyxml2::XMLElement* pBlendData)
 		if (pcOper && m_nMapBlendOp.find(pcOper) != m_nMapBlendOp.end())
 			blendData.blendOp = m_nMapBlendOp[pcOper];
 	}
+}
 
+CWVOID cwBlendParser::parseAlpha(tinyxml2::XMLElement* pBlendData, cwBlendData& blendData)
+{
 	tinyxml2::XMLElement* pAlphaElement = pBlendData->FirstChildElement("Alpha");
 	if (pAlphaElement) {
 		const char* pcSrc = pAlphaElement->Attribute("Src");
@@ -118,8 +136,6 @@ cwBlend* cwBlendParser::parse(tinyxml2::XMLElement* pBlendData)
 		if (pcOper && m_nMapBlendOp.find(pcOper) != m_nMapBlendOp.end())
 			blendData.blendOpAlpha = m_nMapBlendOp[pcOper];
 	}
-
-	return cwRepertory::getInstance().getDevice()->createBlend(blendData);
 }
 
 NS_MINIR_END

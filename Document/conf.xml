@@ -58,11 +58,13 @@
 					</RenderState>
 					<!--
 						Layer Blend configuration
-						Enable:[True,False], ColorEnable:[None,Red,Green,Blue,Alpha,All], you can use Red|Green style for bit or operation.
+						Enable:[True,False], 
+						ColorEnable:[None,Red,Green,Blue,Alpha,All], you can use Red|Green style for bit or operation.
+						AlphaConverage:[True,False]
 						Src:[Zero,One,SrcColor,InvSrcColor,SrcAlpha,InvSrcAlpha,DestAlpha,InvDestAlpha,DestColor,InvDestColor,SrcAlphaSat,BlendFactor,InvBlendFactor,Src1Color,InvSrc1Color,Src1Alpha,InvSrc1Alpha]
 						Oper:[Add,Sub,RevSub,Min,Max]
 					-->
-					<Blend Enable="" ColorEnable="">
+					<Blend Enable="" ColorEnable="" AlphaConverage="">
 						<RGB Src="" Dest="" Oper="" />
 						<Alpha Src="" Dest="" Oper="" />
 					</Blend>

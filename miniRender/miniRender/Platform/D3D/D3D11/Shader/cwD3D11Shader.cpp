@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
 #include "Texture/cwTexture.h"
+#include "Texture/cwRenderTexture.h"
 #include "Platform/Windows/cwWinUtils.h"
 #include "Platform/D3D/D3D11/cwD3D11Utils.h"
 #include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
@@ -258,6 +259,18 @@ void cwD3D11Shader::setVariableTexture(const string& strVariable, cwTexture* pTe
 	CW_HR(pVariable->AsShaderResource()->SetResource(pShaderRes));
 }
 
+CWVOID cwD3D11Shader::setVariableTextureWritable(const CWSTRING& strVariable, cwRenderTexture* pTexture)
+{
+	if (!pTexture) return;
+	auto itVariable = m_mapVariable.find(strVariable);
+	if (itVariable == m_mapVariable.end()) return;
+
+	ID3D11UnorderedAccessView* pShaderRes = reinterpret_cast<ID3D11UnorderedAccessView*>(pTexture->getWritablehandle());
+	if (!pShaderRes) return;
+	ID3DX11EffectVariable* pVariable = itVariable->second;
+	CW_HR(pVariable->AsUnorderedAccessView()->SetUnorderedAccessView(pShaderRes));
+}
+
 CWBOOL cwD3D11Shader::hasVariable(eShaderParamIndex eParam)
 {
 	return m_pShaderParam[eParam] != nullptr;
@@ -311,6 +324,16 @@ CWVOID cwD3D11Shader::setVariableTexture(eShaderParamIndex eParam, cwTexture* pT
 
 	if (m_pShaderParam[eParam])
 		CW_HR(m_pShaderParam[eParam]->AsShaderResource()->SetResource(pShaderRes));
+}
+
+CWVOID cwD3D11Shader::setVariableTextureWritable(eShaderParamIndex eParam, cwRenderTexture* pTexture)
+{
+	if (!pTexture) return;
+	ID3D11UnorderedAccessView* pShaderRes = reinterpret_cast<ID3D11UnorderedAccessView*>(pTexture->getWritablehandle());
+	if (!pShaderRes) return;
+
+	if (m_pShaderParam[eParam])
+		CW_HR(m_pShaderParam[eParam]->AsUnorderedAccessView()->SetUnorderedAccessView(pShaderRes));
 }
 
 void cwD3D11Shader::apply(CWUINT techIndex, CWUINT passIndex)

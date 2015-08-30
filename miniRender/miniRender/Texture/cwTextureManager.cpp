@@ -77,6 +77,7 @@ cwTexture* cwTextureManager::createTextureArray(const std::vector<CWSTRING>& vec
 
 	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createTextureArray(vecFullPath);
 	if (pTex) {
+		pTex->setName(vecFiles[0]);
 		m_mapTexture.insert(vecFiles[0], pTex);
 		return pTex;
 	}

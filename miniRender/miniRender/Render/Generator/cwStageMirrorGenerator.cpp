@@ -76,7 +76,7 @@ CWVOID cwStageMirrorGenerator::generate()
 	m_pStage->clearStageLayer(CWFALSE);
 
 	cwScene* pScene = cwRepertory::getInstance().getEngine()->getCurrScene();
-	cwVector<cwEntity*>& vecEntity = pScene->getVisibleEntities(nullptr, eSceneObjectMirror);
+	cwVector<cwEntity*>& vecEntity = pScene->getVisibleEntities(pStageCamera, eSceneObjectMirror);
 
 	CWUINT iIndex = 0;
 	for (auto pEntity : vecEntity) {

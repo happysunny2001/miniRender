@@ -85,6 +85,7 @@ public:
 	
 protected:
 	cwStage();
+	cwVector<cwEntity*>* getRenderEntities(cwCamera* pCamera, eStageLayerFliterType eType);
 
 protected:
 	CWBOOL m_bEnable;

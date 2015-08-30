@@ -73,7 +73,7 @@ CWBOOL cwD3D11TextureArray::init(const std::vector<CWSTRING>& vecFiles)
 		imgInfo.BindFlags = 0;
 		imgInfo.CpuAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
 		imgInfo.MiscFlags = 0;
-		imgInfo.Format = DXGI_FORMAT_FROM_FILE;
+		imgInfo.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		imgInfo.Filter = D3DX11_FILTER_NONE;
 		imgInfo.MipFilter = D3DX11_FILTER_LINEAR;
 		imgInfo.pSrcInfo = 0;
@@ -86,23 +86,23 @@ CWBOOL cwD3D11TextureArray::init(const std::vector<CWSTRING>& vecFiles)
 	vecD3DTex[0]->GetDesc(&texDesc);
 
 	D3D11_TEXTURE2D_DESC texArrayDesc;
-	texArrayDesc.Width = texDesc.Width;
-	texArrayDesc.Height = texDesc.Height;
-	texArrayDesc.MipLevels = texDesc.MipLevels;
-	texArrayDesc.ArraySize = iSize;
-	texArrayDesc.Format = texDesc.Format;
-	texArrayDesc.SampleDesc.Count = 1;
+	texArrayDesc.Width              = texDesc.Width;
+	texArrayDesc.Height             = texDesc.Height;
+	texArrayDesc.MipLevels          = texDesc.MipLevels;
+	texArrayDesc.ArraySize          = iSize;
+	texArrayDesc.Format             = texDesc.Format;
+	texArrayDesc.SampleDesc.Count   = 1;
 	texArrayDesc.SampleDesc.Quality = 0;
-	texArrayDesc.Usage = D3D11_USAGE_DEFAULT;
-	texArrayDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	texArrayDesc.CPUAccessFlags = 0;
-	texArrayDesc.MiscFlags = 0;
+	texArrayDesc.Usage              = D3D11_USAGE_DEFAULT;
+	texArrayDesc.BindFlags          = D3D11_BIND_SHADER_RESOURCE;
+	texArrayDesc.CPUAccessFlags     = 0;
+	texArrayDesc.MiscFlags          = 0;
 
 	ID3D11Texture2D* pTexArray = NULL;
 	CW_HR(pD3D11Device->getD3D11Device()->CreateTexture2D(&texArrayDesc, NULL, &pTexArray));
 
 	for (CWUINT iTex = 0; iTex < iSize; ++iTex) {
-		for (CWUINT iMip = 0; iMip < texArrayDesc.MipLevels; ++iMip) {
+		for (CWUINT iMip = 0; iMip < texDesc.MipLevels; ++iMip) {
 			D3D11_MAPPED_SUBRESOURCE mapRes;
 			CW_HR(pD3D11Device->getD3D11DeviceContext()->Map(vecD3DTex[iTex], iMip, D3D11_MAP_READ, 0, &mapRes));
 
@@ -119,7 +119,7 @@ CWBOOL cwD3D11TextureArray::init(const std::vector<CWSTRING>& vecFiles)
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC resViewDesc;
 	resViewDesc.Format = texArrayDesc.Format;
-	resViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	resViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
 	resViewDesc.Texture2DArray.MostDetailedMip = 0;
 	resViewDesc.Texture2DArray.MipLevels = texArrayDesc.MipLevels;
 	resViewDesc.Texture2DArray.FirstArraySlice = 0;

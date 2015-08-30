@@ -170,24 +170,31 @@ CWVOID StencilDemoScene::buildMirror()
 	cwEffect* pEffect = cwEffect::create();
 	pEffect->setShader(pShader);
 
-	//cwMirror* pEntityMirrorLeft = cwMirror::create();
-	//pEntityMirrorLeft->setRenderObject(m_pPlaneObj);
-	//pEntityMirrorLeft->setMaterial(pMaterial);
-	//pEntityMirrorLeft->setEffect(pEffect);
-	//pEntityMirrorLeft->setPosition(-49.9f, 25.0f, 0);
-	//pEntityMirrorLeft->setRotation(0, 0, -cwMathUtil::cwPI*0.5f);
-	//pEntityMirrorLeft->setScale(0.5f, 0.5f, 0.5f);
+	cwMirror* pEntityMirrorLeft = cwMirror::create();
+	pEntityMirrorLeft->setRenderObject(m_pPlaneObj);
+	pEntityMirrorLeft->setMaterial(pMaterial);
+	pEntityMirrorLeft->setEffect(pEffect);
+	pEntityMirrorLeft->setPosition(-50.0f, 15.0f, -35.0f);
+	pEntityMirrorLeft->setRotation(0, 0, -cwMathUtil::cwPI*0.5f);
+	pEntityMirrorLeft->setScale(0.3f, 0.3f, 0.3f);
+	this->addChild(pEntityMirrorLeft);
 
-	//this->addChild(pEntityMirrorLeft);
+	cwMirror* pEntityMirrorCenter = cwMirror::create();
+	pEntityMirrorCenter->setRenderObject(m_pPlaneObj);
+	pEntityMirrorCenter->setMaterial(pMaterial);
+	pEntityMirrorCenter->setEffect(pEffect);
+	pEntityMirrorCenter->setPosition(-50.0f, 15.0f, 0);
+	pEntityMirrorCenter->setRotation(0, 0, -cwMathUtil::cwPI*0.5f);
+	pEntityMirrorCenter->setScale(0.3f, 0.3f, 0.3f);
+	this->addChild(pEntityMirrorCenter);
 
 	cwMirror* pEntityMirrorRight = cwMirror::create();
 	pEntityMirrorRight->setRenderObject(m_pPlaneObj);
 	pEntityMirrorRight->setMaterial(pMaterial);
 	pEntityMirrorRight->setEffect(pEffect);
-	pEntityMirrorRight->setPosition(49.9f, 25.0f, 0);
-	pEntityMirrorRight->setRotation(0, 0, cwMathUtil::cwPI*0.5f);
-	pEntityMirrorRight->setScale(0.5f, 0.5f, 0.5f);
-
+	pEntityMirrorRight->setPosition(-50.0f, 15.0f, 35.0f);
+	pEntityMirrorRight->setRotation(0, 0, -cwMathUtil::cwPI*0.5f);
+	pEntityMirrorRight->setScale(0.3f, 0.3f, 0.3f);
 	this->addChild(pEntityMirrorRight);
 }
 

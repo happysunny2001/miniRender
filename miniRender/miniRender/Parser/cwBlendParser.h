@@ -41,6 +41,10 @@ public:
 	cwBlend* parse(tinyxml2::XMLElement* pBlendData);
 
 protected:
+	CWVOID parseRGB(tinyxml2::XMLElement* pBlendData, cwBlendData& blendData);
+	CWVOID parseAlpha(tinyxml2::XMLElement* pBlendData, cwBlendData& blendData);
+
+protected:
 	unordered_map<CWSTRING, eBlendFactor> m_nMapBlendFactor;
 	unordered_map<CWSTRING, eBlendOp> m_nMapBlendOp;
 
