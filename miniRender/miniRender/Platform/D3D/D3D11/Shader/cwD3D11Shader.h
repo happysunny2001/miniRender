@@ -50,6 +50,8 @@ public:
 	virtual CWVOID setVariableFloatArray(const string& strVariable, CWFLOAT* pData, CWUINT count) override;
 	virtual CWVOID setVariableTexture(const string& strVariable, cwTexture* pTexture) override;
 	virtual CWVOID setVariableTextureWritable(const CWSTRING& strVariable, cwRenderTexture* pTexture) override;
+	virtual CWVOID setVariableBuffer(const CWSTRING& strVariable, cwBuffer* pBuffer) override;
+	virtual CWVOID setVariableBufferWritable(const CWSTRING& strVariable, cwBuffer* pBuffer) override;
 
 	virtual CWBOOL hasVariable(eShaderParamIndex eParam) override;
 	virtual CWVOID setVariableData(eShaderParamIndex eParam, CWVOID* pData, CWUINT offset, CWUINT iSize) override;
@@ -60,6 +62,8 @@ public:
 	virtual CWVOID setVariableFloatArray(eShaderParamIndex eParam, CWFLOAT* pData, CWUINT count) override;
 	virtual CWVOID setVariableTexture(eShaderParamIndex eParam, cwTexture* pTexture) override;
 	virtual CWVOID setVariableTextureWritable(eShaderParamIndex eParam, cwRenderTexture* pTexture) override;
+	virtual CWVOID setVariableBuffer(eShaderParamIndex eParam, cwBuffer* pBuffer) override;
+	virtual CWVOID setVariableBufferWritable(eShaderParamIndex eParam, cwBuffer* pBuffer) override;
 
 	virtual CWVOID apply(CWUINT techIndex, CWUINT passIndex) override;
 

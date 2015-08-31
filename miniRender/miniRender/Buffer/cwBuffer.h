@@ -32,42 +32,37 @@ class cwDevice;
 class CW_DLL cwBuffer : public cwRef
 {
 public:
-	static cwBuffer* create(
-		CWUINT uSize,
-		CWUINT usage,
-		CWUINT bindFlag,
-		CWUINT uCpuFlag,
-		CWUINT miscFlag,
-		CWUINT structureByteStride);
-
 	cwBuffer();
 	virtual ~cwBuffer();
 
 	virtual CWBOOL init(
+		CWVOID* pData,
 		CWUINT uSize,
-		CWUINT usage,
-		CWUINT bindFlag,
-		CWUINT uCpuFlag,
+		eBufferUsage usage,
+		eBufferBindFlag bindFlag,
+		eAccessFlag uCpuFlag,
 		CWUINT miscFlag,
 		CWUINT structureByteStride);
 
-	inline CW_BUFFER_DESC& getBufferDesc() { return m_nBuffDesc; }
-	inline CWVOID* getBuffer() { return m_pDRenderBuffer; }
-	inline CWVOID setBuffer(CWVOID* pBuffer) { m_pDRenderBuffer = pBuffer; }
-	virtual CWVOID refresh(CWVOID* pData);
+	virtual CWHANDLE getHandle();
+	virtual CWHANDLE getShaderHandle();
 
-	CWUINT getSize() { return m_nBuffDesc.ByteWidth; }
+	virtual CWVOID refresh(CWVOID* pData);
+	virtual CWVOID copyFrom(cwBuffer* pBuffer);
+	virtual CWVOID copyTo(CWVOID* pData);
+
+	CWUINT getSize() { return m_nStride*m_iElementCnt; }
 
 	inline CWVOID setStride(CWUINT uStride) { m_nStride = uStride; }
 	inline CWUINT getStride() const { return m_nStride; }
+	inline CWVOID setOffset(CWUINT uOffset) { m_nOffset = uOffset; }
 	inline CWUINT getOffset() const { return m_nOffset; }
 
 	const CWUINT getElementCount() const { return m_iElementCnt; }
 
 protected:
-	CW_BUFFER_DESC m_nBuffDesc;
-	CWVOID* m_pDRenderBuffer;
-
+	eAccessFlag m_nAccessFlag;
+	eBufferUsage m_nUsage;
 	CWUINT m_nStride;
 	CWUINT m_nOffset;
 	CWUINT m_iElementCnt;

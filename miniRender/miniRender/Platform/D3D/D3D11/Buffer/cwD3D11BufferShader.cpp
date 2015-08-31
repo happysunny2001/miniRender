@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #ifdef _CW_D3D11_
 
-#include "cwD3D11IndexBuffer.h"
+#include "cwD3D11BufferShader.h"
 #include "Device/cwDevice.h"
 #include "Repertory/cwRepertory.h"
 #include "Platform/Windows/cwWinUtils.h"
@@ -28,15 +28,14 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwD3D11IndexBuffer* cwD3D11IndexBuffer::create(
-	CWUINT uSize,
-	CWUINT structureByteStride,
-	CWUINT usage,
-	CWUINT uCpuFlag,
-	CWUINT miscFlag)
+cwD3D11BufferShader* cwD3D11BufferShader::create(
+CWVOID* pData,
+CWUINT uSize,
+eAccessFlag uCpuFlag,
+CWUINT structureByteStride)
 {
-	cwD3D11IndexBuffer* pBuffer = new cwD3D11IndexBuffer();
-	if (pBuffer && pBuffer->init(uSize, usage, cwD3D11Device::getBufferBindFlag(eBufferBindIndex), uCpuFlag, miscFlag, structureByteStride)) {
+	cwD3D11BufferShader* pBuffer = new cwD3D11BufferShader();
+	if (pBuffer && pBuffer->init(pData, uSize, eBufferUsageDefault, eBufferBindShader, uCpuFlag, D3D11_RESOURCE_MISC_BUFFER_STRUCTURED, structureByteStride)) {
 		pBuffer->autorelease();
 		return pBuffer;
 	}
@@ -45,50 +44,50 @@ cwD3D11IndexBuffer* cwD3D11IndexBuffer::create(
 	return nullptr;
 }
 
-cwD3D11IndexBuffer::cwD3D11IndexBuffer()
+cwD3D11BufferShader::cwD3D11BufferShader():
+m_pShaderResource(NULL)
 {
-	m_iElementCnt = 0;
+
 }
 
-cwD3D11IndexBuffer::~cwD3D11IndexBuffer()
+cwD3D11BufferShader::~cwD3D11BufferShader()
 {
-	ID3D11Buffer* pD3D11Buffer = static_cast<ID3D11Buffer*>(m_pDRenderBuffer);
-	CW_RELEASE_COM(pD3D11Buffer);
-	m_pDRenderBuffer = nullptr;
+	CW_RELEASE_COM(m_pShaderResource);
+	m_pShaderResource = NULL;
 }
 
-bool cwD3D11IndexBuffer::init(
+CWBOOL cwD3D11BufferShader::init(
+	CWVOID* pData,
 	CWUINT uSize,
-	CWUINT usage,
-	CWUINT bindFlag,
-	CWUINT uCpuFlag,
+	eBufferUsage usage,
+	eBufferBindFlag bindFlag,
+	eAccessFlag uCpuFlag,
 	CWUINT miscFlag,
 	CWUINT structureByteStride)
 {
-	CWUINT uD3D11CpuFlag = cwD3D11Device::getAccessFlag(static_cast<eAccessFlag>(uCpuFlag));
-	CWUINT uD3D11Usage = cwD3D11Device::getBufferUsage(static_cast<eBufferUsage>(usage));
-	if (!cwBuffer::init(uSize, uD3D11Usage, bindFlag, uD3D11CpuFlag, miscFlag, structureByteStride)) return false;
-
-	m_iElementCnt = uSize / sizeof(CWUINT);
-
-	return true;
-}
-
-CWVOID cwD3D11IndexBuffer::refresh(CWVOID* pData)
-{
-	if (!pData) return;
+	if (!cwD3D11Buffer::init(pData, uSize, usage, bindFlag, uCpuFlag, miscFlag, structureByteStride)) return CWFALSE;
 
 	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
 
-	D3D11_MAPPED_SUBRESOURCE mappedData;
-	ID3D11Buffer* pD3D11Buffer = static_cast<ID3D11Buffer*>(m_pDRenderBuffer);
-	CW_HR(pD3D11Device->getD3D11DeviceContext()->Map(pD3D11Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderDesc;
+	shaderDesc.Format = DXGI_FORMAT_UNKNOWN;
+	shaderDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFEREX;
+	shaderDesc.BufferEx.FirstElement = 0;
+	shaderDesc.BufferEx.Flags = 0;
+	shaderDesc.BufferEx.NumElements = m_iElementCnt;
 
-	memcpy(mappedData.pData, pData, this->getSize());
+	CW_HR(pD3D11Device->getD3D11Device()->CreateShaderResourceView(m_pD3D11Buffer, &shaderDesc, &m_pShaderResource));
 
-	pD3D11Device->getD3D11DeviceContext()->Unmap(pD3D11Buffer, 0);
+	return CWTRUE;
+}
+
+CWHANDLE cwD3D11BufferShader::getShaderHandle()
+{
+	return m_pShaderResource;
 }
 
 NS_MINIR_END
 
 #endif
+
+

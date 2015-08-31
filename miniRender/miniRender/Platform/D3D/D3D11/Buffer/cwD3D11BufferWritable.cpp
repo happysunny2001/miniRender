@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #ifdef _CW_D3D11_
 
-#include "cwD3D11VertexBuffer.h"
+#include "cwD3D11BufferWritable.h"
 #include "Device/cwDevice.h"
 #include "Repertory/cwRepertory.h"
 #include "Platform/Windows/cwWinUtils.h"
@@ -28,15 +28,15 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwD3D11VertexBuffer* cwD3D11VertexBuffer::create(
-	CWUINT uSize,
-	CWUINT structureByteStride,
-	CWUINT usage,
-	CWUINT uCpuFlag,
-	CWUINT miscFlag)
+cwD3D11BufferWritable* cwD3D11BufferWritable::create(
+CWVOID* pData,
+CWUINT uSize,
+eAccessFlag uCpuFlag,
+CWUINT structureByteStride,
+CWBOOL bAppend)
 {
-	cwD3D11VertexBuffer* pBuffer = new cwD3D11VertexBuffer();
-	if (pBuffer && pBuffer->init(uSize, usage, cwD3D11Device::getBufferBindFlag(eBufferBindVertex), uCpuFlag, miscFlag, structureByteStride)) {
+	cwD3D11BufferWritable* pBuffer = new cwD3D11BufferWritable();
+	if (pBuffer && pBuffer->init(pData, uSize, eBufferUsageDefault, eBufferBindWritable, uCpuFlag, D3D11_RESOURCE_MISC_BUFFER_STRUCTURED, structureByteStride, bAppend)) {
 		pBuffer->autorelease();
 		return pBuffer;
 	}
@@ -45,47 +45,50 @@ cwD3D11VertexBuffer* cwD3D11VertexBuffer::create(
 	return nullptr;
 }
 
-cwD3D11VertexBuffer::cwD3D11VertexBuffer()
+cwD3D11BufferWritable::cwD3D11BufferWritable() : 
+m_pUnorderedResource(NULL)
 {
-	m_nStride = 0;
-	m_nOffset = 0;
+
 }
 
-cwD3D11VertexBuffer::~cwD3D11VertexBuffer()
+cwD3D11BufferWritable::~cwD3D11BufferWritable()
 {
-	ID3D11Buffer* pD3D11Buffer = static_cast<ID3D11Buffer*>(m_pDRenderBuffer);
-	CW_RELEASE_COM(pD3D11Buffer);
-	m_pDRenderBuffer = nullptr;
+	CW_RELEASE_COM(m_pUnorderedResource);
+	m_pUnorderedResource = NULL;
 }
 
-CWBOOL cwD3D11VertexBuffer::init(
+CWBOOL cwD3D11BufferWritable::init(
+	CWVOID* pData,
 	CWUINT uSize,
-	CWUINT usage,
-	CWUINT bindFlag,
-	CWUINT uCpuFlag,
+	eBufferUsage usage,
+	eBufferBindFlag bindFlag,
+	eAccessFlag uCpuFlag,
 	CWUINT miscFlag,
-	CWUINT structureByteStride)
+	CWUINT structureByteStride,
+	CWBOOL bAppend)
 {
-	CWUINT uD3D11CpuFlag = cwD3D11Device::getAccessFlag(static_cast<eAccessFlag>(uCpuFlag));
-	CWUINT uD3D11Usage = cwD3D11Device::getBufferUsage(static_cast<eBufferUsage>(usage));
-	if (!cwBuffer::init(uSize, uD3D11Usage, bindFlag, uD3D11CpuFlag, miscFlag, structureByteStride)) return false;
-
-	return true;
-}
-
-CWVOID cwD3D11VertexBuffer::refresh(CWVOID* pData)
-{
-	if (!pData) return;
+	if (!cwD3D11Buffer::init(pData, uSize, usage, bindFlag, uCpuFlag, miscFlag, structureByteStride)) return CWFALSE;
 
 	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
 
-	D3D11_MAPPED_SUBRESOURCE mappedData;
-	ID3D11Buffer* pD3D11Buffer = static_cast<ID3D11Buffer*>(m_pDRenderBuffer);
-	CW_HR(pD3D11Device->getD3D11DeviceContext()->Map(pD3D11Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
+	D3D11_UNORDERED_ACCESS_VIEW_DESC unorderedDesc;
+	unorderedDesc.Format = DXGI_FORMAT_UNKNOWN;
+	unorderedDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+	unorderedDesc.Buffer.FirstElement = 0;
+	if (bAppend)
+		unorderedDesc.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_APPEND;
+	else
+		unorderedDesc.Buffer.Flags = 0;
+	unorderedDesc.Buffer.NumElements = m_iElementCnt;
 
-	memcpy(mappedData.pData, pData, this->getSize());
+	CW_HR(pD3D11Device->getD3D11Device()->CreateUnorderedAccessView(m_pD3D11Buffer, &unorderedDesc, &m_pUnorderedResource));
 
-	pD3D11Device->getD3D11DeviceContext()->Unmap(pD3D11Buffer, 0);
+	return CWTRUE;
+}
+
+CWHANDLE cwD3D11BufferWritable::getShaderHandle()
+{
+	return m_pUnorderedResource;
 }
 
 NS_MINIR_END

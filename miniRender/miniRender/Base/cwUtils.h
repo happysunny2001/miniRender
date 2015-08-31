@@ -23,11 +23,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifdef _CW_D3D11_
 
 #pragma warning(disable:4005)
-//#include <d3d11.h>
-//#include <d3dx11effect.h>
-//#include <d3dx11async.h>
-//#include <DxErr.h>
-//#include <xnamath.h>
 
 #include <string>
 #include <vector>
@@ -134,14 +129,15 @@ typedef enum {
 }eBufferUsage;
 
 typedef enum {
-	eBufferBindVertex = 0,
+	eBufferBindNone = 0,
+	eBufferBindVertex,
 	eBufferBindIndex,
 	eBufferBindConstant,
 	eBufferBindShader,
 	eBufferBindSteam,
 	eBufferBindRenderTarget,
 	eBufferBindDepthStencil,
-	eBufferBindUnorderedAccess,
+	eBufferBindWritable,
 	eBufferBindMaxCount,
 }eBufferBindFlag;
 

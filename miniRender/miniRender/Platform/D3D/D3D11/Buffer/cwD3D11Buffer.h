@@ -17,46 +17,54 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_INDEX_BUFFER_H__
-#define __CW_INDEX_BUFFER_H__
+#ifndef __CW_D3D11_BUFFER_H__
+#define __CW_D3D11_BUFFER_H__
 
 #ifdef _CW_D3D11_
 
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
 #include "Buffer/cwBuffer.h"
+#include "Platform/D3D/D3D11/cwD3D11Utils.h"
 
 NS_MINIR_BEGIN
 
-class CW_DLL cwD3D11IndexBuffer : public cwBuffer
+class cwD3D11Buffer : public cwBuffer
 {
 public:
-	static cwD3D11IndexBuffer* create(
+	static cwD3D11Buffer* create(
+		CWVOID* pData,
 		CWUINT uSize,
-		CWUINT structureByteStride,
-		CWUINT usage = eBufferUsageImmutable,
-		CWUINT uCpuFlag = eAccessFlagNone,
-		CWUINT miscFlag = 0);
+		eBufferUsage usage,
+		eBufferBindFlag bindFlag,
+		eAccessFlag uCpuFlag,
+		CWUINT miscFlag,
+		CWUINT structureByteStride);
 
-	cwD3D11IndexBuffer();
-	virtual ~cwD3D11IndexBuffer();
+	cwD3D11Buffer();
+	virtual ~cwD3D11Buffer();
 
-	virtual bool init(
+	virtual CWBOOL init(
+		CWVOID* pData,
 		CWUINT uSize,
-		CWUINT usage,
-		CWUINT bindFlag,
-		CWUINT uCpuFlag,
+		eBufferUsage usage,
+		eBufferBindFlag bindFlag,
+		eAccessFlag uCpuFlag,
 		CWUINT miscFlag,
 		CWUINT structureByteStride) override;
 
+	virtual CWHANDLE getHandle() override;
 	virtual CWVOID refresh(CWVOID* pData) override;
-	
+	virtual CWVOID copyFrom(cwBuffer* pBuffer) override;
+	virtual CWVOID copyTo(CWVOID* pData) override;
+
 protected:
+	ID3D11Buffer* m_pD3D11Buffer;
 
 };
 
 NS_MINIR_END
 
-#endif
+#endif //end _CW_D3D11_
 
-#endif
+#endif //end __CW_D3D11_BUFFER_H__

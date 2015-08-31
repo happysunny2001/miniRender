@@ -315,12 +315,6 @@
     <ClInclude Include="Platform\D3D\D3D11\Repertory\cwD3D11Repertory.h">
       <Filter>源文件\Platform\D3D\D3D11\Repertory</Filter>
     </ClInclude>
-    <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11IndexBuffer.h">
-      <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11VertexBuffer.h">
-      <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
-    </ClInclude>
     <ClInclude Include="Platform\D3D\D3D11\Blend\cwD3D11Blend.h">
       <Filter>源文件\Platform\D3D\D3D11\Blend</Filter>
     </ClInclude>
@@ -543,6 +537,15 @@
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureWritable.h">
       <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11Buffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11BufferShader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11BufferWritable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -685,12 +688,6 @@
     </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Repertory\cwD3D11Repertory.cpp">
       <Filter>源文件\Platform\D3D\D3D11\Repertory</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11IndexBuffer.cpp">
-      <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11VertexBuffer.cpp">
-      <Filter>源文件\Platform\D3D\D3D11\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Blend\cwD3D11Blend.cpp">
       <Filter>源文件\Platform\D3D\D3D11\Blend</Filter>
@@ -868,6 +865,15 @@
     </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureWritable.cpp">
       <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11Buffer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11BufferShader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11BufferWritable.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -40,8 +40,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/Windows/cwWinUtils.h"
 #include "Platform/D3D/D3D11/cwD3D11Utils.h"
 #include "Platform/D3D/D3D11/Layouts/cwD3D11Layouts.h"
-#include "Platform/D3D/D3D11/Buffer/cwD3D11VertexBuffer.h"
-#include "Platform/D3D/D3D11/Buffer/cwD3D11IndexBuffer.h"
+#include "Platform/D3D/D3D11/Buffer/cwD3D11Buffer.h"
+#include "Platform/D3D/D3D11/Buffer/cwD3D11BufferShader.h"
+#include "Platform/D3D/D3D11/Buffer/cwD3D11BufferWritable.h"
 #include "Platform/D3D/D3D11/Stencil/cwD3D11Stencil.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11Texture.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11RenderTarget.h"
@@ -376,76 +377,61 @@ cwShader* cwD3D11Device::createShader(const string& strFileName)
 
 cwBuffer* cwD3D11Device::createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt)
 {
-	cwD3D11VertexBuffer* pVertexBuffer = cwD3D11VertexBuffer::create(uStride*uCnt, uStride);
-	if (!pVertexBuffer) return NULL;
+	cwD3D11Buffer* pVertexBuffer = cwD3D11Buffer::create(pData, uStride*uCnt, eBufferUsageImmutable, eBufferBindVertex, eAccessFlagNone, 0, uStride);
+	if (pVertexBuffer) return pVertexBuffer;
 
-	CW_BUFFER_DESC& desc = pVertexBuffer->getBufferDesc();
-	D3D11_BUFFER_DESC d3dDesc;
-	memcpy(&d3dDesc, &desc, sizeof(CW_BUFFER_DESC));
-	ID3D11Buffer* pBuffer = static_cast<ID3D11Buffer*>(pVertexBuffer->getBuffer());
-
-	if (pData) {
-		D3D11_SUBRESOURCE_DATA subData;
-		subData.pSysMem = pData;
-		CW_HR(m_pD3D11Device->CreateBuffer(&d3dDesc, &subData, &pBuffer));
-	}
-	else {
-		CW_HR(m_pD3D11Device->CreateBuffer(&d3dDesc, 0, &pBuffer));
-	}
-
-	pVertexBuffer->setBuffer(pBuffer);
-	pVertexBuffer->setStride(uStride);
-
-	return pVertexBuffer;
+	return nullptr;
 }
 
-cwBuffer* cwD3D11Device::createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, eBufferUsage usage, CWUINT cpuFlag)
+cwBuffer* cwD3D11Device::createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, eBufferUsage usage, eAccessFlag cpuFlag)
 {
-	cwD3D11VertexBuffer* pVertexBuffer = cwD3D11VertexBuffer::create(uStride*uCnt, usage, cpuFlag);
-	if (!pVertexBuffer) return NULL;
-	
-	CW_BUFFER_DESC& desc = pVertexBuffer->getBufferDesc();
-	D3D11_BUFFER_DESC d3dDesc;
-	memcpy(&d3dDesc, &desc, sizeof(CW_BUFFER_DESC));
-	ID3D11Buffer* pBuffer = static_cast<ID3D11Buffer*>(pVertexBuffer->getBuffer());
+	cwD3D11Buffer* pVertexBuffer = cwD3D11Buffer::create(pData, uStride*uCnt, usage, eBufferBindVertex, cpuFlag, 0, uStride);
+	if (pVertexBuffer) return pVertexBuffer;
 
-	if (pData) {
-		D3D11_SUBRESOURCE_DATA subData;
-		subData.pSysMem = pData;
-		CW_HR(m_pD3D11Device->CreateBuffer(&d3dDesc, &subData, &pBuffer));
-	}
-	else {
-		CW_HR(m_pD3D11Device->CreateBuffer(&d3dDesc, 0, &pBuffer));
-	}
-
-	pVertexBuffer->setBuffer(pBuffer);
-	pVertexBuffer->setStride(uStride);
-
-	return pVertexBuffer;
+	return nullptr;
 }
 
 cwBuffer* cwD3D11Device::createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt)
 {
-	cwD3D11IndexBuffer* pIndexBuffer = cwD3D11IndexBuffer::create(uStride*uCnt, uStride);
-	if (!pIndexBuffer) return NULL;
-	
-	CW_BUFFER_DESC& desc = pIndexBuffer->getBufferDesc();
-	D3D11_BUFFER_DESC d3dDesc;
-	memcpy(&d3dDesc, &desc, sizeof(CW_BUFFER_DESC));
-	ID3D11Buffer* pBuffer = static_cast<ID3D11Buffer*>(pIndexBuffer->getBuffer());
+	cwD3D11Buffer* pIndexBuffer = cwD3D11Buffer::create(pData, uStride*uCnt, eBufferUsageImmutable, eBufferBindIndex, eAccessFlagNone, 0, uStride);
+	if (pIndexBuffer) return pIndexBuffer;
 
-	if (pData) {
-		D3D11_SUBRESOURCE_DATA subData;
-		subData.pSysMem = pData;
-		CW_HR(m_pD3D11Device->CreateBuffer(&d3dDesc, &subData, &pBuffer));
-	}
-	else {
-		CW_HR(m_pD3D11Device->CreateBuffer(&d3dDesc, 0, &pBuffer));
+	return nullptr;
+}
+
+cwBuffer* cwD3D11Device::createShaderBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, CWBOOL bWritable, CWBOOL bAppend)
+{
+	if (!bWritable) {
+		cwD3D11BufferShader* pShaderBuffer = cwD3D11BufferShader::create(pData, uStride*uCnt, eAccessFlagNone, uStride);
+		if (pShaderBuffer)
+			return pShaderBuffer;
 	}
 
-	pIndexBuffer->setBuffer(pBuffer);
+	cwD3D11BufferWritable* pShaderBuffer = cwD3D11BufferWritable::create(pData, uStride*uCnt, eAccessFlagNone, uStride, bAppend);
+	if (pShaderBuffer)
+		return pShaderBuffer;
 
-	return pIndexBuffer;
+	return nullptr;
+}
+
+cwBuffer* cwD3D11Device::createBufferOutput(CWUINT uStride, CWUINT uCnt)
+{
+	cwD3D11Buffer* pBuffer = cwD3D11Buffer::create(
+		NULL, 
+		uStride*uCnt, 
+		eBufferUsageStaging, 
+		eBufferBindNone, 
+		eAccessFlagRead, 
+		D3D11_RESOURCE_MISC_BUFFER_STRUCTURED, 
+		uStride);
+	return pBuffer ? pBuffer : nullptr;
+}
+
+cwBuffer* cwD3D11Device::createBuffer(CWUINT uCnt, eBufferUsage usage, eBufferBindFlag bindFlag, eAccessFlag uCpuFlag, CWUINT miscFlag, CWUINT uStride)
+{
+	cwD3D11Buffer* pBuffer = cwD3D11Buffer::create(NULL, uStride*uCnt, usage, bindFlag, uCpuFlag, miscFlag, uStride);
+	if (pBuffer) return pBuffer;
+	return nullptr;
 }
 
 cwBlend* cwD3D11Device::createBlend(const cwBlendData& blendData)
@@ -463,7 +449,7 @@ void cwD3D11Device::setVertexBuffer(cwBuffer* pVertexBuffer)
 	if (pVertexBuffer) {
 		CWUINT stride = pVertexBuffer->getStride();
 		CWUINT offset = pVertexBuffer->getOffset();
-		ID3D11Buffer* pBuffer = static_cast<ID3D11Buffer*>(pVertexBuffer->getBuffer());
+		ID3D11Buffer* pBuffer = static_cast<ID3D11Buffer*>(pVertexBuffer->getHandle());
 		m_pD3D11DeviceContext->IASetVertexBuffers(0, 1, &pBuffer, &stride, &offset);
 	}
 }
@@ -471,7 +457,7 @@ void cwD3D11Device::setVertexBuffer(cwBuffer* pVertexBuffer)
 void cwD3D11Device::setIndexBuffer(cwBuffer* pIndexBuffer)
 {
 	if (pIndexBuffer) {
-		m_pD3D11DeviceContext->IASetIndexBuffer(static_cast<ID3D11Buffer*>(pIndexBuffer->getBuffer()), DXGI_FORMAT_R32_UINT, 0);
+		m_pD3D11DeviceContext->IASetIndexBuffer(static_cast<ID3D11Buffer*>(pIndexBuffer->getHandle()), DXGI_FORMAT_R32_UINT, 0);
 	}
 }
 
@@ -701,74 +687,75 @@ void cwD3D11Device::initStencilBaseData()
 
 void cwD3D11Device::initAccessFlagData()
 {
-	accessFlag[eAccessFlagNone] = 0;
-	accessFlag[eAccessFlagRead] = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_READ;
+	accessFlag[eAccessFlagNone]  = 0;
+	accessFlag[eAccessFlagRead]  = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_READ;
 	accessFlag[eAccessFlagWrite] = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
 }
 
 void cwD3D11Device::initBufferBindFlagData()
 {
-	bufferBindFlag[eBufferBindVertex] = D3D11_BIND_FLAG::D3D11_BIND_VERTEX_BUFFER;
-	bufferBindFlag[eBufferBindIndex] = D3D11_BIND_FLAG::D3D11_BIND_INDEX_BUFFER;
-	bufferBindFlag[eBufferBindConstant] = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
-	bufferBindFlag[eBufferBindShader] = D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE;
-	bufferBindFlag[eBufferBindSteam] = D3D11_BIND_FLAG::D3D11_BIND_STREAM_OUTPUT;
+	bufferBindFlag[eBufferBindNone]         = 0;
+	bufferBindFlag[eBufferBindVertex]       = D3D11_BIND_FLAG::D3D11_BIND_VERTEX_BUFFER;
+	bufferBindFlag[eBufferBindIndex]        = D3D11_BIND_FLAG::D3D11_BIND_INDEX_BUFFER;
+	bufferBindFlag[eBufferBindConstant]     = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
+	bufferBindFlag[eBufferBindShader]       = D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE;
+	bufferBindFlag[eBufferBindSteam]        = D3D11_BIND_FLAG::D3D11_BIND_STREAM_OUTPUT;
 	bufferBindFlag[eBufferBindRenderTarget] = D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET;
 	bufferBindFlag[eBufferBindDepthStencil] = D3D11_BIND_FLAG::D3D11_BIND_DEPTH_STENCIL;
-	bufferBindFlag[eBufferBindUnorderedAccess] = D3D11_BIND_FLAG::D3D11_BIND_UNORDERED_ACCESS;
+	bufferBindFlag[eBufferBindWritable]     = D3D11_BIND_FLAG::D3D11_BIND_UNORDERED_ACCESS;
 }
 
 void cwD3D11Device::initBufferUsageData()
 {
-	bufferUsage[eBufferUsageDefault] = D3D11_USAGE::D3D11_USAGE_DEFAULT;
+	bufferUsage[eBufferUsageDefault]   = D3D11_USAGE::D3D11_USAGE_DEFAULT;
 	bufferUsage[eBufferUsageImmutable] = D3D11_USAGE::D3D11_USAGE_IMMUTABLE;
-	bufferUsage[eBufferUsageDynamic] = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
-	bufferUsage[eBufferUsageStaging] = D3D11_USAGE::D3D11_USAGE_STAGING;
+	bufferUsage[eBufferUsageDynamic]   = D3D11_USAGE::D3D11_USAGE_DYNAMIC;
+	bufferUsage[eBufferUsageStaging]   = D3D11_USAGE::D3D11_USAGE_STAGING;
 }
 
 void cwD3D11Device::initPrimitiveTypeData()
 {
-	primitiveType[ePrimitiveTypePointList] = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
-	primitiveType[ePrimitiveTypeLineList] = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
-	primitiveType[ePrimitiveTypeLineStrip] = D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
-	primitiveType[ePrimitiveTypeTriangleList] = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	primitiveType[ePrimitiveTypeTriangleStrip] = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
-	primitiveType[ePrimitiveTypeLineListAdj] = D3D11_PRIMITIVE_TOPOLOGY_LINELIST_ADJ;
-	primitiveType[ePrimitiveTypeLineStripAdj] = D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP_ADJ;
-	primitiveType[ePrimitiveTypeTriangleListAdj] = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST_ADJ;
+	primitiveType[ePrimitiveTypePointList]        = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
+	primitiveType[ePrimitiveTypeLineList]         = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+	primitiveType[ePrimitiveTypeLineStrip]        = D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
+	primitiveType[ePrimitiveTypeTriangleList]     = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	primitiveType[ePrimitiveTypeTriangleStrip]    = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+	primitiveType[ePrimitiveTypeLineListAdj]      = D3D11_PRIMITIVE_TOPOLOGY_LINELIST_ADJ;
+	primitiveType[ePrimitiveTypeLineStripAdj]     = D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP_ADJ;
+	primitiveType[ePrimitiveTypeTriangleListAdj]  = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST_ADJ;
 	primitiveType[ePrimitiveTypeTriangleStripAdj] = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP_ADJ;
-	primitiveType[ePrimitiveTypePatchList1] = D3D11_PRIMITIVE_TOPOLOGY_1_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList2] = D3D11_PRIMITIVE_TOPOLOGY_2_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList3] = D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList4] = D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList5] = D3D11_PRIMITIVE_TOPOLOGY_5_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList6] = D3D11_PRIMITIVE_TOPOLOGY_6_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList7] = D3D11_PRIMITIVE_TOPOLOGY_7_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList8] = D3D11_PRIMITIVE_TOPOLOGY_8_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList9] = D3D11_PRIMITIVE_TOPOLOGY_9_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList10] = D3D11_PRIMITIVE_TOPOLOGY_10_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList11] = D3D11_PRIMITIVE_TOPOLOGY_11_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList12] = D3D11_PRIMITIVE_TOPOLOGY_12_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList13] = D3D11_PRIMITIVE_TOPOLOGY_13_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList14] = D3D11_PRIMITIVE_TOPOLOGY_14_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList15] = D3D11_PRIMITIVE_TOPOLOGY_15_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList16] = D3D11_PRIMITIVE_TOPOLOGY_16_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList17] = D3D11_PRIMITIVE_TOPOLOGY_17_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList18] = D3D11_PRIMITIVE_TOPOLOGY_18_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList19] = D3D11_PRIMITIVE_TOPOLOGY_19_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList20] = D3D11_PRIMITIVE_TOPOLOGY_20_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList21] = D3D11_PRIMITIVE_TOPOLOGY_21_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList22] = D3D11_PRIMITIVE_TOPOLOGY_22_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList23] = D3D11_PRIMITIVE_TOPOLOGY_23_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList24] = D3D11_PRIMITIVE_TOPOLOGY_24_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList25] = D3D11_PRIMITIVE_TOPOLOGY_25_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList26] = D3D11_PRIMITIVE_TOPOLOGY_26_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList27] = D3D11_PRIMITIVE_TOPOLOGY_27_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList28] = D3D11_PRIMITIVE_TOPOLOGY_28_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList29] = D3D11_PRIMITIVE_TOPOLOGY_29_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList30] = D3D11_PRIMITIVE_TOPOLOGY_30_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList31] = D3D11_PRIMITIVE_TOPOLOGY_31_CONTROL_POINT_PATCHLIST;
-	primitiveType[ePrimitiveTypePatchList32] = D3D11_PRIMITIVE_TOPOLOGY_32_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList1]       = D3D11_PRIMITIVE_TOPOLOGY_1_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList2]       = D3D11_PRIMITIVE_TOPOLOGY_2_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList3]       = D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList4]       = D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList5]       = D3D11_PRIMITIVE_TOPOLOGY_5_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList6]       = D3D11_PRIMITIVE_TOPOLOGY_6_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList7]       = D3D11_PRIMITIVE_TOPOLOGY_7_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList8]       = D3D11_PRIMITIVE_TOPOLOGY_8_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList9]       = D3D11_PRIMITIVE_TOPOLOGY_9_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList10]      = D3D11_PRIMITIVE_TOPOLOGY_10_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList11]      = D3D11_PRIMITIVE_TOPOLOGY_11_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList12]      = D3D11_PRIMITIVE_TOPOLOGY_12_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList13]      = D3D11_PRIMITIVE_TOPOLOGY_13_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList14]      = D3D11_PRIMITIVE_TOPOLOGY_14_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList15]      = D3D11_PRIMITIVE_TOPOLOGY_15_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList16]      = D3D11_PRIMITIVE_TOPOLOGY_16_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList17]      = D3D11_PRIMITIVE_TOPOLOGY_17_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList18]      = D3D11_PRIMITIVE_TOPOLOGY_18_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList19]      = D3D11_PRIMITIVE_TOPOLOGY_19_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList20]      = D3D11_PRIMITIVE_TOPOLOGY_20_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList21]      = D3D11_PRIMITIVE_TOPOLOGY_21_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList22]      = D3D11_PRIMITIVE_TOPOLOGY_22_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList23]      = D3D11_PRIMITIVE_TOPOLOGY_23_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList24]      = D3D11_PRIMITIVE_TOPOLOGY_24_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList25]      = D3D11_PRIMITIVE_TOPOLOGY_25_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList26]      = D3D11_PRIMITIVE_TOPOLOGY_26_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList27]      = D3D11_PRIMITIVE_TOPOLOGY_27_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList28]      = D3D11_PRIMITIVE_TOPOLOGY_28_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList29]      = D3D11_PRIMITIVE_TOPOLOGY_29_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList30]      = D3D11_PRIMITIVE_TOPOLOGY_30_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList31]      = D3D11_PRIMITIVE_TOPOLOGY_31_CONTROL_POINT_PATCHLIST;
+	primitiveType[ePrimitiveTypePatchList32]      = D3D11_PRIMITIVE_TOPOLOGY_32_CONTROL_POINT_PATCHLIST;
 }
 
 NS_MINIR_END

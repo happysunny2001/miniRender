@@ -17,65 +17,51 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwBuffer.h"
+#ifndef __CW_D3D11_BUFFER_WRITABLE_H__
+#define __CW_D3D11_BUFFER_WRITABLE_H__
+
+#ifdef _CW_D3D11_
+
+#include "Base/cwUtils.h"
+#include "Base/cwBasicType.h"
+#include "Buffer/cwBuffer.h"
+#include "Platform/D3D/D3D11/cwD3D11Utils.h"
+#include "cwD3D11Buffer.h"
 
 NS_MINIR_BEGIN
 
-cwBuffer::cwBuffer():
-m_iElementCnt(0),
-m_nStride(0),
-m_nOffset(0)
+class cwD3D11BufferWritable : public cwD3D11Buffer
 {
+public:
+	static cwD3D11BufferWritable* create(
+		CWVOID* pData,
+		CWUINT uSize,
+		eAccessFlag uCpuFlag,
+		CWUINT structureByteStride, 
+		CWBOOL bAppend=CWFALSE);
 
-}
+	cwD3D11BufferWritable();
+	virtual ~cwD3D11BufferWritable();
 
-cwBuffer::~cwBuffer()
-{
-	
-}
+	virtual CWBOOL init(
+		CWVOID* pData,
+		CWUINT uSize,
+		eBufferUsage usage,
+		eBufferBindFlag bindFlag,
+		eAccessFlag uCpuFlag,
+		CWUINT miscFlag,
+		CWUINT structureByteStride,
+		CWBOOL bAppend);
 
-CWBOOL cwBuffer::init(
-	CWVOID* pData,
-	CWUINT uSize,
-	eBufferUsage usage,
-	eBufferBindFlag bindFlag,
-	eAccessFlag uCpuFlag,
-	CWUINT miscFlag,
-	CWUINT structureByteStride)
-{
-	if (structureByteStride > 0)
-		m_iElementCnt = uSize / structureByteStride;
+	virtual CWHANDLE getShaderHandle() override;
 
-	m_nStride = structureByteStride;
-	m_nUsage = usage;
-	m_nAccessFlag = uCpuFlag;
+protected:
+	ID3D11UnorderedAccessView* m_pUnorderedResource;
 
-	return true;
-}
-
-CWHANDLE cwBuffer::getHandle()
-{
-	return NULL;
-}
-
-CWHANDLE cwBuffer::getShaderHandle()
-{
-	return NULL;
-}
-
-CWVOID cwBuffer::refresh(CWVOID* pData)
-{
-
-}
-
-CWVOID cwBuffer::copyFrom(cwBuffer* pBuffer)
-{
-
-}
-
-CWVOID cwBuffer::copyTo(CWVOID* pData)
-{
-
-}
+};
 
 NS_MINIR_END
+
+#endif //end _CW_D3D11_
+
+#endif //end __CW_D3D11_BUFFER_WRITABLE_H__
