@@ -235,24 +235,38 @@ CWVOID cwEntityParser::parseMaterial(tinyxml2::XMLElement* pMaterialData, cwEnti
 
 	tinyxml2::XMLElement* pTextureElement = pMaterialData->FirstChildElement("DiffuseTexture");
 	if (pTextureElement) {
-		const CWCHAR* pcType = pTextureElement->Attribute("Type");
-		const CWCHAR* pcFile = pTextureElement->Attribute("File");
-
-		if (pcType && pcFile) {
-			if (strncmp(pcType, "Local", 5) == 0) {
-				pMaterial->setDiffuseTexture(pcFile);
-			}
-			else if (strncmp(pcType, "Stage", 5) == 0) {
-				cwRenderer* pRenderer = cwRepertory::getInstance().getEngine()->getRenderer();
-				if (pRenderer) {
-					cwStage* pStage = pRenderer->getStage(pcFile);
-					if (pStage) {
-						pMaterial->setDiffuseTexture(pStage->getRenderTexture());
-					}
+		const char* pcStage = pTextureElement->Attribute("Stage");
+		const char* pcName = pTextureElement->Attribute("Name");
+		if (pcStage && pcName) {
+			cwRenderer* pRenderer = cwRepertory::getInstance().getEngine()->getRenderer();
+			cwStage* pStage = pRenderer->getStage(pcStage);
+			if (pStage) {
+				cwTexture* pTexture = pStage->getStageTexture(pcName);
+				if (pTexture) {
+					pMaterial->setDiffuseTexture(pTexture);
 				}
 			}
 		}
 	}
+	//if (pTextureElement) {
+	//	const CWCHAR* pcType = pTextureElement->Attribute("Type");
+	//	const CWCHAR* pcFile = pTextureElement->Attribute("File");
+
+	//	if (pcType && pcFile) {
+	//		if (strncmp(pcType, "File", 5) == 0) {
+	//			pMaterial->setDiffuseTexture(pcFile);
+	//		}
+	//		else if (strncmp(pcType, "Stage", 5) == 0) {
+	//			cwRenderer* pRenderer = cwRepertory::getInstance().getEngine()->getRenderer();
+	//			if (pRenderer) {
+	//				cwStage* pStage = pRenderer->getStage(pcFile);
+	//				if (pStage) {
+	//					pMaterial->setDiffuseTexture(pStage->getRenderTexture());
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 
 	pEntity->setMaterial(pMaterial);
 }

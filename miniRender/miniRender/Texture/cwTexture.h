@@ -32,7 +32,10 @@ public:
 	cwTexture() {}
 	virtual ~cwTexture() {}
 
+	virtual CWHANDLE getRenderHandle() const;
 	virtual CWHANDLE getHandle() const = 0;
+	virtual CWHANDLE getWritablehandle() const;
+
 	virtual const CWSTRING& getName() const;
 	inline CWVOID setName(const CWSTRING& name) { m_nStrName = name; }
 

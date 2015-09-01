@@ -183,6 +183,38 @@ cwStageLayer* cwStage::getStageLayer(CWUINT index)
 	return m_nVecLayer.at(index);
 }
 
+CWVOID cwStage::addStageTexture(const CWSTRING& strName, cwTexture* pTexture)
+{
+	if (!pTexture) return;
+
+	m_nMapStageTextures.insert(strName, pTexture);
+}
+
+cwTexture* cwStage::getStageTexture(const CWSTRING& strName)
+{
+	auto it = m_nMapStageTextures.find(strName);
+	if (it == m_nMapStageTextures.end()) return nullptr;
+
+	return it->second;
+}
+
+CWBOOL cwStage::removeStageTexture(const CWSTRING& strName)
+{
+	return m_nMapStageTextures.erase(strName) ? CWTRUE : CWFALSE;
+}
+
+CWBOOL cwStage::removeStageTexture(cwTexture* pTexture)
+{
+	for (auto it = m_nMapStageTextures.begin(); it != m_nMapStageTextures.end(); ++it) {
+		if (it->second == pTexture) {
+			m_nMapStageTextures.erase(it->first);
+			return CWTRUE;
+		}
+	}
+
+	return CWFALSE;
+}
+
 CWVOID cwStage::clearStageLayer(CWBOOL bClear)
 {
 	m_nVecLayer.clear();

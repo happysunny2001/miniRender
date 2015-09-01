@@ -26,4 +26,14 @@ const CWSTRING& cwTexture::getName() const
 	return m_nStrName;
 }
 
+CWHANDLE cwTexture::getRenderHandle() const
+{
+	return NULL;
+}
+
+CWHANDLE cwTexture::getWritablehandle() const
+{
+	return NULL;
+}
+
 NS_MINIR_END

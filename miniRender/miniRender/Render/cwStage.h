@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwMacros.h"
 #include "Base/cwUtils.h"
 #include "Base/cwVector.h"
+#include "Base/cwMap.h"
 #include "ViewPort/cwViewPort.h"
 #include "Texture/cwRenderTexture.h"
 #include "Parser/cwStageParser.h"
@@ -58,6 +59,11 @@ public:
 	inline cwViewPort* getViewPort() const { return m_pViewPort; }
 	inline cwRenderTexture* getRenderTexture() const { return m_pRenderTarget; }
 
+	CWVOID addStageTexture(const CWSTRING& strName, cwTexture* pTexture);
+	cwTexture* getStageTexture(const CWSTRING& strName);
+	CWBOOL removeStageTexture(const CWSTRING& strName);
+	CWBOOL removeStageTexture(cwTexture* pTexture);
+
 	inline CWVOID setIsClearColor(CWBOOL bClear) { m_bClearColor = bClear; }
 	inline CWVOID setIsClearDepth(CWBOOL bClear) { m_bClearDepth = bClear; }
 	inline CWVOID setIsClearStencil(CWBOOL bClear) { m_bClearStencil = bClear; }
@@ -71,6 +77,7 @@ public:
 	CWVOID addStageLayer(cwStageLayer* pLayer);
 	CWUINT getStageLayerCount() const;
 	cwStageLayer* getStageLayer(CWUINT index);
+
 	CWVOID clearStageLayer(CWBOOL bClear=CWTRUE);
 	CWVOID clearStageGenerator();
 	CWVOID clearStageEntity();
@@ -105,6 +112,7 @@ protected:
 	cwVector<cwRenderGenerator*> m_nVecGenerator;
 
 	cwVector<cwEntity*> m_nVecStageEntities;
+	cwMap<CWSTRING, cwTexture*> m_nMapStageTextures;
 	cwVector<cwStageLayer*> m_nVecLayer;
 
 };

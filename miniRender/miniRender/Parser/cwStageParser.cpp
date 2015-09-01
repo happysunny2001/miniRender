@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwEntityParser.h"
 #include "cwStageLayerParser.h"
 #include "cwParserManager.h"
+#include "cwTextureParser.h"
 #include "Render/cwStage.h"
 #include "Render/cwStageLayer.h"
 #include "Device/cwDevice.h"
@@ -196,6 +197,25 @@ CWVOID cwStageParser::deferParse(cwStage* pStage, tinyxml2::XMLElement* pStageEl
 {
 	if (!pStageElement || !pStage) return;
 
+	//parse texture
+	parseTextureList(pStage, pStageElement);
+
+	//parse stage entity
+	parseEntityList(pStage, pStageElement);
+
+	//add default stage layer
+	if (pStage->getStageLayerCount() == 0) {
+		cwStageLayer* pStageLayer = cwStageLayer::create();
+		pStage->addStageLayer(pStageLayer);
+	}
+
+	pStage->setCamera(cwRepertory::getInstance().getEngine()->getCamera(pStage->getCameraName()));
+}
+
+CWVOID cwStageParser::parseEntityList(cwStage* pStage, tinyxml2::XMLElement* pStageElement)
+{
+	if (!pStageElement || !pStage) return;
+
 	tinyxml2::XMLElement* pEntityListElement = pStageElement->FirstChildElement("EntityList");
 	if (pEntityListElement) {
 		cwEntityParser* pEntityParser = static_cast<cwEntityParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserEntity));
@@ -212,14 +232,27 @@ CWVOID cwStageParser::deferParse(cwStage* pStage, tinyxml2::XMLElement* pStageEl
 			}
 		}
 	}
+}
 
-	//add default stage layer
-	if (pStage->getStageLayerCount() == 0) {
-		cwStageLayer* pStageLayer = cwStageLayer::create();
-		pStage->addStageLayer(pStageLayer);
+CWVOID cwStageParser::parseTextureList(cwStage* pStage, tinyxml2::XMLElement* pStageElement)
+{
+	if (!pStageElement || !pStage) return;
+	tinyxml2::XMLElement* pTextureListElement = pStageElement->FirstChildElement("TextureList");
+	if (!pTextureListElement) return;
+
+	cwTextureParser* pTextureParser = static_cast<cwTextureParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserTexture));
+	if (!pTextureParser) return;
+
+	tinyxml2::XMLElement* pTextureElement = pTextureListElement->FirstChildElement("Texture");
+	while (pTextureElement) {
+		const char* pcName = pTextureElement->Attribute("Name");
+		if (pcName && strlen(pcName) > 0) {
+			cwTexture* pTexture = pTextureParser->parse(pTextureElement);
+			if (pTexture) {
+				pStage->addStageTexture(pcName, pTexture);
+			}
+		}
 	}
-
-	pStage->setCamera(cwRepertory::getInstance().getEngine()->getCamera(pStage->getCameraName()));
 }
 
 NS_MINIR_END

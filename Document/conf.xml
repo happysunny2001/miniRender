@@ -12,11 +12,30 @@
 			
 			<!-- Type:[backbuffer, texture], default value:[backbuffer], if type is texture, then width and height is the size
 				 IsClearColor,IsClearDepth,IsClearStencil:[True,False],default True
+				 Writable:[True,False], only available twhen Type is texture, if True, then the texture is writable texture, default is False
 			-->
-			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" IsClearColor="" IsClearDepth="" IsClearStencil="" /> 
+			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" IsClearColor="" IsClearDepth="" IsClearStencil="" Writable="" /> 
 
 			<StageRoutine></StageRoutine> <!-- if specified, then the routine object will do some task on the stage. -->
 			<Sort Opaque="NearToFar" Transparent="FarToNear"/> <!-- Sort algorithm for opaque and transparent object. values:[NearToFar, FarToNear] -->
+			
+			<!-- stage texture list
+				Name : the texture name, must not null
+				Type:[File, Stage, StageRenderTarget, Create]
+					File : load texture file on disk, the path is in Location 
+					Stage : the texture is in Stage's TextureList element, and the Location is 'StageName/TextureName'
+					StageRenderTarget : texture is Stage's RenderTarget, Location is Stage Name
+					Create : create a texture, use width, height, writable element
+				Location:
+					if Type=File, then this element is the physical path.
+					if Type=Stage, then is 'StageName/TextureName'
+					if Type=StageRenderTarget, it's the Stage name
+					if Type=Create, then ignore it
+				Width,Height,Writable : if Type=Create, they are the texture attributes
+			-->
+			<TextureList>
+				<Texture Name="" Type="" Location="" Width="1.0" Height="1.0" Writable="" />
+			</TextureList>
 			
 			<!--stage entity list, the entities have no parent, and draw at last.-->
 			<EntityList>
@@ -29,7 +48,9 @@
 						<Diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
 						<Specular r="1.0" g="1.0" b="1.0" a="1.0" />
 						<Reflect r="1.0" g="1.0" b="1.0" a="1.0" />
-						<DiffuseTexture Type="[Local,Stage]" File="" /> <!-- if Type=Local, then file is the texture file path, if Type=Stage, then File is the Stage's RenderTarget which is Texture. -->
+						<!-- Stage : stage name
+							 Name : the name of texture in stage's TextureList element. -->
+						<DiffuseTexture Stage="" Name="" /> 
 					</Material>
 
 					<Effect Name="" ShaderType="default" Shader="" Tech="">
@@ -42,6 +63,7 @@
 							Entity : get all visible entities from scene
 							Mirror : get Mirror entities from scene
 							Stage : only add the Geometries from stage's GeometryList element
+							None : render nothing
 				Transparent:[Yes,No], whether or not add transparent entity,default No
 			-->
 			<Layer EntityType="Entity" Transparent="No"> 

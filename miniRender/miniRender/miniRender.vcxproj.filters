@@ -546,6 +546,9 @@
     <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11BufferWritable.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Parser\cwTextureParser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -873,6 +876,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11BufferWritable.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser\cwTextureParser.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

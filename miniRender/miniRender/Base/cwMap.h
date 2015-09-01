@@ -61,7 +61,7 @@ public:
 	size_t erase(const K& key) {
 		iterator it = find(key);
 		if (it != m_nData.end()) {
-			it->second->release();
+			CW_SAFE_RELEASE(it->second);
 			m_nData.erase(it);
 			return 1;
 		}
@@ -84,7 +84,7 @@ private:
 
 	void clear() {
 		for (auto it = m_nData.begin(); it != m_nData.end(); ++it) {
-			it->second->release();
+			CW_SAFE_RELEASE(it->second);
 		}
 		m_nData.clear();
 	}

@@ -100,6 +100,7 @@
     <ClInclude Include="Parser\cwStageLayerParser.h" />
     <ClInclude Include="Parser\cwStageParser.h" />
     <ClInclude Include="Parser\cwStencilParser.h" />
+    <ClInclude Include="Parser\cwTextureParser.h" />
     <ClInclude Include="Platform\cwFileSystem.h" />
     <ClInclude Include="Platform\cwPlatform.h" />
     <ClInclude Include="Platform\D3D\D3D11\Blend\cwD3D11Blend.h" />
@@ -214,6 +215,7 @@
     <ClCompile Include="Parser\cwStageLayerParser.cpp" />
     <ClCompile Include="Parser\cwStageParser.cpp" />
     <ClCompile Include="Parser\cwStencilParser.cpp" />
+    <ClCompile Include="Parser\cwTextureParser.cpp" />
     <ClCompile Include="Platform\cwFileSystem.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Blend\cwD3D11Blend.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11Buffer.cpp" />
