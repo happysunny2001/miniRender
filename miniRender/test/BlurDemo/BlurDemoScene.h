@@ -17,33 +17,36 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "Base/cwMacros.h"
-#include "Ref/cwRef.h"
-#include "Render/cwStageLayer.h"
-#include "tinyxml2.h"
+#ifndef __BLUR_DEMO_SCENE_H__
+#define __BLUR_DEMO_SCENE_H__
 
-#include <functional>
+#include "cwMiniRender.h"
+NS_USING_MINIR;
 
-NS_MINIR_BEGIN
-
-class cwStageLayerParser : public cwRef
+class BlurDemoScene : public cwScene
 {
 public:
-	static cwStageLayerParser* create();
+	static BlurDemoScene* create();
 
-	cwStageLayerParser();
+	BlurDemoScene();
+	virtual ~BlurDemoScene();
 
-	cwStageLayer* parse(tinyxml2::XMLElement* pStageLayerData);
-	CWVOID deferParse(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
+	virtual CWBOOL init() override;
+
+	virtual CWVOID onTouchDown(cwTouch* pTouch) override;
+	virtual CWVOID onTouchUp(cwTouch* pTouch) override;
+	virtual CWVOID onTouchMoving(cwTouch* pTouch) override;
 
 protected:
-	CWVOID parseElement(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parseAttribute(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parsePU(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerPUData);
 
 protected:
-	std::unordered_map <CWSTRING, std::function<CWVOID(cwStageLayer*, tinyxml2::XMLElement*)>> m_nMapParser;
+	CWFLOAT m_fLastX;
+	CWFLOAT m_fLastY;
+	CWFLOAT m_fTheta;
+	CWFLOAT m_fPhi;
+	CWFLOAT m_fRadius;
+	CWBOOL m_bTouchDown;
 
 };
 
-NS_MINIR_END
+#endif

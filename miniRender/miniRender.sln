@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StencilDemo", "test\Stencil
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeometryShaderDemo", "test\GeometryShaderDemo\GeometryShaderDemo.vcxproj", "{4600600F-163B-4DAF-A547-7282C47F4FE6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BlurDemo", "test\BlurDemo\BlurDemo.vcxproj", "{DE6FB2FA-A327-4BC2-A476-80388F979537}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,18 @@ Global
 		{4600600F-163B-4DAF-A547-7282C47F4FE6}.Release|Win32.ActiveCfg = Release|Win32
 		{4600600F-163B-4DAF-A547-7282C47F4FE6}.Release|Win32.Build.0 = Release|Win32
 		{4600600F-163B-4DAF-A547-7282C47F4FE6}.Release|x64.ActiveCfg = Release|Win32
+		{DE6FB2FA-A327-4BC2-A476-80388F979537}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{DE6FB2FA-A327-4BC2-A476-80388F979537}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{DE6FB2FA-A327-4BC2-A476-80388F979537}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{DE6FB2FA-A327-4BC2-A476-80388F979537}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DE6FB2FA-A327-4BC2-A476-80388F979537}.Debug|Win32.Build.0 = Debug|Win32
+		{DE6FB2FA-A327-4BC2-A476-80388F979537}.Debug|x64.ActiveCfg = Debug|Win32
+		{DE6FB2FA-A327-4BC2-A476-80388F979537}.Release|Any CPU.ActiveCfg = Release|Win32
+		{DE6FB2FA-A327-4BC2-A476-80388F979537}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{DE6FB2FA-A327-4BC2-A476-80388F979537}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{DE6FB2FA-A327-4BC2-A476-80388F979537}.Release|Win32.ActiveCfg = Release|Win32
+		{DE6FB2FA-A327-4BC2-A476-80388F979537}.Release|Win32.Build.0 = Release|Win32
+		{DE6FB2FA-A327-4BC2-A476-80388F979537}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -113,5 +127,6 @@ Global
 		{72261194-2392-4836-BE10-5C5AEC3D6441} = {873F1DFA-D35C-41AC-90AC-1D57C7A7446E}
 		{3E1C6602-CD8F-44AD-95BF-87D644340129} = {873F1DFA-D35C-41AC-90AC-1D57C7A7446E}
 		{4600600F-163B-4DAF-A547-7282C47F4FE6} = {873F1DFA-D35C-41AC-90AC-1D57C7A7446E}
+		{DE6FB2FA-A327-4BC2-A476-80388F979537} = {873F1DFA-D35C-41AC-90AC-1D57C7A7446E}
 	EndGlobalSection
 EndGlobal

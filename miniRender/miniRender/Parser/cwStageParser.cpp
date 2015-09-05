@@ -189,8 +189,10 @@ CWVOID cwStageParser::parseLayer(cwStage* pStage, tinyxml2::XMLElement* pLayerDa
 	if (!pStageLayerParser) return;
 
 	cwStageLayer* pStageLayer = pStageLayerParser->parse(pLayerData);
-	if (pStageLayer)
+	if (pStageLayer) {
 		pStage->addStageLayer(pStageLayer);
+		m_nMapStageLayer[pStageLayer] = pLayerData;
+	}
 }
 
 CWVOID cwStageParser::deferParse(cwStage* pStage, tinyxml2::XMLElement* pStageElement)
@@ -208,8 +210,26 @@ CWVOID cwStageParser::deferParse(cwStage* pStage, tinyxml2::XMLElement* pStageEl
 		cwStageLayer* pStageLayer = cwStageLayer::create();
 		pStage->addStageLayer(pStageLayer);
 	}
+	else {
+		cwStageLayerParser* pStageLayerParser = static_cast<cwStageLayerParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserStageLayer));
+		if (!pStageLayerParser) return;
+
+		tinyxml2::XMLElement* pStageLayerElement = pStageElement->FirstChildElement("Layer");
+		while (pStageLayerElement) {
+			const char* pcName = pStageLayerElement->Attribute("Name");
+			if (pcName && strlen(pcName) > 0) {
+				cwStageLayer* pStageLayer = pStage->getStageLayer(pcName);
+				if (pStageLayer) {
+					pStageLayerParser->deferParse(pStageLayer, pStageLayerElement);
+				}
+			}
+			pStageLayerElement = pStageLayerElement->NextSiblingElement("Layer");
+		}
+	}
 
 	pStage->setCamera(cwRepertory::getInstance().getEngine()->getCamera(pStage->getCameraName()));
+
+	m_nMapStageLayer.clear();
 }
 
 CWVOID cwStageParser::parseEntityList(cwStage* pStage, tinyxml2::XMLElement* pStageElement)
@@ -252,6 +272,8 @@ CWVOID cwStageParser::parseTextureList(cwStage* pStage, tinyxml2::XMLElement* pS
 				pStage->addStageTexture(pcName, pTexture);
 			}
 		}
+
+		pTextureElement = pTextureElement->NextSiblingElement("Texture");
 	}
 }
 

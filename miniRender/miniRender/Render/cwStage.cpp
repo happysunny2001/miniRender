@@ -183,6 +183,15 @@ cwStageLayer* cwStage::getStageLayer(CWUINT index)
 	return m_nVecLayer.at(index);
 }
 
+cwStageLayer* cwStage::getStageLayer(const CWSTRING& strName)
+{
+	for (auto pStageLayer : m_nVecLayer) {
+		if (pStageLayer->getName() == strName) return pStageLayer;
+	}
+
+	return nullptr;
+}
+
 CWVOID cwStage::addStageTexture(const CWSTRING& strName, cwTexture* pTexture)
 {
 	if (!pTexture) return;

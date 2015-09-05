@@ -36,6 +36,9 @@ public:
 	cwEffect();
 	virtual ~cwEffect();
 
+	const CWSTRING& getName() const { return m_nStrName; }
+	CWVOID setName(const CWSTRING& strName) { m_nStrName = strName; }
+
 	virtual CWVOID setShader(cwShader* pShader);
 	inline cwShader* getShader() const { return m_pShader; }
 
@@ -46,6 +49,7 @@ public:
 	virtual CWVOID config();
 
 protected:
+	CWSTRING m_nStrName;
 	cwShader* m_pShader;
 	CWSTRING m_strTech;
 

@@ -1,21 +1,5 @@
 #include "lightUtil.fx"
-
-cbuffer cbPerFrame
-{
-	float  gFogStart;             //start fog distance
-	float  gFogRange;             //fog range
-	float4 gFogColor;             //fog color
-};
-
-cbuffer cbPerObject
-{
-	float4x4 gMatWorld;
-	float4x4 gMatWorldInvTranspose; //transform normal
-	float4x4 gMatWorldViewProj;
-	Material gMaterial;             //material of object
-};
-
-//Texture2D gDiffuseTexture;
+#include "util.fx"
 
 struct VertexIn
 {
@@ -48,7 +32,7 @@ float4 PS(VertexOut pIn, uniform bool gAlphaClip, uniform bool gFogEnable) : SV_
 	//float4 texColor = gDiffuseTexture.Sample( samAnisotropic, pIn.Tex );
 	float4 texColor = gTexture0.Sample( samAnisotropic, pIn.Tex );
 	if(gAlphaClip) {
-		clip(texColor.a - 0.1f);
+		clip(texColor.a - 0.05f);
 	}
 
 	pIn.NormalW   = normalize(pIn.NormalW);

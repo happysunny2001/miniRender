@@ -40,6 +40,7 @@ public:
 
 protected:
 	cwTexture* parseTextureFromFile(tinyxml2::XMLElement* pTextureData);
+	cwTexture* parseTextureFromFiles(tinyxml2::XMLElement* pTextureData);
 	cwTexture* parseTextureStage(tinyxml2::XMLElement* pTextureData);
 	cwTexture* parseTextureStageRenderTarget(tinyxml2::XMLElement* pTextureData);
 	cwTexture* parseTextureCreate(tinyxml2::XMLElement* pTextureData);

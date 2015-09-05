@@ -34,6 +34,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Engine/cwEngine.h"
 #include "Render/cwRenderer.h"
 #include "Render/cwStage.h"
+#include "cwEffectParser.h"
+#include "cwParserManager.h"
 
 NS_MINIR_BEGIN
 
@@ -248,25 +250,6 @@ CWVOID cwEntityParser::parseMaterial(tinyxml2::XMLElement* pMaterialData, cwEnti
 			}
 		}
 	}
-	//if (pTextureElement) {
-	//	const CWCHAR* pcType = pTextureElement->Attribute("Type");
-	//	const CWCHAR* pcFile = pTextureElement->Attribute("File");
-
-	//	if (pcType && pcFile) {
-	//		if (strncmp(pcType, "File", 5) == 0) {
-	//			pMaterial->setDiffuseTexture(pcFile);
-	//		}
-	//		else if (strncmp(pcType, "Stage", 5) == 0) {
-	//			cwRenderer* pRenderer = cwRepertory::getInstance().getEngine()->getRenderer();
-	//			if (pRenderer) {
-	//				cwStage* pStage = pRenderer->getStage(pcFile);
-	//				if (pStage) {
-	//					pMaterial->setDiffuseTexture(pStage->getRenderTexture());
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
 
 	pEntity->setMaterial(pMaterial);
 }
@@ -275,31 +258,12 @@ CWVOID cwEntityParser::parseEffect(tinyxml2::XMLElement* pEffectData, cwEntity* 
 {
 	if (!pEffectData || !pEntity) return;
 
-	const CWCHAR* pcShaderType = pEffectData->Attribute("ShaderType");
-	const CWCHAR* pcShader = pEffectData->Attribute("Shader");
-	const CWCHAR* pcTech = pEffectData->Attribute("Tech");
+	cwEffectParser* pEffectParser = static_cast<cwEffectParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserEffect));
+	if (!pEffectParser) return;
 
-	if (strncmp(pcShaderType, "default", 7) == 0) {
-		CWUINT iShaderIndex = atoi(pcShader);
-		eDefShaderID eShaderID = static_cast<eDefShaderID>(iShaderIndex);
-		cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getDefShader(eShaderID);
-		cwEffect* pEffect = cwEffect::create();
-
-		if (pShader && pEffect) {
-			pEffect->setShader(pShader);
-			pEffect->setTech(pcTech);
-			pEntity->setEffect(pEffect);
-		}
-	}
-	else if (strncmp(pcShaderType, "specific", 8) == 0) {
-		cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getShader(pcShader);
-		cwEffect* pEffect = cwEffect::create();
-
-		if (pShader && pEffect) {
-			pEffect->setShader(pShader);
-			pEffect->setTech(pcTech);
-			pEntity->setEffect(pEffect);
-		}
+	cwEffect* pEffect = pEffectParser->parse(pEffectData);
+	if (pEffect) {
+		pEntity->setEffect(pEffect);
 	}
 }
 

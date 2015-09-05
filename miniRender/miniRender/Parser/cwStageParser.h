@@ -30,6 +30,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 NS_MINIR_BEGIN
 
 class cwStage;
+class cwStageLayer;
 
 class cwStageParser : public cwRef
 {
@@ -53,7 +54,8 @@ protected:
 	CWVOID parseEntityList(cwStage* pStage, tinyxml2::XMLElement* pStageElement);
 
 protected:
-	std::unordered_map <CWSTRING, std::function<CWVOID(cwStage*, tinyxml2::XMLElement*)>> m_nMapParser;
+	std::unordered_map<CWSTRING, std::function<CWVOID(cwStage*, tinyxml2::XMLElement*)>> m_nMapParser;
+	std::unordered_map<cwStageLayer*, tinyxml2::XMLElement*> m_nMapStageLayer;
 
 };
 

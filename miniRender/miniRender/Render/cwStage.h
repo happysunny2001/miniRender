@@ -77,6 +77,7 @@ public:
 	CWVOID addStageLayer(cwStageLayer* pLayer);
 	CWUINT getStageLayerCount() const;
 	cwStageLayer* getStageLayer(CWUINT index);
+	cwStageLayer* getStageLayer(const CWSTRING& strName);
 
 	CWVOID clearStageLayer(CWBOOL bClear=CWTRUE);
 	CWVOID clearStageGenerator();

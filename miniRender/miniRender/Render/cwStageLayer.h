@@ -45,6 +45,9 @@ public:
 
 	~cwStageLayer();
 
+	const CWSTRING& getName() const { return m_nStrName; }
+	CWVOID setName(const CWSTRING& strName) { m_nStrName = strName; }
+
 	eStageLayerFliterType getFliterType() const { return m_eFilterType; }
 	CWVOID setFliterType(eStageLayerFliterType eType) { m_eFilterType = eType; }
 
@@ -71,6 +74,7 @@ protected:
 	CWVOID addEntities(cwVector<cwEntity*>& vecEntities);
 
 protected:
+	CWSTRING m_nStrName;
 	eStageLayerFliterType m_eFilterType;
 	CWBOOL m_bTransparent;
 

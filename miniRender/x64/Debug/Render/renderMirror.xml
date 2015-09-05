@@ -13,7 +13,7 @@
 			<ViewPort Name="default" TopLeftX="0" TopLeftY="0" Width="-1" Height="-1" MinDepth="0" MaxDepth="1.0" />
 			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" IsClearColor="False" IsClearDepth="False" IsClearStencil="False" />
 
-			<Layer EntityType="Mirror" Transparent="No"> 
+			<Layer Name="Layer1" EntityType="Mirror" Transparent="No"> 
 				<PU>
 					<Blend Enable="False" ColorEnable="None">
 						<RGB Src="One" Dest="Zero" Oper="Add" />

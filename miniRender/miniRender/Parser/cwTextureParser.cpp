@@ -59,16 +59,19 @@ cwTexture* cwTextureParser::parse(tinyxml2::XMLElement* pTextureData)
 
 	cwTexture* pTexture = nullptr;
 
-	if (strncmp(pcType, "File", 4) == 0) {
+	if (strlen(pcType) == 4 && strncmp(pcType, "File", 4) == 0) {
 		pTexture = parseTextureFromFile(pTextureData);
 	}
-	else if (strncmp(pcType, "Stage", 5) == 0) {
+	else if (strlen(pcType) == 5 && strncmp(pcType, "Files", 5) == 0) {
+		pTexture = parseTextureFromFiles(pTextureData);
+	}
+	else if (strlen(pcType) == 5 && strncmp(pcType, "Stage", 5) == 0) {
 		pTexture = parseTextureStage(pTextureData);
 	}
-	else if (strncmp(pcType, "StageRenderTarget", 17) == 0) {
+	else if (strlen(pcType) == 17 && strncmp(pcType, "StageRenderTarget", 17) == 0) {
 		pTexture = parseTextureStageRenderTarget(pTextureData);
 	}
-	else if (strncmp(pcType, "Create", 6) == 0) {
+	else if (strlen(pcType) == 6 && strncmp(pcType, "Create", 6) == 0) {
 		pTexture = parseTextureCreate(pTextureData);
 	}
 
@@ -84,6 +87,23 @@ cwTexture* cwTextureParser::parseTextureFromFile(tinyxml2::XMLElement* pTextureD
 		cwTexture* pTexture = cwRepertory::getInstance().getTextureManager()->getTexture(pcLocation);
 		if (!pTexture) return nullptr;
 
+		return pTexture;
+	}
+
+	return nullptr;
+}
+
+cwTexture* cwTextureParser::parseTextureFromFiles(tinyxml2::XMLElement* pTextureData)
+{
+	if (!pTextureData) return nullptr;
+
+	const char* pcLocation = pTextureData->Attribute("Location");
+	if (pcLocation) {
+		CWSTRING strLocation(pcLocation);
+		std::vector<CWSTRING> vecPath;
+		cwStringConvert::split(strLocation, ";", vecPath);
+
+		cwTexture* pTexture = cwRepertory::getInstance().getTextureManager()->createTextureArray(vecPath);
 		return pTexture;
 	}
 

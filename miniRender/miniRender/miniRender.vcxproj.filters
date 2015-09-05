@@ -549,6 +549,12 @@
     <ClInclude Include="Parser\cwTextureParser.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="effect\cwEffectFloatArrayParameter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser\cwEffectParser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -879,6 +885,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Parser\cwTextureParser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="effect\cwEffectFloatArrayParameter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser\cwEffectParser.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

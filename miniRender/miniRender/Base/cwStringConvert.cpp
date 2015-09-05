@@ -19,6 +19,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwStringConvert.h"
 
+#include <sstream>
+
 NS_MINIR_BEGIN
 
 CWVOID cwStringConvert::ltrim(CWSTRING& str)
@@ -58,6 +60,32 @@ CWVOID cwStringConvert::split(CWSTRING& str, const CWSTRING& strSep, std::vector
 			vecRet.push_back(tmp);
 		}
 	}
+}
+
+CWSTRING cwStringConvert::replace(CWSTRING& strOrigin, const CWSTRING& strFind, const CWSTRING& strReplace)
+{
+	if (strOrigin.empty()) return strOrigin;
+	if (strFind.empty()) return strOrigin;
+
+	std::stringstream ss;
+
+	std::string::size_type startPos = 0;
+	std::string::size_type pos = strOrigin.find(strFind, startPos);
+	while (pos != std::string::npos) {
+		ss << strOrigin.substr(startPos, pos - startPos);
+		ss << strReplace;
+
+		startPos = pos + strFind.length();
+		if (startPos >= strOrigin.length()) break;
+
+		pos = strOrigin.find(strFind, startPos);
+		if (pos == std::string::npos) {
+			ss << strOrigin.substr(startPos);
+			break;
+		}
+	}
+
+	return ss.str();
 }
 
 NS_MINIR_END

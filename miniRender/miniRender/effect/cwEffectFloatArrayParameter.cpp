@@ -17,33 +17,39 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "Base/cwMacros.h"
-#include "Ref/cwRef.h"
-#include "Render/cwStageLayer.h"
-#include "tinyxml2.h"
-
-#include <functional>
+#include "cwEffectFloatArrayParameter.h"
 
 NS_MINIR_BEGIN
 
-class cwStageLayerParser : public cwRef
+cwEffectFloatArrayParameter* cwEffectFloatArrayParameter::create()
 {
-public:
-	static cwStageLayerParser* create();
+	cwEffectFloatArrayParameter* pEffectParameter = new cwEffectFloatArrayParameter();
+	if (pEffectParameter) {
+		pEffectParameter->autorelease();
+		return pEffectParameter;
+	}
 
-	cwStageLayerParser();
+	return nullptr;
+}
 
-	cwStageLayer* parse(tinyxml2::XMLElement* pStageLayerData);
-	CWVOID deferParse(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
+cwEffectFloatArrayParameter::cwEffectFloatArrayParameter():
+m_pFloatArray(NULL),
+m_iCnt(0)
+{
 
-protected:
-	CWVOID parseElement(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parseAttribute(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parsePU(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerPUData);
+}
 
-protected:
-	std::unordered_map <CWSTRING, std::function<CWVOID(cwStageLayer*, tinyxml2::XMLElement*)>> m_nMapParser;
+cwEffectFloatArrayParameter::~cwEffectFloatArrayParameter()
+{
+	CW_SAFE_DELETE_ARRAY(m_pFloatArray);
+	m_iCnt = 0;
+}
 
-};
+CWVOID cwEffectFloatArrayParameter::binding(cwShader* pShader)
+{
+	if (pShader) {
+		pShader->setVariableFloatArray(m_nStrParamName, m_pFloatArray, m_iCnt);
+	}
+}
 
 NS_MINIR_END

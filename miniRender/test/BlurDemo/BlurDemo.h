@@ -17,33 +17,24 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "Base/cwMacros.h"
-#include "Ref/cwRef.h"
-#include "Render/cwStageLayer.h"
-#include "tinyxml2.h"
+#ifndef __BLUR_DEMO_H__
+#define __BLUR_DEMO_H__
 
-#include <functional>
+#include "cwMiniRender.h"
+NS_USING_MINIR;
 
-NS_MINIR_BEGIN
-
-class cwStageLayerParser : public cwRef
+class BlurDemo : public cwApplication
 {
 public:
-	static cwStageLayerParser* create();
+	BlurDemo();
+	virtual ~BlurDemo();
 
-	cwStageLayerParser();
+	virtual CWVOID gameBegin() override;
+	virtual CWVOID gameEnd() override;
 
-	cwStageLayer* parse(tinyxml2::XMLElement* pStageLayerData);
-	CWVOID deferParse(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-
-protected:
-	CWVOID parseElement(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parseAttribute(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parsePU(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerPUData);
-
-protected:
-	std::unordered_map <CWSTRING, std::function<CWVOID(cwStageLayer*, tinyxml2::XMLElement*)>> m_nMapParser;
+	virtual CWVOID gameBeginBackGround() override;
+	virtual CWVOID gameEndBackGround() override;
 
 };
 
-NS_MINIR_END
+#endif

@@ -38,6 +38,7 @@
     <ClInclude Include="cwMiniRender.h" />
     <ClInclude Include="Device\cwDevice.h" />
     <ClInclude Include="Effect\cwEffect.h" />
+    <ClInclude Include="effect\cwEffectFloatArrayParameter.h" />
     <ClInclude Include="Effect\cwEffectFloatParameter.h" />
     <ClInclude Include="Effect\cwEffectMatrixParameter.h" />
     <ClInclude Include="Effect\cwEffectParameter.h" />
@@ -93,6 +94,7 @@
     <ClInclude Include="Math\cwVector3D.h" />
     <ClInclude Include="Math\cwVector4D.h" />
     <ClInclude Include="Parser\cwBlendParser.h" />
+    <ClInclude Include="Parser\cwEffectParser.h" />
     <ClInclude Include="Parser\cwEntityParser.h" />
     <ClInclude Include="Parser\cwParserManager.h" />
     <ClInclude Include="Parser\cwPUStageLayerParser.h" />
@@ -168,6 +170,7 @@
     <ClCompile Include="Camera\cwHomogeneousCamera.cpp" />
     <ClCompile Include="Device\cwDevice.cpp" />
     <ClCompile Include="Effect\cwEffect.cpp" />
+    <ClCompile Include="effect\cwEffectFloatArrayParameter.cpp" />
     <ClCompile Include="Effect\cwEffectFloatParameter.cpp" />
     <ClCompile Include="Effect\cwEffectMatrixParameter.cpp" />
     <ClCompile Include="Effect\cwEffectParameter.cpp" />
@@ -208,6 +211,7 @@
     <ClCompile Include="Math\cwVector3D.cpp" />
     <ClCompile Include="Math\cwVector4D.cpp" />
     <ClCompile Include="Parser\cwBlendParser.cpp" />
+    <ClCompile Include="Parser\cwEffectParser.cpp" />
     <ClCompile Include="Parser\cwEntityParser.cpp" />
     <ClCompile Include="Parser\cwParserManager.cpp" />
     <ClCompile Include="Parser\cwPUStageLayerParser.cpp" />

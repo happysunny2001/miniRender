@@ -17,33 +17,39 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "Base/cwMacros.h"
-#include "Ref/cwRef.h"
-#include "Render/cwStageLayer.h"
-#include "tinyxml2.h"
+#include "BlurDemo.h"
+#include "BlurDemoScene.h"
 
-#include <functional>
-
-NS_MINIR_BEGIN
-
-class cwStageLayerParser : public cwRef
+BlurDemo::BlurDemo()
 {
-public:
-	static cwStageLayerParser* create();
 
-	cwStageLayerParser();
+}
 
-	cwStageLayer* parse(tinyxml2::XMLElement* pStageLayerData);
-	CWVOID deferParse(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
+BlurDemo::~BlurDemo()
+{
 
-protected:
-	CWVOID parseElement(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parseAttribute(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
-	CWVOID parsePU(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerPUData);
+}
 
-protected:
-	std::unordered_map <CWSTRING, std::function<CWVOID(cwStageLayer*, tinyxml2::XMLElement*)>> m_nMapParser;
+CWVOID BlurDemo::gameBegin()
+{
+	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderBlur.xml");
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 150.0f, -200.0f);
 
-};
+	BlurDemoScene* pScene = BlurDemoScene::create();
+	cwRepertory::getInstance().getEngine()->setScene(pScene);
+}
 
-NS_MINIR_END
+CWVOID BlurDemo::gameEnd()
+{
+
+}
+
+CWVOID BlurDemo::gameBeginBackGround()
+{
+
+}
+
+CWVOID BlurDemo::gameEndBackGround()
+{
+
+}
