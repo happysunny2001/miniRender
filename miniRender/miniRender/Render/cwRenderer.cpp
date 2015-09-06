@@ -77,6 +77,7 @@ CWVOID cwRenderer::setCurrCamera(cwCamera* pCamera)
 
 CWVOID cwRenderer::setCurrShader(cwShader* pShader)
 {
+	if (m_pCurrShader == pShader) return;
 	m_pCurrShader = pShader;
 	configLight();
 }
@@ -144,23 +145,27 @@ CWVOID cwRenderer::render(cwStage* pStage)
 CWVOID cwRenderer::render(cwRenderBatch* pBatch)
 {
 	if (!pBatch) return;
-	if (!pBatch->m_pEntity) return;
+	if (!pBatch->m_pEffect) return;
 
-	cwRenderObject* pRenderObj = pBatch->m_pEntity->getRenderObj();
-	if (!pRenderObj) return;
+	pBatch->m_pEffect->render(pBatch);
 
-	cwMaterial* pMaterial = pBatch->m_pEntity->getMaterial();
-	if (pMaterial)
-		pMaterial->configShader(m_pCurrShader);
+	//if (!pBatch->m_pEntity) return;
 
-	cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+	//cwRenderObject* pRenderObj = pBatch->m_pEntity->getRenderObj();
+	//if (!pRenderObj) return;
 
-	pDevice->setBlend(pBatch->m_pBlend);
-	pDevice->setStencil(pBatch->m_pStencil);
-	pDevice->setShaderWorldTrans(m_pCurrShader, pBatch->m_nWorldTrans, m_pCurrCamera);
-	pDevice->draw(m_pCurrShader, pBatch->m_nStrTech, pRenderObj);
+	//cwMaterial* pMaterial = pBatch->m_pEntity->getMaterial();
+	//if (pMaterial)
+	//	pMaterial->configShader(m_pCurrShader);
 
-	pBatch->m_pEntity->render();
+	//cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+
+	//pDevice->setBlend(pBatch->m_pBlend);
+	//pDevice->setStencil(pBatch->m_pStencil);
+	//pDevice->setShaderWorldTrans(m_pCurrShader, pBatch->m_nWorldTrans, m_pCurrCamera);
+	//pDevice->draw(m_pCurrShader, pBatch->m_nStrTech, pRenderObj);
+
+	//pBatch->m_pEntity->render();
 }
 
 cwStage* cwRenderer::getStage(const CWSTRING& strName)

@@ -142,7 +142,7 @@ CWVOID cwStage::render()
 	for (auto pLayer : m_nVecLayer) {
 		cwVector<cwEntity*>* vecEntities = getRenderEntities(nullptr, pLayer->getFliterType());
 		if (vecEntities) {
-			pLayer->begin(*vecEntities);
+			pLayer->begin(vecEntities);
 		}
 
 		pLayer->render();

@@ -22,8 +22,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwParserManager.h"
 #include "cwBlendParser.h"
 #include "cwStencilParser.h"
+#include "cwEffectParser.h"
 #include "Render/ProcessingUnit/cwPUStageLayerBlend.h"
 #include "Render/ProcessingUnit/cwPUStageLayerStencil.h"
+#include "Render/ProcessingUnit/cwPUStageLayerEffect.h"
 
 NS_MINIR_BEGIN
 
@@ -42,6 +44,7 @@ cwPUStageLayerParser::cwPUStageLayerParser()
 {
 	m_nMapParser["Blend"]   = CW_CALLBACK_1(cwPUStageLayerParser::parsePUBlend, this);
 	m_nMapParser["Stencil"] = CW_CALLBACK_1(cwPUStageLayerParser::parsePUStencil, this);
+	m_nMapParser["Effect"]  = CW_CALLBACK_1(cwPUStageLayerParser::parsePUEffect, this);
 }
 
 cwVector<cwPUStageLayer*> cwPUStageLayerParser::parse(tinyxml2::XMLElement* pPUElement)
@@ -91,6 +94,22 @@ cwPUStageLayerStencil* cwPUStageLayerParser::parsePUStencil(tinyxml2::XMLElement
 	pPUStencil->setStencil(pStencil);
 
 	return pPUStencil;
+}
+
+cwPUStageLayerEffect* cwPUStageLayerParser::parsePUEffect(tinyxml2::XMLElement* pEffectElement)
+{
+	if (!pEffectElement) return nullptr;
+	cwEffectParser* pParser = static_cast<cwEffectParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserEffect));
+	if (!pParser) return nullptr;
+
+	cwEffect* pEffect = pParser->parse(pEffectElement);
+	if (!pEffect) return nullptr;
+
+	cwPUStageLayerEffect* pPUEffect = cwPUStageLayerEffect::create();
+	if (!pPUEffect) return nullptr;
+	pPUEffect->setEffect(pEffect);
+
+	return pPUEffect;
 }
 
 NS_MINIR_END

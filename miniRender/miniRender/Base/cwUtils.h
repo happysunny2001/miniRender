@@ -283,6 +283,7 @@ typedef enum {
 	ePUStageLayerStencil,
 	ePUStageLayerWorldTrans,
 	ePUStageLayerLightTrans,
+	ePUStageLayerEffect,
 }ePURenderType;
 
 #define CW_CONTROL MK_CONTROL

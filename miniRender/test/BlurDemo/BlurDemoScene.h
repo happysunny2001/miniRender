@@ -38,6 +38,8 @@ public:
 	virtual CWVOID onTouchMoving(cwTouch* pTouch) override;
 
 protected:
+	CWVOID buildEntity();
+	CWVOID buildLight();
 
 protected:
 	CWFLOAT m_fLastX;

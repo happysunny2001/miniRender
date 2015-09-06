@@ -17,33 +17,32 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwRenderBatch.h"
-#include "Repertory/cwRepertory.h"
-#include "Engine/cwEngine.h"
-#include "Effect/cwEffect.h"
-#include "cwRenderer.h"
+#ifndef __CW_GP_EFFECT_H__
+#define __CW_GP_EFFECT_H__
+
+#include "Base/cwMacros.h"
+#include "Base/cwStruct.h"
+#include "cwEffect.h"
 
 NS_MINIR_BEGIN
 
-cwRenderBatch::cwRenderBatch()
+class cwGPEffect : public cwEffect
 {
-	reset();
-}
+public:
+	static cwGPEffect* create();
 
-cwRenderBatch::~cwRenderBatch()
-{
-	reset();
-}
+	cwGPEffect();
+	virtual ~cwGPEffect();
 
-CWVOID cwRenderBatch::reset()
-{
-	m_pEffect = nullptr;
-	m_pEntity = nullptr;
-}
+	cwGPInfo& getGPInfo() { return m_nGPInfo; }
 
-CWVOID cwRenderBatch::render()
-{
-	cwRepertory::getInstance().getEngine()->getRenderer()->render(this);
-}
+	virtual CWVOID render(cwRenderBatch* pBatch) override;
+
+protected:
+	cwGPInfo m_nGPInfo;
+
+};
 
 NS_MINIR_END
+
+#endif

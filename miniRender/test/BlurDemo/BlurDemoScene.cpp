@@ -56,6 +56,9 @@ CWBOOL BlurDemoScene::init()
 	m_fRadius = 150.0f;
 	m_bTouchDown = false;
 
+	buildEntity();
+	buildLight();
+
 	return CWTRUE;
 }
 
@@ -91,4 +94,69 @@ CWVOID BlurDemoScene::onTouchMoving(cwTouch* pTouch)
 
 	m_fLastX = pTouch->getScreenPos().x;
 	m_fLastY = pTouch->getScreenPos().y;
+}
+
+CWVOID BlurDemoScene::buildEntity()
+{
+	cwRepertory& repertory = cwRepertory::getInstance();
+
+	cwGeometryGenerator::cwMeshData mesh;
+	repertory.getGeoGenerator()->generateGrid(200.0f, 200.0f, 80, 80, mesh);
+
+	vector<cwVertexPosNormalTex> vecVertex(mesh.nVertex.size());
+	for (int i = 0; i < mesh.nVertex.size(); ++i) {
+		vecVertex[i].pos = mesh.nVertex[i].pos;
+		vecVertex[i].pos.y = repertory.getGeoGenerator()->getTerrainHeight(vecVertex[i].pos.x, vecVertex[i].pos.z);
+		vecVertex[i].normal = repertory.getGeoGenerator()->getTerrainNormal(vecVertex[i].pos.x, vecVertex[i].pos.z);
+		vecVertex[i].tex = mesh.nVertex[i].tex;
+	}
+
+	cwRenderObject* pRenderObj = cwStaticRenderObject::create(
+		ePrimitiveTypeTriangleList,
+		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTex), static_cast<CWUINT>(mesh.nVertex.size()),
+		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosNormalTex);
+
+	cwTexture* pTexTerrain = cwRepertory::getInstance().getTextureManager()->getTexture("Textures/grass.dds");
+	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderLightingTex);
+	cwEffect* pEffect = cwEffect::create();
+	pEffect->setShader(pShader);
+
+	cwMaterial* pMaterial = cwMaterial::create();
+	if (pTexTerrain) {
+		pMaterial->setDiffuseTexture(pTexTerrain);
+	}
+
+	cwEntity* pTerrain = cwEntity::create();
+	pTerrain->setMaterial(pMaterial);
+	pTerrain->setEffect(pEffect);
+	pTerrain->setRenderObject(pRenderObj);
+	pTerrain->setPosition(cwVector3D::ZERO);
+	this->addChild(pTerrain);
+}
+
+CWVOID BlurDemoScene::buildLight()
+{
+	cwDirectionalLight* pLightDirectional = cwDirectionalLight::create(
+		cwVector4D(0, -1.0, 0, 0),
+		cwVector4D(0.5f, 0.5f, 0.5f, 1.0f),
+		cwVector4D(0.1f, 0.1f, 0.1f, 1.0f),
+		cwVector4D(0.1f, 0.1f, 0.1f, 1.0f));
+	this->addDirectionalLight(pLightDirectional);
+
+	cwPointLight* pLightPoint = cwPointLight::create(
+		cwVector4D(50.0f, 100.0f, 0, 0),
+		cwVector4D(0.0f, 0.0f, 0.0f, 1.0f),
+		cwVector4D(0.7f, 0.7f, 0.7f, 1.0f),
+		cwVector4D(0.7f, 0.7f, 0.7f, 1.0f),
+		cwVector4D(0.0f, 0.1f, 0.0f, 1000.0f));
+	this->addPointLight(pLightPoint);
+
+	cwSpotLight* pLightSpot = cwSpotLight::create(
+		cwVector4D(-50.0f, 100.0f, 0, 0),
+		cwVector4D(0.1f, 0.1f, 0.1f, 1.0f),
+		cwVector4D(0.7f, 0.7f, 0.7f, 1.0f),
+		cwVector4D(0.7f, 0.7f, 0.7f, 1.0f),
+		cwVector4D(0.0f, 0.1f, 0.0f, 1000.0f),
+		cwVector4D(0, -1.0, 0, 48.0f));
+	this->addSpotLight(pLightSpot);
 }

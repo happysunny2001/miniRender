@@ -28,6 +28,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
+class cwRenderBatch;
+
 class cwEffect : public cwRef
 {
 public:
@@ -47,6 +49,8 @@ public:
 
 	CWVOID addParameter(cwEffectParameter* pEffectParameter);
 	virtual CWVOID config();
+
+	virtual CWVOID render(cwRenderBatch* pBatch);
 
 protected:
 	CWSTRING m_nStrName;

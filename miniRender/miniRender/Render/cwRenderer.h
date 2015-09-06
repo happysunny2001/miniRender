@@ -57,6 +57,7 @@ public:
 	virtual CWVOID addStageRealTime(cwStage* pStage);
 	virtual cwStage* getStage(const CWSTRING& strName);
 	inline cwStage* getCurrRenderStage() const { return m_pCurrRenderStage; }
+	inline cwCamera* getCurrCamera() const { return m_pCurrCamera; }
 
 	const CWSTRING& getFullPath() const { return m_strFullPath; }
 	CWVOID setFullPath(const CWSTRING& strPath) { m_strFullPath = strPath; }

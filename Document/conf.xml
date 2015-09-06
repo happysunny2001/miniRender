@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Renderer>
 	<StageList>
-		<!-- stage Type:[normal, specific], default value:[normal]. 
-			Enable:[True,False], default value:[true] 
+		<!-- stage Type:[normal, specific], default value:[normal].
+			Enable:[True,False], default value:[true]
 			Generator:[None,Mirror...]. Generator:None means none .  Mirror:Generate mirror stage when current stage render over
 			-->
-		<Stage Name="S1" Type="normal" Enable="True" Generator=""> 
+		<Stage Name="S1" Type="normal" Enable="True" Generator="">
 
 			<Camera Name="default" /> <!-- camera name default value:[default,Homo], Homo means homogeneous coordinates, the camera's view-projection matrix is identity. -->
 			<ViewPort Name="default" TopLeftX=0 TopLeftY=0 Width=-1 Height=-1 MinDepth=0 MaxDepth=1.0 /><!-- view port for the stage, format[minx, miny, width, height, mindepth, maxdepth]. default value:[0,0,-1,-1,0,1.0],-1 means use the scrren dimensions. -->
-			
+
 			<!-- Type:[backbuffer, texture], default value:[backbuffer], if type is texture, then width and height is the size
 				 IsClearColor,IsClearDepth,IsClearStencil:[True,False],default True
 				 Writable:[True,False], only available twhen Type is texture, if True, then the texture is writable texture, default is False
 			-->
-			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" IsClearColor="" IsClearDepth="" IsClearStencil="" Writable="" /> 
-			
+			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" IsClearColor="" IsClearDepth="" IsClearStencil="" Writable="" />
+
 			<!-- stage texture list
 				Name : the texture name, must not null
 				Type:[File, Stage, StageRenderTarget, Create]
-					File : load texture file on disk, the path is in Location 
+					File : load texture file on disk, the path is in Location
 					Files : load textures from file list
 					Stage : the texture is in Stage's TextureList element, and the Location is 'StageName/TextureName'
 					StageRenderTarget : texture is Stage's RenderTarget, Location is Stage Name
@@ -35,10 +35,13 @@
 			<TextureList>
 				<Texture Name="" Type="" Location="" Width="1.0" Height="1.0" Writable="" />
 			</TextureList>
-			
+
 			<!--stage entity list, the entities have no parent, and draw at last.-->
 			<EntityList>
-				<Entity Type="Quad" VertexType="PosNormal"> <!-- type:now support[Quad, Box], VertexType:[PosColor, PosNormal, PosNormalTex] -->
+				<!--
+					Type:now support[Quad, Box, None], if Type=None, then nothing will render
+					VertexType:[PosColor, PosNormal, PosNormalTex] -->
+				<Entity Type="Quad" VertexType="PosNormal">
 					<Position x="" y="" z="" /> <!--position , in world space.-->
 					<Scale x="" y="" z="" />
 					<Rotation x="" y="" z="" />
@@ -49,11 +52,11 @@
 						<Reflect r="1.0" g="1.0" b="1.0" a="1.0" />
 						<!-- Stage : stage name
 							 Name : the name of texture in stage's TextureList element. -->
-						<DiffuseTexture Stage="" Name="" /> 
+						<DiffuseTexture Stage="" Name="" />
 					</Material>
 
 					<Effect Name="" ShaderType="default" Shader="" Tech="">
-					</Effect> 
+					</Effect>
 				</Entity>
 			</EntityList>
 
@@ -65,7 +68,7 @@
 							None : render nothing
 				Transparent:[Yes,No], whether or not add transparent entity,default No
 			-->
-			<Layer Name="" EntityType="Entity" Transparent="No"> 
+			<Layer Name="" EntityType="Entity" Transparent="No">
 				<!--
 					processing unit: do some spec operation
 				-->
@@ -73,13 +76,13 @@
 					<!--
 						layer render state
 						Type:[BuildIn,Create]. BuildIn:use the build-in render state which name is the 'Name' attribute value. Create:create new render state object.
-						Name:[Solid,Wire,NoCull,CW]. 
+						Name:[Solid,Wire,NoCull,CW].
 					-->
 					<RenderState Type="BuildIn" Name="">
 					</RenderState>
 					<!--
 						Layer Blend configuration
-						Enable:[True,False], 
+						Enable:[True,False],
 						ColorEnable:[None,Red,Green,Blue,Alpha,All], you can use Red|Green style for bit or operation.
 						AlphaConverage:[True,False]
 						Src:[Zero,One,SrcColor,InvSrcColor,SrcAlpha,InvSrcAlpha,DestAlpha,InvDestAlpha,DestColor,InvDestColor,SrcAlphaSat,BlendFactor,InvBlendFactor,Src1Color,InvSrc1Color,Src1Alpha,InvSrc1Alpha]
@@ -89,7 +92,7 @@
 						<RGB Src="" Dest="" Oper="" />
 						<Alpha Src="" Dest="" Oper="" />
 					</Blend>
-					
+
 					<!--
 						Value: integer, default is 0.
 						Layer Stencil configuration
@@ -107,30 +110,36 @@
 						<Front Failed="" DepthFailed="" Pass="" Func="" />
 						<Back Failed="" DepthFailed="" Pass="" Func="" />
 					</Stencil>
-					
-					<!-- Stage Layer effect, if specified, then all entities in the stage Layer will 
+
+					<!-- Stage Layer effect, if specified, then all entities in the stage Layer will
 						 omit their own effect and use the default effect.
-						 Type:[default,specific],if default, then user the engine default shader, else it will load shader by it's name. 
-						 Shader: the name of shader, if Type=default, then it's value means the index of default shaders. 
+						 Type : [Normal, GP], Normal effect and GP effect, GP for GPGPU
 					-->
-					<Effect Name="" ShaderType="default" Shader="" Tech=""> 
-						<!-- param name:the name of the parameter in shader. 
-							 type:[Float, FloatArray, Texture, Matrix] 
+					<Effect Name="" Type="">
+						<!-- for GPGPU config, thread count -->
+						<GP GroupX="" GroupY="" GroupZ="" />
+						<!-- shader config
+							Type : [default,specific],if default, then user the engine default shader, else it will load shader by it's name.
+							Shader : the name of shader, if Type=default, then it's value means the index of default shaders.
 						-->
-						<Param Name="" Type=""/> 
+						<Shader Type="" Name="" Tech="" />
+						<!-- param name:the name of the parameter in shader.
+							 type:[Float, FloatArray, Texture, Matrix]
+						-->
+						<Param Name="" Type=""/>
 							<!-- Data
 									if Type is Float, then Data is float value
 									if Type is FloatArray, then Data is float values with separator ';'.
-									if type is Texture, Data is the texture's name in stage's TextureList element, with the 'StageName/TextureName' style. 
+									if type is Texture, Data is the texture's name in stage's TextureList element, with the 'StageName/TextureName' style.
 									if type is Matrix,then Data is float values with separator ';', 4x4 matrix.
 							-->
 							<Data></Data>
 						</Param>
-					</Effect> 
+					</Effect>
 				</PU>
 			</Layer>
 
-			
+
 		</Stage>
 	</StageList>
 </Renderer>

@@ -82,6 +82,7 @@ public:
 	virtual CWVOID clearPixelShaderResource() override;
 	virtual CWVOID render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) override;
 	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj) override;
+	virtual CWVOID drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo) override;
 
 public:
 	IDXGISwapChain* getSwapChain() { return m_pDxgiSwapChain; }

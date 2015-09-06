@@ -628,6 +628,34 @@ void cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObj
 	}
 }
 
+CWVOID cwD3D11Device::drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo)
+{
+	if (!pShader || !pGPInfo) return;
+
+	D3DX11_TECHNIQUE_DESC techDesc;
+	ID3DX11EffectTechnique* pTech = nullptr;
+
+	cwD3D11Shader* pD3D11Shader = static_cast<cwD3D11Shader*>(pShader);
+
+	if (strTech.empty()) {
+		pTech = pD3D11Shader->getTechnique(0);
+	}
+	else {
+		pTech = pD3D11Shader->getTechnique(strTech);
+	}
+
+	if (!pTech) return;
+	pTech->GetDesc(&techDesc);
+
+	for (CWUINT i = 0; i < techDesc.Passes; ++i) {
+		pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
+		m_pD3D11DeviceContext->Dispatch(pGPInfo->groupX, pGPInfo->groupY, pGPInfo->groupZ);
+	}
+
+	ID3D11ShaderResourceView* nullSRV[1] = { 0 };
+	m_pD3D11DeviceContext->CSSetShaderResources(0, 1, nullSRV);
+}
+
 CWVOID cwD3D11Device::clearPixelShaderResource()
 {
 	ID3D11ShaderResourceView* pSrvs[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = { 0 };

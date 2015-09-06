@@ -17,33 +17,52 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwRenderBatch.h"
+#include "cwGPEffect.h"
+#include "Entity/cwEntity.h"
+#include "Material/cwMaterial.h"
+#include "Device/cwDevice.h"
 #include "Repertory/cwRepertory.h"
 #include "Engine/cwEngine.h"
-#include "Effect/cwEffect.h"
-#include "cwRenderer.h"
+#include "Render/cwRenderer.h"
+#include "Render/cwRenderBatch.h"
 
 NS_MINIR_BEGIN
 
-cwRenderBatch::cwRenderBatch()
+cwGPEffect* cwGPEffect::create()
 {
-	reset();
+	cwGPEffect* pEffect = new cwGPEffect();
+	if (pEffect) {
+		pEffect->autorelease();
+		return pEffect;
+	}
+
+	CW_SAFE_DELETE(pEffect);
+	return nullptr;
 }
 
-cwRenderBatch::~cwRenderBatch()
+cwGPEffect::cwGPEffect()
 {
-	reset();
+
 }
 
-CWVOID cwRenderBatch::reset()
+cwGPEffect::~cwGPEffect()
 {
-	m_pEffect = nullptr;
-	m_pEntity = nullptr;
+
 }
 
-CWVOID cwRenderBatch::render()
+CWVOID cwGPEffect::render(cwRenderBatch* pBatch)
 {
-	cwRepertory::getInstance().getEngine()->getRenderer()->render(this);
+	if (!pBatch) return;
+
+	cwRepertory::getInstance().getEngine()->getRenderer()->setCurrShader(m_pShader);
+	this->config();
+
+	cwMaterial* pMaterial = pBatch->m_pEntity->getMaterial();
+	if (pMaterial)
+		pMaterial->configShader(m_pShader);
+
+	cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+	pDevice->drawGP(m_pShader, m_strTech, &m_nGPInfo);
 }
 
 NS_MINIR_END

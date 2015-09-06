@@ -43,6 +43,7 @@
     <ClInclude Include="Effect\cwEffectMatrixParameter.h" />
     <ClInclude Include="Effect\cwEffectParameter.h" />
     <ClInclude Include="Effect\cwEffectTextureParameter.h" />
+    <ClInclude Include="Effect\cwGPEffect.h" />
     <ClInclude Include="Engine\cwEngine.h" />
     <ClInclude Include="Entity\cwEntity.h" />
     <ClInclude Include="Entity\cwMirror.h" />
@@ -142,6 +143,7 @@
     <ClInclude Include="Render\ProcessingUnit\cwPURender.h" />
     <ClInclude Include="Render\ProcessingUnit\cwPUStageLayer.h" />
     <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerBlend.h" />
+    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerEffect.h" />
     <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerLightTrans.h" />
     <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerStencil.h" />
     <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerWorldTrans.h" />
@@ -175,6 +177,7 @@
     <ClCompile Include="Effect\cwEffectMatrixParameter.cpp" />
     <ClCompile Include="Effect\cwEffectParameter.cpp" />
     <ClCompile Include="Effect\cwEffectTextureParameter.cpp" />
+    <ClCompile Include="Effect\cwGPEffect.cpp" />
     <ClCompile Include="Engine\cwEngine.cpp" />
     <ClCompile Include="Entity\cwEntity.cpp" />
     <ClCompile Include="Entity\cwMirror.cpp" />
@@ -257,6 +260,7 @@
     <ClCompile Include="Render\ProcessingUnit\cwPURender.cpp" />
     <ClCompile Include="Render\ProcessingUnit\cwPUStageLayer.cpp" />
     <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerBlend.cpp" />
+    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerEffect.cpp" />
     <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerLightTrans.cpp" />
     <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerStencil.cpp" />
     <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerWorldTrans.cpp" />

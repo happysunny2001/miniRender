@@ -45,7 +45,6 @@ public:
 	cwBlend* m_pBlend;
 	cwStencil* m_pStencil;
 	cwEntity* m_pEntity;
-	CWSTRING m_nStrTech;
 	cwMatrix4X4 m_nWorldTrans;
 
 };

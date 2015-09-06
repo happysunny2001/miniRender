@@ -161,8 +161,20 @@ CWVOID cwStageParser::parseRenderTarget(cwStage* pStage, tinyxml2::XMLElement* p
 	else if (strncmp(pcType, "texture", 7) == 0) {
 		CWFLOAT fWidth = pRenderTarget->FloatAttribute("Width");
 		CWFLOAT fHeight = pRenderTarget->FloatAttribute("Height");
+		const char* pcWritable = pRenderTarget->Attribute("Writable");
 
-		cwRenderTexture* pRenderTexture = cwRepertory::getInstance().getTextureManager()->createRenderTexture(fWidth, fHeight);
+		cwRenderTexture* pRenderTexture = nullptr;
+
+		if (pcWritable) {
+			if (cwRepertory::getInstance().getParserManager()->getBool(pcWritable))
+				pRenderTexture = cwRepertory::getInstance().getTextureManager()->createRenderTexture(fWidth, fHeight, eRenderTextureWritable);
+			else 
+				pRenderTexture = cwRepertory::getInstance().getTextureManager()->createRenderTexture(fWidth, fHeight);
+		}
+		else {
+			pRenderTexture = cwRepertory::getInstance().getTextureManager()->createRenderTexture(fWidth, fHeight);
+		}
+
 		if (pRenderTexture) {
 			pStage->setRenderTexture(pRenderTexture);
 		}

@@ -52,7 +52,7 @@ public:
 	CWVOID setFliterType(eStageLayerFliterType eType) { m_eFilterType = eType; }
 
 	CWVOID reset();
-	CWVOID begin(cwVector<cwEntity*>& vecEntities);
+	CWVOID begin(cwVector<cwEntity*>* vecEntities);
 	CWVOID render();
 	CWVOID end();
 

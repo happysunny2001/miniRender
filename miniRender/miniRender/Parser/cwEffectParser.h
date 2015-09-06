@@ -25,6 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwUtils.h"
 #include "Ref/cwRef.h"
 #include "effect/cwEffect.h"
+#include "Effect/cwGPEffect.h"
 #include "tinyxml2.h"
 
 NS_MINIR_BEGIN
@@ -42,6 +43,8 @@ public:
 
 protected:
 	CWVOID parseAttribute(cwEffect* pEffect, tinyxml2::XMLElement* pEffectElement);
+	CWVOID parseShader(cwEffect* pEffect, tinyxml2::XMLElement* pEffectElement);
+	CWVOID parseGP(cwGPEffect* pEffect, tinyxml2::XMLElement* pEffectElement);
 
 	cwEffectParameter* parseFloatParameter(tinyxml2::XMLElement* pParameterElement);
 	cwEffectParameter* parseFloatArrayParameter(tinyxml2::XMLElement* pParameterElement);

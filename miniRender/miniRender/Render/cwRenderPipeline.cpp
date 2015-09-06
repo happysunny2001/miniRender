@@ -60,7 +60,6 @@ CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity, cwStageLayer* pStageLayer)
 
 	pBatch->m_pEntity = pEntity;
 	pBatch->m_pEffect = pEntity->getEffect();
-	pBatch->m_nStrTech = pEntity->getEffect()->getTech();
 	pBatch->m_pBlend = pEntity->getBlend();
 	pBatch->m_pStencil = pEntity->getStencil();
 	pBatch->m_nWorldTrans = pEntity->getTransformMatrix();
@@ -75,8 +74,6 @@ CWBOOL cwRenderPipeline::full()
 
 CWVOID cwRenderPipeline::render()
 {
-	cwRepertory::getInstance().getEngine()->getRenderer()->setCurrShader(m_pShader);
-
 	for (CWUINT i = 0; i < m_iBatchIndex; ++i) {
 		m_nVecBatch[i].render();
 	}

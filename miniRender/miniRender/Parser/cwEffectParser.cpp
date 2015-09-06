@@ -53,10 +53,24 @@ cwEffect* cwEffectParser::parse(tinyxml2::XMLElement* pEffectElement)
 {
 	if (!pEffectElement) return nullptr;
 
-	cwEffect* pEffect = cwEffect::create();
-	if (!pEffect) return nullptr;
+	cwEffect* pEffect = nullptr;
+	const char* pcType = pEffectElement->Attribute("Type");
+	if (!pcType) return nullptr;
+
+	if (strlen(pcType) == 6 && strncmp(pcType, "Normal", 6) == 0) {
+		pEffect = cwEffect::create();
+		if (!pEffect) return nullptr;
+	}
+	else if (strlen(pcType) == 2 && strncmp(pcType, "GP", 2) == 0) {
+		cwGPEffect* pGPEffect = cwGPEffect::create();
+		if (!pGPEffect) return nullptr;
+
+		parseGP(pGPEffect, pEffectElement);
+		pEffect = pGPEffect;
+	}
 
 	parseAttribute(pEffect, pEffectElement);
+	parseShader(pEffect, pEffectElement);
 
 	tinyxml2::XMLElement* pParamElement = pEffectElement->FirstChildElement("Param");
 	while (pParamElement){
@@ -91,14 +105,23 @@ CWVOID cwEffectParser::parseAttribute(cwEffect* pEffect, tinyxml2::XMLElement* p
 {
 	if (!pEffectElement || !pEffect) return;
 
-	const char* pcShaderType = pEffectElement->Attribute("ShaderType");
-	const char* pcShader = pEffectElement->Attribute("Shader");
-	const char* pcTech = pEffectElement->Attribute("Tech");
 	const char* pcName = pEffectElement->Attribute("Name");
 
 	if (pcName) {
 		pEffect->setName(pcName);
 	}
+}
+
+CWVOID cwEffectParser::parseShader(cwEffect* pEffect, tinyxml2::XMLElement* pEffectElement)
+{
+	if (!pEffectElement || !pEffect) return;
+
+	tinyxml2::XMLElement* pShaderElement = pEffectElement->FirstChildElement("Shader");
+	if (!pShaderElement) return;
+
+	const char* pcShaderType = pShaderElement->Attribute("Type");
+	const char* pcShader = pShaderElement->Attribute("Name");
+	const char* pcTech = pShaderElement->Attribute("Tech");
 
 	if (strncmp(pcShaderType, "default", 7) == 0) {
 		CWUINT iShaderIndex = atoi(pcShader);
@@ -118,6 +141,22 @@ CWVOID cwEffectParser::parseAttribute(cwEffect* pEffect, tinyxml2::XMLElement* p
 			pEffect->setTech(pcTech);
 		}
 	}
+}
+
+CWVOID cwEffectParser::parseGP(cwGPEffect* pEffect, tinyxml2::XMLElement* pEffectElement)
+{
+	if (!pEffectElement || !pEffect) return;
+
+	tinyxml2::XMLElement* pGPElement = pEffectElement->FirstChildElement("GP");
+	if (!pGPElement) return;
+
+	CWUINT uGroupX = pGPElement->UnsignedAttribute("GroupX");
+	CWUINT uGroupY = pGPElement->UnsignedAttribute("GroupY");
+	CWUINT uGroupZ = pGPElement->UnsignedAttribute("GroupZ");
+
+	pEffect->getGPInfo().groupX = uGroupX;
+	pEffect->getGPInfo().groupY = uGroupY;
+	pEffect->getGPInfo().groupZ = uGroupZ;
 }
 
 cwEffectParameter* cwEffectParser::parseFloatParameter(tinyxml2::XMLElement* pParameterElement)

@@ -12,7 +12,7 @@
 			<Camera Name="Homo" />
 			<ViewPort Name="default" TopLeftX="0" TopLeftY="0" Width="-1" Height="-1" MinDepth="0" MaxDepth="1.0" />
 			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" />
-			<Layer EntityType="Stage"/> 
+			<Layer EntityType="Stage"/>
 
 			<TextureList>
 				<Texture Name="S2Texture" Type="StageRenderTarget" Location="S1" />
@@ -30,8 +30,9 @@
 						<Reflect r="1.0" g="1.0" b="1.0" a="1.0" />
 						<DiffuseTexture Stage="S2" Name="S2Texture" />
 					</Material>
-					<Effect Name="" ShaderType="default" Shader="3" Tech="">
-					</Effect> 
+					<Effect Name="Effect1" Type="Normal">
+						<Shader Type="default" Name="3" Tech="" />
+					</Effect>
 				</Entity>
 			</EntityList>
 		</Stage>

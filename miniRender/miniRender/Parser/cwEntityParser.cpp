@@ -92,6 +92,9 @@ cwEntity* cwEntityParser::getEntity(const CWSTRING& strType, const CWSTRING& str
 	else if (strType == "Box") {
 		cwRepertory::getInstance().getGeoGenerator()->generateBox(mesh);
 	}
+	else if (strType == "None"){
+		return cwEntity::create();
+	}
 	else {
 		return nullptr;
 	}

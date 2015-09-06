@@ -17,33 +17,35 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwRenderBatch.h"
-#include "Repertory/cwRepertory.h"
-#include "Engine/cwEngine.h"
-#include "Effect/cwEffect.h"
-#include "cwRenderer.h"
+#ifndef __CW_PU_STAGE_LAYER_EFFECT_H__
+#define __CW_PU_STAGE_LAYER_EFFECT_H__
+
+#include "Base/cwMacros.h"
+#include "Base/cwBasicType.h"
+#include "cwPUStageLayer.h"
 
 NS_MINIR_BEGIN
 
-cwRenderBatch::cwRenderBatch()
-{
-	reset();
-}
+class cwEffect;
 
-cwRenderBatch::~cwRenderBatch()
+class cwPUStageLayerEffect : public cwPUStageLayer
 {
-	reset();
-}
+public:
+	static cwPUStageLayerEffect* create();
 
-CWVOID cwRenderBatch::reset()
-{
-	m_pEffect = nullptr;
-	m_pEntity = nullptr;
-}
+	cwPUStageLayerEffect();
+	virtual ~cwPUStageLayerEffect();
 
-CWVOID cwRenderBatch::render()
-{
-	cwRepertory::getInstance().getEngine()->getRenderer()->render(this);
-}
+	virtual CWVOID begin() override;
+	virtual CWVOID end() override;
+
+	CWVOID setEffect(cwEffect* pEffect);
+
+protected:
+	cwEffect* m_pEffect;
+
+};
 
 NS_MINIR_END
+
+#endif

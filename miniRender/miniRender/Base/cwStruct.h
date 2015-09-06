@@ -145,6 +145,17 @@ typedef struct cwStencilData
 	eComparison backStencilFunc;
 }cwStencilData;
 
+typedef struct cwGPInfo
+{
+	CWUINT groupX;
+	CWUINT groupY;
+	CWUINT groupZ;
+
+	cwGPInfo() : groupX(0), groupY(0), groupZ(0)
+	{
+	}
+}cwGPInfo;
+
 NS_MINIR_END
 
 #endif

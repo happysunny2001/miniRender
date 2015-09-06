@@ -18,6 +18,14 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwEffect.h"
+#include "Render/cwRenderBatch.h"
+#include "Render/cwRenderer.h"
+#include "RenderObject/cwRenderObject.h"
+#include "Entity/cwEntity.h"
+#include "Material/cwMaterial.h"
+#include "Device/cwDevice.h"
+#include "Repertory/cwRepertory.h"
+#include "Engine/cwEngine.h"
 
 NS_MINIR_BEGIN
 
@@ -70,6 +78,31 @@ CWVOID cwEffect::config()
 	for (auto pParam : m_nVecParameter) {
 		pParam->binding(m_pShader);
 	}
+}
+
+CWVOID cwEffect::render(cwRenderBatch* pBatch)
+{
+	if (!pBatch) return;
+	if (!pBatch->m_pEntity) return;
+
+	cwRepertory::getInstance().getEngine()->getRenderer()->setCurrShader(m_pShader);
+	this->config();
+
+	cwRenderObject* pRenderObj = pBatch->m_pEntity->getRenderObj();
+	if (!pRenderObj) return;
+
+	cwMaterial* pMaterial = pBatch->m_pEntity->getMaterial();
+	if (pMaterial)
+		pMaterial->configShader(m_pShader);
+
+	cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+
+	pDevice->setBlend(pBatch->m_pBlend);
+	pDevice->setStencil(pBatch->m_pStencil);
+	pDevice->setShaderWorldTrans(m_pShader, pBatch->m_nWorldTrans, cwRepertory::getInstance().getEngine()->getRenderer()->getCurrCamera());
+	pDevice->draw(m_pShader, m_strTech, pRenderObj);
+
+	pBatch->m_pEntity->render();
 }
 
 NS_MINIR_END

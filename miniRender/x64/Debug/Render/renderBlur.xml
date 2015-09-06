@@ -2,11 +2,89 @@
 <Renderer>
 	<StageList>
 
-		<Stage Name="S1" Type="normal" Enable="True">
-			<Camera Name="default" />
-			<ViewPort Name="default" TopLeftX="0" TopLeftY="0" Width="-1" Height="-1" MinDepth="0" MaxDepth="1.0" />
-			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" />
-		</Stage>
+                        <Stage Name="S1" Type="normal" Enable="True">
+                            <Camera Name="default" />
+                            <ViewPort Name="default" TopLeftX="0" TopLeftY="0" Width="-1" Height="-1" MinDepth="0" MaxDepth="1.0" />
+                            <RenderTarget Type="texture" Width="1.0" Height="1.0" Writable="True" />
+                        </Stage>
+
+                        <Stage Name="S2" Type="normal" Enable="True">
+                            <Camera Name="default" />
+                            <ViewPort Name="default" TopLeftX="0" TopLeftY="0" Width="-1" Height="-1" MinDepth="0" MaxDepth="1.0" />
+                            <RenderTarget Type="backbuffer" Width="1.0" Height="1.0" />
+
+                            <TextureList>
+                                <Texture Name="S1RenderTarget" Type="StageRenderTarget" Location="S1" Width="" Height="" Writable="" />
+                                <Texture Name="S2Texture" Type="Create" Location="" Width="1.0" Height="1.0" Writable="True" />
+                            </TextureList>
+
+                            <EntityList>
+                                <Entity Type="None" VertexType="">
+                                    <Position x="0" y="0" z="0" />
+                                    <Scale x="1.0" y="1.0" z="1.0" />
+                                    <Rotation x="0" y="0" z="0" />
+                                </Entity>
+                            </EntityList>
+
+                            <Layer Name="Layer1" EntityType="Stage" Transparent="No">
+                                <PU>
+                                    <Effect Name="Effect1" Type="GP">
+                                        <Shader Type="specific" Name="effect/D3D11/blur.fx" Tech="HorzBlur" />
+                                        <GP GroupX="4" GroupY="600" GroupZ="1" />
+                                        <Param Name="gInput" Type="Texture"/>
+                                            <Data>S2/S1RenderTarget</Data>
+                                        </Param>
+                                        <Param Name="gOutput" Type="Texture"/>
+                                            <Data>S2/S2Texture</Data>
+                                        </Param>
+                                    </Effect>
+                                </PU>
+                            </Layer>
+
+                            <Layer Name="Layer2" EntityType="Stage" Transparent="No">
+                                <PU>
+                                    <Effect Name="Effect1" Type="GP">
+                                        <Shader Type="specific" Name="effect/D3D11/blur.fx" Tech="VertBlur" />
+                                        <GP GroupX="800" GroupY="3" GroupZ="1" />
+                                        <Param Name="gInput" Type="Texture"/>
+                                            <Data>S2/S2Texture</Data>
+                                        </Param>
+                                        <Param Name="gOutput" Type="Texture"/>
+                                            <Data>S2/S1RenderTarget</Data>
+                                        </Param>
+                                    </Effect>
+                                </PU>
+                            </Layer>
+                        </Stage>
+
+                        <Stage Name="S3" Type="normal" Enable="True">
+                            <Camera Name="Homo" />
+                            <ViewPort Name="default" TopLeftX="0" TopLeftY="0" Width="-1" Height="-1" MinDepth="0" MaxDepth="1.0" />
+                            <RenderTarget Type="backbuffer" Width="1.0" Height="1.0" />
+                            <Layer EntityType="Stage"/>
+
+                            <TextureList>
+                                <Texture Name="S1RenderTarget" Type="StageRenderTarget" Location="S1" Width="" Height="" Writable="" />
+                            </TextureList>
+
+                            <EntityList>
+                                <Entity Type="Quad" VertexType="PosTex">
+                                    <Position x="0" y="0" z="0" />
+                                    <Scale x="1.0" y="1.0" z="1.0" />
+                                    <Rotation x="0" y="0" z="0" />
+                                    <Material>
+                                        <Ambient r="1.0" g="1.0" b="1.0" a="1.0" />
+                                        <Diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+                                        <Specular r="1.0" g="1.0" b="1.0" a="1.0" />
+                                        <Reflect r="1.0" g="1.0" b="1.0" a="1.0" />
+                                        <DiffuseTexture Stage="S3" Name="S1RenderTarget" />
+                                    </Material>
+                                    <Effect Name="Effect1" Type="Normal">
+                                        <Shader Type="default" Name="3" Tech="" />
+                                    </Effect>
+                                </Entity>
+                            </EntityList>
+                        </Stage>
 
 	</StageList>
 </Renderer>

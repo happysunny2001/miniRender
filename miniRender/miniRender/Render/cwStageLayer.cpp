@@ -85,11 +85,12 @@ CWVOID cwStageLayer::reset()
 	m_nMapPipeline.clear();
 }
 
-CWVOID cwStageLayer::begin(cwVector<cwEntity*>& vecEntities)
+CWVOID cwStageLayer::begin(cwVector<cwEntity*>* vecEntities)
 {
 	reset();
 
-	addEntities(vecEntities);
+	if (vecEntities)
+		addEntities(*vecEntities);
 
 	for (auto pPU : m_nVecPU) {
 		pPU->begin();
@@ -126,7 +127,11 @@ CWVOID cwStageLayer::addEntities(cwVector<cwEntity*>& vecEntities)
 cwRenderPipeline* cwStageLayer::getPipeline(cwEntity* pEntity)
 {
 	cwRenderPipeline* pPipeLine = nullptr;
-	cwShader* pShader = pEntity->getEffect()->getShader();
+	cwEffect* pEffect = pEntity->getEffect();
+	cwShader* pShader = nullptr;
+	if (pEffect)
+		pShader = pEffect->getShader();
+
 	if (m_nMapPipeline.find(pShader) != m_nMapPipeline.end()) {
 		pPipeLine = m_nMapPipeline[pShader];
 	}

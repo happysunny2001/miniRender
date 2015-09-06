@@ -33,6 +33,7 @@ NS_MINIR_BEGIN
 class cwPUStageLayer;
 class cwPUStageLayerBlend;
 class cwPUStageLayerStencil;
+class cwPUStageLayerEffect;
 
 class cwPUStageLayerParser : public cwRef
 {
@@ -46,6 +47,7 @@ public:
 protected:
 	cwPUStageLayerBlend* parsePUBlend(tinyxml2::XMLElement* pBlendElement);
 	cwPUStageLayerStencil* parsePUStencil(tinyxml2::XMLElement* pStencilElement);
+	cwPUStageLayerEffect* parsePUEffect(tinyxml2::XMLElement* pEffectElement);
 
 protected:
 	std::unordered_map <CWSTRING, std::function<cwPUStageLayer*(tinyxml2::XMLElement*)>> m_nMapParser;
