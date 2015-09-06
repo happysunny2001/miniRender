@@ -36,9 +36,11 @@ public:
 
 	virtual CWVOID binding(cwShader* pShader) override;
 	CWVOID setTexture(cwTexture* pTexture);
+	CWVOID setWritable(CWBOOL bWritable) { m_bWritable = bWritable; }
 
 protected:
 	cwTexture* m_pTexture;
+	CWBOOL m_bWritable;
 
 };
 

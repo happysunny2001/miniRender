@@ -18,6 +18,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwEffectTextureParameter.h"
+#include "Texture/cwRenderTexture.h"
 
 NS_MINIR_BEGIN
 
@@ -33,7 +34,8 @@ cwEffectTextureParameter* cwEffectTextureParameter::create()
 }
 
 cwEffectTextureParameter::cwEffectTextureParameter():
-m_pTexture(nullptr)
+m_pTexture(nullptr),
+m_bWritable(CWFALSE)
 {
 
 }
@@ -46,7 +48,12 @@ cwEffectTextureParameter::~cwEffectTextureParameter()
 CWVOID cwEffectTextureParameter::binding(cwShader* pShader)
 {
 	if (pShader) {
-		pShader->setVariableTexture(m_nStrParamName, m_pTexture);
+		if (!m_bWritable)
+			pShader->setVariableTexture(m_nStrParamName, m_pTexture);
+		else {
+			if (m_pTexture->getType() == eRenderTextureWritable)
+				pShader->setVariableTextureWritable(m_nStrParamName, static_cast<cwRenderTexture*>(m_pTexture));
+		}
 	}
 }
 

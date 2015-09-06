@@ -125,8 +125,9 @@
 						<Shader Type="" Name="" Tech="" />
 						<!-- param name:the name of the parameter in shader.
 							 type:[Float, FloatArray, Texture, Matrix]
+							 Writable : [True,False]
 						-->
-						<Param Name="" Type=""/>
+						<Param Name="" Type="" Writable=""/>
 							<!-- Data
 									if Type is Float, then Data is float value
 									if Type is FloatArray, then Data is float values with separator ';'.

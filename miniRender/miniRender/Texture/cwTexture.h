@@ -29,7 +29,7 @@ NS_MINIR_BEGIN
 class CW_DLL cwTexture : public cwRef
 {
 public:
-	cwTexture() {}
+	cwTexture();
 	virtual ~cwTexture() {}
 
 	virtual CWHANDLE getRenderHandle() const;
@@ -39,8 +39,12 @@ public:
 	virtual const CWSTRING& getName() const;
 	inline CWVOID setName(const CWSTRING& name) { m_nStrName = name; }
 
+	inline eRenderTextureType getType() const { return m_eType; }
+
 protected:
 	CWSTRING m_nStrName;
+
+	eRenderTextureType m_eType;
 
 };
 

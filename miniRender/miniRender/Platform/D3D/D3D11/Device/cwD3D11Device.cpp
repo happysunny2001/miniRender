@@ -662,6 +662,17 @@ CWVOID cwD3D11Device::clearPixelShaderResource()
 	m_pD3D11DeviceContext->PSSetShaderResources(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, pSrvs);
 }
 
+CWVOID cwD3D11Device::clearGPGPUResource()
+{
+	ID3D11ShaderResourceView* nullSRV[1] = { 0 };
+	m_pD3D11DeviceContext->CSSetShaderResources(0, 1, nullSRV);
+
+	ID3D11UnorderedAccessView* nullUAV[1] = { 0 };
+	m_pD3D11DeviceContext->CSSetUnorderedAccessViews(0, 1, nullUAV, 0);
+
+	m_pD3D11DeviceContext->CSSetShader(0, 0, 0);
+}
+
 void cwD3D11Device::initBlendBaseData()
 {
 	blendFactor[eBlendFactorZero]           = D3D11_BLEND_ZERO;

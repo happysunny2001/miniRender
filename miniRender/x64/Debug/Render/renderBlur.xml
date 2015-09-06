@@ -31,10 +31,10 @@
                                     <Effect Name="Effect1" Type="GP">
                                         <Shader Type="specific" Name="effect/D3D11/blur.fx" Tech="HorzBlur" />
                                         <GP GroupX="4" GroupY="600" GroupZ="1" />
-                                        <Param Name="gInput" Type="Texture"/>
+                                        <Param Name="gInput" Type="Texture">
                                             <Data>S2/S1RenderTarget</Data>
                                         </Param>
-                                        <Param Name="gOutput" Type="Texture"/>
+                                        <Param Name="gOutput" Type="Texture" Writable="True">
                                             <Data>S2/S2Texture</Data>
                                         </Param>
                                     </Effect>
@@ -46,10 +46,10 @@
                                     <Effect Name="Effect1" Type="GP">
                                         <Shader Type="specific" Name="effect/D3D11/blur.fx" Tech="VertBlur" />
                                         <GP GroupX="800" GroupY="3" GroupZ="1" />
-                                        <Param Name="gInput" Type="Texture"/>
+                                        <Param Name="gInput" Type="Texture">
                                             <Data>S2/S2Texture</Data>
                                         </Param>
-                                        <Param Name="gOutput" Type="Texture"/>
+                                        <Param Name="gOutput" Type="Texture" Writable="True">
                                             <Data>S2/S1RenderTarget</Data>
                                         </Param>
                                     </Effect>

@@ -30,6 +30,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Render/cwRenderer.h"
 #include "Render/cwStage.h"
 #include "Engine/cwEngine.h"
+#include "cwParserManager.h"
 
 NS_MINIR_BEGIN
 
@@ -134,7 +135,7 @@ CWVOID cwEffectParser::parseShader(cwEffect* pEffect, tinyxml2::XMLElement* pEff
 		}
 	}
 	else if (strncmp(pcShaderType, "specific", 8) == 0) {
-		cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getShader(pcShader);
+		cwShader* pShader = cwRepertory::getInstance().getShaderManager()->loadShader(pcShader);
 
 		if (pShader) {
 			pEffect->setShader(pShader);
@@ -272,7 +273,9 @@ cwEffectParameter* cwEffectParser::parseTextureParameter(tinyxml2::XMLElement* p
 	if (!pParameterElement) return nullptr;
 
 	const char* pcName = pParameterElement->Attribute("Name");
-	if (pcName) return nullptr;
+	if (!pcName) return nullptr;
+
+	const char* pcWritable = pParameterElement->Attribute("Writable");
 
 	tinyxml2::XMLElement* pDataElement = pParameterElement->FirstChildElement("Data");
 	if (pDataElement) {
@@ -291,6 +294,10 @@ cwEffectParameter* cwEffectParser::parseTextureParameter(tinyxml2::XMLElement* p
 				if (pEffectTextureParam) {
 					pEffectTextureParam->setParameterName(pcName);
 					pEffectTextureParam->setTexture(pTexture);
+
+					if (pcWritable)
+						pEffectTextureParam->setWritable(cwRepertory::getInstance().getParserManager()->getBool(pcWritable));
+
 					return pEffectTextureParam;
 				}
 			}

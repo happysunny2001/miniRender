@@ -21,6 +21,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
+cwTexture::cwTexture()
+{
+	m_eType = eRenderTextureTexture;
+}
+
 const CWSTRING& cwTexture::getName() const
 {
 	return m_nStrName;

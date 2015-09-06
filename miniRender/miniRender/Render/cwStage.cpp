@@ -158,6 +158,9 @@ CWVOID cwStage::end()
 	for (auto pGenerator : m_nVecGenerator) {
 		pGenerator->generate();
 	}
+
+	cwRepertory::getInstance().getDevice()->clearGPGPUResource();
+	cwRepertory::getInstance().getDevice()->clearPixelShaderResource();
 }
 
 CWVOID cwStage::addStageEntity(cwEntity* pEntity)
