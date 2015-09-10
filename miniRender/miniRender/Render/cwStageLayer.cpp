@@ -24,7 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "Blend/cwBlend.h"
 #include "Stencil/cwStencil.h"
-#include "ProcessingUnit/cwPUStageLayer.h"
+#include "ProcessingUnit/StageLayer/cwPUStageLayer.h"
 
 NS_MINIR_BEGIN
 
@@ -99,6 +99,7 @@ CWVOID cwStageLayer::begin(cwVector<cwEntity*>* vecEntities)
 
 CWVOID cwStageLayer::render()
 {
+	m_eOldRenderState = cwRepertory::getInstance().getDevice()->getRenderState();
 	cwRepertory::getInstance().getDevice()->setRenderState(m_eRenderState);
 
 	for (CWUINT i = 0; i < m_iPipeLineIndex; ++i) {
@@ -111,6 +112,8 @@ CWVOID cwStageLayer::end()
 	for (auto pPU : m_nVecPU) {
 		pPU->end();
 	}
+
+	cwRepertory::getInstance().getDevice()->setRenderState(m_eOldRenderState);
 }
 
 CWVOID cwStageLayer::addEntities(cwVector<cwEntity*>& vecEntities)

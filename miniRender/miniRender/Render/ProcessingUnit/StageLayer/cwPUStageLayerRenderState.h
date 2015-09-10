@@ -17,42 +17,30 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_PU_STAGE_LAYER_PARSER_H__
-#define __CW_PU_STAGE_LAYER_PARSER_H__
+#ifndef __CW_PU_STAGE_LAYER_RENDER_STATE_H__
+#define __CW_PU_STAGE_LAYER_RENDER_STATE_H__
 
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
-#include "Base/cwVector.h"
-#include "Ref/cwRef.h"
-#include "tinyxml2.h"
-
-#include <unordered_map>
+#include "cwPUStageLayer.h"
 
 NS_MINIR_BEGIN
 
-class cwPUStageLayer;
-class cwPUStageLayerBlend;
-class cwPUStageLayerStencil;
-class cwPUStageLayerEffect;
-class cwPUStageLayerRenderState;
-
-class cwPUStageLayerParser : public cwRef
+class cwPUStageLayerRenderState : public cwPUStageLayer
 {
 public:
-	static cwPUStageLayerParser* create();
+	static cwPUStageLayerRenderState* create();
 
-	cwPUStageLayerParser();
+	cwPUStageLayerRenderState();
+	virtual ~cwPUStageLayerRenderState();
 
-	cwVector<cwPUStageLayer*> parse(tinyxml2::XMLElement* pPUElement);
+	virtual CWVOID begin() override;
+	virtual CWVOID end() override;
 
-protected:
-	cwPUStageLayerBlend* parsePUBlend(tinyxml2::XMLElement* pBlendElement);
-	cwPUStageLayerStencil* parsePUStencil(tinyxml2::XMLElement* pStencilElement);
-	cwPUStageLayerEffect* parsePUEffect(tinyxml2::XMLElement* pEffectElement);
-	cwPUStageLayerRenderState* parsePURenderState(tinyxml2::XMLElement* pRenderStateElement);
+	inline CWVOID setRenderState(eRenderState eState) { m_eRenderState = eState; }
 
 protected:
-	std::unordered_map <CWSTRING, std::function<cwPUStageLayer*(tinyxml2::XMLElement*)>> m_nMapParser;
+	eRenderState m_eRenderState;
 
 };
 

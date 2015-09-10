@@ -492,19 +492,7 @@
     <ClInclude Include="Render\ProcessingUnit\cwPURender.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerBlend.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerStencil.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Parser\cwPUStageLayerParser.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerWorldTrans.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Light\cwDirectionalLight.h">
@@ -517,9 +505,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Light\cwLight.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerLightTrans.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Texture\cwTextureArray.h">
@@ -558,7 +543,28 @@
     <ClInclude Include="Effect\cwGPEffect.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\cwPUStageLayerEffect.h">
+    <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerBlend.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerEffect.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerLightTrans.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerStencil.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerWorldTrans.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerRenderState.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser\cwRenderStateParser.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -836,19 +842,7 @@
     <ClCompile Include="Render\ProcessingUnit\cwPURender.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerBlend.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerStencil.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Parser\cwPUStageLayerParser.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerWorldTrans.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Light\cwDirectionalLight.cpp">
@@ -861,9 +855,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Light\cwLight.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerLightTrans.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Texture\cwTextureArray.cpp">
@@ -902,7 +893,28 @@
     <ClCompile Include="Effect\cwGPEffect.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\cwPUStageLayerEffect.cpp">
+    <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerBlend.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerEffect.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerLightTrans.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerStencil.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerWorldTrans.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerRenderState.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser\cwRenderStateParser.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -17,45 +17,39 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_PU_STAGE_LAYER_PARSER_H__
-#define __CW_PU_STAGE_LAYER_PARSER_H__
+#include "TessellationDemo.h"
+#include "TessellationDemoScene.h"
 
-#include "Base/cwMacros.h"
-#include "Base/cwBasicType.h"
-#include "Base/cwVector.h"
-#include "Ref/cwRef.h"
-#include "tinyxml2.h"
-
-#include <unordered_map>
-
-NS_MINIR_BEGIN
-
-class cwPUStageLayer;
-class cwPUStageLayerBlend;
-class cwPUStageLayerStencil;
-class cwPUStageLayerEffect;
-class cwPUStageLayerRenderState;
-
-class cwPUStageLayerParser : public cwRef
+TessellationDemo::TessellationDemo()
 {
-public:
-	static cwPUStageLayerParser* create();
 
-	cwPUStageLayerParser();
+}
 
-	cwVector<cwPUStageLayer*> parse(tinyxml2::XMLElement* pPUElement);
+TessellationDemo::~TessellationDemo()
+{
 
-protected:
-	cwPUStageLayerBlend* parsePUBlend(tinyxml2::XMLElement* pBlendElement);
-	cwPUStageLayerStencil* parsePUStencil(tinyxml2::XMLElement* pStencilElement);
-	cwPUStageLayerEffect* parsePUEffect(tinyxml2::XMLElement* pEffectElement);
-	cwPUStageLayerRenderState* parsePURenderState(tinyxml2::XMLElement* pRenderStateElement);
+}
 
-protected:
-	std::unordered_map <CWSTRING, std::function<cwPUStageLayer*(tinyxml2::XMLElement*)>> m_nMapParser;
+CWVOID TessellationDemo::gameBegin()
+{
+	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderTessellation.xml");
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 150.0f, -200.0f);
+	
+	TessellationDemoScene* pScene = TessellationDemoScene::create();
+	cwRepertory::getInstance().getEngine()->setScene(pScene);
+}
 
-};
+CWVOID TessellationDemo::gameEnd()
+{
 
-NS_MINIR_END
+}
 
-#endif
+CWVOID TessellationDemo::gameBeginBackGround()
+{
+
+}
+
+CWVOID TessellationDemo::gameEndBackGround()
+{
+
+}

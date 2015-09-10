@@ -79,8 +79,7 @@ public:
 	virtual CWVOID setStencil(const cwStencil* pStencil);
 	virtual CWVOID setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) override;
 
-	virtual CWVOID clearPixelShaderResource() override;
-	virtual CWVOID clearGPGPUResource() override;
+	virtual CWVOID clearShaderResource() override;
 
 	virtual CWVOID render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) override;
 	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj) override;

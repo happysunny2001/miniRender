@@ -54,6 +54,11 @@ cwDevice::~cwDevice()
 	CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
 }
 
+eRenderState cwDevice::getRenderState()
+{
+	return m_eRenderState;
+}
+
 void cwDevice::setRenderTarget(cwRenderTexture* pRenderTexture)
 {
 	if (m_pCurrRenderTarget == pRenderTexture) return;

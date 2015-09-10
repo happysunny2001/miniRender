@@ -52,7 +52,10 @@ public:
 
 	virtual cwViewPort* createViewPort(CWFLOAT fTopLeftX, CWFLOAT fTopLeftY, CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fMinDepth=0.0f, CWFLOAT fMaxDepth=1.0f) = 0;
 	virtual CWVOID setViewPort(cwViewPort* pViewPort);
+
 	virtual CWVOID createRenderState() = 0;
+	virtual CWVOID setRenderState(eRenderState e) = 0;
+	virtual eRenderState getRenderState();
 
 	virtual CWVOID beginDraw(CWBOOL bClearColor = CWTRUE, CWBOOL bClearDepth = CWTRUE, CWBOOL bClearStencil = CWTRUE) = 0;
 	virtual CWVOID endDraw() = 0;
@@ -61,8 +64,6 @@ public:
 	virtual CWVOID setInputLayout(cwLayouts* pInputLayout) = 0;
 	virtual CWVOID setPrimitiveTopology(ePrimitiveType topology) = 0;
 	virtual CWVOID setClearColor(const cwVector4D& fvColor) = 0;
-	virtual CWVOID setRenderState(eRenderState e) = 0;
-	virtual CWVOID drawIndexed(CWUINT indexCnt, CWUINT startIndex, CWINT baseVertex) = 0;
 
 	virtual cwShader* createShader(const string& strName) = 0;
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) = 0;
@@ -88,12 +89,12 @@ public:
 	virtual CWVOID setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) = 0;
 	virtual CWVOID setRenderTarget(cwRenderTexture* pRenderTexture);
 
-	virtual CWVOID clearPixelShaderResource() = 0;
-	virtual CWVOID clearGPGPUResource() = 0;
+	virtual CWVOID clearShaderResource() = 0;
 
 	virtual CWVOID render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) = 0;
 	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj) = 0;
 	virtual CWVOID drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo) = 0;
+	virtual CWVOID drawIndexed(CWUINT indexCnt, CWUINT startIndex, CWINT baseVertex) = 0;
 
 	inline CWBOOL getEnableMsaa4X() const { return m_bEnableMsaa4x; }
 

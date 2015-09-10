@@ -269,6 +269,7 @@ typedef enum {
 	eParserStageLayerPU,
 	eParserTexture,
 	eParserEffect,
+	eParserRenderState,
 	eParserTypeMax
 }eParserType;
 

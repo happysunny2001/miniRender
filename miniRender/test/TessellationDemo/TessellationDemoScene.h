@@ -17,45 +17,42 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_PU_STAGE_LAYER_PARSER_H__
-#define __CW_PU_STAGE_LAYER_PARSER_H__
+#ifndef __TESSELLATION_DEMO_SCENE_H__
+#define __TESSELLATION_DEMO_SCENE_H__
 
-#include "Base/cwMacros.h"
-#include "Base/cwBasicType.h"
-#include "Base/cwVector.h"
-#include "Ref/cwRef.h"
-#include "tinyxml2.h"
+#include "cwMiniRender.h"
+NS_USING_MINIR;
 
-#include <unordered_map>
-
-NS_MINIR_BEGIN
-
-class cwPUStageLayer;
-class cwPUStageLayerBlend;
-class cwPUStageLayerStencil;
-class cwPUStageLayerEffect;
-class cwPUStageLayerRenderState;
-
-class cwPUStageLayerParser : public cwRef
+class TessellationDemoScene : public cwScene
 {
 public:
-	static cwPUStageLayerParser* create();
+	static TessellationDemoScene* create();
 
-	cwPUStageLayerParser();
+	TessellationDemoScene();
+	virtual ~TessellationDemoScene();
 
-	cwVector<cwPUStageLayer*> parse(tinyxml2::XMLElement* pPUElement);
+	virtual CWBOOL init() override;
+
+	virtual CWVOID onTouchDown(cwTouch* pTouch) override;
+	virtual CWVOID onTouchUp(cwTouch* pTouch) override;
+	virtual CWVOID onTouchMoving(cwTouch* pTouch) override;
 
 protected:
-	cwPUStageLayerBlend* parsePUBlend(tinyxml2::XMLElement* pBlendElement);
-	cwPUStageLayerStencil* parsePUStencil(tinyxml2::XMLElement* pStencilElement);
-	cwPUStageLayerEffect* parsePUEffect(tinyxml2::XMLElement* pEffectElement);
-	cwPUStageLayerRenderState* parsePURenderState(tinyxml2::XMLElement* pRenderStateElement);
+	CWVOID buildEntity();
 
 protected:
-	std::unordered_map <CWSTRING, std::function<cwPUStageLayer*(tinyxml2::XMLElement*)>> m_nMapParser;
+	CWFLOAT m_fLastX;
+	CWFLOAT m_fLastY;
+	CWFLOAT m_fTheta;
+	CWFLOAT m_fPhi;
+	CWFLOAT m_fRadius;
+
+	CWFLOAT m_fTime;
+	CWINT m_iCount;
+
+	bool m_bTouchDown;
 
 };
 
-NS_MINIR_END
-
 #endif
+

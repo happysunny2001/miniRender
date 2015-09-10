@@ -27,12 +27,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-typedef struct 
-{
-	CWUINT startSlot;
-	CWUINT numBuffers;
-}CW_VERTEX_BUFFER_MSG;
-
 //vertex structure
 typedef struct 
 {

@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeometryShaderDemo", "test\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BlurDemo", "test\BlurDemo\BlurDemo.vcxproj", "{DE6FB2FA-A327-4BC2-A476-80388F979537}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TessellationDemo", "test\TessellationDemo\TessellationDemo.vcxproj", "{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +119,18 @@ Global
 		{DE6FB2FA-A327-4BC2-A476-80388F979537}.Release|Win32.ActiveCfg = Release|Win32
 		{DE6FB2FA-A327-4BC2-A476-80388F979537}.Release|Win32.Build.0 = Release|Win32
 		{DE6FB2FA-A327-4BC2-A476-80388F979537}.Release|x64.ActiveCfg = Release|Win32
+		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}.Debug|Win32.Build.0 = Debug|Win32
+		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}.Debug|x64.ActiveCfg = Debug|Win32
+		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}.Release|Any CPU.ActiveCfg = Release|Win32
+		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}.Release|Win32.ActiveCfg = Release|Win32
+		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}.Release|Win32.Build.0 = Release|Win32
+		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -128,5 +142,6 @@ Global
 		{3E1C6602-CD8F-44AD-95BF-87D644340129} = {873F1DFA-D35C-41AC-90AC-1D57C7A7446E}
 		{4600600F-163B-4DAF-A547-7282C47F4FE6} = {873F1DFA-D35C-41AC-90AC-1D57C7A7446E}
 		{DE6FB2FA-A327-4BC2-A476-80388F979537} = {873F1DFA-D35C-41AC-90AC-1D57C7A7446E}
+		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E} = {873F1DFA-D35C-41AC-90AC-1D57C7A7446E}
 	EndGlobalSection
 EndGlobal

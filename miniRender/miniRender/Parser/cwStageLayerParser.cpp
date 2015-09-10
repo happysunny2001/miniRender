@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwStageLayerParser.h"
 #include "Repertory/cwRepertory.h"
-#include "Render/ProcessingUnit/cwPUStageLayer.h"
+#include "Render/ProcessingUnit/StageLayer/cwPUStageLayer.h"
 #include "cwParserManager.h"
 #include "cwPUStageLayerParser.h"
 

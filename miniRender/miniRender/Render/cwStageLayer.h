@@ -81,6 +81,7 @@ protected:
 	cwVector<cwPUStageLayer*> m_nVecPU;
 
 	eRenderState m_eRenderState;
+	eRenderState m_eOldRenderState;
 
 	cwRenderPipeline m_nPipeline[CW_STAGE_PIPELINE_SIZE];
 	CWUINT m_iPipeLineIndex;

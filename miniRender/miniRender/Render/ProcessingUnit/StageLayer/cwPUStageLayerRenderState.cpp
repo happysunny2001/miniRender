@@ -17,32 +17,45 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_PU_STAGE_LAYER_H__
-#define __CW_PU_STAGE_LAYER_H__
-
-#include "Base/cwMacros.h"
-#include "Base/cwBasicType.h"
-#include "Ref/cwRef.h"
-#include "cwPURender.h"
+#include "cwPUStageLayerRenderState.h"
+#include "Render/cwStageLayer.h"
 
 NS_MINIR_BEGIN
 
-class cwStageLayer;
-
-class cwPUStageLayer : public cwPURender
+cwPUStageLayerRenderState* cwPUStageLayerRenderState::create()
 {
-public:
-	cwPUStageLayer();
-	virtual ~cwPUStageLayer();
+	cwPUStageLayerRenderState* pPUStageLayer = new cwPUStageLayerRenderState();
+	if (pPUStageLayer) {
+		pPUStageLayer->autorelease();
+		return pPUStageLayer;
+	}
 
-	inline CWVOID setStageLayer(cwStageLayer* pStageLayer) { m_pStageLayer = pStageLayer; }
-	inline cwStageLayer* getStageLayer() const { return m_pStageLayer; }
+	return nullptr;
+}
 
-protected:
-	cwStageLayer* m_pStageLayer;
+cwPUStageLayerRenderState::cwPUStageLayerRenderState() : 
+m_eRenderState(eRenderStateNone)
+{
 
-};
+}
+
+cwPUStageLayerRenderState::~cwPUStageLayerRenderState()
+{
+
+}
+
+CWVOID cwPUStageLayerRenderState::begin()
+{
+	if (!m_pStageLayer) return;
+
+	if (m_eRenderState != eRenderStateNone) {
+		m_pStageLayer->setRenderState(m_eRenderState);
+	}
+}
+
+CWVOID cwPUStageLayerRenderState::end()
+{
+
+}
 
 NS_MINIR_END
-
-#endif

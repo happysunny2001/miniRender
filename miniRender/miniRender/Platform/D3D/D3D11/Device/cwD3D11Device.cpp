@@ -331,7 +331,7 @@ void cwD3D11Device::beginDraw(CWBOOL bClearColor, CWBOOL bClearDepth, CWBOOL bCl
 void cwD3D11Device::endDraw()
 {
 	m_pCurrRenderTarget->endDraw();
-	clearPixelShaderResource();
+	this->clearShaderResource();
 }
 
 void cwD3D11Device::swap()
@@ -656,14 +656,11 @@ CWVOID cwD3D11Device::drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInf
 	m_pD3D11DeviceContext->CSSetShaderResources(0, 1, nullSRV);
 }
 
-CWVOID cwD3D11Device::clearPixelShaderResource()
+CWVOID cwD3D11Device::clearShaderResource()
 {
 	ID3D11ShaderResourceView* pSrvs[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = { 0 };
 	m_pD3D11DeviceContext->PSSetShaderResources(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, pSrvs);
-}
 
-CWVOID cwD3D11Device::clearGPGPUResource()
-{
 	ID3D11ShaderResourceView* nullSRV[1] = { 0 };
 	m_pD3D11DeviceContext->CSSetShaderResources(0, 1, nullSRV);
 

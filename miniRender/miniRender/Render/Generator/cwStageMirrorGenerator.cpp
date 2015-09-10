@@ -29,11 +29,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Render/cwStage.h"
 #include "Render/cwStageLayer.h"
 #include "Render/cwRenderer.h"
-#include "Render/ProcessingUnit/cwPUStageLayer.h"
-#include "Render/ProcessingUnit/cwPUStageLayerStencil.h"
-#include "Render/ProcessingUnit/cwPUStageLayerBlend.h"
-#include "Render/ProcessingUnit/cwPUStageLayerWorldTrans.h"
-#include "Render/ProcessingUnit/cwPUStageLayerLightTrans.h"
+#include "Render/ProcessingUnit/StageLayer/cwPUStageLayer.h"
+#include "Render/ProcessingUnit/StageLayer/cwPUStageLayerStencil.h"
+#include "Render/ProcessingUnit/StageLayer/cwPUStageLayerBlend.h"
+#include "Render/ProcessingUnit/StageLayer/cwPUStageLayerWorldTrans.h"
+#include "Render/ProcessingUnit/StageLayer/cwPUStageLayerLightTrans.h"
 
 NS_MINIR_BEGIN
 

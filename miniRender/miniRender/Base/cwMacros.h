@@ -20,7 +20,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifndef __CW_MACROS_H__
 #define __CW_MACROS_H__
 
-//#include <functional>
 #include "Platform/cwPlatform.h"
 
 #if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
@@ -82,5 +81,7 @@ do {\
 #define CW_CALLBACK_0(__selector__, __target__, ...) std::bind(&__selector__, __target__, ##__VA_ARGS__)
 #define CW_CALLBACK_1(__selector__, __target__, ...) std::bind(&__selector__, __target__, std::placeholders::_1, ##__VA_ARGS__)
 #define CW_CALLBACK_2(__selector__, __target__, ...) std::bind(&__selector__, __target__, std::placeholders::_1, std::placeholders::_2, ##__VA_ARGS__)
+
+#define CW_STRING_MATCH(SRC, DEST) (strlen((SRC))==strlen((DEST)) && strncmp((SRC), (DEST), strlen((DEST))))
 
 #endif

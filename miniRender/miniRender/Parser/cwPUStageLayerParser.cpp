@@ -23,9 +23,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwBlendParser.h"
 #include "cwStencilParser.h"
 #include "cwEffectParser.h"
-#include "Render/ProcessingUnit/cwPUStageLayerBlend.h"
-#include "Render/ProcessingUnit/cwPUStageLayerStencil.h"
-#include "Render/ProcessingUnit/cwPUStageLayerEffect.h"
+#include "cwRenderStateParser.h"
+#include "Render/ProcessingUnit/StageLayer/cwPUStageLayerBlend.h"
+#include "Render/ProcessingUnit/StageLayer/cwPUStageLayerStencil.h"
+#include "Render/ProcessingUnit/StageLayer/cwPUStageLayerEffect.h"
+#include "Render/ProcessingUnit/StageLayer/cwPUStageLayerRenderState.h"
 
 NS_MINIR_BEGIN
 
@@ -42,9 +44,10 @@ cwPUStageLayerParser* cwPUStageLayerParser::create()
 
 cwPUStageLayerParser::cwPUStageLayerParser()
 {
-	m_nMapParser["Blend"]   = CW_CALLBACK_1(cwPUStageLayerParser::parsePUBlend, this);
-	m_nMapParser["Stencil"] = CW_CALLBACK_1(cwPUStageLayerParser::parsePUStencil, this);
-	m_nMapParser["Effect"]  = CW_CALLBACK_1(cwPUStageLayerParser::parsePUEffect, this);
+	m_nMapParser["Blend"]       = CW_CALLBACK_1(cwPUStageLayerParser::parsePUBlend, this);
+	m_nMapParser["Stencil"]     = CW_CALLBACK_1(cwPUStageLayerParser::parsePUStencil, this);
+	m_nMapParser["Effect"]      = CW_CALLBACK_1(cwPUStageLayerParser::parsePUEffect, this);
+	m_nMapParser["RenderState"] = CW_CALLBACK_1(cwPUStageLayerParser::parsePURenderState, this);
 }
 
 cwVector<cwPUStageLayer*> cwPUStageLayerParser::parse(tinyxml2::XMLElement* pPUElement)
@@ -110,6 +113,27 @@ cwPUStageLayerEffect* cwPUStageLayerParser::parsePUEffect(tinyxml2::XMLElement* 
 	pPUEffect->setEffect(pEffect);
 
 	return pPUEffect;
+}
+
+cwPUStageLayerRenderState* cwPUStageLayerParser::parsePURenderState(tinyxml2::XMLElement* pRenderStateElement)
+{
+	if (!pRenderStateElement) return nullptr;
+
+	cwRenderStateParser* pParser = static_cast<cwRenderStateParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserRenderState));
+	if (!pParser) return nullptr;
+
+	if (pParser->isBuildIn(pRenderStateElement)) {
+		eRenderState eState = pParser->parseBuildIn(pRenderStateElement);
+		if (eState != eRenderStateNone) {
+			cwPUStageLayerRenderState* pPURenderState = cwPUStageLayerRenderState::create();
+			if (pPURenderState) {
+				pPURenderState->setRenderState(eState);
+				return pPURenderState;
+			}
+		}
+	}
+
+	return nullptr;
 }
 
 NS_MINIR_END
