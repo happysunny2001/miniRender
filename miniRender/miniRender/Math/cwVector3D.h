@@ -115,6 +115,12 @@ public:
         z *= div;
         return *this;
     }
+
+	void set(float fx, float fy, float fz) {
+		x = fx;
+		y = fy;
+		z = fz;
+	}
     
     float dot(const cwVector3D& v) const {
         return x*v.x + y*v.y + z*v.z;

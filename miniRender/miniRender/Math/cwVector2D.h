@@ -107,6 +107,11 @@ public:
         y *= div;
         return *this;
     }
+
+	void set(float fx, float fy) {
+		x = fx;
+		y = fy;
+	}
     
     float dot(const cwVector2D& v) const {
         return x*v.x+y*v.y;

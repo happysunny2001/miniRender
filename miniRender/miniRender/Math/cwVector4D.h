@@ -57,6 +57,13 @@ public:
     cwVector4D operator - (const cwVector4D& v) const {
         return cwVector4D(x-v.x, y-v.y, z-v.z);
     }
+
+	void set(float fx, float fy, float fz, float fw) {
+		x = fx;
+		y = fy;
+		z = fz;
+		w = fw;
+	}
     
     void add(const cwVector4D& v, cwVector4D& ret) const {
         ret.x = x + v.x;

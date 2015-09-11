@@ -56,7 +56,9 @@ CWBOOL TessellationDemoScene::init()
 	m_fRadius = 150.0f;
 	m_bTouchDown = CWFALSE;
 
-	buildEntity();
+	buildEntityTriangle();
+	buildEntityQuad();
+	buildEntityBezier();
 
 	return CWTRUE;
 }
@@ -95,14 +97,12 @@ CWVOID TessellationDemoScene::onTouchMoving(cwTouch* pTouch)
 	m_fLastY = pTouch->getScreenPos().y;
 }
 
-CWVOID TessellationDemoScene::buildEntity()
+CWVOID TessellationDemoScene::buildEntityTriangle()
 {
 	cwRepertory& repertory = cwRepertory::getInstance();
 
 	cwGeometryGenerator::cwMeshData mesh;
-
-	cwGeometryGenerator::cwMeshData mesh;
-	repertory.getGeoGenerator()->generateGrid(20.0f, 20.0f, 2, 2, mesh);
+	repertory.getGeoGenerator()->generateGrid(50.0f, 50.0f, 2, 2, mesh);
 
 	vector<cwVertexPosColor> vecVertex(mesh.nVertex.size());
 	for (int i = 0; i < mesh.nVertex.size(); ++i) {
@@ -115,13 +115,98 @@ CWVOID TessellationDemoScene::buildEntity()
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosColor);
 
-	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderLightingTex);
+	cwShader* pShader = repertory.getShaderManager()->loadShader("effect/D3D11/tessellation.fx");
 	cwEffect* pEffect = cwEffect::create();
 	pEffect->setShader(pShader);
+	pEffect->setTech("TessTriangle");
+
+	cwMaterial* pMaterial = cwMaterial::create();
+
+	cwEntity* pTriangle = cwEntity::create();
+	pTriangle->setEffect(pEffect);
+	pTriangle->setMaterial(pMaterial);
+	pTriangle->setRenderObject(pRenderObj);
+	pTriangle->setPosition(cwVector3D(-25, 0, -25));
+	this->addChild(pTriangle);
+}
+
+CWVOID TessellationDemoScene::buildEntityQuad()
+{
+	cwRepertory& repertory = cwRepertory::getInstance();
+
+	cwGeometryGenerator::cwMeshData mesh;
+	repertory.getGeoGenerator()->generateGrid(50.0f, 50.0f, 2, 2, mesh);
+
+	vector<cwVertexPosColor> vecVertex(mesh.nVertex.size());
+	for (int i = 0; i < mesh.nVertex.size(); ++i) {
+		vecVertex[i].pos = mesh.nVertex[i].pos;
+		vecVertex[i].color = cwVector4D(1.0, 1.0, 1.0, 1.0);
+	}
+
+	cwRenderObject* pRenderObj = cwStaticRenderObject::create(
+		ePrimitiveTypePatchList4,
+		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
+		NULL, 0, ceEleDescPosColor);
+
+	cwShader* pShader = repertory.getShaderManager()->loadShader("effect/D3D11/tessellation.fx");
+	cwEffect* pEffect = cwEffect::create();
+	pEffect->setShader(pShader);
+	pEffect->setTech("TessQuad");
+
+	cwMaterial* pMaterial = cwMaterial::create();
 
 	cwEntity* pQuad = cwEntity::create();
 	pQuad->setEffect(pEffect);
+	pQuad->setMaterial(pMaterial);
 	pQuad->setRenderObject(pRenderObj);
-	pQuad->setPosition(cwVector3D::ZERO);
+	pQuad->setPosition(cwVector3D(25, 0, -25));
 	this->addChild(pQuad);
+}
+
+CWVOID TessellationDemoScene::buildEntityBezier()
+{
+	vector<cwVertexPosColor> vecVertex(16);
+
+	vecVertex[0].pos.set(-10.0f, -10.0f, +15.0f);
+	vecVertex[1].pos.set(-5.0f,    0.0f, +15.0f);
+	vecVertex[2].pos.set(+5.0f,    0.0f, +15.0f);
+	vecVertex[3].pos.set(+10.0f,   0.0f, +15.0f);
+
+	vecVertex[4].pos.set(-15.0f, 0.0f, +5.0f);
+	vecVertex[5].pos.set(-5.0f,  0.0f, +5.0f);
+	vecVertex[6].pos.set(+5.0f, 20.0f, +5.0f);
+	vecVertex[7].pos.set(+15.0f, 0.0f, +5.0f);
+
+	vecVertex[8].pos.set(-15.0f,  0.0f, -5.0f);
+	vecVertex[9].pos.set(-5.0f,   0.0f, -5.0f);
+	vecVertex[10].pos.set(+5.0f,  0.0f, -5.0f);
+	vecVertex[11].pos.set(+15.0f, 0.0f, -5.0f);
+
+	vecVertex[12].pos.set(-10.0f, 10.0f, -15.0f);
+	vecVertex[13].pos.set(-5.0f,  0.0f,  -15.0f);
+	vecVertex[14].pos.set(+5.0f,  0.0f,  -15.0f);
+	vecVertex[15].pos.set(+25.0f, 10.0f, -15.0f);
+
+	for (CWUINT i = 0; i < 16; ++i)
+		vecVertex[i].color = cwVector4D(1.0f, 1.0f, 1.0f, 1.0f);
+
+	cwRenderObject* pRenderObj = cwStaticRenderObject::create(
+		ePrimitiveTypePatchList16,
+		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), 16,
+		NULL, 0, ceEleDescPosColor);
+
+	cwRepertory& repertory = cwRepertory::getInstance();
+	cwShader* pShader = repertory.getShaderManager()->loadShader("effect/D3D11/tessellation.fx");
+	cwEffect* pEffect = cwEffect::create();
+	pEffect->setShader(pShader);
+	pEffect->setTech("TessBezier");
+
+	cwMaterial* pMaterial = cwMaterial::create();
+
+	cwEntity* pBezier = cwEntity::create();
+	pBezier->setEffect(pEffect);
+	pBezier->setMaterial(pMaterial);
+	pBezier->setRenderObject(pRenderObj);
+	pBezier->setPosition(cwVector3D(0, 0, 25));
+	this->addChild(pBezier);
 }
