@@ -34,9 +34,7 @@ BoxDemoScene* BoxDemoScene::create()
 }
 
 BoxDemoScene::BoxDemoScene():
-m_bTouchDown(false),
-m_fTime(0),
-m_iCount(0)
+m_bTouchDown(CWFALSE)
 {
 
 }
@@ -62,10 +60,6 @@ bool BoxDemoScene::init()
 	this->addEventListener(pKeyListener);
 
 	this->schedulerUpdate();
-
-	m_fTheta = 0.1f;
-	m_fPhi = -cwMathUtil::cwPIx2 / 8.0f;
-	m_fRadius = 20.0f;
 
 	return true;
 }
@@ -93,15 +87,8 @@ void BoxDemoScene::onTouchMoving(cwTouch* pTouch)
 		CWFLOAT dx = cwMathUtil::angleRadian(pTouch->getScreenPos().x - m_fLastX);
 		CWFLOAT dy = cwMathUtil::angleRadian(pTouch->getScreenPos().y - m_fLastY);
 
-		m_fTheta -= dx;
-		m_fPhi += dy;
-		m_fPhi = min(max(0.1f, m_fPhi), cwMathUtil::cwPI - 0.1f);
-
-		float x = m_fRadius*sinf(m_fPhi)*cosf(m_fTheta);
-		float z = m_fRadius*sinf(m_fPhi)*sinf(m_fTheta);
-		float y = m_fRadius*cosf(m_fPhi);
-
-		cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(x, y, z);
+		cwRepertory::getInstance().getEngine()->getDefaultCamera()->yaw(dx);
+		cwRepertory::getInstance().getEngine()->getDefaultCamera()->pitch(-dy);
 	}
 
 	m_fLastX = pTouch->getScreenPos().x;
@@ -110,14 +97,17 @@ void BoxDemoScene::onTouchMoving(cwTouch* pTouch)
 
 void BoxDemoScene::update(CWFLOAT dt)
 {
-	//m_fTime += dt;
-	//if (m_fTime >= 1.0f) {
-	//	OutputDebugString(L"BoxDemoScene::update\n");
-	//	m_fTime = 0;
-	//	m_iCount++;
+	if (isKeyDown(KeyCode::A)) {
+		cwRepertory::getInstance().getEngine()->getDefaultCamera()->strafe(-10 * dt);
+	}
+	else if (isKeyDown(KeyCode::D)) {
+		cwRepertory::getInstance().getEngine()->getDefaultCamera()->strafe(10 * dt);
+	}
 
-	//	if (m_iCount >= 5) {
-	//		this->clearScheduler();
-	//	}
-	//}
+	if (isKeyDown(KeyCode::W)) {
+		cwRepertory::getInstance().getEngine()->getDefaultCamera()->walk(10 * dt);
+	}
+	else if (isKeyDown(KeyCode::S)) {
+		cwRepertory::getInstance().getEngine()->getDefaultCamera()->walk(-10 * dt);
+	}
 }

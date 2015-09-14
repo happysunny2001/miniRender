@@ -33,7 +33,7 @@ GeometryShaderDemo::~GeometryShaderDemo()
 CWVOID GeometryShaderDemo::gameBegin()
 {
 	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 150.0f, -200.0f);
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 50.0f, -200.0f);
 
 	GeometryShaderDemoScene* pScene = GeometryShaderDemoScene::create();
 	cwRepertory::getInstance().getEngine()->setScene(pScene);

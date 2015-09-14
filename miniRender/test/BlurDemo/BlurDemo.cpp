@@ -33,7 +33,7 @@ BlurDemo::~BlurDemo()
 CWVOID BlurDemo::gameBegin()
 {
 	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderBlur.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 150.0f, -200.0f);
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 50.0f, -200.0f);
 
 	BlurDemoScene* pScene = BlurDemoScene::create();
 	cwRepertory::getInstance().getEngine()->setScene(pScene);

@@ -33,7 +33,7 @@ StencilDemo::~StencilDemo()
 CWVOID StencilDemo::gameBegin()
 {
 	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderMirror.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 100.0f, -150.0f);
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 30.0f, -150.0f);
 
 	StencilDemoScene* pScene = StencilDemoScene::create();
 	cwRepertory::getInstance().getEngine()->setScene(pScene);

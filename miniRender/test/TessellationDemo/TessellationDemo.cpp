@@ -33,7 +33,7 @@ TessellationDemo::~TessellationDemo()
 CWVOID TessellationDemo::gameBegin()
 {
 	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderTessellation.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 150.0f, -200.0f);
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 50.0f, -150.0f);
 	
 	TessellationDemoScene* pScene = TessellationDemoScene::create();
 	cwRepertory::getInstance().getEngine()->setScene(pScene);

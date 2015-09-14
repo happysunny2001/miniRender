@@ -33,6 +33,8 @@ public:
 
 	virtual CWBOOL init() override;
 
+	virtual CWVOID update(CWFLOAT dt) override;
+
 	virtual CWVOID onTouchDown(cwTouch* pTouch) override;
 	virtual CWVOID onTouchUp(cwTouch* pTouch) override;
 	virtual CWVOID onTouchMoving(cwTouch* pTouch) override;
@@ -45,9 +47,6 @@ protected:
 protected:
 	CWFLOAT m_fLastX;
 	CWFLOAT m_fLastY;
-	CWFLOAT m_fTheta;
-	CWFLOAT m_fPhi;
-	CWFLOAT m_fRadius;
 	CWBOOL m_bTouchDown;
 
 };

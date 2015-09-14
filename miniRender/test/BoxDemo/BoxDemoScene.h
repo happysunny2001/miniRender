@@ -33,23 +33,16 @@ public:
 
 	virtual bool init() override;
 
-	virtual void update(CWFLOAT dt) override;
+	virtual CWVOID update(CWFLOAT dt) override;
 
-	virtual void onTouchDown(cwTouch* pTouch) override;
-	virtual void onTouchUp(cwTouch* pTouch) override;
-	virtual void onTouchMoving(cwTouch* pTouch) override;
+	virtual CWVOID onTouchDown(cwTouch* pTouch) override;
+	virtual CWVOID onTouchUp(cwTouch* pTouch) override;
+	virtual CWVOID onTouchMoving(cwTouch* pTouch) override;
 
 protected:
 	CWFLOAT m_fLastX;
 	CWFLOAT m_fLastY;
-	CWFLOAT m_fTheta;
-	CWFLOAT m_fPhi;
-	CWFLOAT m_fRadius;
-
-	CWFLOAT m_fTime;
-	CWINT m_iCount;
-
-	bool m_bTouchDown;
+	CWBOOL m_bTouchDown;
 
 };
 

@@ -52,9 +52,13 @@ CWBOOL LoadTxtDemoScene::init()
 	pTouchListener->onTouchMoving = CW_CALLBACK_1(LoadTxtDemoScene::onTouchMoving, this);
 	this->addEventListener(pTouchListener);
 
-	m_fTheta = 0.1f;
-	m_fPhi = -cwMathUtil::cwPIx2 / 8.0f;
-	m_fRadius = 20.0f;
+	cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
+	pKeyListener->onKeyDown = CW_CALLBACK_1(LoadTxtDemoScene::onKeyDown, this);
+	pKeyListener->onKeyUp = CW_CALLBACK_1(LoadTxtDemoScene::onKeyUp, this);
+	this->addEventListener(pKeyListener);
+
+	this->schedulerUpdate();
+
 	m_bTouchDown = false;
 
 	buildEntity();
@@ -143,17 +147,27 @@ CWVOID LoadTxtDemoScene::onTouchMoving(cwTouch* pTouch)
 		CWFLOAT dx = cwMathUtil::angleRadian(pTouch->getScreenPos().x - m_fLastX);
 		CWFLOAT dy = cwMathUtil::angleRadian(pTouch->getScreenPos().y - m_fLastY);
 
-		m_fTheta -= dx;
-		m_fPhi += dy;
-		m_fPhi = min(max(0.1f, m_fPhi), cwMathUtil::cwPI - 0.1f);
-
-		float x = m_fRadius*sinf(m_fPhi)*cosf(m_fTheta);
-		float z = m_fRadius*sinf(m_fPhi)*sinf(m_fTheta);
-		float y = m_fRadius*cosf(m_fPhi);
-
-		cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(x, y, z);
+		cwRepertory::getInstance().getEngine()->getDefaultCamera()->yaw(dx);
+		cwRepertory::getInstance().getEngine()->getDefaultCamera()->pitch(-dy);
 	}
 
 	m_fLastX = pTouch->getScreenPos().x;
 	m_fLastY = pTouch->getScreenPos().y;
+}
+
+CWVOID LoadTxtDemoScene::update(CWFLOAT dt)
+{
+	if (isKeyDown(KeyCode::A)) {
+		cwRepertory::getInstance().getEngine()->getDefaultCamera()->strafe(-10 * dt);
+	}
+	else if (isKeyDown(KeyCode::D)) {
+		cwRepertory::getInstance().getEngine()->getDefaultCamera()->strafe(10 * dt);
+	}
+
+	if (isKeyDown(KeyCode::W)) {
+		cwRepertory::getInstance().getEngine()->getDefaultCamera()->walk(10 * dt);
+	}
+	else if (isKeyDown(KeyCode::S)) {
+		cwRepertory::getInstance().getEngine()->getDefaultCamera()->walk(-10 * dt);
+	}
 }
