@@ -42,6 +42,16 @@ public:
 	virtual CWVOID updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ);
 	virtual CWVOID updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ);
 
+	virtual CWVOID walk(CWFLOAT fDist);
+	virtual CWVOID strafe(CWFLOAT fDist);
+
+	//rotate the camera a radian on y axis
+	virtual CWVOID yaw(CWFLOAT fRadian);
+	//rotate the camera a radian on x axis
+	virtual CWVOID pitch(CWFLOAT fRadian);
+	//rotate the camera a radian on z axis
+	virtual CWVOID roll(CWFLOAT fRadian);
+
 	inline const cwMatrix4X4& getViewMatrix() const { return m_nViewMatrix; }
 	inline const cwMatrix4X4& getProjMatrix() const { return m_nProjMatrix; }
 	inline const cwMatrix4X4& getViewProjMatrix() const { return m_nViewProjMatrix; }
@@ -59,8 +69,9 @@ protected:
 	cwMatrix4X4 m_nViewProjMatrix;
 
 	cwVector3D m_nPos;
-	cwVector3D m_nTarget;
+	cwVector3D m_nLook;
 	cwVector3D m_nUp;
+	cwVector3D m_nRight;
 
 	CWFLOAT m_fFov;
 	CWFLOAT m_fAspect;

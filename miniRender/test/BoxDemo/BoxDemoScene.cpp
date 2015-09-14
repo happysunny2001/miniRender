@@ -56,6 +56,11 @@ bool BoxDemoScene::init()
 	pTouchListener->onTouchMoving = CW_CALLBACK_1(BoxDemoScene::onTouchMoving, this);
 	this->addEventListener(pTouchListener);
 
+	cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
+	pKeyListener->onKeyDown = CW_CALLBACK_1(BoxDemoScene::onKeyDown, this);
+	pKeyListener->onKeyUp   = CW_CALLBACK_1(BoxDemoScene::onKeyUp, this);
+	this->addEventListener(pKeyListener);
+
 	this->schedulerUpdate();
 
 	m_fTheta = 0.1f;
@@ -105,14 +110,14 @@ void BoxDemoScene::onTouchMoving(cwTouch* pTouch)
 
 void BoxDemoScene::update(CWFLOAT dt)
 {
-	m_fTime += dt;
-	if (m_fTime >= 1.0f) {
-		OutputDebugString(L"BoxDemoScene::update\n");
-		m_fTime = 0;
-		m_iCount++;
+	//m_fTime += dt;
+	//if (m_fTime >= 1.0f) {
+	//	OutputDebugString(L"BoxDemoScene::update\n");
+	//	m_fTime = 0;
+	//	m_iCount++;
 
-		if (m_iCount >= 5) {
-			this->clearScheduler();
-		}
-	}
+	//	if (m_iCount >= 5) {
+	//		this->clearScheduler();
+	//	}
+	//}
 }

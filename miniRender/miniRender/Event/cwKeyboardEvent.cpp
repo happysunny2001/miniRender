@@ -17,44 +17,71 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_WIN_UTILS_H__
-#define __CW_WIN_UTILS_H__
-
-#include "Platform/cwPlatform.h"
-#include "Base/cwBasicType.h"
-#include "Event/cwEventDefine.h"
-#include <unordered_map>
-
-#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
+#include "cwKeyboardEvent.h"
 
 NS_MINIR_BEGIN
 
-#define CW_RELEASE_COM(o) \
-do{\
-	if ((o)) {\
-		(o)->Release(); \
-		(o) = NULL; \
-	}\
-} while (0)
-
-class cwWinKeyMap
+cwKeyboard* cwKeyboard::create(KeyCode code)
 {
-public:
-	static cwWinKeyMap& getInstance();
+	cwKeyboard* pKeyboard = new cwKeyboard();
+	if (pKeyboard && pKeyboard->init(code)) {
+		pKeyboard->autorelease();
+		return pKeyboard;
+	}
 
-	cwWinKeyMap();
-	~cwWinKeyMap();
+	CW_SAFE_DELETE(pKeyboard);
+	return nullptr;
+}
 
-	KeyCode getKeyCode(CWUINT iKey) const;
+cwKeyboard::cwKeyboard():
+m_eKeyCode(KeyCode::KeyNone)
+{
 
-public:
-	std::unordered_map<CWUINT, KeyCode> m_nMapKeyMap;
+}
 
-};
+cwKeyboard::~cwKeyboard()
+{
+
+}
+
+CWBOOL cwKeyboard::init(KeyCode code)
+{
+	m_eKeyCode = code;
+	return CWTRUE;
+}
+
+cwKeyboardEvent* cwKeyboardEvent::create(KeyCode code, KeyState state)
+{
+	cwKeyboardEvent* pEvent = new cwKeyboardEvent();
+	if (pEvent && pEvent->init(code, state)) {
+		pEvent->autorelease();
+		return pEvent;
+	}
+
+	CW_SAFE_DELETE(pEvent);
+	return nullptr;
+}
+
+cwKeyboardEvent::cwKeyboardEvent():
+m_pKeyboard(nullptr),
+m_eKeyState(KeyState::StateNone)
+{
+	m_eType = EventTypeKeyboard;
+}
+
+cwKeyboardEvent::~cwKeyboardEvent()
+{
+	CW_SAFE_RELEASE_NULL(m_pKeyboard);
+}
+
+CWBOOL cwKeyboardEvent::init(KeyCode code, KeyState state)
+{
+	m_eKeyState = state;
+
+	m_pKeyboard = cwKeyboard::create(code);
+	CW_SAFE_RETAIN(m_pKeyboard);
+
+	return CWTRUE;
+}
 
 NS_MINIR_END
-
-#endif // end _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
-
-#endif // end __CW_WIN_UTILS_H__
-

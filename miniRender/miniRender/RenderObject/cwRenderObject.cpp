@@ -29,7 +29,12 @@ NS_MINIR_BEGIN
 cwRenderObject::cwRenderObject():
 m_pVertexBuffer(nullptr),
 m_pIndexBuffer(nullptr),
-m_pLayout(nullptr)
+m_pLayout(nullptr),
+m_pVertexData(nullptr),
+m_pIndexData(nullptr),
+m_uStride(0),
+m_uVertexCnt(0),
+m_uIndexCnt(0)
 {
 }
 
@@ -37,6 +42,13 @@ cwRenderObject::~cwRenderObject()
 {
 	CW_SAFE_RELEASE_NULL(m_pVertexBuffer);
 	CW_SAFE_RELEASE_NULL(m_pIndexBuffer);
+
+	CW_SAFE_FREE(m_pVertexData);
+	CW_SAFE_FREE(m_pIndexData);
+
+	m_uStride = 0;
+	m_uVertexCnt = 0;
+	m_uIndexCnt = 0;
 }
 
 CWBOOL cwRenderObject::init(

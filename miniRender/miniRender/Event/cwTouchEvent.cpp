@@ -63,7 +63,8 @@ cwTouchEvent* cwTouchEvent::create(TouchType type, const cwVector2D& pos)
 
 cwTouchEvent::cwTouchEvent():
 m_eTouchType(TouchTypeNone),
-m_pTouch(nullptr)
+m_pTouch(nullptr),
+m_eTouchButton(TouchButtonNone)
 {
 	m_eType = EventTypeMouse;
 }

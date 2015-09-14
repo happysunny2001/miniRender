@@ -26,6 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Math/cwMath.h"
 #include "Base/cwVector.h"
 #include "Event/Interface/cwTouchEventInterface.h"
+#include "Event/Interface/cwKeyboardEventInterface.h"
 #include "Scheduler/cwScheduleInterface.h"
 
 NS_MINIR_BEGIN
@@ -33,7 +34,7 @@ NS_MINIR_BEGIN
 class cwEventListener;
 class cwEffect;
 
-class cwRenderNode : public cwRef, public cwTouchEventInterface, public cwScheduleInterface
+class cwRenderNode : public cwRef, public cwTouchEventInterface, public cwKeyboardEventInterface, public cwScheduleInterface
 {
 public:
 	static cwRenderNode* create();

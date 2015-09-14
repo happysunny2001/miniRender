@@ -17,44 +17,52 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_WIN_UTILS_H__
-#define __CW_WIN_UTILS_H__
+#ifndef __CW_KEYBOARD_EVENT_H__
+#define __CW_KEYBOARD_EVENT_H__
 
+#include "Base/cwMacros.h"
+#include "Math/cwMath.h"
 #include "Platform/cwPlatform.h"
-#include "Base/cwBasicType.h"
-#include "Event/cwEventDefine.h"
-#include <unordered_map>
-
-#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
+#include "cwEvent.h"
+#include "cwEventDefine.h"
 
 NS_MINIR_BEGIN
 
-#define CW_RELEASE_COM(o) \
-do{\
-	if ((o)) {\
-		(o)->Release(); \
-		(o) = NULL; \
-	}\
-} while (0)
-
-class cwWinKeyMap
+class cwKeyboard : public cwRef
 {
 public:
-	static cwWinKeyMap& getInstance();
+	static cwKeyboard* create(KeyCode code);
 
-	cwWinKeyMap();
-	~cwWinKeyMap();
+	cwKeyboard();
+	virtual ~cwKeyboard();
 
-	KeyCode getKeyCode(CWUINT iKey) const;
+	virtual CWBOOL init(KeyCode code);
 
+	KeyCode getKeyCode() const { return m_eKeyCode; }
+
+protected:
+	KeyCode m_eKeyCode;
+};
+
+class cwKeyboardEvent : public cwEvent
+{
 public:
-	std::unordered_map<CWUINT, KeyCode> m_nMapKeyMap;
+	static cwKeyboardEvent* create(KeyCode code, KeyState state);
+
+	cwKeyboardEvent();
+	virtual ~cwKeyboardEvent();
+
+	virtual CWBOOL init(KeyCode code, KeyState state);
+	
+	cwKeyboard* getKeyboard() { return m_pKeyboard; }
+	KeyState getKeyState() const { return m_eKeyState; }
+
+protected:
+	KeyState m_eKeyState;
+	cwKeyboard* m_pKeyboard;
 
 };
 
 NS_MINIR_END
 
-#endif // end _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
-
-#endif // end __CW_WIN_UTILS_H__
-
+#endif

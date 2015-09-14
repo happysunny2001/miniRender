@@ -17,44 +17,63 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_WIN_UTILS_H__
-#define __CW_WIN_UTILS_H__
-
-#include "Platform/cwPlatform.h"
-#include "Base/cwBasicType.h"
-#include "Event/cwEventDefine.h"
-#include <unordered_map>
-
-#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
+#include "cwKeyboardEventListener.h"
 
 NS_MINIR_BEGIN
 
-#define CW_RELEASE_COM(o) \
-do{\
-	if ((o)) {\
-		(o)->Release(); \
-		(o) = NULL; \
-	}\
-} while (0)
-
-class cwWinKeyMap
+cwKeyboardEventListener* cwKeyboardEventListener::create()
 {
-public:
-	static cwWinKeyMap& getInstance();
+	cwKeyboardEventListener* pEventListener = new cwKeyboardEventListener();
+	if (pEventListener && pEventListener->init()) {
+		pEventListener->autorelease();
+		return pEventListener;
+	}
 
-	cwWinKeyMap();
-	~cwWinKeyMap();
+	CW_SAFE_DELETE(pEventListener);
+	return nullptr;
+}
 
-	KeyCode getKeyCode(CWUINT iKey) const;
+cwKeyboardEventListener::cwKeyboardEventListener()
+{
 
-public:
-	std::unordered_map<CWUINT, KeyCode> m_nMapKeyMap;
+}
 
-};
+cwKeyboardEventListener::~cwKeyboardEventListener()
+{
+
+}
+
+CWBOOL cwKeyboardEventListener::init()
+{
+	onKeyDown = nullptr;
+	onKeyUp = nullptr;
+
+	return CWTRUE;
+}
+
+void cwKeyboardEventListener::onEvent(cwEvent* pEvent)
+{
+	if (pEvent->getEventType() != EventTypeKeyboard) return;
+
+	cwKeyboardEvent* pKeyEvent = static_cast<cwKeyboardEvent*>(pEvent);
+
+	switch (pKeyEvent->getKeyState())
+	{
+	case KeyState::KeyDown:
+		if (onKeyDown) {
+			onKeyDown(pKeyEvent->getKeyboard());
+		}
+		break;
+	case KeyState::keyUp:
+		if (onKeyUp) {
+			onKeyUp(pKeyEvent->getKeyboard());
+		}
+		break;
+	default:
+		break;
+	}
+
+	onBehaviour(pEvent);
+}
 
 NS_MINIR_END
-
-#endif // end _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
-
-#endif // end __CW_WIN_UTILS_H__
-

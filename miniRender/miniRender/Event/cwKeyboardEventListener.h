@@ -17,44 +17,41 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_WIN_UTILS_H__
-#define __CW_WIN_UTILS_H__
+#ifndef __CW_KEYBOARD_EVENT_LISTENER_H__
+#define __CW_KEYBOARD_EVENT_LISTENER_H__
 
+#include "Base/cwMacros.h"
 #include "Platform/cwPlatform.h"
-#include "Base/cwBasicType.h"
-#include "Event/cwEventDefine.h"
-#include <unordered_map>
+#include "cwEventListener.h"
+#include "cwKeyboardEvent.h"
 
-#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
+#include <functional>
 
 NS_MINIR_BEGIN
 
-#define CW_RELEASE_COM(o) \
-do{\
-	if ((o)) {\
-		(o)->Release(); \
-		(o) = NULL; \
-	}\
-} while (0)
-
-class cwWinKeyMap
+class cwKeyboardEventListener : public cwEventListener
 {
 public:
-	static cwWinKeyMap& getInstance();
-
-	cwWinKeyMap();
-	~cwWinKeyMap();
-
-	KeyCode getKeyCode(CWUINT iKey) const;
+	typedef std::function<void(cwKeyboard* pKey)> KeyDownFunc;
+	typedef std::function<void(cwKeyboard* pKey)> KeyUpFunc;
 
 public:
-	std::unordered_map<CWUINT, KeyCode> m_nMapKeyMap;
+	static cwKeyboardEventListener* create();
+
+	cwKeyboardEventListener();
+	virtual ~cwKeyboardEventListener();
+
+	virtual CWBOOL init();
+
+protected:
+	virtual void onEvent(cwEvent* pEvent) override;
+
+public:
+	KeyDownFunc onKeyDown;
+	KeyUpFunc onKeyUp;
 
 };
 
 NS_MINIR_END
 
-#endif // end _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
-
-#endif // end __CW_WIN_UTILS_H__
-
+#endif

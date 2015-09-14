@@ -17,44 +17,31 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_WIN_UTILS_H__
-#define __CW_WIN_UTILS_H__
+#ifndef __CW_KEYBOARD_EVENT_INTERFACE_H__
+#define __CW_KEYBOARD_EVENT_INTERFACE_H__
 
-#include "Platform/cwPlatform.h"
-#include "Base/cwBasicType.h"
+#include "Base/cwMacros.h"
 #include "Event/cwEventDefine.h"
-#include <unordered_map>
+#include "Event/cwKeyboardEvent.h"
+#include "Platform/cwPlatform.h"
 
-#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
+#include <unordered_map>
 
 NS_MINIR_BEGIN
 
-#define CW_RELEASE_COM(o) \
-do{\
-	if ((o)) {\
-		(o)->Release(); \
-		(o) = NULL; \
-	}\
-} while (0)
-
-class cwWinKeyMap
+class cwKeyboardEventInterface
 {
 public:
-	static cwWinKeyMap& getInstance();
+	virtual CWVOID onKeyDown(cwKeyboard* pKey);
+	virtual CWVOID onKeyUp(cwKeyboard* pKey);
 
-	cwWinKeyMap();
-	~cwWinKeyMap();
+	CWBOOL isKeyDown(KeyCode code);
 
-	KeyCode getKeyCode(CWUINT iKey) const;
-
-public:
-	std::unordered_map<CWUINT, KeyCode> m_nMapKeyMap;
+protected:
+	std::unordered_map<KeyCode, CWUINT> m_nMapKey;
 
 };
 
 NS_MINIR_END
 
-#endif // end _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
-
-#endif // end __CW_WIN_UTILS_H__
-
+#endif

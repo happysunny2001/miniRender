@@ -55,6 +55,13 @@ protected:
 	cwLayouts* m_pLayout;
 	ePrimitiveType m_nTopology;
 
+	CWVOID* m_pVertexData;
+	CWUINT m_uStride;
+	CWUINT m_uVertexCnt;
+
+	CWUINT* m_pIndexData;
+	CWUINT m_uIndexCnt;
+
 };
 
 NS_MINIR_END

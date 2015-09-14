@@ -61,9 +61,7 @@ bool cwTouchEventListener::init()
 
 void cwTouchEventListener::onEvent(cwEvent* pEvent)
 {
-	if (!pEvent) return;
 	if (pEvent->getEventType() != EventTypeMouse) return;
-	if (pEvent->getEventState() != EventStateAlive) return;
 
 	cwTouchEvent* pTouchEvent = static_cast<cwTouchEvent*>(pEvent);
 

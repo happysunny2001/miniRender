@@ -67,6 +67,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Event/cwEventManager.h"
 #include "Event/cwTouchEvent.h"
 #include "Event/cwTouchEventListener.h"
+#include "Event/cwKeyboardEvent.h"
+#include "Event/cwKeyboardEventListener.h"
 
 //#include "tinyxml2.h"
 

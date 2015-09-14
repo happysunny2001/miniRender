@@ -125,7 +125,8 @@ void cwEventManager::dispatchEvent()
 	for (auto itListener = m_nVecListener.begin(); itListener != m_nVecListener.end(); ++itListener) {
 		if ((*itListener)->getState() == EventListenerStateAlive) {
 			for (auto itEvent = m_nVecEvent.begin(); itEvent != m_nVecEvent.end(); ++itEvent) {
-				(*itListener)->onEvent(*itEvent);
+				if ((*itEvent) && (*itEvent)->getEventState() == EventStateAlive)
+					(*itListener)->onEvent(*itEvent);
 			}
 		}
 	}

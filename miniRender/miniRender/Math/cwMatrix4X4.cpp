@@ -290,6 +290,31 @@ void cwMatrix4X4::lookAt(const cwVector3D& pos, const cwVector3D& up, const cwVe
 	*this = mTran*mRot;
 }
 
+void cwMatrix4X4::lookAt(const cwVector3D& pos, const cwVector3D& right, const cwVector3D& up, const cwVector3D& view)
+{
+	cwVector3D trans = -pos;
+
+	m11 = right.x;
+	m21 = right.y;
+	m31 = right.z;
+	m41 = trans.dot(right);
+
+	m12 = up.x;
+	m22 = up.y;
+	m32 = up.z;
+	m42 = trans.dot(up);
+
+	m13 = view.x;
+	m23 = view.y;
+	m33 = view.z;
+	m43 = trans.dot(view);
+
+	m14 = 0;
+	m24 = 0;
+	m34 = 0;
+	m44 = 1.0f;
+}
+
 void cwMatrix4X4::perspectiveFov(float fFovY, float fAspect, float fNearZ, float fFarZ)
 {
 	float yScale = 1.0f / tanf(fFovY*0.5f);

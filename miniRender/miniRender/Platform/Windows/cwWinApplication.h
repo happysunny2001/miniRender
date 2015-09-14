@@ -57,10 +57,19 @@ private:
 	LRESULT msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	friend LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-	CWVOID onMouseDown(CWUINT keyState, CWINT x, CWINT y);
-	CWVOID onMouseUp(CWUINT keyState, CWINT x, CWINT y);
+	CWVOID onMouseLeftDown(CWUINT keyState, CWINT x, CWINT y);
+	CWVOID onMouseRightDown(CWUINT keyState, CWINT x, CWINT y);
+	CWVOID onMouseMiddleDown(CWUINT keyState, CWINT x, CWINT y);
+
+	CWVOID onMouseLeftUp(CWUINT keyState, CWINT x, CWINT y);
+	CWVOID onMouseRightUp(CWUINT keyState, CWINT x, CWINT y);
+	CWVOID onMouseMiddleUp(CWUINT keyState, CWINT x, CWINT y);
+
 	CWVOID onMouseMove(CWUINT keyState, CWINT x, CWINT y);
 	CWVOID OnMouseWheel(CWUINT keyState, CWINT delta, CWINT x, CWINT y);
+
+	CWVOID onKeyDown(CWUINT wParam, CWUINT lParam);
+	CWVOID onKeyUp(CWUINT wParam, CWUINT lParam);
 
 private:
 	CWWSTRING m_nStrWinName;

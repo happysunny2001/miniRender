@@ -53,13 +53,17 @@ public:
 	cwTouchEvent();
 	virtual ~cwTouchEvent();
 
-	virtual bool init(TouchType type, const cwVector2D& pos);
+	virtual CWBOOL init(TouchType type, const cwVector2D& pos);
 
 	TouchType getTouchType() const { return m_eTouchType; }
 	cwTouch* getTouch() { return m_pTouch; }
 
+	TouchButton getTouchButton() const { return m_eTouchButton; }
+	CWVOID setTouchButton(TouchButton eBtn) { m_eTouchButton = eBtn; }
+
 protected:
 	TouchType m_eTouchType;
+	TouchButton m_eTouchButton;
 	cwTouch* m_pTouch;
 
 };

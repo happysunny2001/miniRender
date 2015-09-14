@@ -47,9 +47,10 @@ cwCamera* cwCamera::create(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOA
 
 cwCamera::cwCamera()
 {
-	m_nPos    = cwVector3D(0, 0, -1.0f);
-	m_nTarget = cwVector3D(0, 0, 0);
-	m_nUp     = cwVector3D(0, 1.0f, 0);
+	m_nPos   = cwVector3D(0, 0, -1.0f);
+	m_nLook  = cwVector3D(0, 0, 1.0f);
+	m_nUp    = cwVector3D(0, 1.0f, 0);
+	m_nRight = cwVector3D(1.0f, 0, 0);
 
 	this->updateViewMatrix();
 }
@@ -70,9 +71,64 @@ CWBOOL cwCamera::init(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFa
 	return CWTRUE;
 }
 
+CWVOID cwCamera::walk(CWFLOAT fDist)
+{
+	m_nPos += m_nLook*fDist;
+	updateViewMatrix();
+}
+
+CWVOID cwCamera::strafe(CWFLOAT fDist)
+{
+	m_nPos += m_nRight*fDist;
+	updateViewMatrix();
+}
+
+CWVOID cwCamera::yaw(CWFLOAT fRadian)
+{
+	cwMatrix4X4 matRot;
+	matRot.setRotation(m_nUp, fRadian);
+
+	m_nRight *= matRot;
+	m_nLook *= matRot;
+
+	m_nRight.normalize();
+	m_nLook.normalize();
+
+	updateViewMatrix();
+}
+
+CWVOID cwCamera::pitch(CWFLOAT fRadian)
+{
+	cwMatrix4X4 matRot;
+	matRot.setRotation(m_nRight, fRadian);
+
+	m_nUp *= matRot;
+	m_nLook *= matRot;
+
+	m_nUp.normalize();
+	m_nLook.normalize();
+
+	updateViewMatrix();
+}
+
+CWVOID cwCamera::roll(CWFLOAT fRadian)
+{
+	cwMatrix4X4 matRot;
+	matRot.setRotation(m_nLook, fRadian);
+
+	m_nUp *= matRot;
+	m_nRight *= matRot;
+
+	m_nUp.normalize();
+	m_nRight.normalize();
+
+	updateViewMatrix();
+}
+
 CWVOID cwCamera::updateViewMatrix()
 {
-	m_nViewMatrix.lookAt(m_nPos, m_nUp, m_nTarget);
+	//m_nViewMatrix.lookAt(m_nPos, m_nUp, m_nTarget);
+	m_nViewMatrix.lookAt(m_nPos, m_nRight, m_nUp, m_nLook);
 	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;
 }
 

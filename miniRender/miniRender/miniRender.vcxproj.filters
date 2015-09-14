@@ -567,6 +567,15 @@
     <ClInclude Include="Parser\cwRenderStateParser.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Event\cwKeyboardEvent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\cwKeyboardEventListener.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Event\Interface\cwKeyboardEventInterface.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -915,6 +924,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Parser\cwRenderStateParser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\cwWinUtils.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Event\cwKeyboardEvent.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Event\cwKeyboardEventListener.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Event\Interface\cwKeyboardEventInterface.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

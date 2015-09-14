@@ -17,44 +17,33 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_WIN_UTILS_H__
-#define __CW_WIN_UTILS_H__
-
-#include "Platform/cwPlatform.h"
-#include "Base/cwBasicType.h"
-#include "Event/cwEventDefine.h"
-#include <unordered_map>
-
-#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
+#include "cwKeyboardEventInterface.h"
 
 NS_MINIR_BEGIN
 
-#define CW_RELEASE_COM(o) \
-do{\
-	if ((o)) {\
-		(o)->Release(); \
-		(o) = NULL; \
-	}\
-} while (0)
-
-class cwWinKeyMap
+CWVOID cwKeyboardEventInterface::onKeyDown(cwKeyboard* pKey)
 {
-public:
-	static cwWinKeyMap& getInstance();
+	if (pKey) {
+		if (!isKeyDown(pKey->getKeyCode())) {
+			m_nMapKey[pKey->getKeyCode()] = 1;
+		}
+	}
+}
 
-	cwWinKeyMap();
-	~cwWinKeyMap();
+CWVOID cwKeyboardEventInterface::onKeyUp(cwKeyboard* pKey)
+{
+	auto it = m_nMapKey.find(pKey->getKeyCode());
+	if (it != m_nMapKey.end()) {
+		m_nMapKey.erase(it);
+	}
+}
 
-	KeyCode getKeyCode(CWUINT iKey) const;
+CWBOOL cwKeyboardEventInterface::isKeyDown(KeyCode code)
+{
+	auto it = m_nMapKey.find(code);
+	if (it == m_nMapKey.end()) return CWFALSE;
 
-public:
-	std::unordered_map<CWUINT, KeyCode> m_nMapKeyMap;
-
-};
+	return CWTRUE;
+}
 
 NS_MINIR_END
-
-#endif // end _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
-
-#endif // end __CW_WIN_UTILS_H__
-

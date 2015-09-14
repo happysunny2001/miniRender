@@ -53,8 +53,11 @@
     <ClInclude Include="Event\cwEventDefine.h" />
     <ClInclude Include="Event\cwEventListener.h" />
     <ClInclude Include="Event\cwEventManager.h" />
+    <ClInclude Include="Event\cwKeyboardEvent.h" />
+    <ClInclude Include="Event\cwKeyboardEventListener.h" />
     <ClInclude Include="Event\cwTouchEvent.h" />
     <ClInclude Include="Event\cwTouchEventListener.h" />
+    <ClInclude Include="Event\Interface\cwKeyboardEventInterface.h" />
     <ClInclude Include="Event\Interface\cwTouchEventInterface.h" />
     <ClInclude Include="external\json\include\json\assertions.h" />
     <ClInclude Include="external\json\include\json\autolink.h" />
@@ -188,8 +191,11 @@
     <ClCompile Include="Event\cwEvent.cpp" />
     <ClCompile Include="Event\cwEventListener.cpp" />
     <ClCompile Include="Event\cwEventManager.cpp" />
+    <ClCompile Include="Event\cwKeyboardEvent.cpp" />
+    <ClCompile Include="Event\cwKeyboardEventListener.cpp" />
     <ClCompile Include="Event\cwTouchEvent.cpp" />
     <ClCompile Include="Event\cwTouchEventListener.cpp" />
+    <ClCompile Include="Event\Interface\cwKeyboardEventInterface.cpp" />
     <ClCompile Include="external\json\lib_json\json_reader.cpp" />
     <ClCompile Include="external\json\lib_json\json_value.cpp" />
     <ClCompile Include="external\json\lib_json\json_writer.cpp" />
@@ -248,6 +254,7 @@
     <ClCompile Include="Platform\Windows\cwWinApplication.cpp" />
     <ClCompile Include="Platform\Windows\cwWinFileSystem.cpp" />
     <ClCompile Include="Platform\Windows\cwWinStringConvert.cpp" />
+    <ClCompile Include="Platform\Windows\cwWinUtils.cpp" />
     <ClCompile Include="Ref\cwAutoReleasePool.cpp" />
     <ClCompile Include="Ref\cwRef.cpp" />
     <ClCompile Include="RenderObject\cwDynamicRenderObject.cpp" />

@@ -31,7 +31,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Camera/cwCamera.h"
 #include "Event/cwEvent.h"
 #include "Event/cwTouchEvent.h"
+#include "Event/cwKeyboardEvent.h"
 #include "Event/cwEventManager.h"
+#include "cwWinUtils.h"
 
 NS_MINIR_BEGIN
 
@@ -184,20 +186,64 @@ CWVOID cwApplication::onResize()
 	onResize(repertory.getUInt(gValueWinWidth), repertory.getUInt(gValueWinHeight));
 }
 
-CWVOID cwApplication::onMouseDown(CWUINT keyState, CWINT x, CWINT y)
+CWVOID cwApplication::onMouseLeftDown(CWUINT keyState, CWINT x, CWINT y)
 {
 	CWINT heightY = m_uWindowHeight - y;
 	if (heightY < 0) heightY = 0;
 
-	cwRepertory::getInstance().getEventManager()->addEvent(cwTouchEvent::create(TouchTypeDown, cwVector2D((CWFLOAT)x, (CWFLOAT)heightY)));
+	cwTouchEvent* pEvent = cwTouchEvent::create(TouchTypeDown, cwVector2D((CWFLOAT)x, (CWFLOAT)heightY));
+	pEvent->setTouchButton(TouchButtonLeft);
+	cwRepertory::getInstance().getEventManager()->addEvent(pEvent);
 }
 
-CWVOID cwApplication::onMouseUp(CWUINT keyState, CWINT x, CWINT y)
+CWVOID cwApplication::onMouseRightDown(CWUINT keyState, CWINT x, CWINT y)
 {
 	CWINT heightY = m_uWindowHeight - y;
 	if (heightY < 0) heightY = 0;
 
-	cwRepertory::getInstance().getEventManager()->addEvent(cwTouchEvent::create(TouchTypeUp, cwVector2D((CWFLOAT)x, (CWFLOAT)heightY)));
+	cwTouchEvent* pEvent = cwTouchEvent::create(TouchTypeDown, cwVector2D((CWFLOAT)x, (CWFLOAT)heightY));
+	pEvent->setTouchButton(TouchButtonRight);
+	cwRepertory::getInstance().getEventManager()->addEvent(pEvent);
+}
+
+CWVOID cwApplication::onMouseMiddleDown(CWUINT keyState, CWINT x, CWINT y)
+{
+	CWINT heightY = m_uWindowHeight - y;
+	if (heightY < 0) heightY = 0;
+
+	cwTouchEvent* pEvent = cwTouchEvent::create(TouchTypeDown, cwVector2D((CWFLOAT)x, (CWFLOAT)heightY));
+	pEvent->setTouchButton(TouchButtonMiddle);
+	cwRepertory::getInstance().getEventManager()->addEvent(pEvent);
+}
+
+CWVOID cwApplication::onMouseLeftUp(CWUINT keyState, CWINT x, CWINT y)
+{
+	CWINT heightY = m_uWindowHeight - y;
+	if (heightY < 0) heightY = 0;
+
+	cwTouchEvent* pEvent = cwTouchEvent::create(TouchTypeUp, cwVector2D((CWFLOAT)x, (CWFLOAT)heightY));
+	pEvent->setTouchButton(TouchButtonLeft);
+	cwRepertory::getInstance().getEventManager()->addEvent(pEvent);
+}
+
+CWVOID cwApplication::onMouseRightUp(CWUINT keyState, CWINT x, CWINT y)
+{
+	CWINT heightY = m_uWindowHeight - y;
+	if (heightY < 0) heightY = 0;
+
+	cwTouchEvent* pEvent = cwTouchEvent::create(TouchTypeUp, cwVector2D((CWFLOAT)x, (CWFLOAT)heightY));
+	pEvent->setTouchButton(TouchButtonRight);
+	cwRepertory::getInstance().getEventManager()->addEvent(pEvent);
+}
+
+CWVOID cwApplication::onMouseMiddleUp(CWUINT keyState, CWINT x, CWINT y)
+{
+	CWINT heightY = m_uWindowHeight - y;
+	if (heightY < 0) heightY = 0;
+
+	cwTouchEvent* pEvent = cwTouchEvent::create(TouchTypeUp, cwVector2D((CWFLOAT)x, (CWFLOAT)heightY));
+	pEvent->setTouchButton(TouchButtonMiddle);
+	cwRepertory::getInstance().getEventManager()->addEvent(pEvent);
 }
 
 CWVOID cwApplication::onMouseMove(CWUINT keyState, CWINT x, CWINT y)
@@ -214,6 +260,24 @@ CWVOID cwApplication::OnMouseWheel(CWUINT keyState, CWINT delta, CWINT x, CWINT 
 	if (heightY < 0) heightY = 0;
 
 	cwRepertory::getInstance().getEventManager()->addEvent(cwTouchEvent::create(TouchTypeWheel, cwVector2D((CWFLOAT)x, (CWFLOAT)heightY)));
+}
+
+CWVOID cwApplication::onKeyDown(CWUINT wParam, CWUINT lParam)
+{
+	KeyCode code = cwWinKeyMap::getInstance().getKeyCode(wParam);
+	if (code == KeyCode::KeyNone) return;
+
+	cwKeyboardEvent* pEvent = cwKeyboardEvent::create(code, KeyState::KeyDown);
+	cwRepertory::getInstance().getEventManager()->addEvent(pEvent);
+}
+
+CWVOID cwApplication::onKeyUp(CWUINT wParam, CWUINT lParam)
+{
+	KeyCode code = cwWinKeyMap::getInstance().getKeyCode(wParam);
+	if (code == KeyCode::KeyNone) return;
+
+	cwKeyboardEvent* pEvent = cwKeyboardEvent::create(code, KeyState::keyUp);
+	cwRepertory::getInstance().getEventManager()->addEvent(pEvent);
 }
 
 LRESULT cwApplication::msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -234,14 +298,22 @@ LRESULT cwApplication::msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		onResize();
 		return 0;
 	case WM_LBUTTONDOWN:
+		onMouseLeftDown(static_cast<CWUINT>(wParam), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		return 0;
 	case WM_RBUTTONDOWN:
+		onMouseRightDown(static_cast<CWUINT>(wParam), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		return 0;
 	case WM_MBUTTONDOWN:
-		onMouseDown(static_cast<CWUINT>(wParam), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		onMouseMiddleDown(static_cast<CWUINT>(wParam), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		return 0;
 	case WM_LBUTTONUP:
+		onMouseLeftUp(static_cast<CWUINT>(wParam), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		return 0;
 	case WM_RBUTTONUP:
+		onMouseRightUp(static_cast<CWUINT>(wParam), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		return 0;
 	case WM_MBUTTONUP:
-		onMouseUp(static_cast<CWUINT>(wParam), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		onMouseMiddleUp(static_cast<CWUINT>(wParam), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		return 0;
 	case WM_MOUSEMOVE:
 		onMouseMove(static_cast<CWUINT>(wParam), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
@@ -252,6 +324,12 @@ LRESULT cwApplication::msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 			GET_WHEEL_DELTA_WPARAM(wParam),
 			GET_X_LPARAM(lParam),
 			GET_Y_LPARAM(lParam));
+		return 0;
+	case WM_KEYDOWN:
+		onKeyDown(static_cast<CWUINT>(wParam), static_cast<CWUINT>(lParam));
+		return 0;
+	case WM_KEYUP:
+		onKeyUp(static_cast<CWUINT>(wParam), static_cast<CWUINT>(lParam));
 		return 0;
 	default:
 		break;
