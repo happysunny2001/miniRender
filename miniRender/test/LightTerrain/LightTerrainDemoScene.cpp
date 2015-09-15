@@ -131,7 +131,7 @@ CWVOID LightTerrainDemoScene::buildEntity()
 	cwRenderObject* pRenderObj = cwStaticRenderObject::create(
 		ePrimitiveTypeTriangleList,
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTex), static_cast<CWUINT>(mesh.nVertex.size()),
-		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosNormalTex);
+		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosNormalTex");
 
 	cwTexture* pTexTerrain = cwRepertory::getInstance().getTextureManager()->getTexture("Textures/grass.dds");
 	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderLightingTex);
@@ -167,7 +167,7 @@ CWVOID LightTerrainDemoScene::buildLightEntity()
 	cwRenderObject* pObjLight = cwStaticRenderObject::create(
 		ePrimitiveTypeTriangleList,
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
-		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosColor);
+		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosColor");
 
 	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderColor);
 	cwEffect* pEffect = cwEffect::create();

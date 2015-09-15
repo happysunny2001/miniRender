@@ -103,6 +103,8 @@ private:
 	CWVOID initBufferBindFlagData();
 	CWVOID initBufferUsageData();
 	CWVOID initPrimitiveTypeData();
+	CWVOID initFormatTypeData();
+	CWVOID initClassification();
 
 protected:
 	ID3D11Device* m_pD3D11Device;
@@ -130,6 +132,8 @@ public:
 	static CWUINT bufferBindFlag[eBufferBindMaxCount];
 	static CWUINT bufferUsage[eBufferUsageMaxCount];
 	static CWUINT primitiveType[ePrimitiveTypeMaxCount];
+	static CWUINT formatType[eFormatMaxCount];
+	static D3D11_INPUT_CLASSIFICATION classificationType[eClassificationMaxCount];
 
 	static inline D3D11_BLEND getBlendFactor(eBlendFactor index) { return static_cast<D3D11_BLEND>(blendFactor[index]); }
 	static inline D3D11_BLEND_OP getBlendOp(eBlendOp index) { return static_cast<D3D11_BLEND_OP>(blendOp[index]); }
@@ -143,6 +147,8 @@ public:
 	static inline D3D11_USAGE getBufferUsage(eBufferUsage index) { return static_cast<D3D11_USAGE>(bufferUsage[index]); }
 
 	static inline D3D11_PRIMITIVE_TOPOLOGY getPrimitiveType(ePrimitiveType index) { return static_cast<D3D11_PRIMITIVE_TOPOLOGY>(primitiveType[index]); }
+	static inline DXGI_FORMAT getFormatType(eFormat index) { return static_cast<DXGI_FORMAT>(formatType[index]); }
+	static D3D11_INPUT_CLASSIFICATION getClassificationType(eClassification index) { return classificationType[index]; }
 
 };
 

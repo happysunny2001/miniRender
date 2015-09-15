@@ -38,6 +38,7 @@ public:
 	static CWVOID trim(CWSTRING& str);
 	static CWVOID split(CWSTRING& str, const CWSTRING& strSep, std::vector<CWSTRING>& vecRet);
 	static CWSTRING replace(CWSTRING& strOrigin, const CWSTRING& strFind, const CWSTRING& strReplace);
+	static CWBYTE parseHexStringByte(const CWSTRING& strHex);
 
 protected:
 };

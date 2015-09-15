@@ -576,6 +576,9 @@
     <ClInclude Include="Event\Interface\cwKeyboardEventInterface.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Entity\cwBatchEntity.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -936,6 +939,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Event\Interface\cwKeyboardEventInterface.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\cwBatchEntity.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

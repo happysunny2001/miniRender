@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwParserManager.h"
 #include "Base/cwStruct.h"
 #include "Base/cwCommon.h"
+#include "Base/cwStringConvert.h"
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
 
@@ -90,11 +91,11 @@ cwStencil* cwStencilParser::parse(tinyxml2::XMLElement* pStencilData)
 			stencilData.stencilEnable = cwRepertory::getInstance().getParserManager()->getBool(pcEnable);
 
 		const char* pcReadMask = pStencilElement->Attribute("ReadMask");
-		CWBYTE cReadMask = cwCommon::parseHexStringByte(pcReadMask);
+		CWBYTE cReadMask = cwStringConvert::parseHexStringByte(pcReadMask);
 		stencilData.stencilReadMask = cReadMask;
 
 		const char* pcWriteMask = pStencilElement->Attribute("WriteMask");
-		CWBYTE cWriteMask = cwCommon::parseHexStringByte(pcWriteMask);
+		CWBYTE cWriteMask = cwStringConvert::parseHexStringByte(pcWriteMask);
 		stencilData.stencilWriteMask = cWriteMask;
 	}
 

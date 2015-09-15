@@ -34,7 +34,7 @@ public:
 	static cwDynamicRenderObject* create(
 		ePrimitiveType topology,
 		CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
-		CWVOID* pIndexData, CWUINT uIndexCnt, ceElementDesc eLayout);
+		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout);
 
 	cwDynamicRenderObject();
 	virtual ~cwDynamicRenderObject();
@@ -42,7 +42,7 @@ public:
 	virtual bool init(
 		ePrimitiveType topology,
 		CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
-		CWVOID* pIndexData, CWUINT uIndexCnt, ceElementDesc eLayout) override;
+		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout) override;
 
 	virtual void preRender() override;
 

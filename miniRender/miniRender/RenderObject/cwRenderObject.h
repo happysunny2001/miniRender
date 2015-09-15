@@ -38,8 +38,8 @@ public:
 
 	virtual CWBOOL init(
 		ePrimitiveType topology,
-		CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt, 
-		CWVOID* pIndexData, CWUINT uIndexCnt, ceElementDesc eLayout) = 0;
+		CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
+		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout);
 
 	virtual CWVOID preRender() {}
 

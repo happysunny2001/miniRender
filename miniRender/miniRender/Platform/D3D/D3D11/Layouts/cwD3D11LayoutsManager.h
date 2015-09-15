@@ -26,24 +26,27 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Layouts/cwLayoutsManager.h"
 #include "Platform/D3D/D3D11/Repertory/cwD3D11Repertory.h"
 #include "cwInputElementDescManager.h"
+#include "tinyxml2.h"
 
 NS_MINIR_BEGIN
 
-class CW_DLL cwD3D11LayoutsManager :public cwLayoutsManager
+class CW_DLL cwD3D11LayoutsManager : public cwLayoutsManager
 {
 public:
 	virtual ~cwD3D11LayoutsManager();
 
-	virtual bool init() override;
+	virtual CWBOOL init() override;
 
 protected:
 	static cwD3D11LayoutsManager* create();
 	cwD3D11LayoutsManager();
 
+	CWVOID loadLayout();
+	cwInputElementDesc* createElementDesc(tinyxml2::XMLElement* pLayoutElement);
+
 	friend class cwD3D11Repertory;
 
 protected:
-	cwInputElementDescManager* m_pElementDescManager;
 
 };
 

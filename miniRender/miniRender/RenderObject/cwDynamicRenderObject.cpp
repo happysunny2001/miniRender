@@ -29,10 +29,10 @@ cwDynamicRenderObject* cwDynamicRenderObject::create(
 ePrimitiveType topology,
 CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
 CWVOID* pIndexData, CWUINT uIndexCnt,
-ceElementDesc eLayout)
+const CWSTRING& strLayout)
 {
 	cwDynamicRenderObject* pObj = new cwDynamicRenderObject();
-	if (pObj && pObj->init( topology, pVertexData, uVertexStride, uVertexCnt, pIndexData, uIndexCnt, eLayout)) {
+	if (pObj && pObj->init( topology, pVertexData, uVertexStride, uVertexCnt, pIndexData, uIndexCnt, strLayout)) {
 		pObj->autorelease();
 		return pObj;
 	}
@@ -55,12 +55,12 @@ cwDynamicRenderObject::~cwDynamicRenderObject()
 bool cwDynamicRenderObject::init(
 	ePrimitiveType topology,
 	CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
-	CWVOID* pIndexData, CWUINT uIndexCnt, ceElementDesc eLayout)
+	CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout)
 {
 	if (!cwRenderObject::init(
 		topology,
 		pVertexData, uVertexStride, uVertexCnt,
-		pIndexData, uIndexCnt, eLayout)) return false;
+		pIndexData, uIndexCnt, strLayout)) return false;
 
 	cwDevice* pDevice = cwRepertory::getInstance().getDevice();
 	m_pVertexBuffer = pDevice->createVertexBuffer(NULL, uVertexStride, uVertexCnt, eBufferUsageDynamic, eAccessFlagWrite);

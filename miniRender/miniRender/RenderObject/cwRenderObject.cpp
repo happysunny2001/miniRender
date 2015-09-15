@@ -54,7 +54,7 @@ cwRenderObject::~cwRenderObject()
 CWBOOL cwRenderObject::init(
 	ePrimitiveType topology,
 	CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
-	CWVOID* pIndexData, CWUINT uIndexCnt, ceElementDesc eLayout)
+	CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout)
 {
 	m_nTopology = topology;
 	if (pIndexData) {
@@ -63,7 +63,7 @@ CWBOOL cwRenderObject::init(
 
 		if (!m_pIndexBuffer) return CWFALSE;
 	}
-	m_pLayout = cwRepertory::getInstance().getLayoutManager()->getLayouts(eLayout);
+	m_pLayout = cwRepertory::getInstance().getLayoutManager()->getLayouts(strLayout);
 
 	if (!m_pLayout) return CWFALSE;
 

@@ -75,7 +75,7 @@ void BoxDemo::buildEntity()
 	cwRenderObject *pRenderObj = cwStaticRenderObject::create(
 		ePrimitiveTypeTriangleList,
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
-		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosColor);
+		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosColor");
 
 	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderColor);
 	cwMaterial* pMaterial = cwMaterial::create();

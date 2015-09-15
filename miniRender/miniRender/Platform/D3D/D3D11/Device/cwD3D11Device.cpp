@@ -70,6 +70,8 @@ CWUINT cwD3D11Device::bufferBindFlag[eBufferBindMaxCount];
 CWUINT cwD3D11Device::bufferUsage[eBufferUsageMaxCount];
 
 CWUINT cwD3D11Device::primitiveType[ePrimitiveTypeMaxCount];
+CWUINT cwD3D11Device::formatType[eFormatMaxCount];
+D3D11_INPUT_CLASSIFICATION cwD3D11Device::classificationType[eClassificationMaxCount];
 
 cwD3D11Device::cwD3D11Device() :
 m_pD3D11Device(NULL),
@@ -90,6 +92,8 @@ m_pMaterialDefault(nullptr)
 	initBufferBindFlagData();
 	initBufferUsageData();
 	initPrimitiveTypeData();
+	initFormatTypeData();
+	initClassification();
 }
 
 cwD3D11Device::~cwD3D11Device()
@@ -792,6 +796,117 @@ void cwD3D11Device::initPrimitiveTypeData()
 	primitiveType[ePrimitiveTypePatchList30]      = D3D11_PRIMITIVE_TOPOLOGY_30_CONTROL_POINT_PATCHLIST;
 	primitiveType[ePrimitiveTypePatchList31]      = D3D11_PRIMITIVE_TOPOLOGY_31_CONTROL_POINT_PATCHLIST;
 	primitiveType[ePrimitiveTypePatchList32]      = D3D11_PRIMITIVE_TOPOLOGY_32_CONTROL_POINT_PATCHLIST;
+}
+
+CWVOID cwD3D11Device::initFormatTypeData()
+{
+	formatType[eFormatUnknown]                = DXGI_FORMAT_UNKNOWN;
+	formatType[eFormatR32g32b32a32Typeless]   = DXGI_FORMAT_R32G32B32A32_TYPELESS;
+	formatType[eFormatR32g32b32a32Float]      = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	formatType[eFormatR32g32b32a32Uint]       = DXGI_FORMAT_R32G32B32A32_UINT;
+	formatType[eFormatR32g32b32a32Sint]       = DXGI_FORMAT_R32G32B32A32_SINT;
+	formatType[eFormatR32g32b32Typeless]      = DXGI_FORMAT_R32G32B32_TYPELESS;
+	formatType[eFormatR32g32b32Float]         = DXGI_FORMAT_R32G32B32_FLOAT;
+	formatType[eFormatR32g32b32Uint]          = DXGI_FORMAT_R32G32B32_UINT;
+	formatType[eFormatR32g32b32Sint]          = DXGI_FORMAT_R32G32B32_SINT;
+	formatType[eFormatR16g16b16a16Typeless]   = DXGI_FORMAT_R16G16B16A16_TYPELESS;
+	formatType[eFormatR16g16b16a16Float]      = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	formatType[eFormatR16g16b16a16Unorm]      = DXGI_FORMAT_R16G16B16A16_UNORM;
+	formatType[eFormatR16g16b16a16Uint]       = DXGI_FORMAT_R16G16B16A16_UINT;
+	formatType[eFormatR16g16b16a16Snorm]      = DXGI_FORMAT_R16G16B16A16_SNORM;
+	formatType[eFormatR16g16b16a16Sint]       = DXGI_FORMAT_R16G16B16A16_SINT;
+	formatType[eFormatR32g32Typeless]         = DXGI_FORMAT_R32G32_TYPELESS;
+	formatType[eFormatR32g32Float]            = DXGI_FORMAT_R32G32_FLOAT;
+	formatType[eFormatR32g32Uint]             = DXGI_FORMAT_R32G32_UINT;
+	formatType[eFormatR32g32Sint]             = DXGI_FORMAT_R32G32_SINT;
+	formatType[eFormatR32g8x24Typeless]       = DXGI_FORMAT_R32G8X24_TYPELESS;
+	formatType[eFormatD32FloatS8x24Uint]      = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+	formatType[eFormatR32FloatX8x24Typeless]  = DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
+	formatType[eFormatX32TypelessG8x24Uint]   = DXGI_FORMAT_X32_TYPELESS_G8X24_UINT;
+	formatType[eFormatR10g10b10a2Typeless]    = DXGI_FORMAT_R10G10B10A2_TYPELESS;
+	formatType[eFormatR10g10b10a2Unorm]       = DXGI_FORMAT_R10G10B10A2_UNORM;
+	formatType[eFormatR10g10b10a2Uint]        = DXGI_FORMAT_R10G10B10A2_UINT;
+	formatType[eFormatR11g11b10Float]         = DXGI_FORMAT_R11G11B10_FLOAT;
+	formatType[eFormatR8g8b8a8Typeless]       = DXGI_FORMAT_R8G8B8A8_TYPELESS;
+	formatType[eFormatR8g8b8a8Unorm]          = DXGI_FORMAT_R8G8B8A8_UNORM;
+	formatType[eFormatR8g8b8a8UnormSrgb]      = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	formatType[eFormatR8g8b8a8Uint]           = DXGI_FORMAT_R8G8B8A8_UINT;
+	formatType[eFormatR8g8b8a8Snorm]          = DXGI_FORMAT_R8G8B8A8_SNORM;
+	formatType[eFormatR8g8b8a8Sint]           = DXGI_FORMAT_R8G8B8A8_SINT;
+	formatType[eFormatR16g16Typeless]         = DXGI_FORMAT_R16G16_TYPELESS;
+	formatType[eFormatR16g16Float]            = DXGI_FORMAT_R16G16_FLOAT;
+	formatType[eFormatR16g16Unorm]            = DXGI_FORMAT_R16G16_UNORM;
+	formatType[eFormatR16g16Uint]             = DXGI_FORMAT_R16G16_UINT;
+	formatType[eFormatR16g16Snorm]            = DXGI_FORMAT_R16G16_SNORM;
+	formatType[eFormatR16g16Sint]             = DXGI_FORMAT_R16G16_SINT;
+	formatType[eFormatR32Typeless]            = DXGI_FORMAT_R32_TYPELESS;
+	formatType[eFormatd32Float]               = DXGI_FORMAT_D32_FLOAT;
+	formatType[eFormatR32Float]               = DXGI_FORMAT_R32_FLOAT;
+	formatType[eFormatR32Uint]                = DXGI_FORMAT_R32_UINT;
+	formatType[eFormatR32Sint]                = DXGI_FORMAT_R32_SINT;
+	formatType[eFormatR24g8Typeless]          = DXGI_FORMAT_R24G8_TYPELESS;
+	formatType[eFormatd24UnormS8Uint]         = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	formatType[eFormatR24UnormX8Typeless]     = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+	formatType[eFormatx24TypelessG8Uint]      = DXGI_FORMAT_X24_TYPELESS_G8_UINT;
+	formatType[eFormatR8g8Typeless]           = DXGI_FORMAT_R8G8_TYPELESS;
+	formatType[eFormatR8g8Unorm]              = DXGI_FORMAT_R8G8_UNORM;
+	formatType[eFormatR8g8Uint]               = DXGI_FORMAT_R8G8_UINT;
+	formatType[eFormatR8g8Snorm]              = DXGI_FORMAT_R8G8_SNORM;
+	formatType[eFormatR8g8Sint]               = DXGI_FORMAT_R8G8_SINT;
+	formatType[eFormatR16Typeless]            = DXGI_FORMAT_R16_TYPELESS;
+	formatType[eFormatR16Float]               = DXGI_FORMAT_R16_FLOAT;
+	formatType[eFormatd16Unorm]               = DXGI_FORMAT_D16_UNORM;
+	formatType[eFormatR16Unorm]               = DXGI_FORMAT_R16_UNORM;
+	formatType[eFormatR16Uint]                = DXGI_FORMAT_R16_UINT;
+	formatType[eFormatR16Snorm]               = DXGI_FORMAT_R16_SNORM;
+	formatType[eFormatR16Sint]                = DXGI_FORMAT_R16_SINT;
+	formatType[eFormatR8Typeless]             = DXGI_FORMAT_R8_TYPELESS;
+	formatType[eFormatR8Unorm]                = DXGI_FORMAT_R8_UNORM;
+	formatType[eFormatR8Uint]                 = DXGI_FORMAT_R8_UINT;
+	formatType[eFormatR8Snorm]                = DXGI_FORMAT_R8_SNORM;
+	formatType[eFormatR8Sint]                 = DXGI_FORMAT_R8_SINT;
+	formatType[eFormatA8Unorm]                = DXGI_FORMAT_A8_UNORM;
+	formatType[eFormatR1Unorm]                = DXGI_FORMAT_R1_UNORM;
+	formatType[eFormatR9g9b9e5Sharedexp]      = DXGI_FORMAT_R9G9B9E5_SHAREDEXP;
+	formatType[eFormatR8g8_B8g8Unorm]         = DXGI_FORMAT_R8G8_B8G8_UNORM;
+	formatType[eFormatG8r8G8b8Unorm]          = DXGI_FORMAT_G8R8_G8B8_UNORM;
+	formatType[eFormatBc1Typeless]            = DXGI_FORMAT_BC1_TYPELESS;
+	formatType[eFormatBc1Unorm]               = DXGI_FORMAT_BC1_UNORM;
+	formatType[eFormatBc1UnormSrgb]           = DXGI_FORMAT_BC1_UNORM_SRGB;
+	formatType[eFormatBc2Typeless]            = DXGI_FORMAT_BC2_TYPELESS;
+	formatType[eFormatBc2Unorm]               = DXGI_FORMAT_BC2_UNORM;
+	formatType[eFormatBc2UnormSrgb]           = DXGI_FORMAT_BC2_UNORM_SRGB;
+	formatType[eFormatBc3Typeless]            = DXGI_FORMAT_BC3_TYPELESS;
+	formatType[eFormatBc3Unorm]               = DXGI_FORMAT_BC3_UNORM;
+	formatType[eFormatBc3UnormSrgb]           = DXGI_FORMAT_BC3_UNORM_SRGB;
+	formatType[eFormatBc4Typeless]            = DXGI_FORMAT_BC4_TYPELESS;
+	formatType[eFormatBc4Unorm]               = DXGI_FORMAT_BC4_UNORM;
+	formatType[eFormatBc4Snorm]               = DXGI_FORMAT_BC4_SNORM;
+	formatType[eFormatBc5Typeless]            = DXGI_FORMAT_BC5_TYPELESS;
+	formatType[eFormatBc5Unorm]               = DXGI_FORMAT_BC5_UNORM;
+	formatType[eFormatBc5Snorm]               = DXGI_FORMAT_BC5_SNORM;
+	formatType[eFormatB5g6r5Unorm]            = DXGI_FORMAT_B5G6R5_UNORM;
+	formatType[eFormatB5g5r5a1Unorm]          = DXGI_FORMAT_B5G5R5A1_UNORM;
+	formatType[eFormatB8g8r8a8Unorm]          = DXGI_FORMAT_B8G8R8A8_UNORM;
+	formatType[eFormatB8g8r8x8Unorm]          = DXGI_FORMAT_B8G8R8X8_UNORM;
+	formatType[eFormatR10g10b10XrBiasA2Unorm] = DXGI_FORMAT_R10G10B10_XR_BIAS_A2_UNORM;
+	formatType[eFormatB8g8r8a8Typeless]       = DXGI_FORMAT_B8G8R8A8_TYPELESS;
+	formatType[eFormatB8g8r8a8UnormSrgb]      = DXGI_FORMAT_B8G8R8A8_UNORM_SRGB;
+	formatType[eFormatB8g8r8x8Typeless]       = DXGI_FORMAT_B8G8R8X8_TYPELESS;
+	formatType[eFormatB8g8r8x8UnormSrgb]      = DXGI_FORMAT_B8G8R8X8_UNORM_SRGB;
+	formatType[eFormatBc6hTypeless]           = DXGI_FORMAT_BC6H_TYPELESS;
+	formatType[eFormatBc6hUf16]               = DXGI_FORMAT_BC6H_UF16;
+	formatType[eFormatBc6hSf16]               = DXGI_FORMAT_BC6H_SF16;
+	formatType[eFormatBc7Typeless]            = DXGI_FORMAT_BC7_TYPELESS;
+	formatType[eFormatBc7Unorm]               = DXGI_FORMAT_BC7_UNORM;
+	formatType[eFormatBc7UnormSrgb]           = DXGI_FORMAT_BC7_UNORM_SRGB;
+	formatType[eFormatForceUint]              = DXGI_FORMAT_FORCE_UINT;
+}
+
+CWVOID cwD3D11Device::initClassification()
+{
+	classificationType[eClassificationPerVertex]   = D3D11_INPUT_PER_VERTEX_DATA;
+	classificationType[eClassificationPerInstance] = D3D11_INPUT_PER_INSTANCE_DATA;
 }
 
 NS_MINIR_END

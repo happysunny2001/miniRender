@@ -25,6 +25,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/D3D/D3D11/Shader/cwD3D11Shader.h"
 #include "Shader/cwShaderManager.h"
 #include "Platform/cwFileSystem.h"
+#include "Parser/cwParserManager.h"
+#include "Device/cwDevice.h"
+#include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
 
 NS_MINIR_BEGIN
 
@@ -40,66 +43,94 @@ cwD3D11LayoutsManager* cwD3D11LayoutsManager::create()
 	return nullptr;
 }
 
-cwD3D11LayoutsManager::cwD3D11LayoutsManager():
-m_pElementDescManager(nullptr)
+cwD3D11LayoutsManager::cwD3D11LayoutsManager()
 {
 
 }
 
 cwD3D11LayoutsManager::~cwD3D11LayoutsManager()
 {
-	CW_SAFE_RELEASE_NULL(m_pElementDescManager);
+
 }
 
-bool cwD3D11LayoutsManager::init()
+CWBOOL cwD3D11LayoutsManager::init()
 {
-	m_pElementDescManager = cwInputElementDescManager::create();
-	if (!m_pElementDescManager) return false;
-	CW_SAFE_RETAIN(m_pElementDescManager);
+	loadLayout();
 
+	return CWTRUE;
+}
+
+cwInputElementDesc* cwD3D11LayoutsManager::createElementDesc(tinyxml2::XMLElement* pLayoutElement)
+{
+	if (!pLayoutElement) return nullptr;
+
+	cwParserManager* pParserManager = cwRepertory::getInstance().getParserManager();
+	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+
+	std::vector<D3D11_INPUT_ELEMENT_DESC> vecElement;
+
+	tinyxml2::XMLElement* pElement = pLayoutElement->FirstChildElement("Element");
+	while (pElement) {
+		const char* pcName = pElement->Attribute("Name");
+		int iIndex = pElement->IntAttribute("Index");
+		const char* pcFormat = pElement->Attribute("Format");
+		int iSlot = pElement->IntAttribute("Slot");
+		int iOffset = pElement->IntAttribute("Offset");
+		const char* pcClass = pElement->Attribute("Classification");
+		int iInsRate = pElement->IntAttribute("InstanceRate");
+
+		D3D11_INPUT_ELEMENT_DESC desc;
+		desc.SemanticName = pcName;
+		desc.SemanticIndex = iIndex;
+		desc.Format = pD3D11Device->getFormatType(pParserManager->getFormatType(pcFormat));
+		desc.InputSlot = iSlot;
+		desc.AlignedByteOffset = iOffset;
+		desc.InputSlotClass = pD3D11Device->getClassificationType(pParserManager->getClassificationType(pcClass));
+		desc.InstanceDataStepRate = iInsRate;
+
+		vecElement.push_back(desc);
+
+		pElement = pElement->NextSiblingElement("Element");
+	}
+
+	if (vecElement.empty()) return nullptr;
+
+	cwInputElementDesc *pDesc = cwInputElementDesc::create(int(vecElement.size()));
+	int i = 0;
+	for (auto desc : vecElement) {
+		pDesc->addElementDesc(desc, i++);
+	}
+
+	return pDesc;
+}
+
+CWVOID cwD3D11LayoutsManager::loadLayout()
+{
 	auto shaderManager = cwRepertory::getInstance().getShaderManager();
+	CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath("Configure/D3D11/InputLayout.xml");
 
-	{
-		cwLayouts* pLayout = cwD3D11Layouts::create(
-			m_pElementDescManager->getElement(ceEleDescPosColor),
-			static_cast<cwD3D11Shader*>(shaderManager->getShader("effect/D3D11/color.fx"))
-			);
-		if (pLayout) {
-			m_mapLayouts.insert(ceEleDescPosColor, pLayout);
-		}
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLError err = doc.LoadFile(strFilePath.c_str());
+	if (err != tinyxml2::XML_NO_ERROR) {
+		return;
 	}
 
-	{
-		cwLayouts* pLayout = cwD3D11Layouts::create(
-			m_pElementDescManager->getElement(ceEleDescPosNormal),
-			static_cast<cwD3D11Shader*>(shaderManager->getShader("effect/D3D11/lighting.fx"))
-			);
-		if (pLayout) {
-			m_mapLayouts.insert(ceEleDescPosNormal, pLayout);
-		}
-	}
+	tinyxml2::XMLElement* pInputLayoutElement = doc.FirstChildElement("InputLayout");
+	if (!pInputLayoutElement) return ;
 
-	{
-		cwLayouts* pLayout = cwD3D11Layouts::create(
-			m_pElementDescManager->getElement(ceEleDescPosNormalTex),
-			static_cast<cwD3D11Shader*>(shaderManager->getShader("effect/D3D11/lightingTex.fx"))
-			);
-		if (pLayout) {
-			m_mapLayouts.insert(ceEleDescPosNormalTex, pLayout);
-		}
-	}
+	tinyxml2::XMLElement* pLayoutElement = pInputLayoutElement->FirstChildElement("Layout");
+	while (pLayoutElement) {
+		const char* pcName = pLayoutElement->Attribute("Name");
+		const char* pcShader = pLayoutElement->Attribute("Shader");
 
-	{
-		cwLayouts* pLayout = cwD3D11Layouts::create(
-			m_pElementDescManager->getElement(ceEleDescPosTex),
-			static_cast<cwD3D11Shader*>(shaderManager->getShader("effect/D3D11/colorTex.fx"))
-			);
-		if (pLayout) {
-			m_mapLayouts.insert(ceEleDescPosTex, pLayout);
+		cwInputElementDesc* pDesc = createElementDesc(pLayoutElement);
+		if (pDesc) {
+			cwLayouts* pLayout = cwD3D11Layouts::create(pDesc, static_cast<cwD3D11Shader*>(shaderManager->getShader(pcShader)));
+			m_nMapLayouts.insert(pcName, pLayout);
 		}
-	}
 
-	return true;
+		pLayoutElement = pLayoutElement->NextSiblingElement("Layout");
+	}
 }
 
 NS_MINIR_END

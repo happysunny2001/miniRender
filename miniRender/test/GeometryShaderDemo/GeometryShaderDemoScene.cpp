@@ -129,7 +129,7 @@ CWVOID GeometryShaderDemoScene::buildTerrain()
 	cwRenderObject* pRenderObj = cwStaticRenderObject::create(
 		ePrimitiveTypeTriangleList,
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTex), static_cast<CWUINT>(mesh.nVertex.size()),
-		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosNormalTex);
+		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosNormalTex");
 
 	cwTexture* pTexTerrain = cwRepertory::getInstance().getTextureManager()->getTexture("Textures/grass.dds");
 	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderLightingTex);
@@ -176,7 +176,7 @@ CWVOID GeometryShaderDemoScene::buildBillboard()
 	cwRenderObject* pRenderObj = cwStaticRenderObject::create(
 		ePrimitiveTypePointList,
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosTex), 4,
-		NULL, 0, ceEleDescPosTex);
+		NULL, 0, "PosTex");
 
 	cwEffect* pEffect = cwEffect::create();
 	pEffect->setShader(pBillboardShader);

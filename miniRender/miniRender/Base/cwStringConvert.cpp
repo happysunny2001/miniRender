@@ -20,6 +20,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwStringConvert.h"
 
 #include <sstream>
+#include <algorithm>
 
 NS_MINIR_BEGIN
 
@@ -86,6 +87,30 @@ CWSTRING cwStringConvert::replace(CWSTRING& strOrigin, const CWSTRING& strFind, 
 	}
 
 	return ss.str();
+}
+
+CWBYTE cwStringConvert::parseHexStringByte(const CWSTRING& strHex)
+{
+	static CWBYTE baseData[23] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0, 0, 0, 0, 10, 11, 12, 13, 14, 15 };
+
+	CWBYTE ret = 0;
+
+	CWSTRING strLower = strHex;
+	std::transform(strLower.begin(), strLower.end(), strLower.begin(), ::toupper);
+
+	auto nPos = strLower.find('X');
+	if (nPos == std::string::npos) return ret;
+	if (nPos + 2 >= strLower.size()) return ret;
+
+	CWUINT indexUpper = strLower[nPos + 1] - '0';
+	if (indexUpper < 23)
+		ret |= baseData[indexUpper] << 4;
+
+	CWUINT indexLower = strLower[nPos + 2] - '0';
+	if (indexLower < 23)
+		ret |= baseData[indexLower];
+
+	return ret;
 }
 
 NS_MINIR_END

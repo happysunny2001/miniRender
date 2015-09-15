@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<InputLayout>
+	<Layout Name="PosColor" Shader="effect/D3D11/color.fx">
+		<Element Name="POSITION" Index="0" Format="R32g32b32Float" Slot="0" Offset="0" Classification="Vertex" InstanceRate="0"/>
+		<Element Name="COLOR" Index="0" Format="R32g32b32a32Float" Slot="0" Offset="12" Classification="Vertex" InstanceRate="0"/>
+	</Layout>
+
+	<Layout Name="PosNormal" Shader="effect/D3D11/lighting.fx">
+		<Element Name="POSITION" Index="0" Format="R32g32b32Float" Slot="0" Offset="0" Classification="Vertex" InstanceRate="0"/>
+		<Element Name="NORMAL" Index="0" Format="R32g32b32Float" Slot="0" Offset="12" Classification="Vertex" InstanceRate="0"/>
+	</Layout>
+
+	<Layout Name="PosNormalTex" Shader="effect/D3D11/lightingTex.fx">
+		<Element Name="POSITION" Index="0" Format="R32g32b32Float" Slot="0" Offset="0" Classification="Vertex" InstanceRate="0"/>
+		<Element Name="NORMAL" Index="0" Format="R32g32b32Float" Slot="0" Offset="12" Classification="Vertex" InstanceRate="0"/>
+		<Element Name="TEXCOORD" Index="0" Format="R32g32Float" Slot="0" Offset="24" Classification="Vertex" InstanceRate="0"/>
+	</Layout>
+
+	<Layout Name="PosTex" Shader="effect/D3D11/colorTex.fx">
+		<Element Name="POSITION" Index="0" Format="R32g32b32Float" Slot="0" Offset="0" Classification="Vertex" InstanceRate="0"/>
+		<Element Name="TEXCOORD" Index="0" Format="R32g32Float" Slot="0" Offset="12" Classification="Vertex" InstanceRate="0"/>
+	</Layout>
+</InputLayout>

@@ -17,53 +17,31 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_ENTITY_H__
-#define __CW_ENTITY_H__
+#ifndef __CW_BATCH_ENTITY_H__
+#define __CW_BATCH_ENTITY_H__
 
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
 #include "Math/cwMath.h"
 #include "cwRenderNode.h"
+#include "cwEntity.h"
 
 NS_MINIR_BEGIN
 
-class cwRenderObject;
-class cwRenderDevice;
-class cwEffects;
-class cwCamera;
-class cwMaterial;
-class cwLight;
-class cwBlend;
-class cwStencil;
-
-class CW_DLL cwEntity : public cwRenderNode
+class cwBatchEntity : public cwEntity
 {
 public:
-	static cwEntity* create();
+	static cwBatchEntity* create();
 
-	cwEntity();
-	virtual ~cwEntity();
+	cwBatchEntity();
+	virtual ~cwBatchEntity();
 
 	virtual CWBOOL init() override;
 
-	virtual CWVOID setRenderObject(cwRenderObject* pRenderObj);
-	inline cwRenderObject* getRenderObj() { return m_pRenderObj; }
-
-	virtual CWVOID setMaterial(cwMaterial* pMaterial);
-	inline cwMaterial* getMaterial() { return m_pMaterial; }
-
-	virtual CWVOID setBlend(cwBlend* pBlend);
-	inline cwBlend* getBlend() { return m_pBlend; }
-
-	virtual CWVOID setStencil(cwStencil* pStencil);
-	inline cwStencil* getStencil() { return m_pStencil; }
-
 protected:
-	cwMaterial* m_pMaterial;
-	cwRenderObject* m_pRenderObj;
-
-	cwBlend* m_pBlend;
-	cwStencil* m_pStencil;
+	cwRenderObject* m_pInstanceObject;
+	CWUINT m_uInstanceMaxCount;
+	CWUINT m_uInstanceCount;
 
 };
 

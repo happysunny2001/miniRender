@@ -28,7 +28,7 @@ NS_MINIR_BEGIN
 class cwCommon
 {
 public:
-	static CWBYTE parseHexStringByte(const CWSTRING& strHex);
+	//static CWBYTE parseHexStringByte(const CWSTRING& strHex);
 
 };
 

@@ -464,7 +464,7 @@ cwRenderObject* cwGeometryGenerator::generateCoordinateAxisRenderObject(CWFLOAT 
 	return cwStaticRenderObject::create(
 		ePrimitiveTypeTriangleList,
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
-		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosColor);
+		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosColor");
 }
 
 cwEntity* cwGeometryGenerator::generateCoordinateAxisEntity(CWFLOAT scale)

@@ -45,6 +45,7 @@
     <ClInclude Include="Effect\cwEffectTextureParameter.h" />
     <ClInclude Include="Effect\cwGPEffect.h" />
     <ClInclude Include="Engine\cwEngine.h" />
+    <ClInclude Include="Entity\cwBatchEntity.h" />
     <ClInclude Include="Entity\cwEntity.h" />
     <ClInclude Include="Entity\cwMirror.h" />
     <ClInclude Include="Entity\cwRenderNode.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="Effect\cwEffectTextureParameter.cpp" />
     <ClCompile Include="Effect\cwGPEffect.cpp" />
     <ClCompile Include="Engine\cwEngine.cpp" />
+    <ClCompile Include="Entity\cwBatchEntity.cpp" />
     <ClCompile Include="Entity\cwEntity.cpp" />
     <ClCompile Include="Entity\cwMirror.cpp" />
     <ClCompile Include="Entity\cwRenderNode.cpp" />

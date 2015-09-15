@@ -23,10 +23,17 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwLayouts* cwLayoutsManager::getLayouts(ceElementDesc eType)
+//cwLayouts* cwLayoutsManager::getLayouts(ceElementDesc eType)
+//{
+//	auto it = m_mapLayouts.find(eType);
+//	if (it == m_mapLayouts.end()) return nullptr;
+//	return it->second;
+//}
+
+cwLayouts* cwLayoutsManager::getLayouts(const CWSTRING& strLayout)
 {
-	auto it = m_mapLayouts.find(eType);
-	if (it == m_mapLayouts.end()) return nullptr;
+	auto it = m_nMapLayouts.find(strLayout);
+	if (it == m_nMapLayouts.end()) return nullptr;
 	return it->second;
 }
 

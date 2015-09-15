@@ -110,7 +110,7 @@ cwEntity* cwEntityParser::getEntity(const CWSTRING& strType, const CWSTRING& str
 		pRenderObj = cwStaticRenderObject::create(
 			ePrimitiveTypeTriangleList,
 			(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
-			(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosColor);
+			(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), strVertexType);
 	}
 	else if (strVertexType == "PosNormal") {
 		vector<cwVertexPosNormal> vecVertex(mesh.nVertex.size());
@@ -122,7 +122,7 @@ cwEntity* cwEntityParser::getEntity(const CWSTRING& strType, const CWSTRING& str
 		pRenderObj = cwStaticRenderObject::create(
 			ePrimitiveTypeTriangleList,
 			(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormal), static_cast<CWUINT>(mesh.nVertex.size()),
-			(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosNormal);
+			(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), strVertexType);
 	}
 	else if (strVertexType == "PosNormalTex") {
 		vector<cwVertexPosNormalTex> vecVertex(mesh.nVertex.size());
@@ -135,7 +135,7 @@ cwEntity* cwEntityParser::getEntity(const CWSTRING& strType, const CWSTRING& str
 		pRenderObj = cwStaticRenderObject::create(
 			ePrimitiveTypeTriangleList,
 			(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTex), static_cast<CWUINT>(mesh.nVertex.size()),
-			(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosNormalTex);
+			(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), strVertexType);
 	}
 	else if (strVertexType == "PosTex") {
 		vector<cwVertexPosTex> vecVertex(mesh.nVertex.size());
@@ -147,7 +147,7 @@ cwEntity* cwEntityParser::getEntity(const CWSTRING& strType, const CWSTRING& str
 		pRenderObj = cwStaticRenderObject::create(
 			ePrimitiveTypeTriangleList,
 			(CWVOID*)&vecVertex[0], sizeof(cwVertexPosTex), static_cast<CWUINT>(mesh.nVertex.size()),
-			(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosTex);
+			(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), strVertexType);
 	}
 	else {
 		return nullptr;

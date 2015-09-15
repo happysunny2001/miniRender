@@ -61,67 +61,6 @@ void cwInputElementDesc::addElementDesc(const CWCHAR* name, DXGI_FORMAT format, 
 	m_pElementList[index] = { name, 0, format, 0, offset, D3D11_INPUT_PER_VERTEX_DATA, 0 };
 }
 
-cwInputElementDescManager*cwInputElementDescManager::create()
-{
-	cwInputElementDescManager* pManager = new cwInputElementDescManager();
-	if (pManager) {
-		pManager->buildDescMap();
-		pManager->autorelease();
-		return pManager;
-	}
-
-	return nullptr;
-}
-
-cwInputElementDescManager::cwInputElementDescManager()
-{
-	buildDescMap();
-}
-
-cwInputElementDescManager::~cwInputElementDescManager()
-{
-
-}
-
-cwInputElementDesc* cwInputElementDescManager::getElement(ceElementDesc e)
-{
-	auto it = m_mapDesc.find(e);
-	if (it == m_mapDesc.end()) return NULL;
-	return it->second;
-}
-
-void cwInputElementDescManager::buildDescMap()
-{
-	{
-		cwInputElementDesc *pDescPosColor = cwInputElementDesc::create(2);
-		pDescPosColor->addElementDesc(CW_SIG_POSITION, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0);
-		pDescPosColor->addElementDesc(CW_SIG_COLOR, DXGI_FORMAT_R32G32B32A32_FLOAT, 12, 1);
-		m_mapDesc.insert(ceEleDescPosColor, pDescPosColor);
-	}
-
-	{
-		cwInputElementDesc *pDescPosNormal = cwInputElementDesc::create(2);
-		pDescPosNormal->addElementDesc(CW_SIG_POSITION, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0);
-		pDescPosNormal->addElementDesc(CW_SIG_NORMAL, DXGI_FORMAT_R32G32B32_FLOAT, 12, 1);
-		m_mapDesc.insert(ceEleDescPosNormal, pDescPosNormal);
-	}
-
-	{
-		cwInputElementDesc *pDescPosNormalTex = cwInputElementDesc::create(3);
-		pDescPosNormalTex->addElementDesc(CW_SIG_POSITION, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0);
-		pDescPosNormalTex->addElementDesc(CW_SIG_NORMAL, DXGI_FORMAT_R32G32B32_FLOAT, 12, 1);
-		pDescPosNormalTex->addElementDesc(CW_SIG_TEXCOORD, DXGI_FORMAT_R32G32_FLOAT, 24, 2);
-		m_mapDesc.insert(ceEleDescPosNormalTex, pDescPosNormalTex);
-	}
-
-	{
-		cwInputElementDesc *pDescPosColorTex = cwInputElementDesc::create(2);
-		pDescPosColorTex->addElementDesc(CW_SIG_POSITION, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0);
-		pDescPosColorTex->addElementDesc(CW_SIG_TEXCOORD, DXGI_FORMAT_R32G32_FLOAT, 12, 1);
-		m_mapDesc.insert(ceEleDescPosTex, pDescPosColorTex);
-	}
-}
-
 NS_MINIR_END
 
 #endif

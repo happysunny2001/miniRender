@@ -41,6 +41,7 @@ public:
 	virtual bool init(int iElementCnt);
 
 	void addElementDesc(const CWCHAR* name, DXGI_FORMAT format, CWUINT offset, int index);
+	void addElementDesc(const D3D11_INPUT_ELEMENT_DESC& desc, int index) { m_pElementList[index] = desc; }
 
 	D3D11_INPUT_ELEMENT_DESC* getElementDesc() { return m_pElementList; }
 	CWUINT getDescCnt() const { return m_iElementCnt; }
@@ -48,24 +49,6 @@ public:
 public:
 	D3D11_INPUT_ELEMENT_DESC* m_pElementList;
 	CWUINT m_iElementCnt;
-
-};
-
-class CW_DLL cwInputElementDescManager :public cwRef
-{
-public:
-	static cwInputElementDescManager* create();
-
-	cwInputElementDescManager();
-	virtual ~cwInputElementDescManager();
-
-	cwInputElementDesc* getElement(ceElementDesc e);
-
-protected:
-	virtual void buildDescMap();
-
-private:
-	cwMap<ceElementDesc, cwInputElementDesc*> m_mapDesc;
 
 };
 

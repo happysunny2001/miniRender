@@ -41,12 +41,19 @@ public:
 
 	CWBOOL getBool(const CWSTRING& strBool);
 	eColorWriteEnable getColorEnable(const CWSTRING& strColor);
+	eFormat getFormatType(const CWSTRING& strFormat) const;
+	eClassification getClassificationType(const CWSTRING& strClass) const;
+
+protected:
+	CWVOID initFormat();
 
 protected:
 	cwRef* m_nArrParser[eParserTypeMax];
 
 	std::unordered_map<CWSTRING, CWBOOL> m_nMapBool;
 	std::unordered_map<CWSTRING, eColorWriteEnable> m_nMapColorEnable;
+	std::unordered_map<CWSTRING, eFormat> m_nMapFormat;
+	std::unordered_map<CWSTRING, eClassification> m_nMapClassification;
 
 };
 

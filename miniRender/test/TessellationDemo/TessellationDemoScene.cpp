@@ -127,7 +127,7 @@ CWVOID TessellationDemoScene::buildEntityTriangle()
 	cwRenderObject* pRenderObj = cwStaticRenderObject::create(
 		ePrimitiveTypePatchList3,
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
-		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), ceEleDescPosColor);
+		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosColor");
 
 	cwShader* pShader = repertory.getShaderManager()->loadShader("effect/D3D11/tessellation.fx");
 	cwEffect* pEffect = cwEffect::create();
@@ -160,7 +160,7 @@ CWVOID TessellationDemoScene::buildEntityQuad()
 	cwRenderObject* pRenderObj = cwStaticRenderObject::create(
 		ePrimitiveTypePatchList4,
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
-		NULL, 0, ceEleDescPosColor);
+		NULL, 0, "PosColor");
 
 	cwShader* pShader = repertory.getShaderManager()->loadShader("effect/D3D11/tessellation.fx");
 	cwEffect* pEffect = cwEffect::create();
@@ -207,7 +207,7 @@ CWVOID TessellationDemoScene::buildEntityBezier()
 	cwRenderObject* pRenderObj = cwStaticRenderObject::create(
 		ePrimitiveTypePatchList16,
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), 16,
-		NULL, 0, ceEleDescPosColor);
+		NULL, 0, "PosColor");
 
 	cwRepertory& repertory = cwRepertory::getInstance();
 	cwShader* pShader = repertory.getShaderManager()->loadShader("effect/D3D11/tessellation.fx");
