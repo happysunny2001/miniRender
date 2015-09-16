@@ -88,21 +88,23 @@ CWVOID cwEffect::render(cwRenderBatch* pBatch)
 	cwRepertory::getInstance().getEngine()->getRenderer()->setCurrShader(m_pShader);
 	this->config();
 
-	cwRenderObject* pRenderObj = pBatch->m_pEntity->getRenderObj();
-	if (!pRenderObj) return;
+	//cwRenderObject* pRenderObj = pBatch->m_pEntity->getRenderObj();
+	//if (!pRenderObj) return;
 
 	cwMaterial* pMaterial = pBatch->m_pEntity->getMaterial();
 	if (pMaterial)
 		pMaterial->configShader(m_pShader);
 
 	cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+	cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getRenderer()->getCurrCamera();
 
 	pDevice->setBlend(pBatch->m_pBlend);
 	pDevice->setStencil(pBatch->m_pStencil);
-	pDevice->setShaderWorldTrans(m_pShader, pBatch->m_nWorldTrans, cwRepertory::getInstance().getEngine()->getRenderer()->getCurrCamera());
-	pDevice->draw(m_pShader, m_strTech, pRenderObj);
+	pDevice->setShaderWorldTrans(m_pShader, pBatch->m_nWorldTrans, pCamera);
+	pBatch->m_pEntity->render(pBatch);
+	//pDevice->draw(m_pShader, m_strTech, pRenderObj);
 
-	pBatch->m_pEntity->render();
+	//pBatch->m_pEntity->render();
 }
 
 NS_MINIR_END

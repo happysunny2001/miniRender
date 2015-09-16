@@ -67,7 +67,48 @@ CWBOOL cwRenderObject::init(
 
 	if (!m_pLayout) return CWFALSE;
 
+	saveBufferData(pVertexData, uVertexStride, uVertexCnt, pIndexData, uIndexCnt);
+
 	return CWTRUE;
+}
+
+CWVOID cwRenderObject::updateVertexData(CWVOID* pData)
+{
+	if (!pData) return;
+	memcpy(m_pVertexData, pData, m_uStride*m_uVertexCnt);
+}
+
+CWVOID* cwRenderObject::getVertexData(CWUINT i)
+{
+	if (i >= m_uVertexCnt) return nullptr;
+
+	return (CWBYTE*)m_pVertexData + i*m_uStride;
+}
+
+CWVOID cwRenderObject::saveBufferData(
+	CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt, 
+	CWVOID* pIndexData, CWUINT uIndexCnt)
+{
+	CW_SAFE_FREE(m_pVertexData);
+	CW_SAFE_FREE(m_pIndexData);
+
+	if (pVertexData) {
+		m_pVertexData = (CWVOID*)malloc(uVertexStride*uVertexCnt);
+		if (m_pVertexData) {
+			memcpy(m_pVertexData, pVertexData, uVertexStride*uVertexCnt);
+
+			m_uStride = uVertexStride;
+			m_uVertexCnt = uVertexCnt;
+		}
+	}
+
+	if (pIndexData) {
+		m_pIndexData = (CWUINT*)malloc(sizeof(CWUINT)*uIndexCnt);
+		if (m_pIndexData) {
+			memcpy(m_pIndexData, pIndexData, sizeof(CWUINT)*uIndexCnt);
+			m_uIndexCnt = uIndexCnt;
+		}
+	}
 }
 
 NS_MINIR_END

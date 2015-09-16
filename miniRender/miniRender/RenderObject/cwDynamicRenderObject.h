@@ -39,18 +39,19 @@ public:
 	cwDynamicRenderObject();
 	virtual ~cwDynamicRenderObject();
 
-	virtual bool init(
+	virtual CWBOOL init(
 		ePrimitiveType topology,
 		CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
 		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout) override;
 
 	virtual void preRender() override;
+	virtual CWVOID updateVertexData(CWVOID* pData) override;
 
 protected:
 	virtual void updateVertexBuffer();
 
 protected:
-	CWVOID* m_pVertexData;
+	CWBOOL m_bVertexRefresh;
 
 };
 

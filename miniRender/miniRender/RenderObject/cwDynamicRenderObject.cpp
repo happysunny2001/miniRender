@@ -41,18 +41,18 @@ const CWSTRING& strLayout)
 	return NULL;
 }
 
-cwDynamicRenderObject::cwDynamicRenderObject():
-m_pVertexData(NULL)
+cwDynamicRenderObject::cwDynamicRenderObject() :
+m_bVertexRefresh(CWTRUE)
 {
 
 }
 
 cwDynamicRenderObject::~cwDynamicRenderObject()
 {
-	CW_SAFE_FREE(m_pVertexData);
+
 }
 
-bool cwDynamicRenderObject::init(
+CWBOOL cwDynamicRenderObject::init(
 	ePrimitiveType topology,
 	CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
 	CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout)
@@ -60,24 +60,28 @@ bool cwDynamicRenderObject::init(
 	if (!cwRenderObject::init(
 		topology,
 		pVertexData, uVertexStride, uVertexCnt,
-		pIndexData, uIndexCnt, strLayout)) return false;
+		pIndexData, uIndexCnt, strLayout)) return CWFALSE;
 
 	cwDevice* pDevice = cwRepertory::getInstance().getDevice();
 	m_pVertexBuffer = pDevice->createVertexBuffer(NULL, uVertexStride, uVertexCnt, eBufferUsageDynamic, eAccessFlagWrite);
 	CW_SAFE_RETAIN(m_pVertexBuffer);
-	if (!m_pVertexBuffer) return false;
+	if (!m_pVertexBuffer) return CWFALSE;
 
-	m_pVertexData = (CWVOID*)malloc(uVertexStride*uVertexCnt);
-	if (!m_pVertexData) return false;
-
-	memcpy(m_pVertexData, pVertexData, uVertexStride*uVertexCnt);
-
-	return true;
+	return CWTRUE;
 }
 
 void cwDynamicRenderObject::preRender()
 {
-	updateVertexBuffer();
+	if (m_bVertexRefresh) {
+		updateVertexBuffer();
+		m_bVertexRefresh = CWFALSE;
+	}
+}
+
+CWVOID cwDynamicRenderObject::updateVertexData(CWVOID* pData)
+{
+	cwRenderObject::updateVertexData(pData);
+	m_bVertexRefresh = CWTRUE;
 }
 
 void cwDynamicRenderObject::updateVertexBuffer()

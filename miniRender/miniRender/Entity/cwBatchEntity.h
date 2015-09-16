@@ -38,6 +38,8 @@ public:
 
 	virtual CWBOOL init() override;
 
+
+
 protected:
 	cwRenderObject* m_pInstanceObject;
 	CWUINT m_uInstanceMaxCount;

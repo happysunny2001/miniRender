@@ -35,6 +35,7 @@ class cwMaterial;
 class cwLight;
 class cwBlend;
 class cwStencil;
+class cwRenderBatch;
 
 class CW_DLL cwEntity : public cwRenderNode
 {
@@ -57,6 +58,8 @@ public:
 
 	virtual CWVOID setStencil(cwStencil* pStencil);
 	inline cwStencil* getStencil() { return m_pStencil; }
+	
+	virtual CWVOID render(cwRenderBatch* pRenderBatch);
 
 protected:
 	cwMaterial* m_pMaterial;

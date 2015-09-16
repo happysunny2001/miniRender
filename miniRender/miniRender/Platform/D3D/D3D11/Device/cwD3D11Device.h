@@ -56,7 +56,6 @@ public:
 	virtual CWVOID setPrimitiveTopology(ePrimitiveType topology);
 	virtual CWVOID setClearColor(const cwVector4D& fvColor);
 	virtual CWVOID setRenderState(eRenderState e);
-	virtual CWVOID drawIndexed(CWUINT indexCnt, CWUINT startIndex, CWINT baseVertex);
 
 	virtual cwShader* createShader(const string& strFileName) override;
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) override;
@@ -83,6 +82,7 @@ public:
 
 	virtual CWVOID render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) override;
 	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj) override;
+	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, std::vector<cwRenderObject*>& vecRenderObject) override;
 	virtual CWVOID drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo) override;
 
 public:

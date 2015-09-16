@@ -42,12 +42,24 @@ public:
 		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout);
 
 	virtual CWVOID preRender() {}
+	virtual CWVOID updateVertexData(CWVOID* pData);
 
 	inline cwLayouts* getInputLayout() { return m_pLayout; }
 	inline ePrimitiveType getPrimitiveTopology() { return m_nTopology; }
 
 	inline cwBuffer* getVertexBuffer() { return m_pVertexBuffer; }
 	inline cwBuffer* getIndexBuffer() { return m_pIndexBuffer; }
+
+	inline CWVOID* getVertexData() { return m_pVertexData; }
+	CWVOID* getVertexData(CWUINT i);
+	inline CWUINT getVertexStride() const { return m_uStride; }
+	inline CWUINT getVertexCnt() const { return m_uVertexCnt; }
+
+	inline CWUINT* getIndexData() { return m_pIndexData; }
+	inline CWUINT getIndexCnt() const { return m_uIndexCnt; }
+
+protected:
+	CWVOID saveBufferData(CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt, CWVOID* pIndexData, CWUINT uIndexCnt);
 
 protected:
 	cwBuffer* m_pVertexBuffer;

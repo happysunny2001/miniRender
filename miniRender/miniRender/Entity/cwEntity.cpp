@@ -27,6 +27,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Engine/cwEngine.h"
 #include "Blend/cwBlend.h"
 #include "Stencil/cwStencil.h"
+#include "Render/cwRenderBatch.h"
+#include "effect/cwEffect.h"
 
 NS_MINIR_BEGIN
 
@@ -100,6 +102,16 @@ CWVOID cwEntity::setStencil(cwStencil* pStencil)
 	CW_SAFE_RETAIN(pStencil);
 	CW_SAFE_RELEASE_NULL(m_pStencil);
 	m_pStencil = pStencil;
+}
+
+CWVOID cwEntity::render(cwRenderBatch* pRenderBatch)
+{
+	if (pRenderBatch && pRenderBatch->m_pEffect) {
+		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+		pDevice->draw(pRenderBatch->m_pEffect->getShader(), pRenderBatch->m_pEffect->getTech(), m_pRenderObj);
+	}
+
+	cwRenderNode::render();
 }
 
 NS_MINIR_END

@@ -369,11 +369,6 @@ void cwD3D11Device::setRenderState(eRenderState e)
 	m_eRenderState = e;
 }
 
-void cwD3D11Device::drawIndexed(CWUINT indexCnt, CWUINT startIndex, CWINT baseVertex)
-{
-	m_pD3D11DeviceContext->DrawIndexed(indexCnt, startIndex, baseVertex);
-}
-
 cwShader* cwD3D11Device::createShader(const string& strFileName)
 {
 	return cwD3D11Shader::create(strFileName);
@@ -630,6 +625,11 @@ void cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObj
 			m_pD3D11DeviceContext->Draw(pRenderObj->getVertexBuffer()->getElementCount(), 0);
 		}
 	}
+}
+
+CWVOID cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, std::vector<cwRenderObject*>& vecRenderObject)
+{
+
 }
 
 CWVOID cwD3D11Device::drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo)
