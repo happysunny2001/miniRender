@@ -74,15 +74,18 @@ CWBOOL cwRenderObject::init(
 
 CWVOID cwRenderObject::updateVertexData(CWVOID* pData)
 {
-	if (!pData) return;
-	memcpy(m_pVertexData, pData, m_uStride*m_uVertexCnt);
+	if (pData) {
+		memcpy(m_pVertexData, pData, m_uStride*m_uVertexCnt);
+	}
 }
 
 CWVOID* cwRenderObject::getVertexData(CWUINT i)
 {
-	if (i >= m_uVertexCnt) return nullptr;
+	if (i < m_uVertexCnt) {
+		return (CWBYTE*)m_pVertexData + i*m_uStride;
+	}
 
-	return (CWBYTE*)m_pVertexData + i*m_uStride;
+	return nullptr;
 }
 
 CWVOID cwRenderObject::saveBufferData(

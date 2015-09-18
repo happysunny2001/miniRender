@@ -20,4 +20,13 @@
 		<Element Name="POSITION" Index="0" Format="R32g32b32Float" Slot="0" Offset="0" Classification="Vertex" InstanceRate="0"/>
 		<Element Name="TEXCOORD" Index="0" Format="R32g32Float" Slot="0" Offset="12" Classification="Vertex" InstanceRate="0"/>
 	</Layout>
+
+	<Layout Name="BatchPosNormal" Shader="effect/D3D11/batchTest.fx">
+		<Element Name="POSITION" Index="0" Format="R32g32b32Float" Slot="0" Offset="0" Classification="Vertex" InstanceRate="0"/>
+		<Element Name="NORMAL" Index="0" Format="R32g32b32Float" Slot="0" Offset="12" Classification="Vertex" InstanceRate="0"/>
+		<Element Name="WORLD" Index="0" Format="R32g32b32a32Float" Slot="1" Offset="0" Classification="Instance" InstanceRate="1"/>
+		<Element Name="WORLD" Index="1" Format="R32g32b32a32Float" Slot="1" Offset="16" Classification="Instance" InstanceRate="1"/>
+		<Element Name="WORLD" Index="2" Format="R32g32b32a32Float" Slot="1" Offset="32" Classification="Instance" InstanceRate="1"/>
+		<Element Name="WORLD" Index="3" Format="R32g32b32a32Float" Slot="1" Offset="48" Classification="Instance" InstanceRate="1"/>
+	</Layout>
 </InputLayout>

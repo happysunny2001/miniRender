@@ -52,8 +52,10 @@ cwShader* cwShaderManager::loadShader(const CWSTRING& strFile)
 cwShader* cwShaderManager::getShader(const CWSTRING& strFile)
 {
 	auto itFind = m_nMapShader.find(strFile);
-	if (itFind != m_nMapShader.end()) return itFind->second;
-	return nullptr;
+	if (itFind != m_nMapShader.end()) {
+		return itFind->second;
+	}
+	return loadShader(strFile);
 }
 
 cwShader* cwShaderManager::getDefShader(eDefShaderID eShaderID)

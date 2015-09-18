@@ -28,20 +28,23 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-class cwBatchEntity : public cwEntity
+class CW_DLL cwBatchEntity : public cwEntity
 {
 public:
-	static cwBatchEntity* create();
-
-	cwBatchEntity();
 	virtual ~cwBatchEntity();
 
 	virtual CWBOOL init() override;
 
+	virtual CWBOOL setEntityData(CWVOID* pData, CWUINT uStride, CWUINT uInstanceCount) = 0;
+	virtual CWVOID refreshEntityData(CWVOID* pData, CWUINT uInstanceCount) = 0;
 
+	inline CWUINT getMaxInstanceCount() const { return m_uInstanceMaxCount; }
+	inline CWUINT getInstanceCount() const { return m_uInstanceCount; }
 
 protected:
-	cwRenderObject* m_pInstanceObject;
+	cwBatchEntity();
+
+protected:
 	CWUINT m_uInstanceMaxCount;
 	CWUINT m_uInstanceCount;
 

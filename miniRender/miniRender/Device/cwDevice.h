@@ -40,6 +40,7 @@ class cwStencil;
 class cwRenderTexture;
 class cwViewPort;
 class cwTextureArray;
+class cwBatchEntity;
 
 class CW_DLL cwDevice
 {
@@ -80,7 +81,10 @@ public:
 	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) = 0;
 	virtual cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles) = 0;
 
+	virtual cwBatchEntity* createBatchEntity() = 0;
+
 	virtual CWVOID setVertexBuffer(cwBuffer* pVertexBuffer) = 0;
+	virtual CWVOID setVertexBuffer(std::vector<cwBuffer*>& vecBuffers) = 0;
 	virtual CWVOID setIndexBuffer(cwBuffer* pIndexBuffer) = 0;
 	//set blend state, nullptr for restore blend state
 	virtual CWVOID setBlend(const cwBlend* pBlendOper) = 0;
@@ -93,7 +97,7 @@ public:
 
 	virtual CWVOID render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) = 0;
 	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj) = 0;
-	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, std::vector<cwRenderObject*>& vecRenderObject) = 0;
+	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, std::vector<cwRenderObject*>& vecRenderObject, CWUINT uCnt) = 0;
 	virtual CWVOID drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo) = 0;
 
 	inline CWBOOL getEnableMsaa4X() const { return m_bEnableMsaa4x; }

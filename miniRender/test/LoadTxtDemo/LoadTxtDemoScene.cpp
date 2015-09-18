@@ -32,7 +32,9 @@ LoadTxtDemoScene* LoadTxtDemoScene::create()
 }
 
 LoadTxtDemoScene::LoadTxtDemoScene():
-m_pCar(nullptr)
+m_pCar(nullptr),
+m_pBatchCars(nullptr),
+m_pInstanceWorldMat(nullptr)
 {
 
 }
@@ -40,6 +42,7 @@ m_pCar(nullptr)
 LoadTxtDemoScene::~LoadTxtDemoScene()
 {
 	CW_SAFE_RELEASE_NULL(m_pCar);
+	CW_SAFE_DELETE_ARRAY(m_pInstanceWorldMat);
 }
 
 CWBOOL LoadTxtDemoScene::init()
@@ -61,7 +64,8 @@ CWBOOL LoadTxtDemoScene::init()
 
 	m_bTouchDown = false;
 
-	buildEntity();
+	//buildEntity();
+	buildBatchEntity();
 	buildLight();
 
 	return CWTRUE;
@@ -99,6 +103,53 @@ CWVOID LoadTxtDemoScene::buildEntity()
 	CW_SAFE_RETAIN(m_pCar);
 
 	this->addChild(m_pCar);
+}
+
+CWVOID LoadTxtDemoScene::buildBatchEntity()
+{
+	cwRepertory& repertory = cwRepertory::getInstance();
+
+	cwGeometryGenerator::cwMeshData mesh;
+	repertory.getGeoGenerator()->loadTxt(repertory.getFileSystem()->getFullFilePath("Models/car.txt"), mesh);
+
+	vector<cwVertexPosNormal> vecVertex(mesh.nVertex.size());
+	for (int i = 0; i < mesh.nVertex.size(); ++i) {
+		vecVertex[i].pos = mesh.nVertex[i].pos;
+		vecVertex[i].normal = mesh.nVertex[i].normal;
+	}
+
+	cwRenderObject *pRenderObj = cwStaticRenderObject::create(
+		ePrimitiveTypeTriangleList,
+		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormal), static_cast<CWUINT>(mesh.nVertex.size()),
+		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "BatchPosNormal");
+
+	cwShader* pShader = repertory.getShaderManager()->getShader("effect/D3D11/batchTest.fx");
+	cwEffect* pEffect = cwEffect::create();
+	pEffect->setShader(pShader);
+
+	cwMaterial* pMaterial = cwMaterial::create();
+
+	m_pInstanceWorldMat = new cwMatrix4X4[4*4*4];
+	for (CWUINT i = 0; i < 4; ++i) {
+		for (CWUINT j = 0; j < 4; ++j) {
+			for (CWUINT k = 0; k < 4; ++k) {
+				m_pInstanceWorldMat[i * 4 * 4 + j * 4 + k] = cwMatrix4X4(
+					1.0f, 0.0f, 0.0f, 0.0f,
+					0.0f, 1.0f, 0.0f, 0.0f,
+					0.0f, 0.0f, 1.0f, 0.0f,
+					-50.0f + i*25.0f, -50.0f + j*25.0f, -50.0f + k*25.0f, 1.0f);
+			}
+		}
+	}
+
+	m_pBatchCars = cwRepertory::getInstance().getDevice()->createBatchEntity();
+	m_pBatchCars->setMaterial(pMaterial);
+	m_pBatchCars->setRenderObject(pRenderObj);
+	m_pBatchCars->setPosition(cwVector3D::ZERO);
+	m_pBatchCars->setEffect(pEffect);
+	m_pBatchCars->setEntityData(m_pInstanceWorldMat, sizeof(cwMatrix4X4), 10);
+
+	this->addChild(m_pBatchCars);
 }
 
 CWVOID LoadTxtDemoScene::buildLight()

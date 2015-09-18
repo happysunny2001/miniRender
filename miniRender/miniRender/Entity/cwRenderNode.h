@@ -34,7 +34,7 @@ NS_MINIR_BEGIN
 class cwEventListener;
 class cwEffect;
 
-class cwRenderNode : public cwRef, public cwTouchEventInterface, public cwKeyboardEventInterface, public cwScheduleInterface
+class CW_DLL cwRenderNode : public cwRef, public cwTouchEventInterface, public cwKeyboardEventInterface, public cwScheduleInterface
 {
 public:
 	static cwRenderNode* create();

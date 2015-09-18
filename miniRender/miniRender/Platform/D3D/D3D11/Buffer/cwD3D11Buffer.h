@@ -55,6 +55,7 @@ public:
 
 	virtual CWHANDLE getHandle() override;
 	virtual CWVOID refresh(CWVOID* pData) override;
+	virtual CWVOID refresh(CWVOID* pData, CWUINT uSize) override;
 	virtual CWVOID copyFrom(cwBuffer* pBuffer) override;
 	virtual CWVOID copyTo(CWVOID* pData) override;
 

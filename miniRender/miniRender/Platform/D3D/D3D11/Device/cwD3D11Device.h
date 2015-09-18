@@ -72,7 +72,10 @@ public:
 	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) override;
 	virtual cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles) override;
 
+	virtual cwBatchEntity* createBatchEntity() override;
+
 	virtual CWVOID setVertexBuffer(cwBuffer* pVertexBuffer) override;
+	virtual CWVOID setVertexBuffer(std::vector<cwBuffer*>& vecBuffers) override;
 	virtual CWVOID setIndexBuffer(cwBuffer* pIndexBuffer) override;
 	virtual CWVOID setBlend(const cwBlend* pBlendOper);
 	virtual CWVOID setStencil(const cwStencil* pStencil);
@@ -82,7 +85,7 @@ public:
 
 	virtual CWVOID render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) override;
 	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj) override;
-	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, std::vector<cwRenderObject*>& vecRenderObject) override;
+	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, std::vector<cwRenderObject*>& vecRenderObject, CWUINT uCnt) override;
 	virtual CWVOID drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo) override;
 
 public:

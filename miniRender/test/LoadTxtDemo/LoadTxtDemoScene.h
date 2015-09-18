@@ -41,10 +41,13 @@ public:
 
 protected:
 	CWVOID buildEntity();
+	CWVOID buildBatchEntity();
 	CWVOID buildLight();
 
 protected:
 	cwEntity* m_pCar;
+	cwBatchEntity* m_pBatchCars;
+	cwMatrix4X4* m_pInstanceWorldMat;
 
 	CWFLOAT m_fLastX;
 	CWFLOAT m_fLastY;

@@ -17,70 +17,44 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwBuffer.h"
+#ifndef __CW_D3D11_BATCH_ENTITY_H__
+#define __CW_D3D11_BATCH_ENTITY_H__
+
+#ifdef _CW_D3D11_
+
+#include "Base/cwMacros.h"
+#include "Base/cwBasicType.h"
+#include "Entity/cwBatchEntity.h"
+#include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
 
 NS_MINIR_BEGIN
 
-cwBuffer::cwBuffer():
-m_iElementCnt(0),
-m_nStride(0),
-m_nOffset(0)
+class cwD3D11BatchEntity : public cwBatchEntity
 {
+public:
+	cwD3D11BatchEntity();
+	virtual ~cwD3D11BatchEntity();
 
-}
+	virtual CWBOOL init() override;
 
-cwBuffer::~cwBuffer()
-{
-	
-}
+	virtual CWBOOL setEntityData(CWVOID* pData, CWUINT uStride, CWUINT uInstanceCount) override;
+	virtual CWVOID refreshEntityData(CWVOID* pData, CWUINT uInstanceCount) override;
 
-CWBOOL cwBuffer::init(
-	CWVOID* pData,
-	CWUINT uSize,
-	eBufferUsage usage,
-	eBufferBindFlag bindFlag,
-	eAccessFlag uCpuFlag,
-	CWUINT miscFlag,
-	CWUINT structureByteStride)
-{
-	if (structureByteStride > 0)
-		m_iElementCnt = uSize / structureByteStride;
+	virtual CWVOID render(cwRenderBatch* pRenderBatch) override;
 
-	m_nStride = structureByteStride;
-	m_nUsage = usage;
-	m_nAccessFlag = uCpuFlag;
+protected:
+	static cwD3D11BatchEntity* create();
 
-	return true;
-}
+	friend class cwD3D11Device;
 
-CWHANDLE cwBuffer::getHandle()
-{
-	return NULL;
-}
+protected:
+	cwRenderObject* m_pInstanceRenderObj;
+	std::vector<cwRenderObject*> m_nVecRenderObject;
 
-CWHANDLE cwBuffer::getShaderHandle()
-{
-	return NULL;
-}
-
-CWVOID cwBuffer::refresh(CWVOID* pData)
-{
-
-}
-
-CWVOID cwBuffer::refresh(CWVOID* pData, CWUINT uSize)
-{
-
-}
-
-CWVOID cwBuffer::copyFrom(cwBuffer* pBuffer)
-{
-
-}
-
-CWVOID cwBuffer::copyTo(CWVOID* pData)
-{
-
-}
+};
 
 NS_MINIR_END
+
+#endif //end _CW_D3D11_
+
+#endif //end __CW_D3D11_BATCH_ENTITY_H__

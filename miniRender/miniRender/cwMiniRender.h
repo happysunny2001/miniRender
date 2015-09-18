@@ -47,6 +47,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Entity/cwEntity.h"
 #include "Entity/cwScene.h"
 #include "Entity/cwMirror.h"
+#include "Entity/cwBatchEntity.h"
 #include "Engine/cwEngine.h"
 #include "Repertory/cwRepertory.h"
 #include "Texture/cwTexture.h"

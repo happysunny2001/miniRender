@@ -22,27 +22,16 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwBatchEntity* cwBatchEntity::create()
-{
-	cwBatchEntity* pEntity = new cwBatchEntity();
-	if (pEntity && pEntity->init()) {
-		pEntity->autorelease();
-		return pEntity;
-	}
-
-	CW_SAFE_DELETE(pEntity);
-	return nullptr;
-}
-
-cwBatchEntity::cwBatchEntity():
-m_pInstanceObject(nullptr)
+cwBatchEntity::cwBatchEntity() :
+m_uInstanceMaxCount(0),
+m_uInstanceCount(0)
 {
 
 }
 
 cwBatchEntity::~cwBatchEntity()
 {
-	CW_SAFE_RELEASE_NULL(m_pInstanceObject);
+
 }
 
 CWBOOL cwBatchEntity::init()

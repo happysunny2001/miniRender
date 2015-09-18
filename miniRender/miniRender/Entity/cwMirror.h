@@ -30,7 +30,7 @@ class cwBlend;
 class cwStencil;
 class cwStage;
 
-class cwMirror : public cwEntity
+class CW_DLL cwMirror : public cwEntity
 {
 public:
 	static cwMirror* create();

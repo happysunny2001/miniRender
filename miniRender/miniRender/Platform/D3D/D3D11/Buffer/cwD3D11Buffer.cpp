@@ -102,16 +102,30 @@ CWHANDLE cwD3D11Buffer::getHandle()
 
 CWVOID cwD3D11Buffer::refresh(CWVOID* pData)
 {
-	if (!pData) return;
+	if (pData) {
+		cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
 
-	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+		D3D11_MAPPED_SUBRESOURCE mappedData;
+		CW_HR(pD3D11Device->getD3D11DeviceContext()->Map(m_pD3D11Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
 
-	D3D11_MAPPED_SUBRESOURCE mappedData;
-	CW_HR(pD3D11Device->getD3D11DeviceContext()->Map(m_pD3D11Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
+		memcpy(mappedData.pData, pData, this->getSize());
 
-	memcpy(mappedData.pData, pData, this->getSize());
+		pD3D11Device->getD3D11DeviceContext()->Unmap(m_pD3D11Buffer, 0);
+	}
+}
 
-	pD3D11Device->getD3D11DeviceContext()->Unmap(m_pD3D11Buffer, 0);
+CWVOID cwD3D11Buffer::refresh(CWVOID* pData, CWUINT uSize)
+{
+	if (pData && uSize > 0) {
+		cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+
+		D3D11_MAPPED_SUBRESOURCE mappedData;
+		CW_HR(pD3D11Device->getD3D11DeviceContext()->Map(m_pD3D11Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
+
+		memcpy(mappedData.pData, pData, uSize <= this->getSize()?uSize:this->getSize());
+
+		pD3D11Device->getD3D11DeviceContext()->Unmap(m_pD3D11Buffer, 0);
+	}
 }
 
 CWVOID cwD3D11Buffer::copyFrom(cwBuffer* pBuffer)

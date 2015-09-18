@@ -32,14 +32,14 @@ public:
 	virtual ~cwLayoutsManager() {}
 
 	virtual bool init() = 0;
-	//cwLayouts* getLayouts(ceElementDesc eType);
+
 	cwLayouts* getLayouts(const CWSTRING& strLayout);
+	const CWSTRING& getLayoutName(cwLayouts* pLayouts) const;
 
 protected:
 	cwLayoutsManager() {}
 
 protected:
-	//cwMap<ceElementDesc, cwLayouts*> m_mapLayouts;
 	cwMap<CWSTRING, cwLayouts*> m_nMapLayouts;
 
 };

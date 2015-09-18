@@ -52,6 +52,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/D3D/D3D11/Blend/cwD3D11Blend.h"
 #include "Platform/D3D/D3D11/Shader/cwD3D11Shader.h"
 #include "Platform/D3D/D3D11/ViewPort/cwD3D11ViewPort.h"
+#include "Platform/D3D/D3D11/Entity/cwD3D11BatchEntity.h"
 
 #include <assert.h>
 #include <xnamath.h>
@@ -453,6 +454,22 @@ void cwD3D11Device::setVertexBuffer(cwBuffer* pVertexBuffer)
 	}
 }
 
+CWVOID cwD3D11Device::setVertexBuffer(std::vector<cwBuffer*>& vecBuffers)
+{
+	std::vector<ID3D11Buffer*> vecD3D11Buffer(vecBuffers.size());
+	std::vector<CWUINT> vecD3D11Stride(vecBuffers.size());
+	std::vector<CWUINT> vecD3D11Offset(vecBuffers.size());
+
+	for (auto pVertexBuffer : vecBuffers) {
+		ID3D11Buffer* pBuffer = static_cast<ID3D11Buffer*>(pVertexBuffer->getHandle());
+		vecD3D11Buffer.push_back(pBuffer);
+		vecD3D11Stride.push_back(pVertexBuffer->getStride());
+		vecD3D11Offset.push_back(pVertexBuffer->getOffset());
+	}
+
+	m_pD3D11DeviceContext->IASetVertexBuffers(0, (CWUINT)(vecBuffers.size()), &vecD3D11Buffer[0], &vecD3D11Stride[0], &vecD3D11Offset[0]);
+}
+
 void cwD3D11Device::setIndexBuffer(cwBuffer* pIndexBuffer)
 {
 	if (pIndexBuffer) {
@@ -529,6 +546,11 @@ cwRenderTexture* cwD3D11Device::createRenderTexture(float fWidth, float fHeight,
 cwTexture* cwD3D11Device::createTextureArray(const std::vector<CWSTRING>& vecFiles)
 {
 	return cwD3D11TextureArray::create(vecFiles);
+}
+
+cwBatchEntity* cwD3D11Device::createBatchEntity()
+{
+	return cwD3D11BatchEntity::create();
 }
 
 void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera)
@@ -627,9 +649,51 @@ void cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObj
 	}
 }
 
-CWVOID cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, std::vector<cwRenderObject*>& vecRenderObject)
+CWVOID cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, std::vector<cwRenderObject*>& vecRenderObject, CWUINT uCnt)
 {
+	cwRenderObject* pMeshRenderObj = vecRenderObject[0];
 
+	this->setInputLayout(pMeshRenderObj->getInputLayout());
+	this->setPrimitiveTopology(pMeshRenderObj->getPrimitiveTopology());
+
+	std::vector<cwBuffer*> vecBuffer(vecRenderObject.size());
+	for (auto pRenderObj : vecRenderObject) {
+		pRenderObj->preRender();
+		vecBuffer.push_back(pRenderObj->getVertexBuffer());
+	}
+
+	D3DX11_TECHNIQUE_DESC techDesc;
+	ID3DX11EffectTechnique* pTech = nullptr;
+
+	cwD3D11Shader* pD3D11Shader = static_cast<cwD3D11Shader*>(pShader);
+
+	if (strTech.empty()) {
+		pTech = pD3D11Shader->getTechnique(0);
+	}
+	else {
+		pTech = pD3D11Shader->getTechnique(strTech);
+	}
+
+	if (!pTech) return;
+	pTech->GetDesc(&techDesc);
+
+	if (pMeshRenderObj->getIndexBuffer()) {
+		for (CWUINT i = 0; i < techDesc.Passes; ++i) {
+			this->setVertexBuffer(vecBuffer);
+			this->setIndexBuffer(pMeshRenderObj->getIndexBuffer());
+
+			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
+			m_pD3D11DeviceContext->DrawIndexedInstanced(pMeshRenderObj->getIndexBuffer()->getElementCount(), uCnt, 0, 0, 0);
+		}
+	}
+	else {
+		for (CWUINT i = 0; i < techDesc.Passes; ++i) {
+			this->setVertexBuffer(vecBuffer);
+
+			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
+			m_pD3D11DeviceContext->DrawInstanced(pMeshRenderObj->getVertexBuffer()->getElementCount(), uCnt, 0, 0);
+		}
+	}
 }
 
 CWVOID cwD3D11Device::drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo)

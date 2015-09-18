@@ -117,6 +117,7 @@
     <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11BufferWritable.h" />
     <ClInclude Include="Platform\D3D\D3D11\cwD3D11Utils.h" />
     <ClInclude Include="Platform\D3D\D3D11\Device\cwD3D11Device.h" />
+    <ClInclude Include="Platform\D3D\D3D11\Entity\cwD3D11BatchEntity.h" />
     <ClInclude Include="Platform\D3D\D3D11\Layouts\cwD3D11Layouts.h" />
     <ClInclude Include="Platform\D3D\D3D11\Layouts\cwD3D11LayoutsManager.h" />
     <ClInclude Include="Platform\D3D\D3D11\Layouts\cwInputElementDescManager.h" />
@@ -240,6 +241,7 @@
     <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11BufferShader.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11BufferWritable.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Device\cwD3D11Device.cpp" />
+    <ClCompile Include="Platform\D3D\D3D11\Entity\cwD3D11BatchEntity.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Layouts\cwD3D11Layouts.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Layouts\cwD3D11LayoutsManager.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Layouts\cwInputElementDescManager.cpp" />

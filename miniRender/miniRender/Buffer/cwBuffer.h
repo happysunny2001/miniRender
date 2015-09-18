@@ -48,6 +48,7 @@ public:
 	virtual CWHANDLE getShaderHandle();
 
 	virtual CWVOID refresh(CWVOID* pData);
+	virtual CWVOID refresh(CWVOID* pData, CWUINT uSize);
 	virtual CWVOID copyFrom(cwBuffer* pBuffer);
 	virtual CWVOID copyTo(CWVOID* pData);
 
