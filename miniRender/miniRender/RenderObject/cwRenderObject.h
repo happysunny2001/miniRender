@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
 #include "Ref/cwRef.h"
+#include "Math/cwMath.h"
 
 NS_MINIR_BEGIN
 
@@ -39,10 +40,12 @@ public:
 	virtual CWBOOL init(
 		ePrimitiveType topology,
 		CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
-		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout);
+		CWVOID* pIndexData, CWUINT uIndexCnt, 
+		const CWSTRING& strLayout, CWUINT uPositionOffset=0);
 
 	virtual CWVOID preRender() {}
-	virtual CWVOID updateVertexData(CWVOID* pData);
+	CWVOID updateVertexData(CWVOID* pData);
+	virtual CWVOID updateVertexData(CWVOID* pData, CWUINT uSize);
 
 	inline cwLayouts* getInputLayout() { return m_pLayout; }
 	inline ePrimitiveType getPrimitiveTopology() { return m_nTopology; }
@@ -55,11 +58,14 @@ public:
 	inline CWUINT getVertexStride() const { return m_uStride; }
 	inline CWUINT getVertexCnt() const { return m_uVertexCnt; }
 
+	inline const cwAABB& getBoundingBox() const { return m_nAabb; }
+
 	inline CWUINT* getIndexData() { return m_pIndexData; }
 	inline CWUINT getIndexCnt() const { return m_uIndexCnt; }
 
 protected:
-	CWVOID saveBufferData(CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt, CWVOID* pIndexData, CWUINT uIndexCnt);
+	CWVOID saveBufferData(CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt, CWUINT uPositionOffset, CWVOID* pIndexData, CWUINT uIndexCnt);
+	CWVOID calBoundingBox();
 
 protected:
 	cwBuffer* m_pVertexBuffer;
@@ -67,12 +73,16 @@ protected:
 	cwLayouts* m_pLayout;
 	ePrimitiveType m_nTopology;
 
+	//native vertex and index buffer data
 	CWVOID* m_pVertexData;
 	CWUINT m_uStride;
 	CWUINT m_uVertexCnt;
+	CWUINT m_uPositionOffset;
 
 	CWUINT* m_pIndexData;
 	CWUINT m_uIndexCnt;
+
+	cwAABB m_nAabb;
 
 };
 

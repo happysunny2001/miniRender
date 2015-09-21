@@ -582,6 +582,12 @@
     <ClInclude Include="Platform\D3D\D3D11\Entity\cwD3D11BatchEntity.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Base\cwLog.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\cwPrimitiveEntity.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -948,6 +954,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Entity\cwD3D11BatchEntity.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\Windows\cwWinLog.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\cwPrimitiveEntity.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

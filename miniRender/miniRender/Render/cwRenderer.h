@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwMacros.h"
 #include "Ref/cwRef.h"
 #include "Base/cwVector.h"
+#include "Math/cwMath.h"
 
 NS_MINIR_BEGIN
 
@@ -33,6 +34,7 @@ class cwCamera;
 class cwRenderBatch;
 class cwShader;
 class cwEffect;
+class cwPrimitiveEntity;
 
 class cwRenderer : public cwRef
 {
@@ -69,11 +71,17 @@ public:
 	virtual CWVOID render(cwRenderBatch* pBatch);
 	virtual CWVOID configLight();
 
+	CWVOID renderPrimitive(const cwAABB& aabb);
+	CWVOID renderPrimitive(const cwAABB& aabb, const cwVector4D& color);
+
 protected:
 	virtual CWVOID render(cwStage* pStage);
 	virtual CWVOID configDirectionalLight();
 	virtual CWVOID configPointLight();
 	virtual CWVOID configSpotLight();
+
+	CWVOID buildPrimitiveEntity();
+	CWVOID renderPrimitiveEntity();
 
 	sRendererListNode* getAvaiableListNode();
 	sRendererListNode* buildStageList();
@@ -83,6 +91,9 @@ protected:
 
 	cwVector<cwStage*> m_nVecStage;
 	cwStage* m_pCurrRenderStage;
+
+	cwPrimitiveEntity* m_pPrimitiveEntity;
+	cwRenderBatch* m_pPrimitiveBatch;
 
 	sRendererListNode m_nListNodePool[CW_RENDERER_LIST_POOL_SIZE];
 	CWUINT m_iListPoolIndex;

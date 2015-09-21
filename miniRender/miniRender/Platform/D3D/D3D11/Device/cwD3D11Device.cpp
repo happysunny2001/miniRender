@@ -454,20 +454,19 @@ void cwD3D11Device::setVertexBuffer(cwBuffer* pVertexBuffer)
 	}
 }
 
-CWVOID cwD3D11Device::setVertexBuffer(std::vector<cwBuffer*>& vecBuffers)
+CWVOID cwD3D11Device::setVertexBuffer(cwBuffer** pBuffers, CWUINT uCnt)
 {
-	std::vector<ID3D11Buffer*> vecD3D11Buffer(vecBuffers.size());
-	std::vector<CWUINT> vecD3D11Stride(vecBuffers.size());
-	std::vector<CWUINT> vecD3D11Offset(vecBuffers.size());
+	ID3D11Buffer* arrD3D11Buffer[D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT] = { NULL };
+	CWUINT arrStride[D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT] = {0};
+	CWUINT arrOffset[D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT] = {0};
 
-	for (auto pVertexBuffer : vecBuffers) {
-		ID3D11Buffer* pBuffer = static_cast<ID3D11Buffer*>(pVertexBuffer->getHandle());
-		vecD3D11Buffer.push_back(pBuffer);
-		vecD3D11Stride.push_back(pVertexBuffer->getStride());
-		vecD3D11Offset.push_back(pVertexBuffer->getOffset());
+	for (CWUINT i = 0; i < uCnt; ++i) {
+		arrD3D11Buffer[i] = static_cast<ID3D11Buffer*>(pBuffers[i]->getHandle());
+		arrStride[i] = pBuffers[i]->getStride();
+		arrOffset[i] = pBuffers[i]->getOffset();
 	}
 
-	m_pD3D11DeviceContext->IASetVertexBuffers(0, (CWUINT)(vecBuffers.size()), &vecD3D11Buffer[0], &vecD3D11Stride[0], &vecD3D11Offset[0]);
+	m_pD3D11DeviceContext->IASetVertexBuffers(0, uCnt, arrD3D11Buffer, arrStride, arrOffset);
 }
 
 void cwD3D11Device::setIndexBuffer(cwBuffer* pIndexBuffer)
@@ -656,10 +655,12 @@ CWVOID cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, std::vect
 	this->setInputLayout(pMeshRenderObj->getInputLayout());
 	this->setPrimitiveTopology(pMeshRenderObj->getPrimitiveTopology());
 
-	std::vector<cwBuffer*> vecBuffer(vecRenderObject.size());
-	for (auto pRenderObj : vecRenderObject) {
-		pRenderObj->preRender();
-		vecBuffer.push_back(pRenderObj->getVertexBuffer());
+	cwBuffer* arrBuffer[D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT] = {NULL};
+	CWUINT iSize = (CWUINT)vecRenderObject.size();
+	iSize = iSize < D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT ? iSize : D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT;
+	for (CWUINT i = 0; i < iSize; ++i) {
+		vecRenderObject[i]->preRender();
+		arrBuffer[i] = vecRenderObject[i]->getVertexBuffer();
 	}
 
 	D3DX11_TECHNIQUE_DESC techDesc;
@@ -679,7 +680,7 @@ CWVOID cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, std::vect
 
 	if (pMeshRenderObj->getIndexBuffer()) {
 		for (CWUINT i = 0; i < techDesc.Passes; ++i) {
-			this->setVertexBuffer(vecBuffer);
+			this->setVertexBuffer(arrBuffer, iSize);
 			this->setIndexBuffer(pMeshRenderObj->getIndexBuffer());
 
 			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
@@ -688,7 +689,7 @@ CWVOID cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, std::vect
 	}
 	else {
 		for (CWUINT i = 0; i < techDesc.Passes; ++i) {
-			this->setVertexBuffer(vecBuffer);
+			this->setVertexBuffer(arrBuffer, iSize);
 
 			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
 			m_pD3D11DeviceContext->DrawInstanced(pMeshRenderObj->getVertexBuffer()->getElementCount(), uCnt, 0, 0);

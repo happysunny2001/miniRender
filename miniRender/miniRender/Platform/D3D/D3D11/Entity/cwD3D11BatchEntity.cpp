@@ -65,7 +65,7 @@ CWBOOL cwD3D11BatchEntity::setEntityData(CWVOID* pData, CWUINT uStride, CWUINT u
 	if (!m_pRenderObj) return CWFALSE;
 	CW_SAFE_RELEASE_NULL(m_pInstanceRenderObj);
 
-	const CWSTRING& strLayout = cwRepertory::getInstance().getLayoutManager()->getLayoutName(m_pRenderObj->getInputLayout());
+	CWSTRING strLayout = cwRepertory::getInstance().getLayoutManager()->getLayoutName(m_pRenderObj->getInputLayout());
 	m_pInstanceRenderObj = cwDynamicRenderObject::create(m_pRenderObj->getPrimitiveTopology(), pData, uStride, uInstanceCount, NULL, 0, strLayout);
 	if (!m_pInstanceRenderObj) return CWFALSE;
 	CW_SAFE_RETAIN(m_pInstanceRenderObj);
@@ -74,6 +74,9 @@ CWBOOL cwD3D11BatchEntity::setEntityData(CWVOID* pData, CWUINT uStride, CWUINT u
 	m_nVecRenderObject.push_back(m_pRenderObj);
 	m_nVecRenderObject.push_back(m_pInstanceRenderObj);
 
+	m_uInstanceMaxCount = uInstanceCount;
+	m_uInstanceCount = uInstanceCount;
+
 	return CWTRUE;
 }
 
@@ -81,7 +84,7 @@ CWVOID cwD3D11BatchEntity::refreshEntityData(CWVOID* pData, CWUINT uInstanceCoun
 {
 	if (pData && m_pInstanceRenderObj) {
 		m_pInstanceRenderObj->updateVertexData(pData);
-		m_uInstanceCount = uInstanceCount;
+		m_uInstanceCount = uInstanceCount<=m_uInstanceMaxCount?uInstanceCount:m_uInstanceMaxCount;
 	}
 }
 

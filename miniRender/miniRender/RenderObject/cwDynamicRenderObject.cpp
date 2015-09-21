@@ -29,10 +29,10 @@ cwDynamicRenderObject* cwDynamicRenderObject::create(
 ePrimitiveType topology,
 CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
 CWVOID* pIndexData, CWUINT uIndexCnt,
-const CWSTRING& strLayout)
+const CWSTRING& strLayout, CWUINT uPositionOffset)
 {
 	cwDynamicRenderObject* pObj = new cwDynamicRenderObject();
-	if (pObj && pObj->init( topology, pVertexData, uVertexStride, uVertexCnt, pIndexData, uIndexCnt, strLayout)) {
+	if (pObj && pObj->init(topology, pVertexData, uVertexStride, uVertexCnt, pIndexData, uIndexCnt, strLayout, uPositionOffset)) {
 		pObj->autorelease();
 		return pObj;
 	}
@@ -55,12 +55,12 @@ cwDynamicRenderObject::~cwDynamicRenderObject()
 CWBOOL cwDynamicRenderObject::init(
 	ePrimitiveType topology,
 	CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
-	CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout)
+	CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout, CWUINT uPositionOffset)
 {
 	if (!cwRenderObject::init(
 		topology,
 		pVertexData, uVertexStride, uVertexCnt,
-		pIndexData, uIndexCnt, strLayout)) return CWFALSE;
+		pIndexData, uIndexCnt, strLayout, uPositionOffset)) return CWFALSE;
 
 	cwDevice* pDevice = cwRepertory::getInstance().getDevice();
 	m_pVertexBuffer = pDevice->createVertexBuffer(NULL, uVertexStride, uVertexCnt, eBufferUsageDynamic, eAccessFlagWrite);
@@ -70,23 +70,20 @@ CWBOOL cwDynamicRenderObject::init(
 	return CWTRUE;
 }
 
-void cwDynamicRenderObject::preRender()
+CWVOID cwDynamicRenderObject::preRender()
 {
 	if (m_bVertexRefresh) {
-		updateVertexBuffer();
+		m_pVertexBuffer->refresh(m_pVertexData, m_uRefreshSize);
 		m_bVertexRefresh = CWFALSE;
+		m_uRefreshSize = 0;
 	}
 }
 
-CWVOID cwDynamicRenderObject::updateVertexData(CWVOID* pData)
+CWVOID cwDynamicRenderObject::updateVertexData(CWVOID* pData, CWUINT uSize)
 {
-	cwRenderObject::updateVertexData(pData);
+	cwRenderObject::updateVertexData(pData, uSize);
 	m_bVertexRefresh = CWTRUE;
-}
-
-void cwDynamicRenderObject::updateVertexBuffer()
-{
-	m_pVertexBuffer->refresh(m_pVertexData);
+	m_uRefreshSize = uSize;
 }
 
 NS_MINIR_END

@@ -54,7 +54,8 @@ cwRenderObject::~cwRenderObject()
 CWBOOL cwRenderObject::init(
 	ePrimitiveType topology,
 	CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
-	CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout)
+	CWVOID* pIndexData, CWUINT uIndexCnt, 
+	const CWSTRING& strLayout, CWUINT uPositionOffset)
 {
 	m_nTopology = topology;
 	if (pIndexData) {
@@ -67,15 +68,21 @@ CWBOOL cwRenderObject::init(
 
 	if (!m_pLayout) return CWFALSE;
 
-	saveBufferData(pVertexData, uVertexStride, uVertexCnt, pIndexData, uIndexCnt);
+	m_nAabb.zero();
+	saveBufferData(pVertexData, uVertexStride, uVertexCnt, uPositionOffset, pIndexData, uIndexCnt);
 
 	return CWTRUE;
 }
 
 CWVOID cwRenderObject::updateVertexData(CWVOID* pData)
 {
+	updateVertexData(pData, m_uStride*m_uVertexCnt);
+}
+
+CWVOID cwRenderObject::updateVertexData(CWVOID* pData, CWUINT uSize)
+{
 	if (pData) {
-		memcpy(m_pVertexData, pData, m_uStride*m_uVertexCnt);
+		memcpy(m_pVertexData, pData, uSize);
 	}
 }
 
@@ -89,7 +96,7 @@ CWVOID* cwRenderObject::getVertexData(CWUINT i)
 }
 
 CWVOID cwRenderObject::saveBufferData(
-	CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt, 
+	CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt, CWUINT uPositionOffset,
 	CWVOID* pIndexData, CWUINT uIndexCnt)
 {
 	CW_SAFE_FREE(m_pVertexData);
@@ -111,6 +118,25 @@ CWVOID cwRenderObject::saveBufferData(
 			memcpy(m_pIndexData, pIndexData, sizeof(CWUINT)*uIndexCnt);
 			m_uIndexCnt = uIndexCnt;
 		}
+	}
+
+	m_uPositionOffset = uPositionOffset;
+	calBoundingBox();
+}
+
+CWVOID cwRenderObject::calBoundingBox()
+{
+	if (!m_pVertexData) return;
+
+	m_nAabb.empty();
+
+	CWBYTE* pStart = &((CWBYTE*)m_pVertexData)[m_uPositionOffset];
+	for (CWUINT i = 0; i < m_uVertexCnt; ++i) {
+		cwVector3D* pos = (cwVector3D*)pStart;
+
+		m_nAabb.add(*pos);
+
+		pStart += m_uStride;
 	}
 }
 

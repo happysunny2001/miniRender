@@ -34,7 +34,7 @@ public:
 	virtual bool init() = 0;
 
 	cwLayouts* getLayouts(const CWSTRING& strLayout);
-	const CWSTRING& getLayoutName(cwLayouts* pLayouts) const;
+	CWSTRING getLayoutName(cwLayouts* pLayouts) const;
 
 protected:
 	cwLayoutsManager() {}

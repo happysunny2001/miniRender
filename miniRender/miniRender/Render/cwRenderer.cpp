@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "Entity/cwScene.h"
 #include "Entity/cwEntity.h"
+#include "Entity/cwPrimitiveEntity.h"
 #include "Engine/cwEngine.h"
 #include "Shader/cwShader.h"
 #include "Material/cwMaterial.h"
@@ -50,7 +51,9 @@ m_pCurrCamera(nullptr),
 m_pCurrShader(nullptr),
 m_iListPoolIndex(0),
 m_pRenderListHead(nullptr),
-m_pCurrRenderStage(nullptr)
+m_pCurrRenderStage(nullptr),
+m_pPrimitiveEntity(nullptr),
+m_pPrimitiveBatch(nullptr)
 {
 
 }
@@ -58,6 +61,8 @@ m_pCurrRenderStage(nullptr)
 cwRenderer::~cwRenderer()
 {
 	m_nVecStage.clear();
+	CW_SAFE_RELEASE_NULL(m_pPrimitiveEntity);
+	CW_SAFE_DELETE(m_pPrimitiveBatch);
 
 	m_pCurrCamera = nullptr;
 	m_pCurrShader = nullptr;
@@ -67,7 +72,44 @@ cwRenderer::~cwRenderer()
 
 CWBOOL cwRenderer::init()
 {
+	buildPrimitiveEntity();
+
 	return true;
+}
+
+CWVOID cwRenderer::buildPrimitiveEntity()
+{
+	CW_SAFE_RELEASE_NULL(m_pPrimitiveEntity);
+	m_pPrimitiveEntity = cwPrimitiveEntity::create();
+	CW_SAFE_RETAIN(m_pPrimitiveEntity);
+
+	CW_SAFE_DELETE(m_pPrimitiveBatch);
+	m_pPrimitiveBatch = new cwRenderBatch();
+	m_pPrimitiveBatch->m_pEffect = m_pPrimitiveEntity->getEffect();
+	m_pPrimitiveBatch->m_pBlend = m_pPrimitiveEntity->getBlend();
+	m_pPrimitiveBatch->m_pStencil = m_pPrimitiveEntity->getStencil();
+	m_pPrimitiveBatch->m_pEntity = m_pPrimitiveEntity;
+	m_pPrimitiveBatch->m_nWorldTrans = cwMatrix4X4::identityMatrix;
+}
+
+CWVOID cwRenderer::renderPrimitiveEntity()
+{
+	if (m_pPrimitiveBatch)
+		this->render(m_pPrimitiveBatch);
+}
+
+CWVOID cwRenderer::renderPrimitive(const cwAABB& aabb)
+{
+	if (m_pPrimitiveEntity) {
+		m_pPrimitiveEntity->addPrimitive(aabb);
+	}
+}
+
+CWVOID cwRenderer::renderPrimitive(const cwAABB& aabb, const cwVector4D& color)
+{
+	if (m_pPrimitiveEntity) {
+		m_pPrimitiveEntity->addPrimitive(aabb, color);
+	}
 }
 
 CWVOID cwRenderer::setCurrCamera(cwCamera* pCamera)
@@ -126,6 +168,8 @@ CWVOID cwRenderer::render()
 			this->render(m_pCurrRenderStage);
 		}
 	}
+
+	renderPrimitiveEntity();
 }
 
 CWVOID cwRenderer::end()

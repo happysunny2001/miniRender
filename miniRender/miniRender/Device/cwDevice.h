@@ -84,7 +84,7 @@ public:
 	virtual cwBatchEntity* createBatchEntity() = 0;
 
 	virtual CWVOID setVertexBuffer(cwBuffer* pVertexBuffer) = 0;
-	virtual CWVOID setVertexBuffer(std::vector<cwBuffer*>& vecBuffers) = 0;
+	virtual CWVOID setVertexBuffer(cwBuffer** pBuffers, CWUINT uCnt) = 0;
 	virtual CWVOID setIndexBuffer(cwBuffer* pIndexBuffer) = 0;
 	//set blend state, nullptr for restore blend state
 	virtual CWVOID setBlend(const cwBlend* pBlendOper) = 0;

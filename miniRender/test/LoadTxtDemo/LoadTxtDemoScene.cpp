@@ -64,8 +64,8 @@ CWBOOL LoadTxtDemoScene::init()
 
 	m_bTouchDown = false;
 
-	//buildEntity();
-	buildBatchEntity();
+	buildEntity();
+	//buildBatchEntity();
 	buildLight();
 
 	return CWTRUE;
@@ -102,6 +102,8 @@ CWVOID LoadTxtDemoScene::buildEntity()
 	m_pCar->setEffect(pEffect);
 	CW_SAFE_RETAIN(m_pCar);
 
+	m_pCar->rotate(0, 20, 0);
+
 	this->addChild(m_pCar);
 }
 
@@ -129,15 +131,24 @@ CWVOID LoadTxtDemoScene::buildBatchEntity()
 
 	cwMaterial* pMaterial = cwMaterial::create();
 
-	m_pInstanceWorldMat = new cwMatrix4X4[4*4*4];
-	for (CWUINT i = 0; i < 4; ++i) {
-		for (CWUINT j = 0; j < 4; ++j) {
-			for (CWUINT k = 0; k < 4; ++k) {
-				m_pInstanceWorldMat[i * 4 * 4 + j * 4 + k] = cwMatrix4X4(
+	CWUINT iRow = 5;
+	m_pInstanceWorldMat = new cwMatrix4X4[iRow * iRow * iRow];
+	for (CWUINT i = 0; i < iRow; ++i) {
+		for (CWUINT j = 0; j < iRow; ++j) {
+			for (CWUINT k = 0; k < iRow; ++k) {
+
+				CWUINT index = i * iRow * iRow + j * iRow + k;
+				CWFLOAT fX = -50.0f + i*25.0f;
+				CWFLOAT fY = -50.0f + j*25.0f;
+				CWFLOAT fZ = -50.0f + k*25.0f;
+
+				m_pInstanceWorldMat[index] = cwMatrix4X4(
 					1.0f, 0.0f, 0.0f, 0.0f,
 					0.0f, 1.0f, 0.0f, 0.0f,
 					0.0f, 0.0f, 1.0f, 0.0f,
-					-50.0f + i*25.0f, -50.0f + j*25.0f, -50.0f + k*25.0f, 1.0f);
+					fX, fY, fZ, 1.0f);
+
+				cwLog::print("index:%d, pos:[%f,%f,%f]\n", index, fX, fY, fZ);
 			}
 		}
 	}
@@ -147,7 +158,7 @@ CWVOID LoadTxtDemoScene::buildBatchEntity()
 	m_pBatchCars->setRenderObject(pRenderObj);
 	m_pBatchCars->setPosition(cwVector3D::ZERO);
 	m_pBatchCars->setEffect(pEffect);
-	m_pBatchCars->setEntityData(m_pInstanceWorldMat, sizeof(cwMatrix4X4), 10);
+	m_pBatchCars->setEntityData(m_pInstanceWorldMat, sizeof(cwMatrix4X4), iRow * iRow * iRow);
 
 	this->addChild(m_pBatchCars);
 }

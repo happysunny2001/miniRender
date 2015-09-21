@@ -29,10 +29,10 @@ NS_MINIR_BEGIN
 cwStaticRenderObject* cwStaticRenderObject::create(
 		ePrimitiveType topology,
 		CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
-		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout)
+		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout, CWUINT uPositionOffset)
 {
 	cwStaticRenderObject* pObj = new cwStaticRenderObject();
-	if (pObj && pObj->init(topology, pVertexData, uVertexStride, uVertexCnt, pIndexData, uIndexCnt, strLayout)) {
+	if (pObj && pObj->init(topology, pVertexData, uVertexStride, uVertexCnt, pIndexData, uIndexCnt, strLayout, uPositionOffset)) {
 		pObj->autorelease();
 		return pObj;
 	}
@@ -54,12 +54,13 @@ cwStaticRenderObject::~cwStaticRenderObject()
 bool cwStaticRenderObject::init(
 	ePrimitiveType topology,
 	CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
-	CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout)
+	CWVOID* pIndexData, CWUINT uIndexCnt, 
+	const CWSTRING& strLayout, CWUINT uPositionOffset)
 {
 	if (!cwRenderObject::init(
 		topology, 
 		pVertexData, uVertexStride, uVertexCnt, 
-		pIndexData, uIndexCnt, strLayout)) return false;
+		pIndexData, uIndexCnt, strLayout, uPositionOffset)) return false;
 	m_pVertexBuffer = cwRepertory::getInstance().getDevice()->createVertexBuffer(pVertexData, uVertexStride, uVertexCnt);
 	CW_SAFE_RETAIN(m_pVertexBuffer);
 

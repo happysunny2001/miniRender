@@ -17,27 +17,23 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwLayoutsManager.h"
-#include "Shader/cwShaderManager.h"
-#include "Repertory/cwRepertory.h"
+#ifndef __CW_LOG_H__
+#define __CW_LOG_H__
+
+#include "Base/cwBasicType.h"
+#include "Base/cwMacros.h"
 
 NS_MINIR_BEGIN
 
-cwLayouts* cwLayoutsManager::getLayouts(const CWSTRING& strLayout)
+class cwLog
 {
-	auto it = m_nMapLayouts.find(strLayout);
-	if (it == m_nMapLayouts.end()) return nullptr;
-	return it->second;
-}
+public:
+	static CWVOID print(const CWCHAR* pcFormat, ...);
 
-CWSTRING cwLayoutsManager::getLayoutName(cwLayouts* pLayouts) const
-{
-	static CWSTRING strEmpty;
-	for (auto it : m_nMapLayouts) {
-		if (it.second == pLayouts) return it.first;
-	}
+protected:
 
-	return strEmpty;
-}
+};
 
 NS_MINIR_END
+
+#endif

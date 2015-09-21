@@ -118,11 +118,13 @@ CWVOID cwD3D11Buffer::refresh(CWVOID* pData, CWUINT uSize)
 {
 	if (pData && uSize > 0) {
 		cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+		uSize = uSize <= this->getSize() ? uSize : this->getSize();
+		m_iElementCnt = uSize / m_nStride;
 
 		D3D11_MAPPED_SUBRESOURCE mappedData;
 		CW_HR(pD3D11Device->getD3D11DeviceContext()->Map(m_pD3D11Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
 
-		memcpy(mappedData.pData, pData, uSize <= this->getSize()?uSize:this->getSize());
+		memcpy(mappedData.pData, pData, uSize);
 
 		pD3D11Device->getD3D11DeviceContext()->Unmap(m_pD3D11Buffer, 0);
 	}

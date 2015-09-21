@@ -99,6 +99,12 @@ cwVector3D cwAABB::radius() const
     return (m_nMax - m_nMin)*0.5f;
 }
 
+void cwAABB::zero()
+{
+	m_nMin.x = m_nMin.y = m_nMin.z = 0;
+	m_nMax.x = m_nMax.y = m_nMax.z = 0;
+}
+
 void cwAABB::empty()
 {
     m_nMin.x = m_nMin.y = m_nMin.z = FLT_MAX;

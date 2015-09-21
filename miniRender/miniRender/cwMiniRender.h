@@ -20,6 +20,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifndef __CW_MINI_RENDER_H__
 #define __CW_MINI_RENDER_H__
 
+#include "Platform/cwPlatform.h"
+
 #include "Base/cwMacros.h"
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
@@ -27,6 +29,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwVector.h"
 #include "Base/cwValueMap.h"
 #include "Base/cwColor.h"
+#include "Base/cwLog.h"
 #include "Ref/cwRef.h"
 #include "Shader/cwShader.h"
 #include "Shader/cwShaderManager.h"
@@ -70,12 +73,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Event/cwTouchEventListener.h"
 #include "Event/cwKeyboardEvent.h"
 #include "Event/cwKeyboardEventListener.h"
-
-//#include "tinyxml2.h"
-
-// #include "cwReflectEntity.h"
-// #include "cwFog.h"
-// #include "cwPlaneShadow.h"
 
 #if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
 #include "Platform/Windows/cwWinApplication.h"

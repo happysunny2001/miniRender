@@ -17,27 +17,45 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwLayoutsManager.h"
-#include "Shader/cwShaderManager.h"
-#include "Repertory/cwRepertory.h"
+#ifndef __CW_PRIMITIVE_ENTITY_H__
+#define __CW_PRIMITIVE_ENTITY_H__
+
+#include "Base/cwUtils.h"
+#include "Base/cwBasicType.h"
+#include "Base/cwStruct.h"
+#include "Math/cwMath.h"
+#include "cwEntity.h"
 
 NS_MINIR_BEGIN
 
-cwLayouts* cwLayoutsManager::getLayouts(const CWSTRING& strLayout)
+class cwPrimitiveEntity : public cwEntity
 {
-	auto it = m_nMapLayouts.find(strLayout);
-	if (it == m_nMapLayouts.end()) return nullptr;
-	return it->second;
-}
+public:
+	static CWUINT uMaxVertexCnt;
 
-CWSTRING cwLayoutsManager::getLayoutName(cwLayouts* pLayouts) const
-{
-	static CWSTRING strEmpty;
-	for (auto it : m_nMapLayouts) {
-		if (it.second == pLayouts) return it.first;
-	}
+public:
+	static cwPrimitiveEntity* create();
 
-	return strEmpty;
-}
+	cwPrimitiveEntity();
+	virtual ~cwPrimitiveEntity();
+
+	virtual CWBOOL init() override;
+	virtual CWVOID render(cwRenderBatch* pRenderBatch) override;
+
+	CWVOID addPrimitive(const cwAABB& aabb);
+	virtual CWVOID addPrimitive(const cwAABB& aabb, const cwVector4D& color);
+
+protected:
+	CWVOID buildMaterial();
+	CWVOID buildRenderObject();
+	CWVOID buildEffect();
+
+protected:
+	cwVertexPosColor* m_pVertexData;
+	CWUINT m_uVertexCnt;
+
+};
 
 NS_MINIR_END
+
+#endif

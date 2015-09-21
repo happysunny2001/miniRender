@@ -47,6 +47,8 @@ public:
 
 	virtual CWBOOL init() override;
 
+	virtual CWVOID transform() override;
+
 	virtual CWVOID setRenderObject(cwRenderObject* pRenderObj);
 	inline cwRenderObject* getRenderObj() { return m_pRenderObj; }
 
@@ -58,6 +60,8 @@ public:
 
 	virtual CWVOID setStencil(cwStencil* pStencil);
 	inline cwStencil* getStencil() { return m_pStencil; }
+
+	inline const cwAABB& getBoundingBox() const { return m_nAabb; }
 	
 	virtual CWVOID render(cwRenderBatch* pRenderBatch);
 
@@ -67,6 +71,8 @@ protected:
 
 	cwBlend* m_pBlend;
 	cwStencil* m_pStencil;
+
+	cwAABB m_nAabb;
 
 };
 

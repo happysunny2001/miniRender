@@ -38,6 +38,7 @@ public:
     
     cwVector3D corner(int index) const;
     
+	void zero();
     void empty();
     void add(const cwPoint3D& p);
     void add(const cwAABB& box);

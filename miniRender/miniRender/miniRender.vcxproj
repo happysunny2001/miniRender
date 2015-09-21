@@ -23,6 +23,7 @@
     <ClInclude Include="Base\cwColor.h" />
     <ClInclude Include="Base\cwCommon.h" />
     <ClInclude Include="Base\cwFuncNode.h" />
+    <ClInclude Include="Base\cwLog.h" />
     <ClInclude Include="Base\cwMacros.h" />
     <ClInclude Include="Base\cwMap.h" />
     <ClInclude Include="Base\cwRunTime.h" />
@@ -48,6 +49,7 @@
     <ClInclude Include="Entity\cwBatchEntity.h" />
     <ClInclude Include="Entity\cwEntity.h" />
     <ClInclude Include="Entity\cwMirror.h" />
+    <ClInclude Include="Entity\cwPrimitiveEntity.h" />
     <ClInclude Include="Entity\cwRenderNode.h" />
     <ClInclude Include="Entity\cwScene.h" />
     <ClInclude Include="Event\cwEvent.h" />
@@ -189,6 +191,7 @@
     <ClCompile Include="Entity\cwBatchEntity.cpp" />
     <ClCompile Include="Entity\cwEntity.cpp" />
     <ClCompile Include="Entity\cwMirror.cpp" />
+    <ClCompile Include="Entity\cwPrimitiveEntity.cpp" />
     <ClCompile Include="Entity\cwRenderNode.cpp" />
     <ClCompile Include="Entity\cwScene.cpp" />
     <ClCompile Include="Event\cwEvent.cpp" />
@@ -257,6 +260,7 @@
     <ClCompile Include="Platform\D3D\D3D11\ViewPort\cwD3D11ViewPort.cpp" />
     <ClCompile Include="Platform\Windows\cwWinApplication.cpp" />
     <ClCompile Include="Platform\Windows\cwWinFileSystem.cpp" />
+    <ClCompile Include="Platform\Windows\cwWinLog.cpp" />
     <ClCompile Include="Platform\Windows\cwWinStringConvert.cpp" />
     <ClCompile Include="Platform\Windows\cwWinUtils.cpp" />
     <ClCompile Include="Ref\cwAutoReleasePool.cpp" />

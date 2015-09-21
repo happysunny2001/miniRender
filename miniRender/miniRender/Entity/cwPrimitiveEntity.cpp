@@ -1,0 +1,133 @@
+﻿/*
+Copyright © 2015 Ziwei Wang
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the “Software”), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or
+substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+#include "cwPrimitiveEntity.h"
+#include "Material/cwMaterial.h"
+#include "RenderObject/cwRenderObject.h"
+#include "RenderObject/cwDynamicRenderObject.h"
+#include "Effect/cwEffect.h"
+#include "Repertory/cwRepertory.h"
+#include "Shader/cwShaderManager.h"
+#include "Render/cwRenderBatch.h"
+#include "Device/cwDevice.h"
+
+NS_MINIR_BEGIN
+
+CWUINT cwPrimitiveEntity::uMaxVertexCnt = 102400;
+
+cwPrimitiveEntity* cwPrimitiveEntity::create()
+{
+	cwPrimitiveEntity* pEntity = new cwPrimitiveEntity();
+	if (pEntity && pEntity->init()) {
+		pEntity->autorelease();
+		return pEntity;
+	}
+
+	CW_SAFE_DELETE(pEntity);
+	return nullptr;
+}
+
+cwPrimitiveEntity::cwPrimitiveEntity():
+m_pVertexData(nullptr),
+m_uVertexCnt(0)
+{
+
+}
+
+cwPrimitiveEntity::~cwPrimitiveEntity()
+{
+	CW_SAFE_DELETE_ARRAY(m_pVertexData);
+	m_uVertexCnt = 0;
+}
+
+CWBOOL cwPrimitiveEntity::init()
+{
+	if (!cwEntity::init()) return CWFALSE;
+
+	buildMaterial();
+	buildRenderObject();
+	buildEffect();
+
+	this->setPosition(cwVector3D::ZERO);
+
+	return CWTRUE;
+}
+
+CWVOID cwPrimitiveEntity::render(cwRenderBatch* pRenderBatch)
+{
+	if (m_uVertexCnt == 0) return;
+	m_pRenderObj->updateVertexData(m_pVertexData, m_uVertexCnt*m_pRenderObj->getVertexStride());
+
+	if (pRenderBatch && pRenderBatch->m_pEffect) {
+		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+		pDevice->draw(pRenderBatch->m_pEffect->getShader(), pRenderBatch->m_pEffect->getTech(), m_pRenderObj);
+	}
+
+	m_uVertexCnt = 0;
+}
+
+CWVOID cwPrimitiveEntity::buildMaterial()
+{
+	this->setMaterial(cwMaterial::create());
+}
+
+CWVOID cwPrimitiveEntity::buildEffect()
+{
+	cwRepertory& repertory = cwRepertory::getInstance();
+	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderColor);
+	cwEffect* pEffect = cwEffect::create();
+	pEffect->setShader(pShader);
+
+	this->setEffect(pEffect);
+}
+
+CWVOID cwPrimitiveEntity::buildRenderObject()
+{
+	m_pVertexData = new cwVertexPosColor[uMaxVertexCnt];
+	m_uVertexCnt = 0;
+
+	m_pRenderObj = cwDynamicRenderObject::create(ePrimitiveTypeLineList, m_pVertexData, sizeof(cwVertexPosColor), uMaxVertexCnt, NULL, 0, "PosColor");
+	CW_SAFE_RETAIN(m_pRenderObj);
+}
+
+CWVOID cwPrimitiveEntity::addPrimitive(const cwAABB& aabb)
+{
+	addPrimitive(aabb, m_pMaterial->getDiffuse());
+}
+
+CWVOID cwPrimitiveEntity::addPrimitive(const cwAABB& aabb, const cwVector4D& color)
+{
+	static CWUINT uIndex[24] = { 0, 1, 1, 3, 3, 2, 2, 0, 4, 5, 5, 7, 7, 6, 6, 4, 3, 7, 1, 5, 0, 4, 2, 6 };
+
+	if (m_uVertexCnt + 24 > uMaxVertexCnt) return;
+
+	cwVector3D points[8];
+
+	for (CWUINT i = 0; i < 8; ++i)
+		points[i] = aabb.corner(i);
+
+	for (CWUINT i = 0; i < 24; ++i) {
+		m_pVertexData[m_uVertexCnt + i].pos = points[uIndex[i]];
+		m_pVertexData[m_uVertexCnt + i].color = color;
+	}
+
+	m_uVertexCnt += 24;
+}
+
+NS_MINIR_END

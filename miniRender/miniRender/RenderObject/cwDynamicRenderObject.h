@@ -34,7 +34,7 @@ public:
 	static cwDynamicRenderObject* create(
 		ePrimitiveType topology,
 		CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
-		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout);
+		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout, CWUINT uPositionOffset = 0);
 
 	cwDynamicRenderObject();
 	virtual ~cwDynamicRenderObject();
@@ -42,16 +42,14 @@ public:
 	virtual CWBOOL init(
 		ePrimitiveType topology,
 		CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
-		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout) override;
+		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout, CWUINT uPositionOffset = 0) override;
 
-	virtual void preRender() override;
-	virtual CWVOID updateVertexData(CWVOID* pData) override;
-
-protected:
-	virtual void updateVertexBuffer();
+	virtual CWVOID preRender() override;
+	virtual CWVOID updateVertexData(CWVOID* pData, CWUINT uSize) override;
 
 protected:
 	CWBOOL m_bVertexRefresh;
+	CWUINT m_uRefreshSize;
 
 };
 

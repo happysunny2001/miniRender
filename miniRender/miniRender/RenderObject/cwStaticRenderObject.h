@@ -31,7 +31,7 @@ public:
 	static cwStaticRenderObject* create(
 		ePrimitiveType topology,
 		CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
-		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout);
+		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout, CWUINT uPositionOffset = 0);
 
 	cwStaticRenderObject();
 	virtual ~cwStaticRenderObject();
@@ -39,7 +39,7 @@ public:
 	virtual bool init(
 		ePrimitiveType topology,
 		CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
-		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout) override;
+		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout, CWUINT uPositionOffset = 0) override;
 
 protected:
 

@@ -75,7 +75,7 @@ public:
 	virtual cwBatchEntity* createBatchEntity() override;
 
 	virtual CWVOID setVertexBuffer(cwBuffer* pVertexBuffer) override;
-	virtual CWVOID setVertexBuffer(std::vector<cwBuffer*>& vecBuffers) override;
+	virtual CWVOID setVertexBuffer(cwBuffer** pBuffers, CWUINT uCnt) override;
 	virtual CWVOID setIndexBuffer(cwBuffer* pIndexBuffer) override;
 	virtual CWVOID setBlend(const cwBlend* pBlendOper);
 	virtual CWVOID setStencil(const cwStencil* pStencil);

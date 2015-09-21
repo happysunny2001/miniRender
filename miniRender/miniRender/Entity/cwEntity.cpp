@@ -27,8 +27,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Engine/cwEngine.h"
 #include "Blend/cwBlend.h"
 #include "Stencil/cwStencil.h"
+#include "Render/cwRenderer.h"
 #include "Render/cwRenderBatch.h"
 #include "effect/cwEffect.h"
+#include "Engine/cwEngine.h"
 
 NS_MINIR_BEGIN
 
@@ -66,6 +68,14 @@ CWBOOL cwEntity::init()
 	if (!cwRenderNode::init()) return CWFALSE;
 
 	return CWTRUE;
+}
+
+CWVOID cwEntity::transform()
+{
+	if (m_bTransDirty) {
+		cwRenderNode::transform();
+		m_nAabb.update(m_pRenderObj->getBoundingBox(), m_nTrans);
+	}
 }
 
 CWVOID cwEntity::setRenderObject(cwRenderObject* pRenderObj)
@@ -111,6 +121,7 @@ CWVOID cwEntity::render(cwRenderBatch* pRenderBatch)
 		pDevice->draw(pRenderBatch->m_pEffect->getShader(), pRenderBatch->m_pEffect->getTech(), m_pRenderObj);
 	}
 
+	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(m_nAabb);
 	cwRenderNode::render();
 }
 
