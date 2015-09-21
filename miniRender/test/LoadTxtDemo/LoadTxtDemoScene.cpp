@@ -98,11 +98,9 @@ CWVOID LoadTxtDemoScene::buildEntity()
 	m_pCar = cwEntity::create();
 	m_pCar->setMaterial(pMaterial);
 	m_pCar->setRenderObject(pRenderObj);
-	m_pCar->setPosition(cwVector3D::ZERO);
+	m_pCar->setPosition(cwVector3D(-2.0f, 1.0f, 1.0f));
 	m_pCar->setEffect(pEffect);
 	CW_SAFE_RETAIN(m_pCar);
-
-	m_pCar->rotate(0, 20, 0);
 
 	this->addChild(m_pCar);
 }
@@ -231,5 +229,10 @@ CWVOID LoadTxtDemoScene::update(CWFLOAT dt)
 	}
 	else if (isKeyDown(KeyCode::S)) {
 		cwRepertory::getInstance().getEngine()->getDefaultCamera()->walk(-10 * dt);
+	}
+
+	if (m_pCar) {
+		const cwVector3D& rot = m_pCar->getRotation();
+		m_pCar->setRotation(rot.x, rot.y+dt*0.6f, rot.z);
 	}
 }

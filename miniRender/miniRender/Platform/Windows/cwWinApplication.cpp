@@ -289,6 +289,8 @@ LRESULT cwApplication::msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 		PostQuitMessage(0);
 		return 0;
 	case WM_SIZE:
+		if (wParam == SIZE_MINIMIZED)
+			return 0;
 		onResize(LOWORD(lParam), HIWORD(lParam));
 		return 0;
 	case WM_ENTERSIZEMOVE:

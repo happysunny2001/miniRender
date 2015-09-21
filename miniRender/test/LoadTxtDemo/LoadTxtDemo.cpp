@@ -33,7 +33,7 @@ LoadTxtDemo::~LoadTxtDemo()
 CWVOID LoadTxtDemo::gameBegin()
 {
 	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 3.0f, -20.0f);
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 5.0f, -20.0f);
 
 	LoadTxtDemoScene* pScene = LoadTxtDemoScene::create();
 	cwRepertory::getInstance().getEngine()->setScene(pScene);
