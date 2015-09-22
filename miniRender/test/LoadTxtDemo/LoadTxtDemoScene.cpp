@@ -235,4 +235,9 @@ CWVOID LoadTxtDemoScene::update(CWFLOAT dt)
 		const cwVector3D& rot = m_pCar->getRotation();
 		m_pCar->setRotation(rot.x, rot.y+dt*0.6f, rot.z);
 	}
+
+	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(m_pCar->getBoundingBox());
+
+	cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getDefaultCamera();
+	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(pCamera);
 }

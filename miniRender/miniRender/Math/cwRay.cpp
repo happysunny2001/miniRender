@@ -74,7 +74,7 @@ float cwRay::closestPoint(const cwPoint3D& p, cwVector3D& ret) const
     return t;
 }
 
-bool cwRay::intersection(const cwShape& other) const
+int cwRay::intersection(const cwShape& other) const
 {
     switch (other.m_eType) {
         case eShapeRay:

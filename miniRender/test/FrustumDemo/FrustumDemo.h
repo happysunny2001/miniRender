@@ -17,39 +17,27 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "LoadTxtDemo.h"
-#include "LoadTxtDemoScene.h"
+#ifndef __FRUSTUM_DEMO_H__
+#define __FRUSTUM_DEMO_H__
 
-LoadTxtDemo::LoadTxtDemo()
+#include "cwMiniRender.h"
+NS_USING_MINIR;
+
+class FrustumDemo : public cwApplication
 {
+public:
+	FrustumDemo();
+	virtual ~FrustumDemo();
 
-}
+	virtual CWVOID gameBegin() override;
+	virtual CWVOID gameEnd() override;
 
-LoadTxtDemo::~LoadTxtDemo()
-{
+	virtual CWVOID gameBeginBackGround() override;
+	virtual CWVOID gameEndBackGround() override;
 
-}
+protected:
 
-CWVOID LoadTxtDemo::gameBegin()
-{
-	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 5.0f, -50.0f);
+};
 
-	LoadTxtDemoScene* pScene = LoadTxtDemoScene::create();
-	cwRepertory::getInstance().getEngine()->setScene(pScene);
-}
+#endif
 
-CWVOID LoadTxtDemo::gameEnd()
-{
-
-}
-
-CWVOID LoadTxtDemo::gameBeginBackGround()
-{
-
-}
-
-CWVOID LoadTxtDemo::gameEndBackGround()
-{
-
-}

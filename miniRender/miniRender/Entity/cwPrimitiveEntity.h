@@ -24,6 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwBasicType.h"
 #include "Base/cwStruct.h"
 #include "Math/cwMath.h"
+#include "Camera/cwCamera.h"
 #include "cwEntity.h"
 
 NS_MINIR_BEGIN
@@ -43,7 +44,10 @@ public:
 	virtual CWVOID render(cwRenderBatch* pRenderBatch) override;
 
 	CWVOID addPrimitive(const cwAABB& aabb);
-	virtual CWVOID addPrimitive(const cwAABB& aabb, const cwVector4D& color);
+	CWVOID addPrimitive(const cwAABB& aabb, const cwVector4D& color);
+
+	CWVOID addPrimitive(cwCamera* pCamera);
+	CWVOID addPrimitive(cwCamera* pCamera, const cwVector4D& color);
 
 protected:
 	CWVOID buildMaterial();

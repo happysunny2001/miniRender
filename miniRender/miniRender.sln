@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BlurDemo", "test\BlurDemo\B
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TessellationDemo", "test\TessellationDemo\TessellationDemo.vcxproj", "{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FrustumDemo", "test\FrustumDemo\FrustumDemo.vcxproj", "{51E6F88C-CB9C-47AA-9900-5DC904AE16BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +133,18 @@ Global
 		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}.Release|Win32.ActiveCfg = Release|Win32
 		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}.Release|Win32.Build.0 = Release|Win32
 		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E}.Release|x64.ActiveCfg = Release|Win32
+		{51E6F88C-CB9C-47AA-9900-5DC904AE16BF}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{51E6F88C-CB9C-47AA-9900-5DC904AE16BF}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{51E6F88C-CB9C-47AA-9900-5DC904AE16BF}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{51E6F88C-CB9C-47AA-9900-5DC904AE16BF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{51E6F88C-CB9C-47AA-9900-5DC904AE16BF}.Debug|Win32.Build.0 = Debug|Win32
+		{51E6F88C-CB9C-47AA-9900-5DC904AE16BF}.Debug|x64.ActiveCfg = Debug|Win32
+		{51E6F88C-CB9C-47AA-9900-5DC904AE16BF}.Release|Any CPU.ActiveCfg = Release|Win32
+		{51E6F88C-CB9C-47AA-9900-5DC904AE16BF}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{51E6F88C-CB9C-47AA-9900-5DC904AE16BF}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{51E6F88C-CB9C-47AA-9900-5DC904AE16BF}.Release|Win32.ActiveCfg = Release|Win32
+		{51E6F88C-CB9C-47AA-9900-5DC904AE16BF}.Release|Win32.Build.0 = Release|Win32
+		{51E6F88C-CB9C-47AA-9900-5DC904AE16BF}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -143,5 +157,6 @@ Global
 		{4600600F-163B-4DAF-A547-7282C47F4FE6} = {873F1DFA-D35C-41AC-90AC-1D57C7A7446E}
 		{DE6FB2FA-A327-4BC2-A476-80388F979537} = {873F1DFA-D35C-41AC-90AC-1D57C7A7446E}
 		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E} = {873F1DFA-D35C-41AC-90AC-1D57C7A7446E}
+		{51E6F88C-CB9C-47AA-9900-5DC904AE16BF} = {873F1DFA-D35C-41AC-90AC-1D57C7A7446E}
 	EndGlobalSection
 EndGlobal

@@ -112,6 +112,20 @@ CWVOID cwRenderer::renderPrimitive(const cwAABB& aabb, const cwVector4D& color)
 	}
 }
 
+CWVOID cwRenderer::renderPrimitive(cwCamera* pCamera)
+{
+	if (m_pPrimitiveEntity) {
+		m_pPrimitiveEntity->addPrimitive(pCamera);
+	}
+}
+
+CWVOID cwRenderer::renderPrimitive(cwCamera* pCamera, const cwVector4D& color)
+{
+	if (m_pPrimitiveEntity) {
+		m_pPrimitiveEntity->addPrimitive(pCamera, color);
+	}
+}
+
 CWVOID cwRenderer::setCurrCamera(cwCamera* pCamera)
 {
 	m_pCurrCamera = pCamera;

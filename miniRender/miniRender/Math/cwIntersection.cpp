@@ -26,12 +26,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-bool cwIntersectionRayRay(const cwRay& r1, const cwRay& r2)
+int cwIntersectionRayRay(const cwRay& r1, const cwRay& r2)
 {
     cwVector3D d = r1.m_nDir.cross(r2.m_nDir);
     float dSquLen = d.squareLength();
     //lines are parallel
-	if (dSquLen < cwMathUtil::cwFloatEpsilon) return false;
+	if (dSquLen < cwMathUtil::cwFloatEpsilon) return 0;
     
     float dSquLenInv = 1.0f / dSquLen;
     cwVector3D v = (r2.m_nOrigin-r1.m_nOrigin);
@@ -39,58 +39,58 @@ bool cwIntersectionRayRay(const cwRay& r1, const cwRay& r2)
     float t1 = v.cross(r2.m_nDir).dot(d) * dSquLenInv;
     float t2 = v.cross(r1.m_nDir).dot(d) * dSquLenInv;
     
-    if(t1 < 0 || t2 < 0 || t1 > r1.m_fT || t2 > r2.m_fT) return false;
+    if(t1 < 0 || t2 < 0 || t1 > r1.m_fT || t2 > r2.m_fT) return 0;
     
     cwPoint3D p1 = r1.m_nOrigin + t1*r1.m_nDir;
     cwPoint3D p2 = r2.m_nOrigin + t2*r2.m_nDir;
     
     //two line maybe skew, we examine the distance between p1 and p2
-	if ((p2 - p1).squareLength() < cwMathUtil::cwFloatEpsilon) return true;
+	if ((p2 - p1).squareLength() < cwMathUtil::cwFloatEpsilon) return 1;
     
-    return false;
+    return 0;
 }
 
-bool cwIntersectionRayCircle(const cwRay& ray, const cwCircle& circle)
+int cwIntersectionRayCircle(const cwRay& ray, const cwCircle& circle)
 {
     cwVector3D e = circle.m_nOrigin - ray.m_nOrigin;
     float a = e.dot(ray.m_nDir);
     float f = circle.m_fR*circle.m_fR - e.dot(e) + a*a;
-    if(f < 0) return false;
+    if(f < 0) return 0;
     
     float t = a - sqrt(f);
-    if(t < 0 || t > ray.m_fT) return false;
+    if(t < 0 || t > ray.m_fT) return 0;
     
-    return true;
+    return 1;
 }
 
-bool cwIntersectionRayPlane(const cwRay& ray, const cwPlane& plane)
+int cwIntersectionRayPlane(const cwRay& ray, const cwPlane& plane)
 {
     float f = ray.m_nDir.dot(plane.m_nNormal);
-	if (f < cwMathUtil::cwFloatEpsilon) return false;
+	if (f < cwMathUtil::cwFloatEpsilon) return 0;
     
     float t = (plane.m_fD - ray.m_nOrigin.dot(plane.m_nNormal)) / f;
-    if(t < 0 || t > ray.m_fT) return false;
-    return true;
+    if(t < 0 || t > ray.m_fT) return 0;
+    return 1;
 }
 
-bool cwIntersectionRayAABB(const cwRay& ray, const cwAABB& aabb)
+int cwIntersectionRayAABB(const cwRay& ray, const cwAABB& aabb)
 {
     cwVector3D rayDelta = ray.m_nDir*(ray.m_fT*0.5f);
-    bool inside = true;
+    int inside = 1;
     
     float xt, xn;
     if(ray.m_nOrigin.x < aabb.m_nMin.x) {
         xt = aabb.m_nMin.x - ray.m_nOrigin.x;
-        if(xt > rayDelta.x) return false;
+        if(xt > rayDelta.x) return 0;
         xt /= rayDelta.x;
-        inside = false;
+        inside = 0;
         xn = -1.0f;
     }
     else if(ray.m_nOrigin.x > aabb.m_nMax.x) {
         xt = aabb.m_nMax.x - ray.m_nOrigin.x;
-        if(xt < rayDelta.x) return false;
+        if(xt < rayDelta.x) return 0;
         xt /= rayDelta.x;
-        inside = false;
+        inside = 0;
         xn = 1.0f;
     }
     else {
@@ -100,16 +100,16 @@ bool cwIntersectionRayAABB(const cwRay& ray, const cwAABB& aabb)
     float yt, yn;
     if(ray.m_nOrigin.y < aabb.m_nMin.y) {
         yt = aabb.m_nMin.y - ray.m_nOrigin.y;
-        if(yt > rayDelta.y) return false;
+        if(yt > rayDelta.y) return 0;
         yt /= rayDelta.y;
-        inside = false;
+        inside = 0;
         yn = -1.0f;
     }
     else if(ray.m_nOrigin.y > aabb.m_nMax.y) {
         yt = aabb.m_nMax.y - ray.m_nOrigin.y;
-        if(yt < rayDelta.y) return false;
+        if(yt < rayDelta.y) return 0;
         yt /= rayDelta.y;
-        inside = false;
+        inside = 0;
         yn = 1.0f;
     }
     else {
@@ -119,16 +119,16 @@ bool cwIntersectionRayAABB(const cwRay& ray, const cwAABB& aabb)
     float zt, zn;
     if(ray.m_nOrigin.z < aabb.m_nMin.z) {
         zt = aabb.m_nMin.z - ray.m_nOrigin.z;
-        if(zt > rayDelta.z) return false;
+        if(zt > rayDelta.z) return 0;
         zt /= rayDelta.z;
-        inside = false;
+        inside = 0;
         zn = -1.0f;
     }
     else if(ray.m_nOrigin.z > aabb.m_nMax.z) {
         zt = aabb.m_nMax.z - ray.m_nOrigin.z;
-        if(zt < rayDelta.z) return false;
+        if(zt < rayDelta.z) return 0;
         zt /= rayDelta.z;
-        inside = false;
+        inside = 0;
         zn = 1.0f;
     }
     else {
@@ -136,7 +136,7 @@ bool cwIntersectionRayAABB(const cwRay& ray, const cwAABB& aabb)
     }
     
     if(inside) {
-        return false;
+        return 0;
     }
     
     int which = 0;
@@ -155,47 +155,47 @@ bool cwIntersectionRayAABB(const cwRay& ray, const cwAABB& aabb)
         case 0:
         {
             float y = ray.m_nOrigin.y + rayDelta.y*t;
-            if(y < aabb.m_nMin.y || y > aabb.m_nMax.y) return false;
+            if(y < aabb.m_nMin.y || y > aabb.m_nMax.y) return 0;
             float z = ray.m_nOrigin.z + rayDelta.z*t;
-            if(z < aabb.m_nMin.z || z > aabb.m_nMax.z) return false;
+            if(z < aabb.m_nMin.z || z > aabb.m_nMax.z) return 0;
         }
             break;
         case 1:
         {
             float x = ray.m_nOrigin.x + rayDelta.x*t;
-            if(x < aabb.m_nMin.x || x > aabb.m_nMax.x) return false;
+            if(x < aabb.m_nMin.x || x > aabb.m_nMax.x) return 0;
             float z = ray.m_nOrigin.z + rayDelta.z*t;
-            if(z < aabb.m_nMin.z || z > aabb.m_nMax.z) return false;
+            if(z < aabb.m_nMin.z || z > aabb.m_nMax.z) return 0;
         }
             break;
         case 2:
         {
             float x = ray.m_nOrigin.x + rayDelta.x*t;
-            if(x < aabb.m_nMin.x || x > aabb.m_nMax.x) return false;
+            if(x < aabb.m_nMin.x || x > aabb.m_nMax.x) return 0;
             float y = ray.m_nOrigin.y + rayDelta.y*t;
-            if(y < aabb.m_nMin.y || y > aabb.m_nMax.y) return false;
+            if(y < aabb.m_nMin.y || y > aabb.m_nMax.y) return 0;
         }
             break;
     }
     
-    return true;
+    return 1;
 }
 
-bool cwIntersectionPlanePlane(const cwPlane& p1, const cwPlane& p2)
+int cwIntersectionPlanePlane(const cwPlane& p1, const cwPlane& p2)
 {
-	if (fabsf(fabsf(p1.m_nNormal.dot(p2.m_nNormal)) - 1.0f) < cwMathUtil::cwFloatEpsilon) return false;
-    return true;
+	if (fabsf(fabsf(p1.m_nNormal.dot(p2.m_nNormal)) - 1.0f) < cwMathUtil::cwFloatEpsilon) return 0;
+    return 1;
 }
 
-bool cwIntersectionPlaneCircle(const cwPlane& plane, const cwCircle& circle)
+int cwIntersectionPlaneCircle(const cwPlane& plane, const cwCircle& circle)
 {
     float d = plane.m_nNormal.dot(circle.m_nOrigin) - plane.m_fD;
     
-    if(d < -circle.m_fR || d > circle.m_fR) return false;
-    return true;
+    if(d < -circle.m_fR || d > circle.m_fR) return 0;
+    return 1;
 }
 
-bool cwIntersectionPlaneAABB(const cwPlane& plane, const cwAABB& aabb)
+int cwIntersectionPlaneAABB(const cwPlane& plane, const cwAABB& aabb)
 {
     float minD, maxD;
     
@@ -225,19 +225,21 @@ bool cwIntersectionPlaneAABB(const cwPlane& plane, const cwAABB& aabb)
         minD += plane.m_nNormal.z*aabb.m_nMax.z;
         maxD += plane.m_nNormal.z*aabb.m_nMin.z;
     }
+
+	if (minD >= plane.m_fD) return 1;
+	if (maxD <= plane.m_fD) return -1;
     
-    if(minD > plane.m_fD || maxD < plane.m_fD) return false;
-    return true;
+    return 0;
 }
 
-bool cwIntersectionCircleCircle(const cwCircle& c1, const cwCircle& c2)
+int cwIntersectionCircleCircle(const cwCircle& c1, const cwCircle& c2)
 {
     cwVector2D d = c2.m_nOrigin - c1.m_nOrigin;
     if(d.squareLength() <= (c1.m_fR+c2.m_fR)*(c1.m_fR+c2.m_fR)) return true;
     return false;
 }
 
-bool cwIntersectionCircleAABB(const cwCircle& circle, const cwAABB& aabb)
+int cwIntersectionCircleAABB(const cwCircle& circle, const cwAABB& aabb)
 {
     cwVector3D p = aabb.closestPoint(circle.m_nOrigin);
     cwVector3D v = p - circle.m_nOrigin;
@@ -245,7 +247,7 @@ bool cwIntersectionCircleAABB(const cwCircle& circle, const cwAABB& aabb)
     return false;
 }
 
-bool cwIntersectionAABBAABB(const cwAABB& a1, const cwAABB& a2)
+int cwIntersectionAABBAABB(const cwAABB& a1, const cwAABB& a2)
 {
     if(a1.m_nMin.x >= a2.m_nMax.x) return false;
     if(a1.m_nMax.x <= a2.m_nMin.x) return false;

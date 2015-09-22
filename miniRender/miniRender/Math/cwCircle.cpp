@@ -72,7 +72,7 @@ float cwCircle::closestPoint(const cwPoint3D& p, cwVector3D& ret) const
     return dLen-m_fR;
 }
 
-bool cwCircle::intersection(const cwShape& other) const
+int cwCircle::intersection(const cwShape& other) const
 {
     switch (other.m_eType) {
         case eShapeRay:

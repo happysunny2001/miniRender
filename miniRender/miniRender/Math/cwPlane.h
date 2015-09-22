@@ -43,7 +43,9 @@ public:
     virtual float closestPoint(const cwPoint3D& p, cwVector3D& ret) const;
     
 	void update(const cwMatrix4X4& mat);
-    virtual bool intersection(const cwShape& other) const;
+    virtual int intersection(const cwShape& other) const;
+
+	void normalize();
     
 public:
     cwVector3D m_nNormal;

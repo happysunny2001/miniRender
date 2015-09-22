@@ -17,39 +17,39 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "LoadTxtDemo.h"
-#include "LoadTxtDemoScene.h"
+#include "FrustumDemo.h"
+#include "FrustumDemoScene.h"
 
-LoadTxtDemo::LoadTxtDemo()
+FrustumDemo::FrustumDemo()
 {
 
 }
 
-LoadTxtDemo::~LoadTxtDemo()
+FrustumDemo::~FrustumDemo()
 {
 
 }
 
-CWVOID LoadTxtDemo::gameBegin()
+CWVOID FrustumDemo::gameBegin()
 {
 	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
 	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 5.0f, -50.0f);
 
-	LoadTxtDemoScene* pScene = LoadTxtDemoScene::create();
+	FrustumDemoScene* pScene = FrustumDemoScene::create();
 	cwRepertory::getInstance().getEngine()->setScene(pScene);
 }
 
-CWVOID LoadTxtDemo::gameEnd()
+CWVOID FrustumDemo::gameEnd()
 {
 
 }
 
-CWVOID LoadTxtDemo::gameBeginBackGround()
+CWVOID FrustumDemo::gameBeginBackGround()
 {
 
 }
 
-CWVOID LoadTxtDemo::gameEndBackGround()
+CWVOID FrustumDemo::gameEndBackGround()
 {
 
 }

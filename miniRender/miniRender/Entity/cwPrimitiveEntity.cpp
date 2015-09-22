@@ -130,4 +130,56 @@ CWVOID cwPrimitiveEntity::addPrimitive(const cwAABB& aabb, const cwVector4D& col
 	m_uVertexCnt += 24;
 }
 
+CWVOID cwPrimitiveEntity::addPrimitive(cwCamera* pCamera)
+{
+	addPrimitive(pCamera, m_pMaterial->getDiffuse());
+}
+
+CWVOID cwPrimitiveEntity::addPrimitive(cwCamera* pCamera, const cwVector4D& color)
+{
+	static CWUINT uIndex[24] = { 1, 2, 2, 3, 3, 4, 4, 1, 5, 6, 6, 7, 7, 8, 8, 5, 0, 5, 0, 6, 0, 7, 0, 8 };
+
+	if (m_uVertexCnt + 24 > uMaxVertexCnt) return;
+
+	CWFLOAT fFovY = pCamera->getFovY();
+	CWFLOAT fFovX = pCamera->getAspect()*fFovY;
+
+	CWFLOAT fTanY = tanf(fFovY*0.5f);
+	CWFLOAT fTanX = tanf(fFovX*0.5f);
+
+	CWFLOAT fNearZ = pCamera->getNearZ();
+	CWFLOAT fFarZ = pCamera->getFarZ();
+
+	CWFLOAT fNearH = fNearZ*fTanY;
+	CWFLOAT fNearW = fNearZ*fTanX;
+
+	CWFLOAT fFarH = fFarZ*fTanY;
+	CWFLOAT fFarW = fFarZ*fTanX;
+
+	cwVector3D points[9];
+	points[1].set(-fNearW,  fNearH, fNearZ);
+	points[2].set( fNearW,  fNearH, fNearZ);
+	points[3].set( fNearW, -fNearH, fNearZ);
+	points[4].set(-fNearW, -fNearH, fNearZ);
+
+	points[5].set(-fFarW,  fFarH, fFarZ);
+	points[6].set( fFarW,  fFarH, fFarZ);
+	points[7].set( fFarW, -fFarH, fFarZ);
+	points[8].set(-fFarW, -fFarH, fFarZ);
+
+	points[0] = pCamera->getPos();
+
+	cwMatrix4X4 invMat = pCamera->getViewMatrix().inverse();
+	for (int i = 1; i < 9; ++i) {
+		points[i] *= invMat;
+	}
+
+	for (CWUINT i = 0; i < 24; ++i) {
+		m_pVertexData[m_uVertexCnt + i].pos = points[uIndex[i]];
+		m_pVertexData[m_uVertexCnt + i].color = color;
+	}
+
+	m_uVertexCnt += 24;
+}
+
 NS_MINIR_END

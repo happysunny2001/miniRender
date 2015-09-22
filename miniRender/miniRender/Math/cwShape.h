@@ -50,7 +50,7 @@ public:
     virtual cwVector3D closestPoint(const cwPoint3D& p) const = 0;
     virtual float closestPoint(const cwPoint3D& p, cwVector3D& ret) const = 0;
     
-    virtual bool intersection(const cwShape& other) const = 0;
+    virtual int intersection(const cwShape& other) const = 0;
     
 public:
     eShapeType m_eType;

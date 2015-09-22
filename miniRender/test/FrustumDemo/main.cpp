@@ -17,39 +17,11 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "LoadTxtDemo.h"
-#include "LoadTxtDemoScene.h"
+#include <windows.h>
+#include "FrustumDemo.h"
 
-LoadTxtDemo::LoadTxtDemo()
+int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, __in LPSTR lpCmdLine, __in int nShowCmd)
 {
-
-}
-
-LoadTxtDemo::~LoadTxtDemo()
-{
-
-}
-
-CWVOID LoadTxtDemo::gameBegin()
-{
-	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 5.0f, -50.0f);
-
-	LoadTxtDemoScene* pScene = LoadTxtDemoScene::create();
-	cwRepertory::getInstance().getEngine()->setScene(pScene);
-}
-
-CWVOID LoadTxtDemo::gameEnd()
-{
-
-}
-
-CWVOID LoadTxtDemo::gameBeginBackGround()
-{
-
-}
-
-CWVOID LoadTxtDemo::gameEndBackGround()
-{
-
+	FrustumDemo demo;
+	demo.go();
 }

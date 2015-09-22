@@ -53,10 +53,13 @@ public:
 	virtual ~cwRenderer();
 
 	virtual CWBOOL init();
+
 	virtual CWVOID setCurrCamera(cwCamera* pCamera);
 	virtual CWVOID setCurrShader(cwShader* pShader);
+
 	virtual CWVOID addStage(cwStage* pStage);
 	virtual CWVOID addStageRealTime(cwStage* pStage);
+
 	virtual cwStage* getStage(const CWSTRING& strName);
 	inline cwStage* getCurrRenderStage() const { return m_pCurrRenderStage; }
 	inline cwCamera* getCurrCamera() const { return m_pCurrCamera; }
@@ -73,6 +76,9 @@ public:
 
 	CWVOID renderPrimitive(const cwAABB& aabb);
 	CWVOID renderPrimitive(const cwAABB& aabb, const cwVector4D& color);
+
+	CWVOID renderPrimitive(cwCamera* pCamera);
+	CWVOID renderPrimitive(cwCamera* pCamera, const cwVector4D& color);
 
 protected:
 	virtual CWVOID render(cwStage* pStage);

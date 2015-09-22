@@ -81,7 +81,14 @@ void cwPlane::update(const cwMatrix4X4& mat)
 	m_fD = m_nNormal.dot(vecTrans);
 }
 
-bool cwPlane::intersection(const cwShape& other) const
+void cwPlane::normalize()
+{
+	float fDivLen = 1.0f / m_nNormal.length();
+	m_nNormal.x *= fDivLen;
+	m_fD *= fDivLen;
+}
+
+int cwPlane::intersection(const cwShape& other) const
 {
     switch (other.m_eType) {
         case eShapeRay:

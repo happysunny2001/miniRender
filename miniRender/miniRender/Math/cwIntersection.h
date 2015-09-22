@@ -29,19 +29,24 @@ class cwCircle;
 class cwPlane;
 class cwAABB;
 
-bool cwIntersectionRayRay(const cwRay& r1, const cwRay& r2);
-bool cwIntersectionRayCircle(const cwRay& ray, const cwCircle& circle);
-bool cwIntersectionRayPlane(const cwRay& ray, const cwPlane& plane);
-bool cwIntersectionRayAABB(const cwRay& ray, const cwAABB& aabb);
+int cwIntersectionRayRay(const cwRay& r1, const cwRay& r2);
+int cwIntersectionRayCircle(const cwRay& ray, const cwCircle& circle);
+int cwIntersectionRayPlane(const cwRay& ray, const cwPlane& plane);
+int cwIntersectionRayAABB(const cwRay& ray, const cwAABB& aabb);
 
-bool cwIntersectionPlanePlane(const cwPlane& p1, const cwPlane& p2);
-bool cwIntersectionPlaneCircle(const cwPlane& plane, const cwCircle& circle);
-bool cwIntersectionPlaneAABB(const cwPlane& plane, const cwAABB& aabb);
+int cwIntersectionPlanePlane(const cwPlane& p1, const cwPlane& p2);
+int cwIntersectionPlaneCircle(const cwPlane& plane, const cwCircle& circle);
 
-bool cwIntersectionCircleCircle(const cwCircle& c1, const cwCircle& c2);
-bool cwIntersectionCircleAABB(const cwCircle& circle, const cwAABB& aabb);
+//return value:
+//	<0 : Box is completely inside the back side of the plane
+//	>0 : Box is completely inside the front side of the plane
+//   0 : Box intersects the plane
+int cwIntersectionPlaneAABB(const cwPlane& plane, const cwAABB& aabb);
 
-bool cwIntersectionAABBAABB(const cwAABB& a1, const cwAABB& a2);
+int cwIntersectionCircleCircle(const cwCircle& c1, const cwCircle& c2);
+int cwIntersectionCircleAABB(const cwCircle& circle, const cwAABB& aabb);
+
+int cwIntersectionAABBAABB(const cwAABB& a1, const cwAABB& a2);
 
 NS_MINIR_END
 

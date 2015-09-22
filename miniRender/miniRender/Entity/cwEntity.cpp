@@ -121,7 +121,7 @@ CWVOID cwEntity::render(cwRenderBatch* pRenderBatch)
 		pDevice->draw(pRenderBatch->m_pEffect->getShader(), pRenderBatch->m_pEffect->getTech(), m_pRenderObj);
 	}
 
-//	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(m_nAabb);
+	//cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(m_nAabb);
 	cwRenderNode::render();
 }
 

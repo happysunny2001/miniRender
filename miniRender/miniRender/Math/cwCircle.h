@@ -37,7 +37,7 @@ public:
     virtual cwVector3D closestPoint(const cwPoint3D& p) const;
     virtual float closestPoint(const cwPoint3D& p, cwVector3D& ret) const;
     
-    virtual bool intersection(const cwShape& other) const;
+    virtual int intersection(const cwShape& other) const;
     
 public:
     cwPoint3D m_nOrigin;

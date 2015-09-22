@@ -30,6 +30,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Event/cwEventManager.h"
 #include "Scheduler/cwSchedulerManager.h"
 #include "Parser/cwParserManager.h"
+#include "Math/cwMath.h"
 
 #ifdef _CW_D3D11_
 #include "Platform/D3D/D3D11/Repertory/cwD3D11Repertory.h"
@@ -84,7 +85,7 @@ void cwRepertory::initAll()
 
 	addValue(gValueNearZ, cwValueMap(1.0f));
 	addValue(gValueFarZ, cwValueMap(1000.0f));
-	addValue(gValueFov, cwValueMap(0.25f*3.14159f));
+	addValue(gValueFov, cwValueMap(0.25f*cwMathUtil::cwPI));
 
 	m_pParserManager = cwParserManager::create();
 	CW_SAFE_RETAIN(m_pParserManager);

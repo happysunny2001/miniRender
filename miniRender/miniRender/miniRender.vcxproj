@@ -88,6 +88,7 @@
     <ClInclude Include="Material\cwMaterial.h" />
     <ClInclude Include="Math\cwAABB.h" />
     <ClInclude Include="Math\cwCircle.h" />
+    <ClInclude Include="Math\cwFrustum.h" />
     <ClInclude Include="Math\cwIntersection.h" />
     <ClInclude Include="Math\cwMath.h" />
     <ClInclude Include="Math\cwMathUtil.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="Material\cwMaterial.cpp" />
     <ClCompile Include="Math\cwAABB.cpp" />
     <ClCompile Include="Math\cwCircle.cpp" />
+    <ClCompile Include="Math\cwFrustum.cpp" />
     <ClCompile Include="Math\cwIntersection.cpp" />
     <ClCompile Include="Math\cwMathUtil.cpp" />
     <ClCompile Include="Math\cwMatrix4X4.cpp" />

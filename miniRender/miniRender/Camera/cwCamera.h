@@ -60,6 +60,11 @@ public:
 	inline const CWSTRING& getName() const { return m_strName; }
 	inline CWVOID setName(const CWSTRING& strName) { m_strName = strName; }
 
+	inline CWFLOAT getFovY() const { return m_fFovY; }
+	inline CWFLOAT getAspect() const { return m_fAspect; }
+	inline CWFLOAT getNearZ() const { return m_fNearZ; }
+	inline CWFLOAT getFarZ() const { return m_fFarZ; }
+
 protected:
 	CWVOID updateViewMatrix();
 
@@ -73,7 +78,7 @@ protected:
 	cwVector3D m_nUp;
 	cwVector3D m_nRight;
 
-	CWFLOAT m_fFov;
+	CWFLOAT m_fFovY;
 	CWFLOAT m_fAspect;
 	CWFLOAT m_fNearZ;
 	CWFLOAT m_fFarZ;

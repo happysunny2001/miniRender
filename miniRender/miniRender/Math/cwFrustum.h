@@ -17,39 +17,43 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "LoadTxtDemo.h"
-#include "LoadTxtDemoScene.h"
+#ifndef __CW_FRUSTUM_H_
+#define __CW_FRUSTUM_H_
 
-LoadTxtDemo::LoadTxtDemo()
+#include "Base/cwBasicType.h"
+#include "Base/cwMacros.h"
+#include "Camera/cwCamera.h"
+#include "cwPlane.h"
+#include "cwAABB.h"
+
+NS_MINIR_BEGIN
+
+class cwFrustum
 {
+public:
+	enum FrustumPlane{
+		LeftPlane = 0,
+		RightPlane,
+		TopPlane,
+		BottomPlane,
+		NearPlane,
+		FarPlane,
+	};
 
-}
+public:
+	cwFrustum();
+	~cwFrustum();
 
-LoadTxtDemo::~LoadTxtDemo()
-{
+	void refresh(cwCamera* pCamera);
+	inline const cwPlane& getPlane(FrustumPlane plane) const { return m_nPlanes[plane]; }
 
-}
+	int intersection(const cwAABB& aabb) const;
 
-CWVOID LoadTxtDemo::gameBegin()
-{
-	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 5.0f, -50.0f);
+protected:
+	cwPlane m_nPlanes[6];
 
-	LoadTxtDemoScene* pScene = LoadTxtDemoScene::create();
-	cwRepertory::getInstance().getEngine()->setScene(pScene);
-}
+};
 
-CWVOID LoadTxtDemo::gameEnd()
-{
+NS_MINIR_END
 
-}
-
-CWVOID LoadTxtDemo::gameBeginBackGround()
-{
-
-}
-
-CWVOID LoadTxtDemo::gameEndBackGround()
-{
-
-}
+#endif

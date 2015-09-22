@@ -17,39 +17,33 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "LoadTxtDemo.h"
-#include "LoadTxtDemoScene.h"
+#ifndef __FRUSTUM_DEMO_SCENE_H__
+#define __FRUSTUM_DEMO_SCENE_H__
 
-LoadTxtDemo::LoadTxtDemo()
+#include "cwMiniRender.h"
+NS_USING_MINIR;
+
+class FrustumDemoScene : public cwScene
 {
+public:
+	static FrustumDemoScene* create();
 
-}
+	FrustumDemoScene();
+	virtual ~FrustumDemoScene();
 
-LoadTxtDemo::~LoadTxtDemo()
-{
+	virtual CWBOOL init() override;
 
-}
+	virtual CWVOID onTouchDown(cwTouch* pTouch) override;
+	virtual CWVOID onTouchUp(cwTouch* pTouch) override;
+	virtual CWVOID onTouchMoving(cwTouch* pTouch) override;
 
-CWVOID LoadTxtDemo::gameBegin()
-{
-	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 5.0f, -50.0f);
+	virtual CWVOID update(CWFLOAT dt) override;
 
-	LoadTxtDemoScene* pScene = LoadTxtDemoScene::create();
-	cwRepertory::getInstance().getEngine()->setScene(pScene);
-}
+protected:
+	CWFLOAT m_fLastX;
+	CWFLOAT m_fLastY;
+	CWBOOL m_bTouchDown;
 
-CWVOID LoadTxtDemo::gameEnd()
-{
+};
 
-}
-
-CWVOID LoadTxtDemo::gameBeginBackGround()
-{
-
-}
-
-CWVOID LoadTxtDemo::gameEndBackGround()
-{
-
-}
+#endif
