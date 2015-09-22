@@ -18,9 +18,24 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwVector3D.h"
+#include "cwVector4D.h"
 
 NS_MINIR_BEGIN
 
 cwVector3D cwVector3D::ZERO(0.0f, 0.0f, 0.0f);
+
+cwVector3D::cwVector3D(const cwVector4D& v):
+cwVector2D(v.x, v.y),
+z(v.z)
+{
+
+}
+
+cwVector3D& cwVector3D::operator = (const cwVector4D& v) {
+	x = v.x;
+	y = v.y;
+	z = v.z;
+	return *this;
+}
 
 NS_MINIR_END

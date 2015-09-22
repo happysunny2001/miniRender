@@ -51,6 +51,7 @@ public:
 	cwCamera* getDefaultCamera();
 	cwCamera* getCamera(const CWSTRING& strName);
 	CWBOOL removeCamera(cwCamera* pCamera);
+	CWVOID addCamera(cwCamera* pCamera);
 
 	inline cwRenderer* getRenderer() const { return m_pRenderer; }
 	virtual CWVOID loadRenderer(const CWSTRING& strConfFile);

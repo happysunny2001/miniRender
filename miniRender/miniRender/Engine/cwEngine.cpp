@@ -137,6 +137,13 @@ CWBOOL cwEngine::removeCamera(cwCamera* pCamera)
 	return true;
 }
 
+CWVOID cwEngine::addCamera(cwCamera* pCamera)
+{
+	if (pCamera) {
+		m_nMapCameras.insert(pCamera->getName(), pCamera);
+	}
+}
+
 CWVOID cwEngine::render()
 {
 	if (m_pRenderer) {

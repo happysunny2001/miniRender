@@ -156,16 +156,16 @@ CWVOID cwPrimitiveEntity::addPrimitive(cwCamera* pCamera, const cwVector4D& colo
 	CWFLOAT fFarH = fFarZ*fTanY;
 	CWFLOAT fFarW = fFarZ*fTanX;
 
-	cwVector3D points[9];
-	points[1].set(-fNearW,  fNearH, fNearZ);
-	points[2].set( fNearW,  fNearH, fNearZ);
-	points[3].set( fNearW, -fNearH, fNearZ);
-	points[4].set(-fNearW, -fNearH, fNearZ);
+	cwVector4D points[9];
+	points[1].set(-fNearW,  fNearH, fNearZ, 1.0f);
+	points[2].set(fNearW, fNearH, fNearZ, 1.0f);
+	points[3].set(fNearW, -fNearH, fNearZ, 1.0f);
+	points[4].set(-fNearW, -fNearH, fNearZ, 1.0f);
 
-	points[5].set(-fFarW,  fFarH, fFarZ);
-	points[6].set( fFarW,  fFarH, fFarZ);
-	points[7].set( fFarW, -fFarH, fFarZ);
-	points[8].set(-fFarW, -fFarH, fFarZ);
+	points[5].set(-fFarW, fFarH, fFarZ, 1.0f);
+	points[6].set(fFarW, fFarH, fFarZ, 1.0f);
+	points[7].set(fFarW, -fFarH, fFarZ, 1.0f);
+	points[8].set(-fFarW, -fFarH, fFarZ, 1.0f);
 
 	points[0] = pCamera->getPos();
 

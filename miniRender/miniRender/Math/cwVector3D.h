@@ -25,12 +25,15 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
+class cwVector4D;
+
 class CW_DLL cwVector3D : public cwVector2D
 {
 public:
     cwVector3D() {}
     cwVector3D(float xx, float yy, float zz) : cwVector2D(xx, yy), z(zz) {}
     cwVector3D(const cwVector3D& v) : cwVector2D(v.x, v.y), z(v.z) {}
+	cwVector3D(const cwVector4D& v);
     
     void zero() {
         x = y = z = 0;
@@ -42,7 +45,8 @@ public:
         z = v.z;
         return *this;
     }
-    
+
+	cwVector3D& operator = (const cwVector4D& v);
     cwVector3D operator - () const {
         return cwVector3D(-x, -y, -z);
     }

@@ -40,9 +40,17 @@ public:
 	virtual CWVOID update(CWFLOAT dt) override;
 
 protected:
+	CWVOID buildEntity();
+	CWVOID buildLight();
+	CWVOID buildCamera();
+
+protected:
 	CWFLOAT m_fLastX;
 	CWFLOAT m_fLastY;
 	CWBOOL m_bTouchDown;
+
+	cwEntity* m_pCar[5*5*5];
+	cwCamera* m_pCamera;
 
 };
 
