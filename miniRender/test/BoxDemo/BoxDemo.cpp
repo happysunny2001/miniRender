@@ -19,29 +19,23 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "BoxDemo.h"
 
-BoxDemo::BoxDemo():
-m_pEntityAxis(nullptr),
-m_pEntityBox01(nullptr),
-m_pEntityBox02(nullptr),
-m_pScene(nullptr)
+BoxDemo::BoxDemo()
 {
 	
 }
 
 BoxDemo::~BoxDemo()
 {
-	CW_SAFE_RELEASE_NULL(m_pEntityAxis);
-	CW_SAFE_RELEASE_NULL(m_pEntityBox01);
-	CW_SAFE_RELEASE_NULL(m_pEntityBox02);
-	CW_SAFE_RELEASE_NULL(m_pScene);
 }
 
 void BoxDemo::gameBegin()
 {
 	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderScreenQuad.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 2.0f, -20.0f);
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 10.0f, -20.0f);
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->pitch(cwMathUtil::cwPI*0.1f);
 
-	buildScene();
+	BoxDemoScene* pScene = BoxDemoScene::create();
+	cwRepertory::getInstance().getEngine()->setScene(pScene);
 }
 
 void BoxDemo::gameEnd()
@@ -59,62 +53,3 @@ void BoxDemo::gameEndBackGround()
 
 }
 
-void BoxDemo::buildEntity()
-{
-	cwRepertory& repertory = cwRepertory::getInstance();
-
-	cwGeometryGenerator::cwMeshData mesh;
-	repertory.getGeoGenerator()->generateBox(mesh);
-
-	vector<cwVertexPosColor> vecVertex(mesh.nVertex.size());
-	for (int i = 0; i < mesh.nVertex.size(); ++i) {
-		vecVertex[i].pos = mesh.nVertex[i].pos;
-		vecVertex[i].color = cwVector4D(1.0f, 1.0f, 1.0f, 1.0f);
-	}
-
-	cwRenderObject *pRenderObj = cwStaticRenderObject::create(
-		ePrimitiveTypeTriangleList,
-		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
-		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosColor");
-
-	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderColor);
-	cwMaterial* pMaterial = cwMaterial::create();
-	cwEffect* pEffect = cwEffect::create();
-	pEffect->setShader(pShader);
-
-	m_pEntityBox01 = cwEntity::create();
-	m_pEntityBox01->setMaterial(pMaterial);
-	m_pEntityBox01->setRenderObject(pRenderObj);
-	m_pEntityBox01->setPosition(cwVector3D(2.0f, 1.0f, 0.0f));
-	m_pEntityBox01->setEffect(pEffect);
-	CW_SAFE_RETAIN(m_pEntityBox01);
-
-	m_pEntityBox02 = cwEntity::create();
-	m_pEntityBox02->setMaterial(pMaterial);
-	m_pEntityBox02->setRenderObject(pRenderObj);
-	m_pEntityBox02->setPosition(cwVector3D(-2.0f, 1.0f, -3.0f));
-	m_pEntityBox02->setEffect(pEffect);
-	CW_SAFE_RETAIN(m_pEntityBox02);
-}
-
-void BoxDemo::buildAxis()
-{
-	m_pEntityAxis = cwRepertory::getInstance().getGeoGenerator()->generateCoordinateAxisEntity(10.0f);
-	CW_SAFE_RETAIN(m_pEntityAxis);
-}
-
-void BoxDemo::buildScene()
-{
-	buildEntity();
-	buildAxis();
-
-	m_pScene = BoxDemoScene::create();
-	CW_SAFE_RETAIN(m_pScene);
-
-	m_pScene->addChild(m_pEntityBox01);
-	m_pEntityBox01->addChild(m_pEntityBox02);
-	m_pScene->addChild(m_pEntityBox02);
-	m_pScene->addChild(m_pEntityAxis);
-
-	cwRepertory::getInstance().getEngine()->setScene(m_pScene);
-}

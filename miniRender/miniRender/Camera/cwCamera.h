@@ -65,6 +65,8 @@ public:
 	inline CWFLOAT getNearZ() const { return m_fNearZ; }
 	inline CWFLOAT getFarZ() const { return m_fFarZ; }
 
+	inline const cwFrustum& getFrustum() const { return m_nFrustum; }
+
 protected:
 	CWVOID updateViewMatrix();
 
@@ -82,6 +84,8 @@ protected:
 	CWFLOAT m_fAspect;
 	CWFLOAT m_fNearZ;
 	CWFLOAT m_fFarZ;
+
+	cwFrustum m_nFrustum;
 
 	CWSTRING m_strName;
 

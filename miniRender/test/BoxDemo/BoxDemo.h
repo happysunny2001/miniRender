@@ -38,16 +38,6 @@ public:
 	virtual void gameEndBackGround() override;
 
 protected:
-	void buildEntity();
-	void buildAxis();
-	void buildScene();
-
-protected:
-	cwEntity* m_pEntityBox01;
-	cwEntity* m_pEntityBox02;
-	cwEntity* m_pEntityAxis;
-	
-	BoxDemoScene* m_pScene;
 
 };
 

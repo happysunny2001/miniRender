@@ -77,10 +77,21 @@ public:
 	virtual CWVOID setEffect(cwEffect* pEffect);
 	inline cwEffect* getEffect() const { return m_pEffect; }
 
+	inline CWBOOL getTransDirty() const { return m_bTransDirty; }
+	inline cwRenderNode* getParent() const { return m_pParent; }
+
 	cwVector<cwRenderNode*>& getChildren() { return m_nVecChildren; }
+
+	virtual CWVOID refreshBoundingBox();
+	inline const cwAABB& getBoundingBox() const { return m_nBoundingBox; }
+
+	virtual CWVOID refreshGroupBoundingBox();
+	inline const cwAABB& getGroupBoundingBox() const { return m_nGroupBoundingBox; }
 
 	virtual CWVOID transform();
 	const cwMatrix4X4& getTransformMatrix() const { return m_nTrans; }
+	CWVOID setTransformMatrix(const cwMatrix4X4& mat);
+	const cwMatrix4X4& getLocalTransMatrix() const { return m_nLocalTrans; }
 
 	virtual CWVOID addEventListener(cwEventListener* pListener);
 	virtual CWVOID addEventListener(cwEventListener* pListener, CWINT iPriority, CWBOOL swallow);
@@ -93,6 +104,7 @@ public:
 protected:
 	CWVOID clearChildren();
 	CWVOID clearEventListener();
+	CWVOID updateChildrenTransform();
 	
 protected:
 	eSceneObjectType m_eType;
@@ -102,6 +114,7 @@ protected:
 	//angle of rotation around the x, y, z axis, in radians
 	cwVector3D m_nRot;
 	cwVector3D m_nScale;
+	cwMatrix4X4 m_nLocalTrans;
 	cwMatrix4X4 m_nTrans; 
 	CWBOOL m_bTransDirty;
 
@@ -111,6 +124,9 @@ protected:
 	cwRenderNode* m_pParent;
 
 	cwVector<cwEventListener*> m_nVecEventListener;
+
+	cwAABB m_nBoundingBox;
+	cwAABB m_nGroupBoundingBox;
 
 };
 

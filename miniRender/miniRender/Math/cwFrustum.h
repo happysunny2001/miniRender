@@ -22,11 +22,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwBasicType.h"
 #include "Base/cwMacros.h"
-#include "Camera/cwCamera.h"
 #include "cwPlane.h"
 #include "cwAABB.h"
 
 NS_MINIR_BEGIN
+
+class cwCamera;
 
 class cwFrustum
 {
@@ -47,6 +48,9 @@ public:
 	void refresh(cwCamera* pCamera);
 	inline const cwPlane& getPlane(FrustumPlane plane) const { return m_nPlanes[plane]; }
 
+	//intersection with aabb
+	//return value: lower 8 bit means whether outside the plane, 0 is outside the plane
+	//			    9-16 bit means inside or intersect the plane, 0 is intersect the plane, 1 is inside the plane
 	int intersection(const cwAABB& aabb) const;
 
 protected:

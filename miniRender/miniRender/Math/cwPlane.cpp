@@ -84,7 +84,7 @@ void cwPlane::update(const cwMatrix4X4& mat)
 void cwPlane::normalize()
 {
 	float fDivLen = 1.0f / m_nNormal.length();
-	m_nNormal.x *= fDivLen;
+	m_nNormal *= fDivLen;
 	m_fD *= fDivLen;
 }
 

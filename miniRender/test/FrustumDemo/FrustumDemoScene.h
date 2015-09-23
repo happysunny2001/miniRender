@@ -50,6 +50,7 @@ protected:
 	CWBOOL m_bTouchDown;
 
 	cwEntity* m_pCar[5*5*5];
+	cwEntity* m_pSingleCar;
 	cwCamera* m_pCamera;
 
 };

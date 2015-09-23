@@ -40,9 +40,18 @@ public:
 	virtual CWVOID onTouchMoving(cwTouch* pTouch) override;
 
 protected:
+	void buildEntity();
+	void buildAxis();
+	void buildScene();
+
+protected:
 	CWFLOAT m_fLastX;
 	CWFLOAT m_fLastY;
 	CWBOOL m_bTouchDown;
+
+	cwEntity* m_pEntityBox01;
+	cwEntity* m_pEntityBox02;
+	cwEntity* m_pEntityAxis;
 
 };
 

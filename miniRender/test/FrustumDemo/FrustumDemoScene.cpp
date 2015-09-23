@@ -32,7 +32,8 @@ FrustumDemoScene* FrustumDemoScene::create()
 }
 
 FrustumDemoScene::FrustumDemoScene() :
-m_pCamera(nullptr)
+m_pCamera(nullptr),
+m_pSingleCar(nullptr)
 {
 	memset(m_pCar, 0, sizeof(cwEntity*)* 5 * 5 * 5);
 }
@@ -43,6 +44,7 @@ FrustumDemoScene::~FrustumDemoScene()
 		CW_SAFE_RELEASE_NULL(m_pCar[i]);
 	}
 	CW_SAFE_RELEASE_NULL(m_pCamera);
+	CW_SAFE_RELEASE_NULL(m_pSingleCar);
 }
 CWBOOL FrustumDemoScene::init()
 {
@@ -112,8 +114,23 @@ CWVOID FrustumDemoScene::update(CWFLOAT dt)
 		cwRepertory::getInstance().getEngine()->getDefaultCamera()->walk(-10 * dt);
 	}
 
-	for (int i = 0; i < 5 * 5 * 5; ++i)
-		cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(m_pCar[i]->getBoundingBox());
+	for (int i = 0; i < 5 * 5 * 5; ++i) {
+		int iSect = m_pCamera->getFrustum().intersection(m_pCar[i]->getBoundingBox());
+		if ((iSect & 0x003F) == 0x003F) {
+			cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(m_pCar[i]->getBoundingBox(), cwVector4D(0, 0, 1.0f, 1.0f));
+		}
+		else {
+			cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(m_pCar[i]->getBoundingBox());
+		}
+	}
+
+	//int iSect = m_pCamera->getFrustum().intersection(m_pSingleCar->getBoundingBox());
+	//if ((iSect & 0x003F) == 0x003F) {
+	//	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(m_pSingleCar->getBoundingBox(), cwVector4D(0, 0, 1.0f, 1.0f));
+	//}
+	//else {
+	//	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(m_pSingleCar->getBoundingBox());
+	//}
 
 	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(m_pCamera);
 }
@@ -163,6 +180,14 @@ CWVOID FrustumDemoScene::buildEntity()
 			}
 		}
 	}
+
+	//m_pSingleCar = cwEntity::create();
+	//m_pSingleCar->setMaterial(pMaterial);
+	//m_pSingleCar->setRenderObject(pRenderObj);
+	//m_pSingleCar->setPosition(cwVector3D::ZERO);
+	//m_pSingleCar->setEffect(pEffect);
+	//CW_SAFE_RETAIN(m_pSingleCar);
+	//this->addChild(m_pSingleCar);
 }
 
 CWVOID FrustumDemoScene::buildLight()
@@ -200,5 +225,5 @@ CWVOID FrustumDemoScene::buildCamera()
 	m_pCamera->yaw(-0.5f*cwMathUtil::cwPI);
 	m_pCamera->walk(-20);
 
-	m_pCamera->updateProjMatrix(0.25*cwMathUtil::cwPI, 800.0f / 600.0f, 10.0f, 50.0f);
+	m_pCamera->updateProjMatrix(0.25f*cwMathUtil::cwPI, 800.0f / 600.0f, 10.0f, 50.0f);
 }

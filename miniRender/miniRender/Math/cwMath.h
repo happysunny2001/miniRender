@@ -33,5 +33,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwQuaternion.h"
 #include "cwRay.h"
 #include "cwShape.h"
+#include "cwFrustum.h"
 
 #endif

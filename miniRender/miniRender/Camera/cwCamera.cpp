@@ -127,9 +127,10 @@ CWVOID cwCamera::roll(CWFLOAT fRadian)
 
 CWVOID cwCamera::updateViewMatrix()
 {
-	//m_nViewMatrix.lookAt(m_nPos, m_nUp, m_nTarget);
 	m_nViewMatrix.lookAt(m_nPos, m_nRight, m_nUp, m_nLook);
 	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;
+
+	m_nFrustum.refresh(this);
 }
 
 CWVOID cwCamera::updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ)
@@ -147,6 +148,8 @@ CWVOID cwCamera::updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ,
 
 	m_nProjMatrix.perspectiveFov(m_fFovY, m_fAspect, m_fNearZ, m_fFarZ);
 	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;
+
+	m_nFrustum.refresh(this);
 }
 
 NS_MINIR_END

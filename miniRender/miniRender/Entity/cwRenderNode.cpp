@@ -78,6 +78,7 @@ CWVOID cwRenderNode::setParent(cwRenderNode* pNode)
 CWVOID cwRenderNode::addChild(cwRenderNode* pNode)
 {
 	if (!pNode) return;
+	if (pNode->getParent()) return;
 	if (m_nVecChildren.contains(pNode)) return;
 	m_nVecChildren.pushBack(pNode);
 	pNode->setParent(this);
@@ -234,13 +235,58 @@ CWVOID cwRenderNode::transform()
 		matTranslate.setTranslation(m_nPos);
 		matScale.setScale(m_nScale);
 		matRot.setRotation(m_nRot);
-		m_nTrans = matScale * matRot * matTranslate;
+		m_nLocalTrans = matScale * matRot * matTranslate;
+
+		if (m_pParent) {
+			m_nTrans = m_nLocalTrans * m_pParent->getTransformMatrix();
+		}
+		else {
+			m_nTrans = m_nLocalTrans;
+		}
+
+		updateChildrenTransform();
+		refreshBoundingBox();
+		refreshGroupBoundingBox();
 
 		m_bTransDirty = CWFALSE;
 	}
+}
 
-	if (m_pParent) {
-		m_nTrans = m_nTrans * m_pParent->getTransformMatrix();
+CWVOID cwRenderNode::updateChildrenTransform()
+{
+	for (auto pChild : m_nVecChildren) {
+		if (!pChild || pChild->getTransDirty()) continue;
+		pChild->setTransformMatrix(pChild->getLocalTransMatrix()*m_nTrans);
+		pChild->updateChildrenTransform();
+	}
+}
+
+CWVOID cwRenderNode::setTransformMatrix(const cwMatrix4X4& mat)
+{
+	m_nTrans = mat;
+	refreshBoundingBox();
+	refreshGroupBoundingBox();
+}
+
+CWVOID cwRenderNode::refreshBoundingBox()
+{
+	m_nBoundingBox.m_nMin = m_nBoundingBox.m_nMax = m_nPos;
+}
+
+CWVOID cwRenderNode::refreshGroupBoundingBox()
+{
+	m_nGroupBoundingBox = m_nBoundingBox;
+
+	if (!m_nVecChildren.empty()) {
+		for (auto pChild : m_nVecChildren) {
+			m_nGroupBoundingBox.add(pChild->getGroupBoundingBox());
+		}
+	}
+
+	cwRenderNode* pParent = this->getParent();
+	while (pParent) {
+		pParent->refreshGroupBoundingBox();
+		pParent = pParent->getParent();
 	}
 }
 

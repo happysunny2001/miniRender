@@ -70,12 +70,9 @@ CWBOOL cwEntity::init()
 	return CWTRUE;
 }
 
-CWVOID cwEntity::transform()
+CWVOID cwEntity::refreshBoundingBox()
 {
-	if (m_bTransDirty) {
-		cwRenderNode::transform();
-		m_nAabb.update(m_pRenderObj->getBoundingBox(), m_nTrans);
-	}
+	m_nBoundingBox.update(m_pRenderObj->getBoundingBox(), m_nTrans);
 }
 
 CWVOID cwEntity::setRenderObject(cwRenderObject* pRenderObj)
@@ -121,7 +118,6 @@ CWVOID cwEntity::render(cwRenderBatch* pRenderBatch)
 		pDevice->draw(pRenderBatch->m_pEffect->getShader(), pRenderBatch->m_pEffect->getTech(), m_pRenderObj);
 	}
 
-	//cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(m_nAabb);
 	cwRenderNode::render();
 }
 

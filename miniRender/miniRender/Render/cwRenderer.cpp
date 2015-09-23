@@ -174,16 +174,21 @@ CWVOID cwRenderer::begin()
 
 CWVOID cwRenderer::render()
 {
+	CWBOOL bPrimitive = CWFALSE;
+
 	if (m_pRenderListHead) {
 		sRendererListNode* pElement = nullptr;
 
 		DL_FOREACH(m_pRenderListHead, pElement) {
 			m_pCurrRenderStage = pElement->m_pStage;
 			this->render(m_pCurrRenderStage);
+
+			if (!bPrimitive) {
+				renderPrimitiveEntity();
+				bPrimitive = CWTRUE;
+			}
 		}
 	}
-
-	renderPrimitiveEntity();
 }
 
 CWVOID cwRenderer::end()

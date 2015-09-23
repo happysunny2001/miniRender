@@ -19,6 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwFrustum.h"
 #include "cwMatrix4X4.h"
+#include "Camera/cwCamera.h"
 
 NS_MINIR_BEGIN
 
@@ -40,32 +41,32 @@ void cwFrustum::refresh(cwCamera* pCamera)
 		m_nPlanes[LeftPlane].m_nNormal.x = matViewProj.m14 + matViewProj.m11;
 		m_nPlanes[LeftPlane].m_nNormal.y = matViewProj.m24 + matViewProj.m21;
 		m_nPlanes[LeftPlane].m_nNormal.z = matViewProj.m34 + matViewProj.m31;
-		m_nPlanes[LeftPlane].m_fD = matViewProj.m44 + matViewProj.m41;
+		m_nPlanes[LeftPlane].m_fD = -(matViewProj.m44 + matViewProj.m41);
 
 		m_nPlanes[RightPlane].m_nNormal.x = matViewProj.m14 - matViewProj.m11;
 		m_nPlanes[RightPlane].m_nNormal.y = matViewProj.m24 - matViewProj.m21;
 		m_nPlanes[RightPlane].m_nNormal.z = matViewProj.m34 - matViewProj.m31;
-		m_nPlanes[RightPlane].m_fD = matViewProj.m44 - matViewProj.m41;
+		m_nPlanes[RightPlane].m_fD = -(matViewProj.m44 - matViewProj.m41);
 
 		m_nPlanes[BottomPlane].m_nNormal.x = matViewProj.m14 + matViewProj.m12;
 		m_nPlanes[BottomPlane].m_nNormal.y = matViewProj.m24 + matViewProj.m22;
 		m_nPlanes[BottomPlane].m_nNormal.z = matViewProj.m34 + matViewProj.m32;
-		m_nPlanes[BottomPlane].m_fD = matViewProj.m44 + matViewProj.m42;
+		m_nPlanes[BottomPlane].m_fD = -(matViewProj.m44 + matViewProj.m42);
 
 		m_nPlanes[TopPlane].m_nNormal.x = matViewProj.m14 - matViewProj.m12;
 		m_nPlanes[TopPlane].m_nNormal.y = matViewProj.m24 - matViewProj.m22;
 		m_nPlanes[TopPlane].m_nNormal.z = matViewProj.m34 - matViewProj.m32;
-		m_nPlanes[TopPlane].m_fD = matViewProj.m44 - matViewProj.m42;
+		m_nPlanes[TopPlane].m_fD = -(matViewProj.m44 - matViewProj.m42);
 
 		m_nPlanes[NearPlane].m_nNormal.x = matViewProj.m13;
 		m_nPlanes[NearPlane].m_nNormal.y = matViewProj.m23;
 		m_nPlanes[NearPlane].m_nNormal.z = matViewProj.m33;
-		m_nPlanes[NearPlane].m_fD = matViewProj.m43;
+		m_nPlanes[NearPlane].m_fD = -matViewProj.m43;
 
 		m_nPlanes[FarPlane].m_nNormal.x = matViewProj.m14 - matViewProj.m13;
 		m_nPlanes[FarPlane].m_nNormal.y = matViewProj.m24 - matViewProj.m23;
 		m_nPlanes[FarPlane].m_nNormal.z = matViewProj.m34 - matViewProj.m33;
-		m_nPlanes[FarPlane].m_fD = matViewProj.m44 - matViewProj.m43;
+		m_nPlanes[FarPlane].m_fD = -(matViewProj.m44 - matViewProj.m43);
 
 		m_nPlanes[LeftPlane].normalize();
 		m_nPlanes[RightPlane].normalize();
@@ -79,7 +80,7 @@ void cwFrustum::refresh(cwCamera* pCamera)
 int cwFrustum::intersection(const cwAABB& aabb) const
 {
 	int ret = 0;
-	for (int i = LeftPlane; i < FarPlane; ++i) {
+	for (int i = LeftPlane; i <= FarPlane; ++i) {
 		int iRet = aabb.intersection(m_nPlanes[i]);
 		if (iRet < 0) return ret;
 		ret |= 1 << i;
