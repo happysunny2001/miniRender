@@ -104,23 +104,29 @@ void BoxDemoScene::onTouchMoving(cwTouch* pTouch)
 
 void BoxDemoScene::update(CWFLOAT dt)
 {
+	cwRepertory& repertory = cwRepertory::getInstance();
+
 	if (isKeyDown(KeyCode::A)) {
-		cwRepertory::getInstance().getEngine()->getDefaultCamera()->strafe(-10 * dt);
+		repertory.getEngine()->getDefaultCamera()->strafe(-10 * dt);
 	}
 	else if (isKeyDown(KeyCode::D)) {
-		cwRepertory::getInstance().getEngine()->getDefaultCamera()->strafe(10 * dt);
+		repertory.getEngine()->getDefaultCamera()->strafe(10 * dt);
 	}
 
 	if (isKeyDown(KeyCode::W)) {
-		cwRepertory::getInstance().getEngine()->getDefaultCamera()->walk(10 * dt);
+		repertory.getEngine()->getDefaultCamera()->walk(10 * dt);
 	}
 	else if (isKeyDown(KeyCode::S)) {
-		cwRepertory::getInstance().getEngine()->getDefaultCamera()->walk(-10 * dt);
+		repertory.getEngine()->getDefaultCamera()->walk(-10 * dt);
 	}
 
-	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(m_pEntityBox01->getBoundingBox(), cwColor::blue);
-	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(m_pEntityBox02->getBoundingBox(), cwColor::blue);
-	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(m_pEntityBox01->getGroupBoundingBox(), cwColor::blue);
+	if (m_pEntityBox01) {
+		m_pEntityBox01->rotate(0, dt*cwMathUtil::cwPI*0.1f, 0);
+	}
+
+	repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox01->getBoundingBox(), cwColor::sliver);
+	repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox02->getBoundingBox(), cwColor::sliver);
+	repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox01->getGroupBoundingBox(), cwColor::sliver);
 }
 
 void BoxDemoScene::buildEntity()

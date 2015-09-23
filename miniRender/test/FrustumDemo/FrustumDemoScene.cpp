@@ -114,6 +114,8 @@ CWVOID FrustumDemoScene::update(CWFLOAT dt)
 		cwRepertory::getInstance().getEngine()->getDefaultCamera()->walk(-10 * dt);
 	}
 
+	m_pCamera->yaw(dt*cwMathUtil::cwPI*0.1f);
+
 	for (int i = 0; i < 5 * 5 * 5; ++i) {
 		int iSect = m_pCamera->getFrustum().intersection(m_pCar[i]->getBoundingBox());
 		if ((iSect & 0x003F) == 0x003F) {
