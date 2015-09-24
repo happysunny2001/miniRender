@@ -89,7 +89,6 @@
     <ClInclude Include="Math\cwAABB.h" />
     <ClInclude Include="Math\cwCircle.h" />
     <ClInclude Include="Math\cwFrustum.h" />
-    <ClInclude Include="Math\cwIntersection.h" />
     <ClInclude Include="Math\cwMath.h" />
     <ClInclude Include="Math\cwMathUtil.h" />
     <ClInclude Include="Math\cwMatrix4X4.h" />
@@ -97,7 +96,6 @@
     <ClInclude Include="Math\cwPoint4D.h" />
     <ClInclude Include="Math\cwQuaternion.h" />
     <ClInclude Include="Math\cwRay.h" />
-    <ClInclude Include="Math\cwShape.h" />
     <ClInclude Include="Math\cwVector2D.h" />
     <ClInclude Include="Math\cwVector3D.h" />
     <ClInclude Include="Math\cwVector4D.h" />
@@ -218,14 +216,12 @@
     <ClCompile Include="Math\cwAABB.cpp" />
     <ClCompile Include="Math\cwCircle.cpp" />
     <ClCompile Include="Math\cwFrustum.cpp" />
-    <ClCompile Include="Math\cwIntersection.cpp" />
     <ClCompile Include="Math\cwMathUtil.cpp" />
     <ClCompile Include="Math\cwMatrix4X4.cpp" />
     <ClCompile Include="Math\cwPlane.cpp" />
     <ClCompile Include="Math\cwPoint4D.cpp" />
     <ClCompile Include="Math\cwQuaternion.cpp" />
     <ClCompile Include="Math\cwRay.cpp" />
-    <ClCompile Include="Math\cwShape.cpp" />
     <ClCompile Include="Math\cwVector2D.cpp" />
     <ClCompile Include="Math\cwVector3D.cpp" />
     <ClCompile Include="Math\cwVector4D.cpp" />

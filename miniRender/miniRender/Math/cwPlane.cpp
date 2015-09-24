@@ -21,21 +21,22 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwRay.h"
 #include "cwCircle.h"
 #include "cwAABB.h"
-#include "cwIntersection.h"
+//#include "cwIntersection.h"
+#include "cwMathUtil.h"
 
 NS_MINIR_BEGIN
 
 cwPlane::cwPlane():
 m_fD(0)
 {
-    m_eType = eShapePlane;
+
 }
 
 cwPlane::cwPlane(const cwVector3D& n, float d):
 m_nNormal(n),
 m_fD(d)
 {
-    m_eType = eShapePlane;
+
 }
 
 cwPlane::cwPlane(const cwPoint3D& p1, const cwPoint3D& p2, const cwPoint3D& p3)
@@ -53,7 +54,7 @@ cwPlane::cwPlane(const cwPlane& p):
 m_nNormal(p.m_nNormal),
 m_fD(p.m_fD)
 {
-    m_eType = eShapePlane;
+
 }
 
 cwPlane::~cwPlane()
@@ -88,21 +89,47 @@ void cwPlane::normalize()
 	m_fD *= fDivLen;
 }
 
-int cwPlane::intersection(const cwShape& other) const
+//int cwPlane::intersection(const cwShape& other) const
+//{
+//    switch (other.m_eType) {
+//        case eShapeRay:
+//            return cwIntersectionRayPlane(static_cast<const cwRay&>(other), *this);
+//        case eShapePlane:
+//            return cwIntersectionPlanePlane(*this, static_cast<const cwPlane&>(other));
+//        case eShapeCircle:
+//            return cwIntersectionPlaneCircle(*this, static_cast<const cwCircle&>(other));
+//        case eShapeAABB:
+//            return cwIntersectionPlaneAABB(*this, static_cast<const cwAABB&>(other));
+//        default:
+//            return false;
+//    }
+//    return false;
+//}
+
+int cwPlane::intersection(const cwRay& ray) const
 {
-    switch (other.m_eType) {
-        case eShapeRay:
-            return cwIntersectionRayPlane(static_cast<const cwRay&>(other), *this);
-        case eShapePlane:
-            return cwIntersectionPlanePlane(*this, static_cast<const cwPlane&>(other));
-        case eShapeCircle:
-            return cwIntersectionPlaneCircle(*this, static_cast<const cwCircle&>(other));
-        case eShapeAABB:
-            return cwIntersectionPlaneAABB(*this, static_cast<const cwAABB&>(other));
-        default:
-            return false;
-    }
-    return false;
+	float f = ray.m_nDir.dot(this->m_nNormal);
+	if (f < cwMathUtil::cwFloatEpsilon) return 0;
+
+	float t = (this->m_fD - ray.m_nOrigin.dot(this->m_nNormal)) / f;
+	if (t < 0 || t > ray.m_fT) return 0;
+	return 1;
+}
+
+int cwPlane::intersection(const cwPlane& plane) const
+{
+	if (fabsf(fabsf(this->m_nNormal.dot(plane.m_nNormal)) - 1.0f) < cwMathUtil::cwFloatEpsilon) return 0;
+	return 1;
+}
+
+int cwPlane::intersection(const cwCircle& circle) const
+{
+	return circle.intersection(*this);
+}
+
+int cwPlane::intersection(const cwAABB& aabb) const
+{
+	return aabb.intersection(*this);
 }
 
 NS_MINIR_END

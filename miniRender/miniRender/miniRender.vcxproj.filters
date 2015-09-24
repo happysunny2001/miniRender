@@ -159,9 +159,6 @@
     <ClInclude Include="Math\cwCircle.h">
       <Filter>源文件\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Math\cwIntersection.h">
-      <Filter>源文件\Math</Filter>
-    </ClInclude>
     <ClInclude Include="Math\cwMath.h">
       <Filter>源文件\Math</Filter>
     </ClInclude>
@@ -181,9 +178,6 @@
       <Filter>源文件\Math</Filter>
     </ClInclude>
     <ClInclude Include="Math\cwRay.h">
-      <Filter>源文件\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\cwShape.h">
       <Filter>源文件\Math</Filter>
     </ClInclude>
     <ClInclude Include="Math\cwVector2D.h">
@@ -599,9 +593,6 @@
     <ClCompile Include="Math\cwCircle.cpp">
       <Filter>源文件\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Math\cwIntersection.cpp">
-      <Filter>源文件\Math</Filter>
-    </ClCompile>
     <ClCompile Include="Math\cwMathUtil.cpp">
       <Filter>源文件\Math</Filter>
     </ClCompile>
@@ -618,9 +609,6 @@
       <Filter>源文件\Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\cwRay.cpp">
-      <Filter>源文件\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Math\cwShape.cpp">
       <Filter>源文件\Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\cwVector2D.cpp">

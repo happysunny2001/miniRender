@@ -25,14 +25,15 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwVector3D.h"
 #include "cwVector4D.h"
 #include "cwPoint4D.h"
+#include "cwQuaternion.h"
 #include "cwMatrix4X4.h"
+
 #include "cwAABB.h"
 #include "cwCircle.h"
-#include "cwIntersection.h"
+//#include "cwIntersection.h"
 #include "cwPlane.h"
-#include "cwQuaternion.h"
 #include "cwRay.h"
-#include "cwShape.h"
+//#include "cwShape.h"
 #include "cwFrustum.h"
 
 #endif

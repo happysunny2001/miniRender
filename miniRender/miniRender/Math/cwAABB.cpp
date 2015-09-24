@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwAABB.h"
 #include <float.h>
-#include "cwIntersection.h"
+//#include "cwIntersection.h"
 #include "cwRay.h"
 #include "cwPlane.h"
 #include "cwCircle.h"
@@ -30,18 +30,17 @@ cwAABB::cwAABB():
 m_nMin(cwPoint3D::ZERO),
 m_nMax(cwPoint3D::ZERO)
 {
-    m_eType = eShapeAABB;
+
 }
 
 cwAABB::cwAABB(const cwPoint3D& ptMin, const cwPoint3D& ptMax):
 m_nMin(ptMin),
 m_nMax(ptMax)
 {
-    m_eType = eShapeAABB;
+
 }
 cwAABB::cwAABB(cwPoint3D* p, int n)
 {
-    m_eType = eShapeAABB;
     update(p, n);
 }
 
@@ -49,7 +48,7 @@ cwAABB::cwAABB(const cwAABB& box):
 m_nMin(box.m_nMin),
 m_nMax(box.m_nMax)
 {
-    m_eType = eShapeAABB;
+
 }
 
 cwAABB::~cwAABB()
@@ -271,22 +270,184 @@ float cwAABB::closestPoint(const cwPoint3D& p, cwVector3D& ret) const
     return 0;
 }
 
-int cwAABB::intersection(const cwShape& other) const
+//int cwAABB::intersection(const cwShape& other) const
+//{
+//    switch (other.m_eType) {
+//        case eShapeRay:
+//            return cwIntersectionRayAABB(static_cast<const cwRay&>(other), *this);
+//        case eShapePlane:
+//            return cwIntersectionPlaneAABB(static_cast<const cwPlane&>(other), *this);
+//        case eShapeCircle:
+//            return cwIntersectionCircleAABB(static_cast<const cwCircle&>(other), *this);
+//        case eShapeAABB:
+//            return cwIntersectionAABBAABB(static_cast<const cwAABB&>(other), *this);
+//        default:
+//            return false;
+//    }
+//    
+//    return false;
+//}
+
+int cwAABB::intersection(const cwRay& ray) const
 {
-    switch (other.m_eType) {
-        case eShapeRay:
-            return cwIntersectionRayAABB(static_cast<const cwRay&>(other), *this);
-        case eShapePlane:
-            return cwIntersectionPlaneAABB(static_cast<const cwPlane&>(other), *this);
-        case eShapeCircle:
-            return cwIntersectionCircleAABB(static_cast<const cwCircle&>(other), *this);
-        case eShapeAABB:
-            return cwIntersectionAABBAABB(static_cast<const cwAABB&>(other), *this);
-        default:
-            return false;
-    }
-    
-    return false;
+	cwVector3D rayDelta = ray.m_nDir*(ray.m_fT*0.5f);
+	int inside = 1;
+
+	float xt, xn;
+	if (ray.m_nOrigin.x < this->m_nMin.x) {
+		xt = this->m_nMin.x - ray.m_nOrigin.x;
+		if (xt > rayDelta.x) return 0;
+		xt /= rayDelta.x;
+		inside = 0;
+		xn = -1.0f;
+	}
+	else if (ray.m_nOrigin.x > this->m_nMax.x) {
+		xt = this->m_nMax.x - ray.m_nOrigin.x;
+		if (xt < rayDelta.x) return 0;
+		xt /= rayDelta.x;
+		inside = 0;
+		xn = 1.0f;
+	}
+	else {
+		xt = -1.0f;
+	}
+
+	float yt, yn;
+	if (ray.m_nOrigin.y < this->m_nMin.y) {
+		yt = this->m_nMin.y - ray.m_nOrigin.y;
+		if (yt > rayDelta.y) return 0;
+		yt /= rayDelta.y;
+		inside = 0;
+		yn = -1.0f;
+	}
+	else if (ray.m_nOrigin.y > this->m_nMax.y) {
+		yt = this->m_nMax.y - ray.m_nOrigin.y;
+		if (yt < rayDelta.y) return 0;
+		yt /= rayDelta.y;
+		inside = 0;
+		yn = 1.0f;
+	}
+	else {
+		yt = -1.0f;
+	}
+
+	float zt, zn;
+	if (ray.m_nOrigin.z < this->m_nMin.z) {
+		zt = this->m_nMin.z - ray.m_nOrigin.z;
+		if (zt > rayDelta.z) return 0;
+		zt /= rayDelta.z;
+		inside = 0;
+		zn = -1.0f;
+	}
+	else if (ray.m_nOrigin.z > this->m_nMax.z) {
+		zt = this->m_nMax.z - ray.m_nOrigin.z;
+		if (zt < rayDelta.z) return 0;
+		zt /= rayDelta.z;
+		inside = 0;
+		zn = 1.0f;
+	}
+	else {
+		zt = -1.0f;
+	}
+
+	if (inside) {
+		return 0;
+	}
+
+	int which = 0;
+	float t = xt;
+	if (yt > t) {
+		which = 1;
+		t = yt;
+	}
+
+	if (zt > t) {
+		which = 2;
+		t = zt;
+	}
+
+	switch (which) {
+	case 0:
+	{
+			  float y = ray.m_nOrigin.y + rayDelta.y*t;
+			  if (y < this->m_nMin.y || y > this->m_nMax.y) return 0;
+			  float z = ray.m_nOrigin.z + rayDelta.z*t;
+			  if (z < this->m_nMin.z || z > this->m_nMax.z) return 0;
+	}
+		break;
+	case 1:
+	{
+			  float x = ray.m_nOrigin.x + rayDelta.x*t;
+			  if (x < this->m_nMin.x || x > this->m_nMax.x) return 0;
+			  float z = ray.m_nOrigin.z + rayDelta.z*t;
+			  if (z < this->m_nMin.z || z > this->m_nMax.z) return 0;
+	}
+		break;
+	case 2:
+	{
+			  float x = ray.m_nOrigin.x + rayDelta.x*t;
+			  if (x < this->m_nMin.x || x > this->m_nMax.x) return 0;
+			  float y = ray.m_nOrigin.y + rayDelta.y*t;
+			  if (y < this->m_nMin.y || y > this->m_nMax.y) return 0;
+	}
+		break;
+	}
+
+	return 1;
+}
+
+int cwAABB::intersection(const cwPlane& plane) const
+{
+	float minD, maxD;
+
+	if (plane.m_nNormal.x > 0) {
+		minD = plane.m_nNormal.x*this->m_nMin.x;
+		maxD = plane.m_nNormal.x*this->m_nMax.x;
+	}
+	else {
+		minD = plane.m_nNormal.x*this->m_nMax.x;
+		maxD = plane.m_nNormal.x*this->m_nMin.x;
+	}
+
+	if (plane.m_nNormal.y > 0) {
+		minD += plane.m_nNormal.y*this->m_nMin.y;
+		maxD += plane.m_nNormal.y*this->m_nMax.y;
+	}
+	else {
+		minD += plane.m_nNormal.y*this->m_nMax.y;
+		maxD += plane.m_nNormal.y*this->m_nMin.y;
+	}
+
+	if (plane.m_nNormal.z > 0) {
+		minD += plane.m_nNormal.z*this->m_nMin.z;
+		maxD += plane.m_nNormal.z*this->m_nMax.z;
+	}
+	else {
+		minD += plane.m_nNormal.z*this->m_nMax.z;
+		maxD += plane.m_nNormal.z*this->m_nMin.z;
+	}
+
+	if (minD >= plane.m_fD) return 1;
+	if (maxD <= plane.m_fD) return -1;
+
+	return 0;
+}
+
+int cwAABB::intersection(const cwCircle& circle) const
+{
+	return circle.intersection(*this);
+}
+
+int cwAABB::intersection(const cwAABB& aabb) const
+{
+	if (this->m_nMin.x >= aabb.m_nMax.x) return 0;
+	if (this->m_nMax.x <= aabb.m_nMin.x) return 0;
+	if (this->m_nMin.y >= aabb.m_nMax.y) return 0;
+	if (this->m_nMax.y <= aabb.m_nMin.y) return 0;
+	if (this->m_nMin.z >= aabb.m_nMax.z) return 0;
+	if (this->m_nMax.z <= aabb.m_nMin.z) return 0;
+
+	return 1;
 }
 
 NS_MINIR_END

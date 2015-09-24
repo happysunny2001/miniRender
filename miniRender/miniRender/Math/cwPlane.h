@@ -20,30 +20,39 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifndef __CWPLANE_H__
 #define __CWPLANE_H__
 
-#include "cwShape.h"
+//#include "cwShape.h"
 #include "cwVector3D.h"
 #include "../Base/cwMacros.h"
 
 NS_MINIR_BEGIN
 
+class cwRay;
+class cwCircle;
+class cwAABB;
+class cwMatrix4X4;
+
 //plane notation
 //p.n + d = 0
 //when origin is in back side of plane, d is positive
 //otherwise d is negative
-class CW_DLL cwPlane : public cwShape
+class CW_DLL cwPlane
 {
 public:
     cwPlane();
     cwPlane(const cwVector3D& n, float d);
     cwPlane(const cwPoint3D& p1, const cwPoint3D& p2, const cwPoint3D& p3);
     cwPlane(const cwPlane& p);
-    virtual ~cwPlane();
+    ~cwPlane();
     
-    virtual cwVector3D closestPoint(const cwPoint3D& p) const;
-    virtual float closestPoint(const cwPoint3D& p, cwVector3D& ret) const;
+    cwVector3D closestPoint(const cwPoint3D& p) const;
+    float closestPoint(const cwPoint3D& p, cwVector3D& ret) const;
     
 	void update(const cwMatrix4X4& mat);
-    virtual int intersection(const cwShape& other) const;
+    //int intersection(const cwShape& other) const;
+	int intersection(const cwRay& ray) const;
+	int intersection(const cwPlane& plane) const;
+	int intersection(const cwCircle& circle) const;
+	int intersection(const cwAABB& aabb) const;
 
 	void normalize();
     

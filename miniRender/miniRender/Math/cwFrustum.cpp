@@ -90,4 +90,22 @@ int cwFrustum::intersection(const cwAABB& aabb) const
 	return ret;
 }
 
+int cwFrustum::intersection(const cwCircle& circle) const
+{
+	int ret = 0;
+	for (int i = LeftPlane; i <= FarPlane; ++i) {
+		int iRet = circle.intersection(m_nPlanes[i]);
+		if (iRet < 0) return ret;
+		ret |= 1 << i;
+		ret |= iRet << (8 + i);
+	}
+
+	return ret;
+}
+
+bool cwFrustum::isInside(int iRet) const
+{
+	return (iRet & 0x003F) == 0x003F;
+}
+
 NS_MINIR_END

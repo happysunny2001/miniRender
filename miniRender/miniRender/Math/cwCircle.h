@@ -20,24 +20,31 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifndef __CWCIRCLE_H__
 #define __CWCIRCLE_H__
 
-#include "cwShape.h"
+//#include "cwShape.h"
 #include "cwVector3D.h"
 #include "../Base/cwMacros.h"
 
 NS_MINIR_BEGIN
 
-class CW_DLL cwCircle : public cwShape
+class cwRay;
+class cwPlane;
+class cwAABB;
+
+class CW_DLL cwCircle
 {
 public:
     cwCircle();
     cwCircle(const cwPoint3D& o, float r);
     cwCircle(const cwCircle& c);
-    virtual ~cwCircle();
+    ~cwCircle();
     
-    virtual cwVector3D closestPoint(const cwPoint3D& p) const;
-    virtual float closestPoint(const cwPoint3D& p, cwVector3D& ret) const;
+    cwVector3D closestPoint(const cwPoint3D& p) const;
+    float closestPoint(const cwPoint3D& p, cwVector3D& ret) const;
     
-    virtual int intersection(const cwShape& other) const;
+	int intersection(const cwRay& ray) const;
+	int intersection(const cwCircle& circle) const;
+	int intersection(const cwPlane& plane) const;
+	int intersection(const cwAABB& aabb) const;
     
 public:
     cwPoint3D m_nOrigin;

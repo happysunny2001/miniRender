@@ -52,6 +52,9 @@ public:
 	//return value: lower 8 bit means whether outside the plane, 0 is outside the plane
 	//			    9-16 bit means inside or intersect the plane, 0 is intersect the plane, 1 is inside the plane
 	int intersection(const cwAABB& aabb) const;
+	int intersection(const cwCircle& circle) const;
+
+	bool isInside(int iRet) const;
 
 protected:
 	cwPlane m_nPlanes[6];

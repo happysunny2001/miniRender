@@ -20,21 +20,25 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifndef __CWAABB_H__
 #define __CWAABB_H__
 
-#include "cwShape.h"
+//#include "cwShape.h"
 #include "cwVector3D.h"
 #include "cwMatrix4X4.h"
 #include "../Base/cwMacros.h"
 
 NS_MINIR_BEGIN
 
-class CW_DLL cwAABB : public cwShape
+class cwRay;
+class cwPlane;
+class cwCircle;
+
+class CW_DLL cwAABB
 {
 public:
     cwAABB();
     cwAABB(const cwPoint3D& ptMin, const cwPoint3D& ptMax);
     cwAABB(cwPoint3D* p, int n);
     cwAABB(const cwAABB& box);
-    virtual ~cwAABB();
+    ~cwAABB();
     
     cwVector3D corner(int index) const;
     
@@ -49,10 +53,14 @@ public:
     cwVector3D center() const;
     cwVector3D radius() const;
     
-    virtual cwVector3D closestPoint(const cwPoint3D& p) const;
-    virtual float closestPoint(const cwPoint3D& p, cwVector3D& ret) const;
+    cwVector3D closestPoint(const cwPoint3D& p) const;
+    float closestPoint(const cwPoint3D& p, cwVector3D& ret) const;
     
-    virtual int intersection(const cwShape& other) const;
+    //int intersection(const cwShape& other) const;
+	int intersection(const cwRay& ray) const;
+	int intersection(const cwPlane& plane) const;
+	int intersection(const cwCircle& circle) const;
+	int intersection(const cwAABB& aabb) const;
     
 public:
     cwPoint3D m_nMin;

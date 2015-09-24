@@ -18,19 +18,20 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwRay.h"
-#include <float.h>
 #include "cwMathUtil.h"
 #include "cwCircle.h"
 #include "cwPlane.h"
 #include "cwAABB.h"
-#include "cwIntersection.h"
+//#include "cwIntersection.h"
+
+#include <float.h>
 
 NS_MINIR_BEGIN
 
 cwRay::cwRay() :
 m_fT(FLT_MAX)
 {
-    m_eType = eShapeRay;
+
 }
 
 cwRay::cwRay(const cwPoint3D& nPos, const cwVector3D& v) :
@@ -38,7 +39,7 @@ m_nOrigin(nPos),
 m_nDir(v),
 m_fT(FLT_MAX)
 {
-    m_eType = eShapeRay;
+
 }
 
 cwRay::cwRay(const cwPoint3D& nPos, const cwVector3D& v, float t) :
@@ -46,7 +47,7 @@ m_nOrigin(nPos),
 m_nDir(v),
 m_fT(t)
 {
-    m_eType = eShapeRay;
+
 }
 
 cwRay::cwRay(const cwRay& r) :
@@ -54,7 +55,7 @@ m_nOrigin(r.m_nOrigin),
 m_nDir(r.m_nDir),
 m_fT(r.m_fT)
 {
-    m_eType = eShapeRay;
+
 }
 
 cwRay::~cwRay()
@@ -74,22 +75,61 @@ float cwRay::closestPoint(const cwPoint3D& p, cwVector3D& ret) const
     return t;
 }
 
-int cwRay::intersection(const cwShape& other) const
+//int cwRay::intersection(const cwShape& other) const
+//{
+//    switch (other.m_eType) {
+//        case eShapeRay:
+//            return cwIntersectionRayRay(*this, static_cast<const cwRay&>(other));
+//        case eShapeCircle:
+//            return cwIntersectionRayCircle(*this, static_cast<const cwCircle&>(other));
+//        case eShapePlane:
+//            return cwIntersectionRayPlane(*this, static_cast<const cwPlane&>(other));
+//        case eShapeAABB:
+//            return cwIntersectionRayAABB(*this, static_cast<const cwAABB&>(other));
+//        default:
+//            return false;
+//    }
+//    
+//    return false;
+//}
+
+int cwRay::intersection(const cwRay& ray) const
 {
-    switch (other.m_eType) {
-        case eShapeRay:
-            return cwIntersectionRayRay(*this, static_cast<const cwRay&>(other));
-        case eShapeCircle:
-            return cwIntersectionRayCircle(*this, static_cast<const cwCircle&>(other));
-        case eShapePlane:
-            return cwIntersectionRayPlane(*this, static_cast<const cwPlane&>(other));
-        case eShapeAABB:
-            return cwIntersectionRayAABB(*this, static_cast<const cwAABB&>(other));
-        default:
-            return false;
-    }
-    
-    return false;
+	cwVector3D d = this->m_nDir.cross(ray.m_nDir);
+	float dSquLen = d.squareLength();
+	//lines are parallel
+	if (dSquLen < cwMathUtil::cwFloatEpsilon) return 0;
+
+	float dSquLenInv = 1.0f / dSquLen;
+	cwVector3D v = (ray.m_nOrigin - this->m_nOrigin);
+
+	float t1 = v.cross(ray.m_nDir).dot(d) * dSquLenInv;
+	float t2 = v.cross(this->m_nDir).dot(d) * dSquLenInv;
+
+	if (t1 < 0 || t2 < 0 || t1 > this->m_fT || t2 > ray.m_fT) return 0;
+
+	cwPoint3D p1 = this->m_nOrigin + t1*this->m_nDir;
+	cwPoint3D p2 = ray.m_nOrigin + t2*ray.m_nDir;
+
+	//two line maybe skew, we examine the distance between p1 and p2
+	if ((p2 - p1).squareLength() < cwMathUtil::cwFloatEpsilon) return 1;
+
+	return 0;
+}
+
+int cwRay::intersection(const cwCircle& circle) const
+{
+	return circle.intersection(*this);
+}
+
+int cwRay::intersection(const cwPlane& plane) const
+{
+	return plane.intersection(*this);
+}
+
+int cwRay::intersection(const cwAABB& aabb) const
+{
+	return aabb.intersection(*this);
 }
 
 NS_MINIR_END
