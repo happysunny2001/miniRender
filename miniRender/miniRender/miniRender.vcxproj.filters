@@ -585,6 +585,12 @@
     <ClInclude Include="Math\cwFrustum.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="SpatialSorting\cwSpatial.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SpatialSorting\cwOctree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -954,6 +960,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Math\cwFrustum.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialSorting\cwSpatial.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialSorting\cwOctree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

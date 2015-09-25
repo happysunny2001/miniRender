@@ -17,39 +17,38 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef _CW_BASIC_TYPE_H__
-#define _CW_BASIC_TYPE_H__
+#ifndef __CW_SPATIAL_H__
+#define __CW_SPATIAL_H__
 
-#include "cwMacros.h"
-#include "Platform/cwPlatform.h"
-#include <string>
-using namespace std;
+#include "Base/cwMacros.h"
+#include "Base/cwBasicType.h"
+#include "Ref/cwRef.h"
+
+#include <vector>
 
 NS_MINIR_BEGIN
 
-typedef __int64          CWINT64;
-typedef unsigned __int64 CWUINT64;
-typedef double           CWDOUBLE;
-typedef float            CWFLOAT;
-typedef unsigned __int32 CWUINT;
-typedef __int32          CWINT;
-typedef __int16          CWSHORT;
-typedef unsigned __int16 CWUSHORT;
-typedef bool             CWBOOL;
-typedef char             CWCHAR;
-typedef unsigned char    CWBYTE;
-typedef std::string      CWSTRING;
-typedef void             CWVOID;
-typedef CWVOID*          CWHANDLE;
+class cwScene;
+class cwFrustum;
+class cwRenderNode;
+class cwAABB;
+class cwCircle;
 
-#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
-typedef wstring          CWWSTRING;
-#else
-typedef std::string      CWWSTRING;
-#endif
+class cwSpatial : public cwRef
+{
+public:
+	virtual CWBOOL build(cwScene*) = 0;
+	
+	virtual CWVOID intersection(const cwFrustum&, std::vector<cwRenderNode*>&) = 0;
+	virtual CWVOID intersection(const cwAABB&, std::vector<cwRenderNode*>&) = 0;
+	virtual CWVOID intersection(const cwCircle&, std::vector<cwRenderNode*>&) = 0;
 
-#define CWTRUE           true
-#define CWFALSE          false
+	virtual CWBOOL insert(cwRenderNode*) = 0;
+	virtual CWBOOL remove(cwRenderNode*) = 0;
+
+protected:
+
+};
 
 NS_MINIR_END
 
