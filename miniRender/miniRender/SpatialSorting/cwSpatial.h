@@ -46,6 +46,8 @@ public:
 	virtual CWBOOL insert(cwRenderNode*) = 0;
 	virtual CWBOOL remove(cwRenderNode*) = 0;
 
+	virtual CWVOID update() = 0;
+
 protected:
 
 };

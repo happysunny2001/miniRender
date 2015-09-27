@@ -61,6 +61,8 @@ public:
 	int intersection(const cwPlane& plane) const;
 	int intersection(const cwCircle& circle) const;
 	int intersection(const cwAABB& aabb) const;
+	
+	bool contained(const cwAABB& aabb) const;
     
 public:
     cwPoint3D m_nMin;
