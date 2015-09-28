@@ -22,6 +22,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Event/cwEventManager.h"
 #include "Event/cwEventDefine.h"
 #include "Effect/cwEffect.h"
+#include "Repertory/cwRepertory.h"
+#include "Engine/cwEngine.h"
+#include "cwScene.h"
 
 NS_MINIR_BEGIN
 
@@ -237,36 +240,47 @@ CWVOID cwRenderNode::transform()
 		matRot.setRotation(m_nRot);
 		m_nLocalTrans = matScale * matRot * matTranslate;
 
-		if (m_pParent) {
-			m_nTrans = m_nLocalTrans * m_pParent->getTransformMatrix();
-		}
-		else {
-			m_nTrans = m_nLocalTrans;
-		}
+		//if (m_pParent) {
+		//	m_nTrans = m_nLocalTrans * m_pParent->getTransformMatrix();
+		//}
+		//else {
+		//	m_nTrans = m_nLocalTrans;
+		//}
 
-		updateChildrenTransform();
-		refreshBoundingBox();
-		refreshGroupBoundingBox();
+		//updateChildrenTransform();
+		//refreshBoundingBox();
+		//refreshGroupBoundingBox();
 
 		m_bTransDirty = CWFALSE;
 	}
 }
 
-CWVOID cwRenderNode::updateChildrenTransform()
+CWVOID cwRenderNode::refreshTransform()
 {
-	for (auto pChild : m_nVecChildren) {
-		if (!pChild || pChild->getTransDirty()) continue;
-		pChild->setTransformMatrix(pChild->getLocalTransMatrix()*m_nTrans);
-		pChild->updateChildrenTransform();
+	m_nTrans = m_nLocalTrans;
+
+	cwRenderNode* pParent = m_pParent;
+	while (pParent) {
+		m_nTrans *= pParent->getLocalTransMatrix();
+		pParent = pParent->getParent();
 	}
 }
 
-CWVOID cwRenderNode::setTransformMatrix(const cwMatrix4X4& mat)
-{
-	m_nTrans = mat;
-	refreshBoundingBox();
-	refreshGroupBoundingBox();
-}
+//CWVOID cwRenderNode::updateChildrenTransform()
+//{
+//	for (auto pChild : m_nVecChildren) {
+//		if (!pChild || pChild->getTransDirty()) continue;
+//		pChild->setTransformMatrix(pChild->getLocalTransMatrix()*m_nTrans);
+//		pChild->updateChildrenTransform();
+//	}
+//}
+
+//CWVOID cwRenderNode::setTransformMatrix(const cwMatrix4X4& mat)
+//{
+//	m_nTrans = mat;
+//	refreshBoundingBox();
+//	refreshGroupBoundingBox();
+//}
 
 CWVOID cwRenderNode::refreshBoundingBox()
 {

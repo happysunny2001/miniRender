@@ -17,39 +17,19 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_SPATIAL_H__
-#define __CW_SPATIAL_H__
+#ifndef __CW_SPATIAL_FACTORY_H__
+#define __CW_SPATIAL_FACTORY_H__
 
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
-#include "Ref/cwRef.h"
-
-#include <vector>
+#include "cwSpatial.h"
 
 NS_MINIR_BEGIN
 
-class cwScene;
-class cwFrustum;
-class cwRenderNode;
-class cwAABB;
-class cwCircle;
-
-class cwSpatial : public cwRef
+class cwSpatialFactory
 {
 public:
-	virtual CWBOOL build(cwScene*) = 0;
-	
-	virtual CWVOID intersection(const cwFrustum&, std::vector<cwRenderNode*>&) = 0;
-	virtual CWVOID intersection(const cwAABB&, std::vector<cwRenderNode*>&) = 0;
-	virtual CWVOID intersection(const cwCircle&, std::vector<cwRenderNode*>&) = 0;
-
-	virtual CWBOOL insert(cwRenderNode*) = 0;
-	virtual CWBOOL remove(cwRenderNode*) = 0;
-
-	virtual CWVOID update() = 0;
-	virtual CWVOID refresh(cwRenderNode*) = 0;
-
-protected:
+	static cwSpatial* createSpatial(const CWSTRING& strType);
 
 };
 

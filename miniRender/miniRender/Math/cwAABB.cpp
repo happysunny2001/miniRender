@@ -453,9 +453,9 @@ int cwAABB::intersection(const cwAABB& aabb) const
 bool cwAABB::contained(const cwAABB& aabb) const
 {
 	return (
-		aabb.m_nMin.x > m_nMin.x && aabb.m_nMax.x < m_nMax.x &&
-		aabb.m_nMin.y > m_nMin.y && aabb.m_nMax.y < m_nMax.y &&
-		aabb.m_nMin.z > m_nMin.z && aabb.m_nMax.z < m_nMax.z);
+		aabb.m_nMin.x >= m_nMin.x && aabb.m_nMax.x <= m_nMax.x &&
+		aabb.m_nMin.y >= m_nMin.y && aabb.m_nMax.y <= m_nMax.y &&
+		aabb.m_nMin.z >= m_nMin.z && aabb.m_nMax.z <= m_nMax.z);
 }
 
 NS_MINIR_END

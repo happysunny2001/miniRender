@@ -591,6 +591,9 @@
     <ClInclude Include="SpatialSorting\cwOctree.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="SpatialSorting\cwSpatialFactory.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -966,6 +969,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="SpatialSorting\cwOctree.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialSorting\cwSpatialFactory.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

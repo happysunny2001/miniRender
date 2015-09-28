@@ -54,7 +54,10 @@ public:
 	int intersection(const cwAABB& aabb) const;
 	int intersection(const cwCircle& circle) const;
 
-	bool isInside(int iRet) const;
+	//whether collide, inside or intersect the frustum 
+	inline bool isCollide(int iRet) const { return (iRet & 0x00FF) == 0x003F; }
+	//whether inside the frustum
+	inline bool isInside(int iRet) const { return (iRet & 0xFFFF) == 0x3F3F; }
 
 protected:
 	cwPlane m_nPlanes[6];

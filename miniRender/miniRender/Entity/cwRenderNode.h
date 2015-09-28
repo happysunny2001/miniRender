@@ -89,6 +89,7 @@ public:
 	inline const cwAABB& getGroupBoundingBox() const { return m_nGroupBoundingBox; }
 
 	virtual CWVOID transform();
+	virtual CWVOID refreshTransform();
 	const cwMatrix4X4& getTransformMatrix() const { return m_nTrans; }
 	CWVOID setTransformMatrix(const cwMatrix4X4& mat);
 	const cwMatrix4X4& getLocalTransMatrix() const { return m_nLocalTrans; }

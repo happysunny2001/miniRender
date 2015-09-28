@@ -22,10 +22,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
+#include "Base/cwVector.h"
 #include "Math/cwMath.h"
 #include "cwSpatial.h"
 
 #include <list>
+#include <queue>
+#include <unordered_set>
 
 NS_MINIR_BEGIN
 
@@ -85,16 +88,40 @@ public:
 	virtual CWBOOL remove(cwRenderNode*) override;
 
 	virtual CWVOID update() override;
+	virtual CWVOID refresh(cwRenderNode*) override;
 
 	inline CWUINT getMaxDepth() const { return m_uMaxDepth; }
 
 protected:
-	CWBOOL insert(cwRenderNode*, sOctreeNode*);
+	CWBOOL insert();
+	CWBOOL remove();
+
+	CWBOOL insert(cwRenderNode*, sOctreeNode*, CWUINT uDepth);
 	CWVOID getChildrenBoundingBox(sOctreeNode*, cwAABB*);
+	sOctreeNode* getTreeNodeBelong(cwRenderNode*);
+	sOctreeNode* getTreeNodeBelong(cwRenderNode*, sOctreeNode*);
+	sOctreeNode* getTreeNodeBelongRude(cwRenderNode*, sOctreeNode*);
+
+	CWVOID intersection(sOctreeNode*, const cwFrustum&, std::vector<cwRenderNode*>&);
+	CWVOID intersection(sOctreeNode*, const cwAABB&, std::vector<cwRenderNode*>&);
+	CWVOID intersection(sOctreeNode*, const cwCircle&, std::vector<cwRenderNode*>&);
+
+	CWVOID getRenderNodeChild(cwRenderNode*, std::unordered_map<cwRenderNode*, sOctreeNode*>&);
+	CWVOID updateRenderNode(cwRenderNode*, sOctreeNode*);
+
+	sOctreeNode* getUnuseOctreeNode();
+	CWVOID saveUnuseOctreeNode(sOctreeNode*);
+	CWVOID removeOctreeNode(sOctreeNode*);
 
 protected:
 	sOctreeNode* m_pRoot;
 	CWUINT m_uMaxDepth;
+
+	std::unordered_set<cwRenderNode*> m_nSetRefreshNode;
+	std::queue<sOctreeNode*> m_nQueueUnuseOctreeNode;
+
+	cwVector<cwRenderNode*> m_nVecAppend;
+	cwVector<cwRenderNode*> m_nVecRemove;
 
 };
 
