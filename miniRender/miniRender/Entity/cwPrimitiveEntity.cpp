@@ -106,6 +106,11 @@ CWVOID cwPrimitiveEntity::buildRenderObject()
 	CW_SAFE_RETAIN(m_pRenderObj);
 }
 
+CWVOID cwPrimitiveEntity::refreshSpatialNode()
+{
+
+}
+
 CWVOID cwPrimitiveEntity::addPrimitive(const cwAABB& aabb)
 {
 	addPrimitive(aabb, m_pMaterial->getDiffuse());

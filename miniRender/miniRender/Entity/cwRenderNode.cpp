@@ -26,6 +26,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Engine/cwEngine.h"
 #include "cwScene.h"
 
+#include <stack>
+
 NS_MINIR_BEGIN
 
 cwRenderNode* cwRenderNode::create()
@@ -45,7 +47,7 @@ m_bVisible(CWTRUE),
 m_nPos(cwVector3D::ZERO),
 m_nRot(cwVector3D::ZERO),
 m_nScale(1.0f, 1.0f ,1.0f),
-m_bTransDirty(CWTRUE),
+m_bTransDirty(CWFALSE),
 m_pEffect(nullptr)
 {
 	m_eType = eSceneObjectNode;
@@ -78,26 +80,76 @@ CWVOID cwRenderNode::setParent(cwRenderNode* pNode)
 	m_pParent = pNode;
 }
 
-CWVOID cwRenderNode::addChild(cwRenderNode* pNode)
+CWBOOL cwRenderNode::addChild(cwRenderNode* pNode)
 {
-	if (!pNode) return;
-	if (pNode->getParent()) return;
-	if (m_nVecChildren.contains(pNode)) return;
-	m_nVecChildren.pushBack(pNode);
-	pNode->setParent(this);
+	if (pNode && !pNode->getParent()) {
+		if (!m_nVecChildren.contains(pNode)) {
+			m_nVecChildren.pushBack(pNode);
+			pNode->setParent(this);
+
+			cwRepertory::getInstance().getEngine()->insertSpatialNode(pNode);
+			cwRepertory::getInstance().getEngine()->refreshSpatialNode(pNode);
+			//insertSpatialNode(pNode);
+			return CWTRUE;
+		}
+	}
+
+	return CWFALSE;
 }
 
-CWVOID cwRenderNode::removeChild(cwRenderNode* pNode)
+CWVOID cwRenderNode::insertSpatialNode(cwRenderNode* pNode)
 {
-	if (!pNode) return;
-	pNode->setParent(nullptr);
-	m_nVecChildren.erase(pNode);
+	if (m_eType == eSceneObjectScene) return;
+
+	cwRenderNode* pParent = m_pParent;
+	while (pParent) {
+		if (pParent->getParent())
+			pParent = pParent->getParent();
+		else
+			break;
+	}
+
+	if (!pParent) return;
+	if (pParent->getType() != eSceneObjectScene) return;
+	cwRepertory::getInstance().getEngine()->insertSpatialNode(pNode);
 }
 
-CWVOID cwRenderNode::removeChildren()
+CWBOOL cwRenderNode::removeChild(cwRenderNode* pNode)
 {
-	clearChildren();
+	if (pNode && pNode->getParent() == this) {
+		pNode->setParent(nullptr);
+		m_nVecChildren.erase(pNode);
+		return CWTRUE;
+	}
+
+	return CWFALSE;
 }
+
+CWVOID cwRenderNode::removeSpatialNode(cwRenderNode* pNode)
+{
+	if (m_eType == eSceneObjectScene) return;
+
+	cwRenderNode* pParent = m_pParent;
+	while (pParent) {
+		if (pParent->getParent())
+			pParent = pParent->getParent();
+		else
+			break;
+	}
+
+	if (!pParent) return;
+	if (pParent->getType() != eSceneObjectScene) return;
+	cwRepertory::getInstance().getEngine()->removeSpatialNode(pNode);
+}
+
+//CWVOID cwRenderNode::removeChildren()
+//{
+//	for (auto it = m_nVecChildren.begin(); it != m_nVecChildren.end(); ++it) {
+//		(*it)->setParent(nullptr);
+//	}
+//
+//	m_nVecChildren.clear();
+//}
 
 CWVOID cwRenderNode::setPosition(CWFLOAT x, CWFLOAT y, CWFLOAT z)
 {
@@ -105,7 +157,10 @@ CWVOID cwRenderNode::setPosition(CWFLOAT x, CWFLOAT y, CWFLOAT z)
 	m_nPos.y = y;
 	m_nPos.z = z;
 
-	m_bTransDirty = CWTRUE;
+	if (!m_bTransDirty) {
+		refreshSpatialNode();
+		m_bTransDirty = CWTRUE;
+	}
 }
 
 CWVOID cwRenderNode::setPosition(const cwVector3D& v)
@@ -114,7 +169,10 @@ CWVOID cwRenderNode::setPosition(const cwVector3D& v)
 	m_nPos.y = v.y;
 	m_nPos.z = v.z;
 
-	m_bTransDirty = CWTRUE;
+	if (!m_bTransDirty) {
+		refreshSpatialNode();
+		m_bTransDirty = CWTRUE;
+	}
 }
 
 CWVOID cwRenderNode::move(CWFLOAT x, CWFLOAT y, CWFLOAT z)
@@ -123,7 +181,10 @@ CWVOID cwRenderNode::move(CWFLOAT x, CWFLOAT y, CWFLOAT z)
 	m_nPos.y += y;
 	m_nPos.z += z;
 
-	m_bTransDirty = CWTRUE;
+	if (!m_bTransDirty) {
+		refreshSpatialNode();
+		m_bTransDirty = CWTRUE;
+	}
 }
 
 CWVOID cwRenderNode::move(const cwVector3D& v)
@@ -132,7 +193,10 @@ CWVOID cwRenderNode::move(const cwVector3D& v)
 	m_nPos.y += v.y;
 	m_nPos.z += v.z;
 
-	m_bTransDirty = CWTRUE;
+	if (!m_bTransDirty) {
+		refreshSpatialNode();
+		m_bTransDirty = CWTRUE;
+	}
 }
 
 CWVOID cwRenderNode::setRotation(CWFLOAT x, CWFLOAT y, CWFLOAT z)
@@ -141,7 +205,10 @@ CWVOID cwRenderNode::setRotation(CWFLOAT x, CWFLOAT y, CWFLOAT z)
 	m_nRot.y = y;
 	m_nRot.z = z;
 
-	m_bTransDirty = CWTRUE;
+	if (!m_bTransDirty) {
+		refreshSpatialNode();
+		m_bTransDirty = CWTRUE;
+	}
 }
 
 CWVOID cwRenderNode::setRotation(const cwVector3D& v)
@@ -150,7 +217,10 @@ CWVOID cwRenderNode::setRotation(const cwVector3D& v)
 	m_nRot.y = v.y;
 	m_nRot.z = v.z;
 
-	m_bTransDirty = CWTRUE;
+	if (!m_bTransDirty) {
+		refreshSpatialNode();
+		m_bTransDirty = CWTRUE;
+	}
 }
 
 CWVOID cwRenderNode::rotate(CWFLOAT x, CWFLOAT y, CWFLOAT z)
@@ -159,7 +229,10 @@ CWVOID cwRenderNode::rotate(CWFLOAT x, CWFLOAT y, CWFLOAT z)
 	m_nRot.y += y;
 	m_nRot.z += z;
 
-	m_bTransDirty = CWTRUE;
+	if (!m_bTransDirty) {
+		refreshSpatialNode();
+		m_bTransDirty = CWTRUE;
+	}
 }
 
 CWVOID cwRenderNode::rotate(const cwVector3D& v)
@@ -168,7 +241,10 @@ CWVOID cwRenderNode::rotate(const cwVector3D& v)
 	m_nRot.y += v.y;
 	m_nRot.z += v.z;
 
-	m_bTransDirty = CWTRUE;
+	if (!m_bTransDirty) {
+		refreshSpatialNode();
+		m_bTransDirty = CWTRUE;
+	}
 }
 
 CWVOID cwRenderNode::setScale(CWFLOAT x, CWFLOAT y, CWFLOAT z)
@@ -177,7 +253,10 @@ CWVOID cwRenderNode::setScale(CWFLOAT x, CWFLOAT y, CWFLOAT z)
 	m_nScale.y = y;
 	m_nScale.z = z;
 
-	m_bTransDirty = CWTRUE;
+	if (!m_bTransDirty) {
+		refreshSpatialNode();
+		m_bTransDirty = CWTRUE;
+	}
 }
 
 CWVOID cwRenderNode::setScale(const cwVector3D& v)
@@ -186,7 +265,10 @@ CWVOID cwRenderNode::setScale(const cwVector3D& v)
 	m_nScale.y = v.y;
 	m_nScale.z = v.z;
 
-	m_bTransDirty = CWTRUE;
+	if (!m_bTransDirty) {
+		refreshSpatialNode();
+		m_bTransDirty = CWTRUE;
+	}
 }
 
 CWVOID cwRenderNode::scale(CWFLOAT x, CWFLOAT y, CWFLOAT z)
@@ -195,7 +277,10 @@ CWVOID cwRenderNode::scale(CWFLOAT x, CWFLOAT y, CWFLOAT z)
 	m_nScale.y += y;
 	m_nScale.z += z;
 
-	m_bTransDirty = CWTRUE;
+	if (!m_bTransDirty) {
+		refreshSpatialNode();
+		m_bTransDirty = CWTRUE;
+	}
 }
 
 CWVOID cwRenderNode::scale(const cwVector3D& v)
@@ -204,7 +289,16 @@ CWVOID cwRenderNode::scale(const cwVector3D& v)
 	m_nScale.y += v.y;
 	m_nScale.z += v.z;
 
-	m_bTransDirty = CWTRUE;
+	if (!m_bTransDirty) {
+		refreshSpatialNode();
+		m_bTransDirty = CWTRUE;
+	}
+}
+
+CWVOID cwRenderNode::refreshSpatialNode()
+{
+	if (m_pParent)
+		cwRepertory::getInstance().getEngine()->refreshSpatialNode(this);
 }
 
 CWVOID cwRenderNode::setVisible(bool b)
@@ -240,17 +334,6 @@ CWVOID cwRenderNode::transform()
 		matRot.setRotation(m_nRot);
 		m_nLocalTrans = matScale * matRot * matTranslate;
 
-		//if (m_pParent) {
-		//	m_nTrans = m_nLocalTrans * m_pParent->getTransformMatrix();
-		//}
-		//else {
-		//	m_nTrans = m_nLocalTrans;
-		//}
-
-		//updateChildrenTransform();
-		//refreshBoundingBox();
-		//refreshGroupBoundingBox();
-
 		m_bTransDirty = CWFALSE;
 	}
 }
@@ -266,42 +349,37 @@ CWVOID cwRenderNode::refreshTransform()
 	}
 }
 
-//CWVOID cwRenderNode::updateChildrenTransform()
-//{
-//	for (auto pChild : m_nVecChildren) {
-//		if (!pChild || pChild->getTransDirty()) continue;
-//		pChild->setTransformMatrix(pChild->getLocalTransMatrix()*m_nTrans);
-//		pChild->updateChildrenTransform();
-//	}
-//}
-
-//CWVOID cwRenderNode::setTransformMatrix(const cwMatrix4X4& mat)
-//{
-//	m_nTrans = mat;
-//	refreshBoundingBox();
-//	refreshGroupBoundingBox();
-//}
-
 CWVOID cwRenderNode::refreshBoundingBox()
 {
 	m_nBoundingBox.m_nMin = m_nBoundingBox.m_nMax = m_nPos;
 }
 
-CWVOID cwRenderNode::refreshGroupBoundingBox()
+cwAABB cwRenderNode::getGroupBoundingBox()
 {
-	m_nGroupBoundingBox = m_nBoundingBox;
+	if (m_nVecChildren.empty()) {
+		return m_nBoundingBox;
+	}
 
-	if (!m_nVecChildren.empty()) {
-		for (auto pChild : m_nVecChildren) {
-			m_nGroupBoundingBox.add(pChild->getGroupBoundingBox());
+	m_nGroupBoundingBox.zero();
+
+	std::vector<cwRenderNode*> vecStack;
+	vecStack.push_back(this);
+
+	while (!vecStack.empty()) {
+		cwRenderNode* pLast = vecStack.back();
+		m_nGroupBoundingBox.add(pLast->getBoundingBox());
+
+		vecStack.pop_back();
+
+		cwVector<cwRenderNode*>& nVecChildren = pLast->getChildren();
+		if (!nVecChildren.empty()) {
+			for (auto pNode : nVecChildren) {
+				vecStack.push_back(pNode);
+			}
 		}
 	}
 
-	cwRenderNode* pParent = this->getParent();
-	while (pParent) {
-		pParent->refreshGroupBoundingBox();
-		pParent = pParent->getParent();
-	}
+	return m_nGroupBoundingBox;
 }
 
 CWVOID cwRenderNode::update(CWFLOAT dt)

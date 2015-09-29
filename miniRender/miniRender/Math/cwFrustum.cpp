@@ -103,9 +103,4 @@ int cwFrustum::intersection(const cwCircle& circle) const
 	return ret;
 }
 
-bool cwFrustum::isCollide(int iRet) const
-{
-	return (iRet & 0x003F) == 0x003F;
-}
-
 NS_MINIR_END

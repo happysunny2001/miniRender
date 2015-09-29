@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
+#include "Base/cwStruct.h"
 #include "Ref/cwRef.h"
 
 #include <vector>
@@ -48,6 +49,9 @@ public:
 
 	virtual CWVOID update() = 0;
 	virtual CWVOID refresh(cwRenderNode*) = 0;
+
+	virtual CWVOID clear() = 0;
+	virtual CWVOID renderPrimitiveFrame() = 0;
 
 protected:
 

@@ -119,7 +119,7 @@ CWVOID cwStageLayer::end()
 CWVOID cwStageLayer::addEntities(cwVector<cwEntity*>& vecEntities)
 {
 	for (auto pEntity : vecEntities) {
-		pEntity->transform();
+		//pEntity->transform();
 
 		cwRenderPipeline* pPiepline = getPipeline(pEntity);
 		if (pPiepline)

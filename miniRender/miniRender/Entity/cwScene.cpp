@@ -19,8 +19,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwScene.h"
 #include "Base/cwMacros.h"
-#include "SpatialSorting/cwSpatial.h"
-#include "SpatialSorting/cwSpatialFactory.h"
+#include "Repertory/cwRepertory.h"
+#include "Engine/cwEngine.h"
 #include "cwEntity.h"
 
 NS_MINIR_BEGIN
@@ -36,26 +36,48 @@ cwScene* cwScene::create()
 	return nullptr;
 }
 
-cwScene::cwScene():
-m_pSpatial(nullptr)
+cwScene::cwScene()
 {
 	m_eType = eSceneObjectScene;
 }
 
 cwScene::~cwScene()
 {
-	CW_SAFE_RELEASE_NULL(m_pSpatial);
+
 }
 
 CWBOOL cwScene::init()
 {
 	if (!cwRenderNode::init()) return CWFALSE;
 
-	m_pSpatial = cwSpatialFactory::createSpatial("Octree");
-	CW_SAFE_RETAIN(m_pSpatial);
-
 	return CWTRUE;
 }
+
+//CWBOOL cwScene::addChild(cwRenderNode* pNode)
+//{
+//	CWBOOL b = cwRenderNode::addChild(pNode);
+//	if (b) {
+//		if (cwRepertory::getInstance().getEngine()->getCurrScene() == this)
+//			cwRepertory::getInstance().getEngine()->insertSpatialNode(pNode);
+//	}
+//	return b;
+//}
+//
+//CWBOOL cwScene::removeChild(cwRenderNode* pNode)
+//{
+//	if (pNode) {
+//		CW_SAFE_RETAIN(pNode);
+//		CWBOOL b = cwRenderNode::removeChild(pNode);
+//		if (b) {
+//			if (cwRepertory::getInstance().getEngine()->getCurrScene() == this)
+//				cwRepertory::getInstance().getEngine()->removeSpatialNode(pNode);
+//		}
+//		CW_SAFE_RELEASE(pNode);
+//		return b;
+//	}
+//
+//	return CWFALSE;
+//}
 
 CWVOID cwScene::addDirectionalLight(cwDirectionalLight* pLight)
 {
@@ -111,13 +133,6 @@ const cwVector<cwSpotLight*>& cwScene::getSpotLights() const
 	return m_nVecSpotLights;
 }
 
-CWVOID cwScene::refreshNode(cwRenderNode* pNode)
-{
-	if (pNode && m_pSpatial) {
-		m_pSpatial->refresh(pNode);
-	}
-}
-
 cwVector<cwEntity*>& cwScene::getVisibleEntities(cwCamera* pCamera, eSceneObjectType eType)
 {
 	m_nVecVisibleEntity.clear();
@@ -141,29 +156,6 @@ cwVector<cwEntity*>& cwScene::getVisibleEntities(cwCamera* pCamera, eSceneObject
 	}
 
 	return m_nVecVisibleEntity;
-}
-
-CWVOID cwScene::addChild(cwRenderNode* pNode)
-{
-	cwRenderNode::addChild(pNode);
-	if (pNode && m_pSpatial) {
-		m_pSpatial->insert(pNode);
-	}
-}
-
-CWVOID cwScene::removeChild(cwRenderNode* pNode)
-{
-	if (pNode) {
-		if (m_pSpatial)
-			m_pSpatial->remove(pNode);
-
-		cwRenderNode::removeChild(pNode);
-	}
-}
-
-CWVOID cwScene::removeChildren()
-{
-
 }
 
 NS_MINIR_END

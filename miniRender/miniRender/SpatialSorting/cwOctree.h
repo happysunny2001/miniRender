@@ -29,6 +29,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include <list>
 #include <queue>
 #include <unordered_set>
+#include <unordered_map>
 
 NS_MINIR_BEGIN
 
@@ -90,13 +91,21 @@ public:
 	virtual CWVOID update() override;
 	virtual CWVOID refresh(cwRenderNode*) override;
 
+	virtual CWVOID clear() override;
+	virtual CWVOID renderPrimitiveFrame() override;
+
 	inline CWUINT getMaxDepth() const { return m_uMaxDepth; }
 
 protected:
-	CWBOOL insert();
-	CWBOOL remove();
+	CWBOOL insertNode(cwRenderNode*);
+	CWBOOL insertNode(cwRenderNode*, sOctreeNode*, CWUINT uDepth);
+	CWBOOL insertNodes();
 
-	CWBOOL insert(cwRenderNode*, sOctreeNode*, CWUINT uDepth);
+	CWBOOL removeNode(cwRenderNode*);
+	CWBOOL removeNodes();
+
+	CWVOID clearOctreeNode(sOctreeNode*);
+	
 	CWVOID getChildrenBoundingBox(sOctreeNode*, cwAABB*);
 	sOctreeNode* getTreeNodeBelong(cwRenderNode*);
 	sOctreeNode* getTreeNodeBelong(cwRenderNode*, sOctreeNode*);
@@ -109,9 +118,12 @@ protected:
 	CWVOID getRenderNodeChild(cwRenderNode*, std::unordered_map<cwRenderNode*, sOctreeNode*>&);
 	CWVOID updateRenderNode(cwRenderNode*, sOctreeNode*);
 
+	CWBOOL isLeafNode(sOctreeNode*);
 	sOctreeNode* getUnuseOctreeNode();
 	CWVOID saveUnuseOctreeNode(sOctreeNode*);
 	CWVOID removeOctreeNode(sOctreeNode*);
+
+	CWVOID renderOctreeNodePrimitiveFrame(sOctreeNode*);
 
 protected:
 	sOctreeNode* m_pRoot;

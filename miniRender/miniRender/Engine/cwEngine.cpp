@@ -34,6 +34,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Parser/cwRendererParser.h"
 #include "Platform/cwFileSystem.h"
 #include "Repertory/cwRepertory.h"
+#include "SpatialSorting/cwSpatial.h"
+#include "SpatialSorting/cwSpatialFactory.h"
 
 NS_MINIR_BEGIN
 
@@ -52,7 +54,8 @@ cwEngine* cwEngine::create()
 cwEngine::cwEngine():
 m_pCurrScene(nullptr),
 m_pRenderer(nullptr),
-m_pDefaultCamera(nullptr)
+m_pDefaultCamera(nullptr),
+m_pSpatial(nullptr)
 {
 
 }
@@ -61,12 +64,17 @@ cwEngine::~cwEngine()
 {
 	CW_SAFE_RELEASE_NULL(m_pCurrScene);
 	CW_SAFE_RELEASE_NULL(m_pRenderer);
+	CW_SAFE_RELEASE_NULL(m_pSpatial);
 	m_pDefaultCamera = nullptr;
 }
 
 CWBOOL cwEngine::init()
 {
 	buildDefaultCamera();
+
+	m_pSpatial = cwSpatialFactory::createSpatial("Octree");
+	CW_SAFE_RETAIN(m_pSpatial);
+
 	return true;
 }
 
@@ -90,6 +98,11 @@ CWVOID cwEngine::setScene(cwScene* pScene)
 	CW_SAFE_RETAIN(pScene);
 	CW_SAFE_RELEASE_NULL(m_pCurrScene);
 	m_pCurrScene = pScene;
+
+	//if (m_pSpatial) {
+	//	m_pSpatial->clear();
+	//	m_pSpatial->build(pScene);
+	//}
 }
 
 CWVOID cwEngine::mainLoop(CWFLOAT dt)
@@ -98,6 +111,11 @@ CWVOID cwEngine::mainLoop(CWFLOAT dt)
 
 	repertory.getEventManager()->dispatchEvent();
 	repertory.getSchedulerManager()->update(dt);
+
+	if (m_pSpatial) {
+		m_pSpatial->update();
+	}
+
 	render();
 	repertory.getAutoReleasePool()->clear();
 }
@@ -151,6 +169,26 @@ CWVOID cwEngine::render()
 		m_pRenderer->render();
 		m_pRenderer->end();
 	}
+}
+
+CWBOOL cwEngine::insertSpatialNode(cwRenderNode* pNode)
+{
+	if (m_pSpatial)
+		return m_pSpatial->insert(pNode);
+	return CWFALSE;
+}
+
+CWBOOL cwEngine::removeSpatialNode(cwRenderNode* pNode)
+{
+	if (m_pSpatial)
+		return m_pSpatial->remove(pNode);
+	return CWFALSE;
+}
+
+CWVOID cwEngine::refreshSpatialNode(cwRenderNode* pNode)
+{
+	if (m_pSpatial)
+		m_pSpatial->refresh(pNode);
 }
 
 NS_MINIR_END

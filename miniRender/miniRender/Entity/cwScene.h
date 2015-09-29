@@ -22,18 +22,16 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Base/cwVector.h"
-#include "cwRenderNode.h"
-#include "Base/cwVector.h"
 #include "Light/cwLight.h"
 #include "Light/cwDirectionalLight.h"
 #include "Light/cwPointLight.h"
 #include "Light/cwSpotLight.h"
+#include "cwRenderNode.h"
 
 NS_MINIR_BEGIN
 
 class cwEntity;
 class cwCamera;
-class cwSpatial;
 
 class CW_DLL cwScene : public cwRenderNode
 {
@@ -45,9 +43,8 @@ public:
 
 	virtual CWBOOL init() override;
 
-	virtual CWVOID addChild(cwRenderNode* pNode) override;
-	virtual CWVOID removeChild(cwRenderNode* pNode) override;
-	virtual CWVOID removeChildren() override;
+	//virtual CWBOOL addChild(cwRenderNode* pNode) override;
+	//virtual CWBOOL removeChild(cwRenderNode* pNode) override;
 
 	virtual CWVOID addDirectionalLight(cwDirectionalLight* pLight);
 	virtual CWVOID addPointLight(cwPointLight* pLight);
@@ -61,7 +58,6 @@ public:
 	const cwVector<cwPointLight*>& getPointLights() const;
 	const cwVector<cwSpotLight*>& getSpotLights() const;
 
-	CWVOID refreshNode(cwRenderNode* pNode);
 	cwVector<cwEntity*>& getVisibleEntities(cwCamera* pCamera, eSceneObjectType eType = eSceneObjectEntity);
 
 protected:
@@ -69,8 +65,6 @@ protected:
 	cwVector<cwPointLight*> m_nVecPointLights;
 	cwVector<cwSpotLight*> m_nVecSpotLights;
 	cwVector<cwEntity*> m_nVecVisibleEntity;
-
-	cwSpatial* m_pSpatial;
 
 };
 

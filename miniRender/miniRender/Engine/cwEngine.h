@@ -40,12 +40,19 @@ class cwShader;
 class cwEntity;
 class cwEffect;
 class cwRenderer;
+class cwSpatial;
+class cwRenderNode;
 
 class CW_DLL cwEngine : public cwRef
 {
 public:
 	CWVOID setScene(cwScene* pScene);
 	cwScene* getCurrScene() { return m_pCurrScene; }
+
+	CWBOOL insertSpatialNode(cwRenderNode*);
+	CWBOOL removeSpatialNode(cwRenderNode*);
+	CWVOID refreshSpatialNode(cwRenderNode*);
+
 	CWVOID mainLoop(CWFLOAT dt);
 
 	cwCamera* getDefaultCamera();
@@ -71,6 +78,7 @@ protected:
 
 protected:
 	cwScene* m_pCurrScene;
+	cwSpatial* m_pSpatial;
 
 	cwCamera* m_pDefaultCamera;
 	cwMap<CWSTRING, cwCamera*> m_nMapCameras;

@@ -20,13 +20,14 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwOctree.h"
 #include "Entity/cwRenderNode.h"
 #include "Entity/cwScene.h"
-
-#include <unordered_map>
+#include "Repertory/cwRepertory.h"
+#include "Engine/cwEngine.h"
+#include "Render/cwRenderer.h"
 
 NS_MINIR_BEGIN
 
 const CWUINT cwOctree::MAX_DEPTH = 8;
-const CWUINT cwOctree::m_uDefaultDepth = 6;
+const CWUINT cwOctree::m_uDefaultDepth = 5;
 const cwAABB cwOctree::m_nDefaultSize(cwPoint3D(-1000.0f, -1000.0f, -1000.0f), cwPoint3D(1000.0f, 1000.0f, 1000.0f));
 
 cwOctree::sOctreeNode::sOctreeNode()
@@ -39,13 +40,13 @@ cwOctree::sOctreeNode::sOctreeNode()
 cwOctree::sOctreeNode::~sOctreeNode()
 {
 	m_pParent = nullptr;
+	m_nListObjs.clear();
+
 	for (CWUINT i = 0; i < 8; ++i) {
 		if (m_pChildren[i]) {
 			CW_SAFE_DELETE(m_pChildren[i]);
 		}
 	}
-
-	m_nListObjs.clear();
 }
 
 cwOctree* cwOctree::create()
@@ -92,7 +93,7 @@ cwOctree::~cwOctree()
 CWBOOL cwOctree::init()
 {
 	sOctreeInit initData;
-	initData.m_uDepth = MAX_DEPTH;
+	initData.m_uDepth = m_uDefaultDepth;
 	initData.m_nMaxSpace = m_nDefaultSize;
 
 	return this->init(initData);
@@ -118,29 +119,25 @@ CWBOOL cwOctree::build(cwScene* pScene)
 	return CWTRUE;
 }
 
-CWBOOL cwOctree::insert(cwRenderNode* pNode)
+CWBOOL cwOctree::insertNode(cwRenderNode* pNode)
 {
 	if (!pNode) return CWFALSE;
 	if (!m_pRoot) return CWFALSE;
 
-	if (pNode->getType() == eSceneObjectEntity) {
-		insert(pNode, m_pRoot, 0);
-	}
-	else {
-		for (auto pChild : pNode->getChildren()) {
-			insert(pChild);
-		}
-	}
+	pNode->transform();
+	pNode->refreshTransform();
+	pNode->refreshBoundingBox();
+	
+	insertNode(pNode, m_pRoot, 0);
 
 	return CWTRUE;
 }
 
-CWBOOL cwOctree::insert(cwRenderNode* pNode, sOctreeNode* pOctreeNode, CWUINT uDepth)
+CWBOOL cwOctree::insertNode(cwRenderNode* pNode, sOctreeNode* pOctreeNode, CWUINT uDepth)
 {
-	if (!pOctreeNode || !pNode) return CWFALSE;
-
 	if (uDepth == m_uMaxDepth) {
 		pOctreeNode->m_nListObjs.push_back(pNode);
+		return CWTRUE;
 	}
 
 	if (pOctreeNode->m_nBox.contained(pNode->getBoundingBox())) {
@@ -148,17 +145,21 @@ CWBOOL cwOctree::insert(cwRenderNode* pNode, sOctreeNode* pOctreeNode, CWUINT uD
 		getChildrenBoundingBox(pOctreeNode, childBox);
 		CWBOOL bInner = CWFALSE;
 
+		const cwAABB& nodeAabb = pNode->getBoundingBox();
+
 		for (CWUINT i = 0; i < 8; ++i) {
-			if (childBox[i].contained(pNode->getBoundingBox())) {
+			if (childBox[i].contained(nodeAabb)) {
 				bInner = CWTRUE;
 				if (pOctreeNode->m_pChildren[i]) {
-					insert(pNode, pOctreeNode->m_pChildren[i], uDepth++);
+					insertNode(pNode, pOctreeNode->m_pChildren[i], uDepth+1);
 				}
 				else {
 					pOctreeNode->m_pChildren[i] = getUnuseOctreeNode();
-					pOctreeNode->m_pChildren[i]->m_pParent = pOctreeNode;
-					pOctreeNode->m_pChildren[i]->m_nBox = childBox[i];
-					insert(pNode, pOctreeNode->m_pChildren[i], uDepth++);
+					if (pOctreeNode->m_pChildren[i]) {
+						pOctreeNode->m_pChildren[i]->m_pParent = pOctreeNode;
+						pOctreeNode->m_pChildren[i]->m_nBox = childBox[i];
+						insertNode(pNode, pOctreeNode->m_pChildren[i], uDepth + 1);
+					}
 				}
 
 				if (bInner) {
@@ -175,11 +176,30 @@ CWBOOL cwOctree::insert(cwRenderNode* pNode, sOctreeNode* pOctreeNode, CWUINT uD
 		pOctreeNode->m_nListObjs.push_back(pNode);
 	}
 
-	for (auto pChild : pNode->getChildren()) {
-		insert(pChild);
+	return CWTRUE;
+}
+
+CWBOOL cwOctree::insertNodes()
+{
+	for (auto pNode : m_nVecAppend) {
+		insertNode(pNode);
 	}
 
+	m_nVecAppend.clear();
+
 	return CWTRUE;
+}
+
+CWBOOL cwOctree::insert(cwRenderNode* pNode)
+{
+	if (pNode) {
+		if (!m_nVecAppend.contains(pNode)) {
+			m_nVecAppend.pushBack(pNode);
+			return CWTRUE;
+		}
+	}
+
+	return CWFALSE;
 }
 
 CWVOID cwOctree::getChildrenBoundingBox(sOctreeNode* pOctreeNode, cwAABB* pAabb)
@@ -217,6 +237,18 @@ CWVOID cwOctree::getChildrenBoundingBox(sOctreeNode* pOctreeNode, cwAABB* pAabb)
 
 CWBOOL cwOctree::remove(cwRenderNode* pNode)
 {
+	if (pNode) {
+		if (!m_nVecRemove.contains(pNode)) {
+			m_nVecRemove.pushBack(pNode);
+			return CWTRUE;
+		}
+	}
+
+	return CWFALSE;
+}
+
+CWBOOL cwOctree::removeNode(cwRenderNode* pNode)
+{
 	if (!pNode) return CWFALSE;
 	if (!m_pRoot) return CWFALSE;
 
@@ -229,16 +261,25 @@ CWBOOL cwOctree::remove(cwRenderNode* pNode)
 	}
 
 	for (auto pChild : pNode->getChildren()) {
-		remove(pChild);
+		removeNode(pChild);
 	}
 
-	return CWFALSE;
+	return CWTRUE;
+}
+
+CWBOOL cwOctree::removeNodes()
+{
+	for (auto pNode : m_nVecRemove) {
+		removeNode(pNode);
+	}
+
+	m_nVecRemove.clear();
+	return CWTRUE;
 }
 
 cwOctree::sOctreeNode* cwOctree::getTreeNodeBelong(cwRenderNode* pNode)
 {
 	if (!pNode) return nullptr;
-	if (pNode->getType() != eSceneObjectEntity) return nullptr;
 	if (!m_pRoot) return nullptr;
 
 	sOctreeNode* pInnerOctreeNode = getTreeNodeBelong(pNode, m_pRoot);
@@ -356,50 +397,54 @@ CWVOID cwOctree::refresh(cwRenderNode* pNode)
 
 CWVOID cwOctree::update()
 {
-	if (m_nSetRefreshNode.empty()) return;
-	
-	std::unordered_map<cwRenderNode*, sOctreeNode*> m_nMapNodeTree;
-	for (auto pNode : m_nSetRefreshNode) {
-		if (pNode && pNode->getType() == eSceneObjectEntity) {
-			if (m_nMapNodeTree.find(pNode) == m_nMapNodeTree.end()) {
-				sOctreeNode* pOctreeNode = getTreeNodeBelong(pNode);
-				if (pOctreeNode) {
-					m_nMapNodeTree[pNode] = pOctreeNode;
+	insertNodes();
+
+	if (!m_nSetRefreshNode.empty()) {
+		std::unordered_map<cwRenderNode*, sOctreeNode*> mapNodeTree;
+		std::unordered_set<sOctreeNode*> setOctreeNode;
+
+		for (auto pNode : m_nSetRefreshNode) {
+			if (pNode) {
+				if (mapNodeTree.find(pNode) == mapNodeTree.end()) {
+					sOctreeNode* pOctreeNode = getTreeNodeBelong(pNode);
+					if (pOctreeNode) {
+						mapNodeTree[pNode] = pOctreeNode;
+						setOctreeNode.insert(pOctreeNode);
+					}
 				}
+			}
+
+			getRenderNodeChild(pNode, mapNodeTree);
+		}
+
+		for (auto nodeData : mapNodeTree) {
+			nodeData.first->transform();
+		}
+
+		for (auto nodeData : mapNodeTree) {
+			nodeData.first->refreshTransform();
+			nodeData.first->refreshBoundingBox();
+
+			if (nodeData.second->m_nBox.contained(nodeData.first->getBoundingBox())) continue;
+
+			auto it = std::find(nodeData.second->m_nListObjs.begin(), nodeData.second->m_nListObjs.end(), nodeData.first);
+			if (it != nodeData.second->m_nListObjs.end()) {
+				nodeData.second->m_nListObjs.erase(it);
+			}
+
+			insertNode(nodeData.first, m_pRoot, 0);
+		}
+
+		for (auto pOctreeNode : setOctreeNode) {
+			if (pOctreeNode->m_nListObjs.empty() && isLeafNode(pOctreeNode)) {
+				removeOctreeNode(pOctreeNode);
 			}
 		}
 
-		getRenderNodeChild(pNode, m_nMapNodeTree);
+		m_nSetRefreshNode.clear();
 	}
-
-	for (auto nodeData : m_nMapNodeTree) {
-		nodeData.first->transform();
-	}
-
-	for (auto nodeData : m_nMapNodeTree) {
-		nodeData.first->refreshTransform();
-		nodeData.first->refreshBoundingBox();
-	}
-
-	for (auto nodeData : m_nMapNodeTree) {
-		nodeData.first->refreshGroupBoundingBox();
-		if (nodeData.second->m_nBox.contained(nodeData.first->getBoundingBox())) continue;
-
-		auto it = std::find(nodeData.second->m_nListObjs.begin(), nodeData.second->m_nListObjs.end(), nodeData.first);
-		if (it != nodeData.second->m_nListObjs.end()) {
-			nodeData.second->m_nListObjs.erase(it);
-		}
-
-		insert(nodeData.first, m_pRoot, 0);
-	}
-
-	for (auto nodeData : m_nMapNodeTree) {
-		if (nodeData.second->m_nListObjs.empty()) {
-			removeOctreeNode(nodeData.second);
-		}
-	}
-
-	m_nSetRefreshNode.clear();
+	
+	removeNodes();
 }
 
 CWVOID cwOctree::getRenderNodeChild(cwRenderNode* pNode, std::unordered_map<cwRenderNode*, sOctreeNode*>& mapNode)
@@ -407,7 +452,7 @@ CWVOID cwOctree::getRenderNodeChild(cwRenderNode* pNode, std::unordered_map<cwRe
 	if (!pNode) return;
 
 	for (auto pChildNode : pNode->getChildren()) {
-		if (pChildNode && pChildNode->getType() == eSceneObjectEntity) {
+		if (pChildNode) {
 			if (mapNode.find(pChildNode) == mapNode.end()) {
 				sOctreeNode* pOctreeNode = getTreeNodeBelong(pChildNode);
 				if (pOctreeNode) {
@@ -429,6 +474,14 @@ cwOctree::sOctreeNode* cwOctree::getUnuseOctreeNode()
 	return pOctreeNode;
 }
 
+CWBOOL cwOctree::isLeafNode(sOctreeNode* pOctreeNode)
+{
+	for (CWUINT i = 0; i < 8; ++i)
+	if (pOctreeNode->m_pChildren[i]) return CWFALSE;
+
+	return CWTRUE;
+}
+
 CWVOID cwOctree::saveUnuseOctreeNode(sOctreeNode* pOctreeNode)
 {
 	if (pOctreeNode) {
@@ -442,12 +495,45 @@ CWVOID cwOctree::removeOctreeNode(sOctreeNode* pOctreeNode)
 		//root node? 
 		if (!pOctreeNode->m_pParent) return;
 		for (CWUINT i = 0; i < 8; ++i) {
-			if (pOctreeNode->m_pChildren[i] == pOctreeNode) {
-				pOctreeNode->m_pChildren[i] = nullptr;
+			if (pOctreeNode->m_pParent->m_pChildren[i] == pOctreeNode) {
+				pOctreeNode->m_pParent->m_pChildren[i] = nullptr;
 				pOctreeNode->m_pParent = nullptr;
 				saveUnuseOctreeNode(pOctreeNode);
 			}
 		}
+	}
+}
+
+CWVOID cwOctree::clear()
+{
+	clearOctreeNode(m_pRoot);
+	m_nSetRefreshNode.clear();
+	m_nVecAppend.clear();
+	m_nVecRemove.clear();
+}
+
+CWVOID cwOctree::clearOctreeNode(sOctreeNode* pOctreeNode)
+{
+	if (pOctreeNode) {
+		pOctreeNode->m_nListObjs.clear();
+		for (auto pChildNode : pOctreeNode->m_pChildren) {
+			clearOctreeNode(pChildNode);
+		}
+	}
+}
+
+CWVOID cwOctree::renderPrimitiveFrame()
+{
+	if (m_pRoot)
+		renderOctreeNodePrimitiveFrame(m_pRoot);
+}
+
+CWVOID cwOctree::renderOctreeNodePrimitiveFrame(sOctreeNode* pOctreeNode)
+{
+	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(pOctreeNode->m_nBox);
+	for (CWUINT i = 0; i < 8; ++i)  {
+		if (pOctreeNode->m_pChildren[i])
+			renderOctreeNodePrimitiveFrame(pOctreeNode->m_pChildren[i]);
 	}
 }
 

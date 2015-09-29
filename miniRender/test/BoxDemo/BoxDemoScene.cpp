@@ -156,14 +156,12 @@ void BoxDemoScene::buildEntity()
 	m_pEntityBox01 = cwEntity::create();
 	m_pEntityBox01->setMaterial(pMaterial);
 	m_pEntityBox01->setRenderObject(pRenderObj);
-	m_pEntityBox01->setPosition(cwVector3D(2.0f, 1.0f, 0.0f));
 	m_pEntityBox01->setEffect(pEffect);
 	CW_SAFE_RETAIN(m_pEntityBox01);
 
 	m_pEntityBox02 = cwEntity::create();
 	m_pEntityBox02->setMaterial(pMaterial);
 	m_pEntityBox02->setRenderObject(pRenderObj);
-	m_pEntityBox02->setPosition(cwVector3D(-2.0f, 1.0f, -3.0f));
 	m_pEntityBox02->setEffect(pEffect);
 	CW_SAFE_RETAIN(m_pEntityBox02);
 }
@@ -179,9 +177,15 @@ void BoxDemoScene::buildScene()
 	buildEntity();
 	buildAxis();
 
+	m_pEntityBox01->setPosition(cwVector3D(2.0f, 1.0f, 0.0f));
 	this->addChild(m_pEntityBox01);
+
+	m_pEntityBox02->setPosition(cwVector3D(-2.0f, 1.0f, -3.0f));
 	m_pEntityBox01->addChild(m_pEntityBox02);
 	this->addChild(m_pEntityAxis);
 
-	m_pEntityBox01->rotate(0, cwMathUtil::cwPI*0.1f, 0);
+	cwRenderNode* pZeroNode = cwRenderNode::create();
+	this->addChild(pZeroNode);
+
+//	m_pEntityBox01->rotate(0, cwMathUtil::cwPI*0.1f, 0);
 }

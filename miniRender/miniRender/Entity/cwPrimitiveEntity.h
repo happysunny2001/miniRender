@@ -54,6 +54,8 @@ protected:
 	CWVOID buildRenderObject();
 	CWVOID buildEffect();
 
+	virtual CWVOID refreshSpatialNode() override;
+
 protected:
 	cwVertexPosColor* m_pVertexData;
 	CWUINT m_uVertexCnt;

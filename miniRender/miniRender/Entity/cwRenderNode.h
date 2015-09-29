@@ -46,9 +46,9 @@ public:
 
 	virtual CWVOID setParent(cwRenderNode* pNode);
 
-	virtual CWVOID addChild(cwRenderNode* pNode);
-	virtual CWVOID removeChild(cwRenderNode* pNode);
-	virtual CWVOID removeChildren();
+	virtual CWBOOL addChild(cwRenderNode* pNode);
+	virtual CWBOOL removeChild(cwRenderNode* pNode);
+	//virtual CWVOID removeChildren();
 
 	const cwVector3D& getPosition() const { return m_nPos; }
 	virtual CWVOID setPosition(CWFLOAT x, CWFLOAT y, CWFLOAT z);
@@ -85,7 +85,7 @@ public:
 	virtual CWVOID refreshBoundingBox();
 	inline const cwAABB& getBoundingBox() const { return m_nBoundingBox; }
 
-	virtual CWVOID refreshGroupBoundingBox();
+	virtual cwAABB getGroupBoundingBox();
 	inline const cwAABB& getGroupBoundingBox() const { return m_nGroupBoundingBox; }
 
 	virtual CWVOID transform();
@@ -99,13 +99,16 @@ public:
 	virtual CWVOID removeEventListerner(cwEventListener* pListener, CWBOOL bClean = CWTRUE);
 
 	virtual CWVOID update(CWFLOAT dt);
-	
 	virtual CWVOID render();
 
 protected:
 	CWVOID clearChildren();
 	CWVOID clearEventListener();
 	CWVOID updateChildrenTransform();
+
+	CWVOID insertSpatialNode(cwRenderNode*);
+	CWVOID removeSpatialNode(cwRenderNode*);
+	virtual CWVOID refreshSpatialNode();
 	
 protected:
 	eSceneObjectType m_eType;
