@@ -28,7 +28,8 @@ NS_MINIR_BEGIN
 
 const CWUINT cwOctree::MAX_DEPTH = 8;
 const CWUINT cwOctree::m_uDefaultDepth = 5;
-const cwAABB cwOctree::m_nDefaultSize(cwPoint3D(-1000.0f, -1000.0f, -1000.0f), cwPoint3D(1000.0f, 1000.0f, 1000.0f));
+//const cwAABB cwOctree::m_nDefaultSize(cwPoint3D(-1000.0f, -1000.0f, -1000.0f), cwPoint3D(1000.0f, 1000.0f, 1000.0f));
+const cwAABB cwOctree::m_nDefaultSize(cwPoint3D(-50.0f, -50.0f, -50.0f), cwPoint3D(50.0f, 50.0f, 50.0f));
 
 cwOctree::sOctreeNode::sOctreeNode()
 {
@@ -151,7 +152,7 @@ CWBOOL cwOctree::insertNode(cwRenderNode* pNode, sOctreeNode* pOctreeNode, CWUIN
 			if (childBox[i].contained(nodeAabb)) {
 				bInner = CWTRUE;
 				if (pOctreeNode->m_pChildren[i]) {
-					insertNode(pNode, pOctreeNode->m_pChildren[i], uDepth+1);
+					insertNode(pNode, pOctreeNode->m_pChildren[i], uDepth + 1);
 				}
 				else {
 					pOctreeNode->m_pChildren[i] = getUnuseOctreeNode();
@@ -237,21 +238,37 @@ CWVOID cwOctree::getChildrenBoundingBox(sOctreeNode* pOctreeNode, cwAABB* pAabb)
 
 CWBOOL cwOctree::remove(cwRenderNode* pNode)
 {
-	if (pNode) {
-		if (!m_nVecRemove.contains(pNode)) {
-			m_nVecRemove.pushBack(pNode);
-			return CWTRUE;
+	if (!pNode) return CWFALSE;
+
+	std::vector<cwRenderNode*> vecStack;
+	vecStack.reserve(10);
+	vecStack.push_back(pNode);
+
+	while (!vecStack.empty()) {
+		cwRenderNode* pLast = vecStack.back();
+		vecStack.pop_back();
+
+		auto it = m_nSetRemove.find(pLast);
+		if (it == m_nSetRemove.end()) {
+			auto pairRet = m_nSetRemove.insert(pLast);
+			if (pairRet.second)
+				CW_SAFE_RETAIN(pLast);
+		}
+
+		cwVector<cwRenderNode*>& nVecChildren = pLast->getChildren();
+		if (!nVecChildren.empty()) {
+			for (auto pNode : nVecChildren) {
+				if (pNode)
+					vecStack.push_back(pNode);
+			}
 		}
 	}
 
-	return CWFALSE;
+	return CWTRUE;
 }
 
 CWBOOL cwOctree::removeNode(cwRenderNode* pNode)
 {
-	if (!pNode) return CWFALSE;
-	if (!m_pRoot) return CWFALSE;
-
 	sOctreeNode* pInnerOctreeNode = getTreeNodeBelong(pNode);
 	if (pInnerOctreeNode) {
 		auto it = std::find(pInnerOctreeNode->m_nListObjs.begin(), pInnerOctreeNode->m_nListObjs.end(), pNode);
@@ -260,20 +277,17 @@ CWBOOL cwOctree::removeNode(cwRenderNode* pNode)
 		}
 	}
 
-	for (auto pChild : pNode->getChildren()) {
-		removeNode(pChild);
-	}
-
 	return CWTRUE;
 }
 
 CWBOOL cwOctree::removeNodes()
 {
-	for (auto pNode : m_nVecRemove) {
+	for (auto pNode : m_nSetRemove) {
 		removeNode(pNode);
+		CW_SAFE_RELEASE(pNode);
 	}
 
-	m_nVecRemove.clear();
+	m_nSetRemove.clear();
 	return CWTRUE;
 }
 
@@ -324,79 +338,108 @@ cwOctree::sOctreeNode* cwOctree::getTreeNodeBelongRude(cwRenderNode* pNode, sOct
 	return nullptr;
 }
 
-CWVOID cwOctree::intersection(const cwFrustum& frustum, std::vector<cwRenderNode*>& vecRet)
+CWVOID cwOctree::intersection(const cwFrustum& frustum, std::vector<cwRenderNode*>& vecRet, eSceneObjectType eType)
 {
-	intersection(m_pRoot, frustum, vecRet);
+	intersection(m_pRoot, frustum, vecRet, eType);
 }
 
-CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwFrustum& frustum, std::vector<cwRenderNode*>& vecRet)
+CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwFrustum& frustum, std::vector<cwRenderNode*>& vecRet, eSceneObjectType eType)
 {
 	if (!pOctreeNode) return;
 	int iRet = frustum.intersection(pOctreeNode->m_nBox);
 	if (!frustum.isCollide(iRet)) return;
 
 	for (auto pNode : pOctreeNode->m_nListObjs) {
-		int iRet = frustum.intersection(pNode->getBoundingBox());
-		if (frustum.isCollide(iRet)) vecRet.push_back(pNode);
+		if (pNode->getType() == eType) {
+			int iRet = frustum.intersection(pNode->getBoundingBox());
+			if (frustum.isCollide(iRet)) vecRet.push_back(pNode);
+		}
 	}
 
 	for (CWUINT i = 0; i < 8; ++i) {
 		if (pOctreeNode->m_pChildren[i])
-			intersection(pOctreeNode->m_pChildren[i], frustum, vecRet);
+			intersection(pOctreeNode->m_pChildren[i], frustum, vecRet, eType);
 	}
 }
 
-CWVOID cwOctree::intersection(const cwAABB& aabb, std::vector<cwRenderNode*>& vecRet)
+CWVOID cwOctree::intersection(const cwAABB& aabb, std::vector<cwRenderNode*>& vecRet, eSceneObjectType eType)
 {
-	intersection(m_pRoot, aabb, vecRet);
+	intersection(m_pRoot, aabb, vecRet, eType);
 }
 
-CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwAABB& aabb, std::vector<cwRenderNode*>& vecRet)
+CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwAABB& aabb, std::vector<cwRenderNode*>& vecRet, eSceneObjectType eType)
 {
 	if (!pOctreeNode) return;
 	if (!pOctreeNode->m_nBox.intersection(aabb)) return;
 
 	for (auto pNode : pOctreeNode->m_nListObjs) {
-		if (aabb.intersection(pNode->getBoundingBox()))
-			vecRet.push_back(pNode);
+		if (pNode->getType() == eType) {
+			if (aabb.intersection(pNode->getBoundingBox()))
+				vecRet.push_back(pNode);
+		}
 	}
 
 	for (CWUINT i = 0; i < 8; ++i) {
 		if (pOctreeNode->m_pChildren[i])
-			intersection(pOctreeNode->m_pChildren[i], aabb, vecRet);
+			intersection(pOctreeNode->m_pChildren[i], aabb, vecRet, eType);
 	}
 }
 
-CWVOID cwOctree::intersection(const cwCircle& circle, std::vector<cwRenderNode*>& vecRet)
+CWVOID cwOctree::intersection(const cwCircle& circle, std::vector<cwRenderNode*>& vecRet, eSceneObjectType eType)
 {
-	intersection(m_pRoot, circle, vecRet);
+	intersection(m_pRoot, circle, vecRet, eType);
 }
 
-CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwCircle& circle, std::vector<cwRenderNode*>& vecRet)
+CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwCircle& circle, std::vector<cwRenderNode*>& vecRet, eSceneObjectType eType)
 {
 	if (!pOctreeNode) return;
 	if (!pOctreeNode->m_nBox.intersection(circle)) return;
 
 	for (auto pNode : pOctreeNode->m_nListObjs) {
-		if (circle.intersection(pNode->getBoundingBox()))
-			vecRet.push_back(pNode);
+		if (pNode->getType() == eType) {
+			if (circle.intersection(pNode->getBoundingBox()))
+				vecRet.push_back(pNode);
+		}
 	}
 
 	for (CWUINT i = 0; i < 8; ++i) {
 		if (pOctreeNode->m_pChildren[i])
-			intersection(pOctreeNode->m_pChildren[i], circle, vecRet);
+			intersection(pOctreeNode->m_pChildren[i], circle, vecRet, eType);
 	}
 }
 
 CWVOID cwOctree::refresh(cwRenderNode* pNode)
 {
 	if (pNode) {
-		m_nSetRefreshNode.insert(pNode);
+		std::vector<cwRenderNode*> vecStack;
+		vecStack.reserve(10);
+		vecStack.push_back(pNode);
+
+		while (!vecStack.empty()) {
+			cwRenderNode* pLast = vecStack.back();
+			vecStack.pop_back();
+
+			auto it = m_nSetRefreshNode.find(pLast);
+			if (it == m_nSetRefreshNode.end()) {
+				auto pairRet = m_nSetRefreshNode.insert(pLast);
+				if (pairRet.second)
+					CW_SAFE_RETAIN(pLast);
+			}
+
+			cwVector<cwRenderNode*>& nVecChildren = pLast->getChildren();
+			if (!nVecChildren.empty()) {
+				for (auto pChildNode : nVecChildren) {
+					if (pChildNode)
+						vecStack.push_back(pChildNode);
+				}
+			}
+		}
 	}
 }
 
 CWVOID cwOctree::update()
 {
+	if (!m_pRoot) return;
 	insertNodes();
 
 	if (!m_nSetRefreshNode.empty()) {
@@ -414,7 +457,7 @@ CWVOID cwOctree::update()
 				}
 			}
 
-			getRenderNodeChild(pNode, mapNodeTree);
+			//getRenderNodeChild(pNode, mapNodeTree);
 		}
 
 		for (auto nodeData : mapNodeTree) {
@@ -441,6 +484,8 @@ CWVOID cwOctree::update()
 			}
 		}
 
+		for (auto pNode : m_nSetRefreshNode)
+			CW_SAFE_RELEASE(pNode);
 		m_nSetRefreshNode.clear();
 	}
 	
@@ -509,7 +554,11 @@ CWVOID cwOctree::clear()
 	clearOctreeNode(m_pRoot);
 	m_nSetRefreshNode.clear();
 	m_nVecAppend.clear();
-	m_nVecRemove.clear();
+	
+	for (auto pNode : m_nSetRemove) {
+		CW_SAFE_RELEASE(pNode);
+	}
+	m_nSetRemove.clear();
 }
 
 CWVOID cwOctree::clearOctreeNode(sOctreeNode* pOctreeNode)

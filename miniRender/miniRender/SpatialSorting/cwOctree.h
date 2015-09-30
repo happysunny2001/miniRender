@@ -81,9 +81,9 @@ public:
 
 	virtual CWBOOL build(cwScene*) override;
 
-	virtual CWVOID intersection(const cwFrustum&, std::vector<cwRenderNode*>&) override;
-	virtual CWVOID intersection(const cwAABB&, std::vector<cwRenderNode*>&) override;
-	virtual CWVOID intersection(const cwCircle&, std::vector<cwRenderNode*>&) override;
+	virtual CWVOID intersection(const cwFrustum&, std::vector<cwRenderNode*>&, eSceneObjectType eType = eSceneObjectEntity) override;
+	virtual CWVOID intersection(const cwAABB&, std::vector<cwRenderNode*>&, eSceneObjectType eType = eSceneObjectEntity) override;
+	virtual CWVOID intersection(const cwCircle&, std::vector<cwRenderNode*>&, eSceneObjectType eType = eSceneObjectEntity) override;
 
 	virtual CWBOOL insert(cwRenderNode*) override;
 	virtual CWBOOL remove(cwRenderNode*) override;
@@ -111,9 +111,9 @@ protected:
 	sOctreeNode* getTreeNodeBelong(cwRenderNode*, sOctreeNode*);
 	sOctreeNode* getTreeNodeBelongRude(cwRenderNode*, sOctreeNode*);
 
-	CWVOID intersection(sOctreeNode*, const cwFrustum&, std::vector<cwRenderNode*>&);
-	CWVOID intersection(sOctreeNode*, const cwAABB&, std::vector<cwRenderNode*>&);
-	CWVOID intersection(sOctreeNode*, const cwCircle&, std::vector<cwRenderNode*>&);
+	CWVOID intersection(sOctreeNode*, const cwFrustum&, std::vector<cwRenderNode*>&, eSceneObjectType);
+	CWVOID intersection(sOctreeNode*, const cwAABB&, std::vector<cwRenderNode*>&, eSceneObjectType);
+	CWVOID intersection(sOctreeNode*, const cwCircle&, std::vector<cwRenderNode*>&, eSceneObjectType);
 
 	CWVOID getRenderNodeChild(cwRenderNode*, std::unordered_map<cwRenderNode*, sOctreeNode*>&);
 	CWVOID updateRenderNode(cwRenderNode*, sOctreeNode*);
@@ -133,7 +133,8 @@ protected:
 	std::queue<sOctreeNode*> m_nQueueUnuseOctreeNode;
 
 	cwVector<cwRenderNode*> m_nVecAppend;
-	cwVector<cwRenderNode*> m_nVecRemove;
+	//cwVector<cwRenderNode*> m_nVecRemove;
+	std::unordered_set<cwRenderNode*> m_nSetRemove;
 
 };
 

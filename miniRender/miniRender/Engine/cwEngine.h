@@ -49,6 +49,7 @@ public:
 	CWVOID setScene(cwScene* pScene);
 	cwScene* getCurrScene() { return m_pCurrScene; }
 
+	cwSpatial* getSpatial() const { return m_pSpatial; }
 	CWBOOL insertSpatialNode(cwRenderNode*);
 	CWBOOL removeSpatialNode(cwRenderNode*);
 	CWVOID refreshSpatialNode(cwRenderNode*);

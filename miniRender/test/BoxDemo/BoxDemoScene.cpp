@@ -127,6 +127,7 @@ void BoxDemoScene::update(CWFLOAT dt)
 	repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox01->getBoundingBox(), cwColor::sliver);
 	repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox02->getBoundingBox(), cwColor::sliver);
 	repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox01->getGroupBoundingBox(), cwColor::sliver);
+	repertory.getEngine()->getSpatial()->renderPrimitiveFrame();
 }
 
 void BoxDemoScene::buildEntity()

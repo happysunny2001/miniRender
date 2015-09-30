@@ -363,6 +363,7 @@ cwAABB cwRenderNode::getGroupBoundingBox()
 	m_nGroupBoundingBox.zero();
 
 	std::vector<cwRenderNode*> vecStack;
+	vecStack.reserve(10);
 	vecStack.push_back(this);
 
 	while (!vecStack.empty()) {
