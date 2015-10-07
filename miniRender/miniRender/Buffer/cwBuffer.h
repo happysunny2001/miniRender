@@ -52,7 +52,7 @@ public:
 	virtual CWVOID copyFrom(cwBuffer* pBuffer);
 	virtual CWVOID copyTo(CWVOID* pData);
 
-	CWUINT getSize() { return m_nStride*m_iElementCnt; }
+	inline CWUINT getSize() const { return m_uBufferSize; }
 
 	inline CWVOID setStride(CWUINT uStride) { m_nStride = uStride; }
 	inline CWUINT getStride() const { return m_nStride; }
@@ -67,6 +67,7 @@ protected:
 	CWUINT m_nStride;
 	CWUINT m_nOffset;
 	CWUINT m_iElementCnt;
+	CWUINT m_uBufferSize;
 
 };
 

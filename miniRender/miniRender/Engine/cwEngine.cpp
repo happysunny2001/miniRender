@@ -55,7 +55,8 @@ cwEngine::cwEngine():
 m_pCurrScene(nullptr),
 m_pRenderer(nullptr),
 m_pDefaultCamera(nullptr),
-m_pSpatial(nullptr)
+m_pSpatial(nullptr),
+m_uNodeVectorCounter(0)
 {
 
 }
@@ -96,13 +97,15 @@ CWVOID cwEngine::setScene(cwScene* pScene)
 {
 	if (pScene == m_pCurrScene) return;
 	CW_SAFE_RETAIN(pScene);
+
+	if (m_pSpatial) {
+		m_pSpatial->remove(m_pCurrScene);
+	}
+
 	CW_SAFE_RELEASE_NULL(m_pCurrScene);
 	m_pCurrScene = pScene;
 
-	//if (m_pSpatial) {
-	//	m_pSpatial->clear();
-	//	m_pSpatial->build(pScene);
-	//}
+	
 }
 
 CWVOID cwEngine::mainLoop(CWFLOAT dt)
@@ -122,15 +125,20 @@ CWVOID cwEngine::mainLoop(CWFLOAT dt)
 
 CWVOID cwEngine::buildDefaultCamera()
 {
+	cwRepertory& repertory = cwRepertory::getInstance();
+	CWFLOAT fScreenWidth  = static_cast<CWFLOAT>(repertory.getUInt(gValueWinWidth));
+	CWFLOAT fScreenHeight = static_cast<CWFLOAT>(repertory.getUInt(gValueWinHeight));
+
 	cwCamera* pDefCamera = cwCamera::create();
-	pDefCamera->setName("default");
-	m_nMapCameras.insert(pDefCamera->getName(), pDefCamera);
+	pDefCamera->setName("Default");
+	pDefCamera->updateProjMatrix(0.25f*cwMathUtil::cwPI, fScreenWidth / fScreenHeight, 1.0f, 1000.0f);
+	this->addCamera(pDefCamera);
 
 	cwHomogeneousCamera* pHomoCamera = cwHomogeneousCamera::create();
 	pHomoCamera->setName("Homo");
-	m_nMapCameras.insert(pHomoCamera->getName(), pHomoCamera);
+	this->addCamera(pHomoCamera);
 
-	m_pDefaultCamera = m_nMapCameras.find("default")->second;
+	m_pDefaultCamera = getCamera("Default"); 
 }
 
 cwCamera* cwEngine::getDefaultCamera()
@@ -149,16 +157,25 @@ cwCamera* cwEngine::getCamera(const CWSTRING& strName)
 
 CWBOOL cwEngine::removeCamera(cwCamera* pCamera)
 {
-	if (!pCamera) return false;
+	if (!pCamera) return CWFALSE;
+
+	if (m_pDefaultCamera == pCamera) {
+		m_pDefaultCamera = nullptr;
+	}
 
 	m_nMapCameras.erase(pCamera->getName());
-	return true;
+	m_nVecVisiableNodes.pop_back();
+	return CWTRUE;
 }
 
 CWVOID cwEngine::addCamera(cwCamera* pCamera)
 {
 	if (pCamera) {
 		m_nMapCameras.insert(pCamera->getName(), pCamera);
+
+		cwVector<cwRenderNode*> vecNodes;
+		vecNodes.reserve(100);
+		m_nVecVisiableNodes.push_back(vecNodes);
 	}
 }
 
@@ -169,6 +186,8 @@ CWVOID cwEngine::render()
 		m_pRenderer->render();
 		m_pRenderer->end();
 	}
+
+	clearVisibleNodes();
 }
 
 CWBOOL cwEngine::insertSpatialNode(cwRenderNode* pNode)
@@ -189,6 +208,33 @@ CWVOID cwEngine::refreshSpatialNode(cwRenderNode* pNode)
 {
 	if (m_pSpatial)
 		m_pSpatial->refresh(pNode);
+}
+
+cwVector<cwRenderNode*>* cwEngine::getVisibleNodes(cwCamera* pCamera, eSceneObjectType eType)
+{
+	if (pCamera && m_pSpatial) {
+		auto it = m_nMapVisibleNodes.find(pCamera);
+		if (it != m_nMapVisibleNodes.end()) return (it->second);
+
+		cwVector<cwRenderNode*>& vecNodes = m_nVecVisiableNodes[m_uNodeVectorCounter++];
+		m_pSpatial->intersection(pCamera->getFrustum(), vecNodes, eType, CWTRUE);
+
+		m_nMapVisibleNodes[pCamera] = &vecNodes;
+
+		return &vecNodes;
+	}
+
+	return nullptr;
+}
+
+CWVOID cwEngine::clearVisibleNodes()
+{
+	m_nMapVisibleNodes.clear();
+	for (auto it = m_nVecVisiableNodes.begin(); it != m_nVecVisiableNodes.end(); ++it) {
+		it->clear();
+	}
+
+	m_uNodeVectorCounter = 0;
 }
 
 NS_MINIR_END

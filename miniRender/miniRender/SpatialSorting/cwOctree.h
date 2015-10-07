@@ -33,7 +33,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-class cwOctree : public cwSpatial
+class CW_DLL cwOctree : public cwSpatial
 {
 public:
 	static const CWUINT MAX_DEPTH;
@@ -81,9 +81,9 @@ public:
 
 	virtual CWBOOL build(cwScene*) override;
 
-	virtual CWVOID intersection(const cwFrustum&, std::vector<cwRenderNode*>&, eSceneObjectType eType = eSceneObjectEntity) override;
-	virtual CWVOID intersection(const cwAABB&, std::vector<cwRenderNode*>&, eSceneObjectType eType = eSceneObjectEntity) override;
-	virtual CWVOID intersection(const cwCircle&, std::vector<cwRenderNode*>&, eSceneObjectType eType = eSceneObjectEntity) override;
+	virtual CWVOID intersection(const cwFrustum&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) override;
+	virtual CWVOID intersection(const cwAABB&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) override;
+	virtual CWVOID intersection(const cwCircle&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) override;
 
 	virtual CWBOOL insert(cwRenderNode*) override;
 	virtual CWBOOL remove(cwRenderNode*) override;
@@ -93,6 +93,8 @@ public:
 
 	virtual CWVOID clear() override;
 	virtual CWVOID renderPrimitiveFrame() override;
+
+	virtual const cwAABB& getBoundingBox() const override;
 
 	inline CWUINT getMaxDepth() const { return m_uMaxDepth; }
 
@@ -111,9 +113,9 @@ protected:
 	sOctreeNode* getTreeNodeBelong(cwRenderNode*, sOctreeNode*);
 	sOctreeNode* getTreeNodeBelongRude(cwRenderNode*, sOctreeNode*);
 
-	CWVOID intersection(sOctreeNode*, const cwFrustum&, std::vector<cwRenderNode*>&, eSceneObjectType);
-	CWVOID intersection(sOctreeNode*, const cwAABB&, std::vector<cwRenderNode*>&, eSceneObjectType);
-	CWVOID intersection(sOctreeNode*, const cwCircle&, std::vector<cwRenderNode*>&, eSceneObjectType);
+	CWVOID intersection(sOctreeNode*, const cwFrustum&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL);
+	CWVOID intersection(sOctreeNode*, const cwAABB&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL);
+	CWVOID intersection(sOctreeNode*, const cwCircle&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL);
 
 	CWVOID getRenderNodeChild(cwRenderNode*, std::unordered_map<cwRenderNode*, sOctreeNode*>&);
 	CWVOID updateRenderNode(cwRenderNode*, sOctreeNode*);
@@ -122,6 +124,7 @@ protected:
 	sOctreeNode* getUnuseOctreeNode();
 	CWVOID saveUnuseOctreeNode(sOctreeNode*);
 	CWVOID removeOctreeNode(sOctreeNode*);
+	CWVOID checkOctreeNodeEmpty(sOctreeNode*);
 
 	CWVOID renderOctreeNodePrimitiveFrame(sOctreeNode*);
 

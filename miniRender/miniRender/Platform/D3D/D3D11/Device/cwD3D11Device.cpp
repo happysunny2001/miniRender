@@ -569,15 +569,17 @@ void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& tr
 		}
 	}
 
-	if (pShader->hasVariable(eShaderParamWorldViewProj)) {
-		const cwMatrix4X4& matViewProj = pCamera->getViewProjMatrix();
-		cwMatrix4X4 worldViewProj = trans*matViewProj;
-		pShader->setVariableMatrix(eShaderParamWorldViewProj, reinterpret_cast<CWFLOAT*>(&worldViewProj));
-		pShader->setVariableMatrix(eShaderParamViewProj, (CWFLOAT*)(&matViewProj));
-	}
+	if (pCamera) {
+		if (pShader->hasVariable(eShaderParamWorldViewProj)) {
+			const cwMatrix4X4& matViewProj = pCamera->getViewProjMatrix();
+			cwMatrix4X4 worldViewProj = trans*matViewProj;
+			pShader->setVariableMatrix(eShaderParamWorldViewProj, reinterpret_cast<CWFLOAT*>(&worldViewProj));
+			pShader->setVariableMatrix(eShaderParamViewProj, (CWFLOAT*)(&matViewProj));
+		}
 
-	const cwVector3D& pos = pCamera->getPos();
-	pShader->setVariableData(eShaderParamEyePosWorld, (CWVOID*)&pos, 0, sizeof(cwVector3D));
+		const cwVector3D& pos = pCamera->getPos();
+		pShader->setVariableData(eShaderParamEyePosWorld, (CWVOID*)&pos, 0, sizeof(cwVector3D));
+	}
 }
 
 void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera)

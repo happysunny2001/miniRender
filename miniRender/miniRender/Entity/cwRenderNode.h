@@ -33,6 +33,9 @@ NS_MINIR_BEGIN
 
 class cwEventListener;
 class cwEffect;
+class cwRenderBatch;
+class cwBlend;
+class cwStencil;
 
 class CW_DLL cwRenderNode : public cwRef, public cwTouchEventInterface, public cwKeyboardEventInterface, public cwScheduleInterface
 {
@@ -48,6 +51,7 @@ public:
 
 	virtual CWBOOL addChild(cwRenderNode* pNode);
 	virtual CWBOOL removeChild(cwRenderNode* pNode);
+	virtual CWBOOL removeFromParent();
 	//virtual CWVOID removeChildren();
 
 	const cwVector3D& getPosition() const { return m_nPos; }
@@ -69,13 +73,19 @@ public:
 	virtual CWVOID scale(const cwVector3D& v);
 
 	virtual CWVOID setVisible(CWBOOL b);
-	CWBOOL getVisible() const { return m_bVisible; }
+	inline CWBOOL getVisible() const { return m_bVisible; }
 
 	inline eSceneObjectType getType() const { return m_eType; }
 	inline CWVOID setType(eSceneObjectType eType) { m_eType = eType; }
 
 	virtual CWVOID setEffect(cwEffect* pEffect);
 	inline cwEffect* getEffect() const { return m_pEffect; }
+
+	virtual CWVOID setBlend(cwBlend* pBlend);
+	inline cwBlend* getBlend() { return m_pBlend; }
+
+	virtual CWVOID setStencil(cwStencil* pStencil);
+	inline cwStencil* getStencil() { return m_pStencil; }
 
 	inline CWBOOL getTransDirty() const { return m_bTransDirty; }
 	inline cwRenderNode* getParent() const { return m_pParent; }
@@ -100,14 +110,13 @@ public:
 
 	virtual CWVOID update(CWFLOAT dt);
 	virtual CWVOID render();
+	virtual CWVOID render(cwRenderBatch* pRenderBatch);
 
 protected:
 	CWVOID clearChildren();
 	CWVOID clearEventListener();
 	CWVOID updateChildrenTransform();
 
-	CWVOID insertSpatialNode(cwRenderNode*);
-	CWVOID removeSpatialNode(cwRenderNode*);
 	virtual CWVOID refreshSpatialNode();
 	
 protected:
@@ -123,6 +132,8 @@ protected:
 	CWBOOL m_bTransDirty;
 
 	cwEffect* m_pEffect; //effect for render, contains shader and tech
+	cwBlend* m_pBlend;
+	cwStencil* m_pStencil;
 
 	cwVector<cwRenderNode*> m_nVecChildren;
 	cwRenderNode* m_pParent;

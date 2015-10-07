@@ -64,6 +64,8 @@ public:
 	inline cwRenderer* getRenderer() const { return m_pRenderer; }
 	virtual CWVOID loadRenderer(const CWSTRING& strConfFile);
 
+	virtual cwVector<cwRenderNode*>* getVisibleNodes(cwCamera*, eSceneObjectType eType = eSceneObjectEntity);
+
 protected:
 	static cwEngine* create();
 
@@ -74,6 +76,7 @@ protected:
 	virtual CWVOID buildDefaultCamera();
 
 	virtual CWVOID render();
+	CWVOID clearVisibleNodes();
 
 	friend class cwRepertory;
 
@@ -83,6 +86,10 @@ protected:
 
 	cwCamera* m_pDefaultCamera;
 	cwMap<CWSTRING, cwCamera*> m_nMapCameras;
+
+	CWUINT m_uNodeVectorCounter;
+	std::vector<cwVector<cwRenderNode*>> m_nVecVisiableNodes;
+	std::unordered_map<cwCamera*, cwVector<cwRenderNode*>*> m_nMapVisibleNodes;
 
 	cwRenderer* m_pRenderer;
 

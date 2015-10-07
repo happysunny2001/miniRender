@@ -54,12 +54,12 @@ CWVOID cwGPEffect::render(cwRenderBatch* pBatch)
 {
 	if (!pBatch) return;
 
-	cwRepertory::getInstance().getEngine()->getRenderer()->setCurrShader(m_pShader);
+	//cwRepertory::getInstance().getEngine()->getRenderer()->setCurrShader(m_pShader);
 	this->config();
 
-	cwMaterial* pMaterial = pBatch->m_pEntity->getMaterial();
-	if (pMaterial)
-		pMaterial->configShader(m_pShader);
+	//cwMaterial* pMaterial = pBatch->m_pEntity->getMaterial();
+	//if (pMaterial)
+	//	pMaterial->configShader(m_pShader);
 
 	cwDevice* pDevice = cwRepertory::getInstance().getDevice();
 	pDevice->drawGP(m_pShader, m_strTech, &m_nGPInfo);

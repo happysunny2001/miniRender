@@ -24,7 +24,8 @@ NS_MINIR_BEGIN
 cwBuffer::cwBuffer():
 m_iElementCnt(0),
 m_nStride(0),
-m_nOffset(0)
+m_nOffset(0),
+m_uBufferSize(0)
 {
 
 }
@@ -46,6 +47,7 @@ CWBOOL cwBuffer::init(
 	if (structureByteStride > 0)
 		m_iElementCnt = uSize / structureByteStride;
 
+	m_uBufferSize = uSize;
 	m_nStride = structureByteStride;
 	m_nUsage = usage;
 	m_nAccessFlag = uCpuFlag;

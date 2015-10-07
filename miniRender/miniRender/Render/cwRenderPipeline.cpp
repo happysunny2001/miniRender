@@ -53,7 +53,7 @@ cwRenderBatch* cwRenderPipeline::getNextAvailableBatch()
 	return nullptr;
 }
 
-CWBOOL cwRenderPipeline::addEntity(cwEntity* pEntity, cwStageLayer* pStageLayer)
+CWBOOL cwRenderPipeline::addEntity(cwRenderNode* pEntity, cwStageLayer* pStageLayer)
 {
 	cwRenderBatch* pBatch = getNextAvailableBatch();
 	if (!pBatch) return CWFALSE;

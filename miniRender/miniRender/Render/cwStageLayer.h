@@ -32,7 +32,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 NS_MINIR_BEGIN
 
 class cwShader;
-class cwEntity;
+class cwRenderNode;
 class cwEffect;
 class cwBlend;
 class cwStencil;
@@ -52,7 +52,7 @@ public:
 	CWVOID setFliterType(eStageLayerFliterType eType) { m_eFilterType = eType; }
 
 	CWVOID reset();
-	CWVOID begin(cwVector<cwEntity*>* vecEntities);
+	CWVOID begin(cwVector<cwRenderNode*>* vecEntities);
 	CWVOID render();
 	CWVOID end();
 
@@ -68,10 +68,10 @@ protected:
 	cwStageLayer();
 
 protected:
-	cwRenderPipeline* getPipeline(cwEntity* pEntity);
+	cwRenderPipeline* getPipeline(cwRenderNode* pEntity);
 	cwRenderPipeline* getUnusePipeline(cwShader* pShader);
 
-	CWVOID addEntities(cwVector<cwEntity*>& vecEntities);
+	CWVOID addEntities(cwVector<cwRenderNode*>& vecEntities);
 
 protected:
 	CWSTRING m_nStrName;

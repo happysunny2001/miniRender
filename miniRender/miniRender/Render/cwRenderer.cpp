@@ -207,10 +207,14 @@ CWVOID cwRenderer::render(cwStage* pStage)
 
 CWVOID cwRenderer::render(cwRenderBatch* pBatch)
 {
-	if (!pBatch) return;
-	if (!pBatch->m_pEffect) return;
+	if (pBatch && pBatch->m_pEffect) {
+		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
 
-	pBatch->m_pEffect->render(pBatch);
+		this->setCurrShader(pBatch->m_pEffect->getShader());
+		pDevice->setShaderWorldTrans(pBatch->m_pEffect->getShader(), pBatch->m_nWorldTrans, m_pCurrCamera);
+
+		pBatch->m_pEffect->render(pBatch);
+	}
 }
 
 cwStage* cwRenderer::getStage(const CWSTRING& strName)

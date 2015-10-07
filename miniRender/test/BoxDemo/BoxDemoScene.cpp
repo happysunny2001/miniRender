@@ -36,8 +36,10 @@ BoxDemoScene* BoxDemoScene::create()
 BoxDemoScene::BoxDemoScene():
 m_bTouchDown(CWFALSE),
 m_pEntityAxis(nullptr),
-m_pEntityBox01(nullptr),
-m_pEntityBox02(nullptr)
+//m_pEntityBox01(nullptr),
+//m_pEntityBox02(nullptr),
+m_pTestCamera(nullptr),
+m_pBoxRenderObj(nullptr)
 {
 
 }
@@ -45,8 +47,10 @@ m_pEntityBox02(nullptr)
 BoxDemoScene::~BoxDemoScene()
 {
 	CW_SAFE_RELEASE_NULL(m_pEntityAxis);
-	CW_SAFE_RELEASE_NULL(m_pEntityBox01);
-	CW_SAFE_RELEASE_NULL(m_pEntityBox02);
+	//CW_SAFE_RELEASE_NULL(m_pEntityBox01);
+	//CW_SAFE_RELEASE_NULL(m_pEntityBox02);
+	CW_SAFE_RELEASE_NULL(m_pTestCamera);
+	CW_SAFE_RELEASE_NULL(m_pBoxRenderObj);
 }
 
 bool BoxDemoScene::init()
@@ -66,6 +70,7 @@ bool BoxDemoScene::init()
 
 	this->schedulerUpdate();
 
+	buildCamera();
 	buildScene();
 
 	return true;
@@ -119,18 +124,44 @@ void BoxDemoScene::update(CWFLOAT dt)
 	else if (isKeyDown(KeyCode::S)) {
 		repertory.getEngine()->getDefaultCamera()->walk(-10 * dt);
 	}
-
-	if (m_pEntityBox01) {
-		m_pEntityBox01->rotate(0, dt*cwMathUtil::cwPI*0.1f, 0);
+	else if (isKeyDown(KeyCode::P)) {
+		if (m_nVecEntities.size() > 1) {
+			cwEntity* pLastEntity = m_nVecEntities.at(m_nVecEntities.size() - 1);
+			pLastEntity->removeFromParent();
+			m_nVecEntities.popBack();
+		}
+	}
+	else if (isKeyDown(KeyCode::I)) {
+		createRandomEntity();
 	}
 
-	repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox01->getBoundingBox(), cwColor::sliver);
-	repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox02->getBoundingBox(), cwColor::sliver);
-	repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox01->getGroupBoundingBox(), cwColor::sliver);
+	m_pTestCamera->yaw(dt*cwMathUtil::cwPI*0.1f);
+
+	if (m_nVecEntities.size() >= 1) {
+		m_nVecEntities.at(0)->rotate(0, dt*cwMathUtil::cwPI*0.03f, 0);
+	}
+
+	//repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox01->getBoundingBox(), cwColor::sliver);
+	//repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox02->getBoundingBox(), cwColor::sliver);
+	//repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox01->getGroupBoundingBox(), cwColor::sliver);
 	repertory.getEngine()->getSpatial()->renderPrimitiveFrame();
+	repertory.getEngine()->getRenderer()->renderPrimitive(m_pTestCamera);
+
+	//for (auto pEntity : m_nVecEntities)
+	//	pEntity->setVisible(CWTRUE);
+
+	//cwVector<cwRenderNode*> vecNode;
+	//repertory.getEngine()->getSpatial()->intersection(m_pTestCamera->getFrustum(), vecNode, eSceneObjectEntity, CWTRUE);
+
+	//for (auto pEntity : m_nVecEntities)
+	//	pEntity->setVisible(CWFALSE);
+
+	//for (auto pNode : vecNode) {
+	//	pNode->setVisible(CWTRUE);
+	//}
 }
 
-void BoxDemoScene::buildEntity()
+void BoxDemoScene::buildRenderObject()
 {
 	cwRepertory& repertory = cwRepertory::getInstance();
 
@@ -143,50 +174,79 @@ void BoxDemoScene::buildEntity()
 		vecVertex[i].color = cwVector4D(1.0f, 1.0f, 1.0f, 0.5f);
 	}
 
-	cwRenderObject *pRenderObj = cwStaticRenderObject::create(
+	m_pBoxRenderObj = cwStaticRenderObject::create(
 		ePrimitiveTypeTriangleList,
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosColor");
+	CW_SAFE_RETAIN(m_pBoxRenderObj);
+}
 
-	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderColor);
+cwEntity* BoxDemoScene::buildEntity()
+{
+	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getDefShader(eDefShaderColor);
 	cwMaterial* pMaterial = cwMaterial::create();
-	pMaterial->m_nMatData.m_nDiffuse.w = 0.5f;
 	cwEffect* pEffect = cwEffect::create();
 	pEffect->setShader(pShader);
 
-	m_pEntityBox01 = cwEntity::create();
-	m_pEntityBox01->setMaterial(pMaterial);
-	m_pEntityBox01->setRenderObject(pRenderObj);
-	m_pEntityBox01->setEffect(pEffect);
-	CW_SAFE_RETAIN(m_pEntityBox01);
+	cwEntity* pEntity = cwEntity::create();
+	pEntity->setMaterial(pMaterial);
+	pEntity->setRenderObject(m_pBoxRenderObj);
+	pEntity->setEffect(pEffect);
 
-	m_pEntityBox02 = cwEntity::create();
-	m_pEntityBox02->setMaterial(pMaterial);
-	m_pEntityBox02->setRenderObject(pRenderObj);
-	m_pEntityBox02->setEffect(pEffect);
-	CW_SAFE_RETAIN(m_pEntityBox02);
+	return pEntity;
 }
 
 void BoxDemoScene::buildAxis()
 {
 	m_pEntityAxis = cwRepertory::getInstance().getGeoGenerator()->generateCoordinateAxisEntity(10.0f);
 	CW_SAFE_RETAIN(m_pEntityAxis);
+	this->addChild(m_pEntityAxis);
 }
 
 void BoxDemoScene::buildScene()
 {
-	buildEntity();
+	buildRenderObject();
 	buildAxis();
 
-	m_pEntityBox01->setPosition(cwVector3D(2.0f, 1.0f, 0.0f));
-	this->addChild(m_pEntityBox01);
+	cwEntity* pEntityBox01 = buildEntity();
+	pEntityBox01->setPosition(cwVector3D(3.0, 3.0, 2.0));
+	this->addChild(pEntityBox01);
+	m_nVecEntities.pushBack(pEntityBox01);
 
-	m_pEntityBox02->setPosition(cwVector3D(-2.0f, 1.0f, -3.0f));
-	m_pEntityBox01->addChild(m_pEntityBox02);
-	this->addChild(m_pEntityAxis);
-
-	cwRenderNode* pZeroNode = cwRenderNode::create();
-	this->addChild(pZeroNode);
+	//cwEntity* pEntityBox02 = buildEntity();
+	//pEntityBox02->setPosition(cwVector3D(-5.0f, 1.0f, -3.0f));
+	//pEntityBox01->addChild(pEntityBox02);
+	//m_nVecEntities.pushBack(pEntityBox02);
 
 //	m_pEntityBox01->rotate(0, cwMathUtil::cwPI*0.1f, 0);
+}
+
+CWVOID BoxDemoScene::createRandomEntity()
+{
+	const cwAABB& worldSpace = cwRepertory::getInstance().getEngine()->getSpatial()->getBoundingBox();
+	cwEntity* pEntity = buildEntity();
+	if (!pEntity) return;
+
+	cwPoint3D pos;
+	pos.x = worldSpace.m_nMin.x + rand() % CWUINT((worldSpace.m_nMax.x - worldSpace.m_nMin.x)*0.8f);
+	pos.y = worldSpace.m_nMin.y + rand() % CWUINT((worldSpace.m_nMax.y - worldSpace.m_nMin.y)*0.8f);
+	pos.z = worldSpace.m_nMin.z + rand() % CWUINT((worldSpace.m_nMax.z - worldSpace.m_nMin.z)*0.8f);
+
+	pEntity->setPosition(pos);
+
+	if (m_nVecEntities.size() >= 1) {
+		m_nVecEntities.at(0)->addChild(pEntity);
+		m_nVecEntities.pushBack(pEntity);
+	}
+}
+
+void BoxDemoScene::buildCamera()
+{
+	m_pTestCamera = cwCamera::create();
+	CW_SAFE_RETAIN(m_pTestCamera);
+
+	m_pTestCamera->yaw(-0.5f*cwMathUtil::cwPI);
+	m_pTestCamera->walk(-20);
+
+	m_pTestCamera->updateProjMatrix(0.25f*cwMathUtil::cwPI, 800.0f / 600.0f, 1.0f, 30.0f);
 }

@@ -24,6 +24,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Effect/cwEffect.h"
 #include "Repertory/cwRepertory.h"
 #include "Engine/cwEngine.h"
+#include "Blend/cwBlend.h"
+#include "Stencil/cwStencil.h"
 #include "cwScene.h"
 
 #include <stack>
@@ -48,7 +50,9 @@ m_nPos(cwVector3D::ZERO),
 m_nRot(cwVector3D::ZERO),
 m_nScale(1.0f, 1.0f ,1.0f),
 m_bTransDirty(CWFALSE),
-m_pEffect(nullptr)
+m_pEffect(nullptr),
+m_pBlend(nullptr),
+m_pStencil(nullptr)
 {
 	m_eType = eSceneObjectNode;
 }
@@ -57,6 +61,8 @@ cwRenderNode::~cwRenderNode()
 {
 	CW_SAFE_RELEASE_NULL(m_pParent);
 	CW_SAFE_RELEASE_NULL(m_pEffect);
+	CW_SAFE_RELEASE_NULL(m_pBlend);
+	CW_SAFE_RELEASE_NULL(m_pStencil);
 	clearChildren();
 	clearEventListener();
 }
@@ -97,27 +103,11 @@ CWBOOL cwRenderNode::addChild(cwRenderNode* pNode)
 	return CWFALSE;
 }
 
-CWVOID cwRenderNode::insertSpatialNode(cwRenderNode* pNode)
-{
-	if (m_eType == eSceneObjectScene) return;
-
-	cwRenderNode* pParent = m_pParent;
-	while (pParent) {
-		if (pParent->getParent())
-			pParent = pParent->getParent();
-		else
-			break;
-	}
-
-	if (!pParent) return;
-	if (pParent->getType() != eSceneObjectScene) return;
-	cwRepertory::getInstance().getEngine()->insertSpatialNode(pNode);
-}
-
 CWBOOL cwRenderNode::removeChild(cwRenderNode* pNode)
 {
 	if (pNode && pNode->getParent() == this) {
 		pNode->setParent(nullptr);
+		cwRepertory::getInstance().getEngine()->removeSpatialNode(pNode);
 		m_nVecChildren.erase(pNode);
 		return CWTRUE;
 	}
@@ -125,21 +115,13 @@ CWBOOL cwRenderNode::removeChild(cwRenderNode* pNode)
 	return CWFALSE;
 }
 
-CWVOID cwRenderNode::removeSpatialNode(cwRenderNode* pNode)
+CWBOOL cwRenderNode::removeFromParent()
 {
-	if (m_eType == eSceneObjectScene) return;
-
-	cwRenderNode* pParent = m_pParent;
-	while (pParent) {
-		if (pParent->getParent())
-			pParent = pParent->getParent();
-		else
-			break;
+	if (m_pParent) {
+		return m_pParent->removeChild(this);
 	}
 
-	if (!pParent) return;
-	if (pParent->getType() != eSceneObjectScene) return;
-	cwRepertory::getInstance().getEngine()->removeSpatialNode(pNode);
+	return CWFALSE;
 }
 
 //CWVOID cwRenderNode::removeChildren()
@@ -295,6 +277,24 @@ CWVOID cwRenderNode::scale(const cwVector3D& v)
 	}
 }
 
+CWVOID cwRenderNode::setBlend(cwBlend* pBlend)
+{
+	if (m_pBlend == pBlend) return;
+
+	CW_SAFE_RETAIN(pBlend);
+	CW_SAFE_RELEASE_NULL(m_pBlend);
+	m_pBlend = pBlend;
+}
+
+CWVOID cwRenderNode::setStencil(cwStencil* pStencil)
+{
+	if (m_pStencil == pStencil) return;
+
+	CW_SAFE_RETAIN(pStencil);
+	CW_SAFE_RELEASE_NULL(m_pStencil);
+	m_pStencil = pStencil;
+}
+
 CWVOID cwRenderNode::refreshSpatialNode()
 {
 	if (m_pParent)
@@ -389,6 +389,11 @@ CWVOID cwRenderNode::update(CWFLOAT dt)
 }
 
 CWVOID cwRenderNode::render()
+{
+
+}
+
+CWVOID cwRenderNode::render(cwRenderBatch* pRenderBatch)
 {
 
 }

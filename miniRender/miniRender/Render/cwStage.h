@@ -39,6 +39,8 @@ class cwEffect;
 class cwShader;
 class cwStageLayer;
 class cwRenderGenerator;
+class cwRenderNode;
+class cwEntity;
 
 class CW_DLL cwStage : public cwRef
 {
@@ -93,7 +95,7 @@ public:
 	
 protected:
 	cwStage();
-	cwVector<cwEntity*>* getRenderEntities(cwCamera* pCamera, eStageLayerFliterType eType);
+	cwVector<cwRenderNode*>* getRenderEntities(cwCamera* pCamera, eStageLayerFliterType eType);
 
 protected:
 	CWBOOL m_bEnable;
@@ -112,7 +114,7 @@ protected:
 
 	cwVector<cwRenderGenerator*> m_nVecGenerator;
 
-	cwVector<cwEntity*> m_nVecStageEntities;
+	cwVector<cwRenderNode*> m_nVecStageEntities;
 	cwMap<CWSTRING, cwTexture*> m_nMapStageTextures;
 	cwVector<cwStageLayer*> m_nVecLayer;
 

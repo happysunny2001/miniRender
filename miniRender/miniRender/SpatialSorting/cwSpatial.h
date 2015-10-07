@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
 #include "Base/cwStruct.h"
+#include "Base/cwVector.h"
 #include "Ref/cwRef.h"
 
 #include <vector>
@@ -35,14 +36,14 @@ class cwRenderNode;
 class cwAABB;
 class cwCircle;
 
-class cwSpatial : public cwRef
+class CW_DLL cwSpatial : public cwRef
 {
 public:
 	virtual CWBOOL build(cwScene*) = 0;
 	
-	virtual CWVOID intersection(const cwFrustum&, std::vector<cwRenderNode*>&, eSceneObjectType eType=eSceneObjectEntity) = 0;
-	virtual CWVOID intersection(const cwAABB&, std::vector<cwRenderNode*>&, eSceneObjectType eType = eSceneObjectEntity) = 0;
-	virtual CWVOID intersection(const cwCircle&, std::vector<cwRenderNode*>&, eSceneObjectType eType = eSceneObjectEntity) = 0;
+	virtual CWVOID intersection(const cwFrustum&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) = 0;
+	virtual CWVOID intersection(const cwAABB&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) = 0;
+	virtual CWVOID intersection(const cwCircle&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) = 0;
 
 	virtual CWBOOL insert(cwRenderNode*) = 0;
 	virtual CWBOOL remove(cwRenderNode*) = 0;
@@ -52,6 +53,8 @@ public:
 
 	virtual CWVOID clear() = 0;
 	virtual CWVOID renderPrimitiveFrame() = 0;
+
+	virtual const cwAABB& getBoundingBox() const = 0;
 
 protected:
 

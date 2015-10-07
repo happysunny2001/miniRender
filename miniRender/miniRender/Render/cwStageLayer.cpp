@@ -85,7 +85,7 @@ CWVOID cwStageLayer::reset()
 	m_nMapPipeline.clear();
 }
 
-CWVOID cwStageLayer::begin(cwVector<cwEntity*>* vecEntities)
+CWVOID cwStageLayer::begin(cwVector<cwRenderNode*>* vecEntities)
 {
 	reset();
 
@@ -116,18 +116,16 @@ CWVOID cwStageLayer::end()
 	cwRepertory::getInstance().getDevice()->setRenderState(m_eOldRenderState);
 }
 
-CWVOID cwStageLayer::addEntities(cwVector<cwEntity*>& vecEntities)
+CWVOID cwStageLayer::addEntities(cwVector<cwRenderNode*>& vecEntities)
 {
 	for (auto pEntity : vecEntities) {
-		//pEntity->transform();
-
 		cwRenderPipeline* pPiepline = getPipeline(pEntity);
 		if (pPiepline)
 			pPiepline->addEntity(pEntity, this);
 	}
 }
 
-cwRenderPipeline* cwStageLayer::getPipeline(cwEntity* pEntity)
+cwRenderPipeline* cwStageLayer::getPipeline(cwRenderNode* pEntity)
 {
 	cwRenderPipeline* pPipeLine = nullptr;
 	cwEffect* pEffect = pEntity->getEffect();

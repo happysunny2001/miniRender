@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Engine/cwEngine.h"
 #include "Effect/cwEffect.h"
+#include "Device/cwDevice.h"
 #include "cwRenderer.h"
 
 NS_MINIR_BEGIN
@@ -43,7 +44,11 @@ CWVOID cwRenderBatch::reset()
 
 CWVOID cwRenderBatch::render()
 {
-	cwRepertory::getInstance().getEngine()->getRenderer()->render(this);
+	cwRepertory& repertory = cwRepertory::getInstance();
+
+	repertory.getDevice()->setBlend(m_pBlend);
+	repertory.getDevice()->setStencil(m_pStencil);
+	repertory.getEngine()->getRenderer()->render(this);
 }
 
 NS_MINIR_END

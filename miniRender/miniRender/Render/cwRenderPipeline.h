@@ -28,7 +28,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-class cwEntity;
+class cwRenderNode;
 class cwEffect;
 class cwShader;
 class cwStageLayer;
@@ -40,7 +40,7 @@ public:
 	~cwRenderPipeline();
 	
 	CWVOID reset();
-	CWBOOL addEntity(cwEntity* pEntity, cwStageLayer* pStageLayer);
+	CWBOOL addEntity(cwRenderNode* pEntity, cwStageLayer* pStageLayer);
 	CWBOOL full();
 
 	inline std::vector<cwRenderBatch>& getRenderBatch() { return m_nVecBatch; }

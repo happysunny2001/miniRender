@@ -7,7 +7,7 @@
 			-->
 		<Stage Name="S1" Type="normal" Enable="True" Generator="">
 
-			<Camera Name="default" /> <!-- camera name default value:[default,Homo], Homo means homogeneous coordinates, the camera's view-projection matrix is identity. -->
+			<Camera Name="Default" /> <!-- camera name default value:[Default,Homo], Homo means homogeneous coordinates, the camera's view-projection matrix is identity. -->
 			<ViewPort Name="default" TopLeftX=0 TopLeftY=0 Width=-1 Height=-1 MinDepth=0 MaxDepth=1.0 /><!-- view port for the stage, format[minx, miny, width, height, mindepth, maxdepth]. default value:[0,0,-1,-1,0,1.0],-1 means use the scrren dimensions. -->
 
 			<!-- Type:[backbuffer, texture], default value:[backbuffer], if type is texture, then width and height is the size

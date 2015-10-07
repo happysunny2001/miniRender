@@ -23,13 +23,15 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Engine/cwEngine.h"
 #include "Render/cwRenderer.h"
+#include "Base/cwColor.h"
+#include "Base/cwLog.h"
 
 NS_MINIR_BEGIN
 
 const CWUINT cwOctree::MAX_DEPTH = 8;
 const CWUINT cwOctree::m_uDefaultDepth = 5;
 //const cwAABB cwOctree::m_nDefaultSize(cwPoint3D(-1000.0f, -1000.0f, -1000.0f), cwPoint3D(1000.0f, 1000.0f, 1000.0f));
-const cwAABB cwOctree::m_nDefaultSize(cwPoint3D(-50.0f, -50.0f, -50.0f), cwPoint3D(50.0f, 50.0f, 50.0f));
+const cwAABB cwOctree::m_nDefaultSize(cwPoint3D(-100.0f, -100.0f, -100.0f), cwPoint3D(100.0f, 100.0f, 100.0f));
 
 cwOctree::sOctreeNode::sOctreeNode()
 {
@@ -274,6 +276,8 @@ CWBOOL cwOctree::removeNode(cwRenderNode* pNode)
 		auto it = std::find(pInnerOctreeNode->m_nListObjs.begin(), pInnerOctreeNode->m_nListObjs.end(), pNode);
 		if (it != pInnerOctreeNode->m_nListObjs.end()) {
 			pInnerOctreeNode->m_nListObjs.erase(it);
+
+			checkOctreeNodeEmpty(pInnerOctreeNode);
 		}
 	}
 
@@ -324,6 +328,7 @@ cwOctree::sOctreeNode* cwOctree::getTreeNodeBelong(cwRenderNode* pNode, sOctreeN
 
 cwOctree::sOctreeNode* cwOctree::getTreeNodeBelongRude(cwRenderNode* pNode, sOctreeNode* pOctreeNode)
 {
+	cwLog::print("cwOctree::getTreeNodeBelongRude, bad!");
 	for (auto pInnerNode : pOctreeNode->m_nListObjs) {
 		if (pInnerNode == pNode) return pOctreeNode;
 	}
@@ -338,73 +343,73 @@ cwOctree::sOctreeNode* cwOctree::getTreeNodeBelongRude(cwRenderNode* pNode, sOct
 	return nullptr;
 }
 
-CWVOID cwOctree::intersection(const cwFrustum& frustum, std::vector<cwRenderNode*>& vecRet, eSceneObjectType eType)
+CWVOID cwOctree::intersection(const cwFrustum& frustum, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
 {
-	intersection(m_pRoot, frustum, vecRet, eType);
+	intersection(m_pRoot, frustum, vecRet, eType, bVisible);
 }
 
-CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwFrustum& frustum, std::vector<cwRenderNode*>& vecRet, eSceneObjectType eType)
+CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwFrustum& frustum, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
 {
 	if (!pOctreeNode) return;
 	int iRet = frustum.intersection(pOctreeNode->m_nBox);
 	if (!frustum.isCollide(iRet)) return;
 
 	for (auto pNode : pOctreeNode->m_nListObjs) {
-		if (pNode->getType() == eType) {
+		if (pNode->getVisible() == bVisible && pNode->getType() == eType) {
 			int iRet = frustum.intersection(pNode->getBoundingBox());
-			if (frustum.isCollide(iRet)) vecRet.push_back(pNode);
+			if (frustum.isCollide(iRet)) vecRet.pushBack(pNode);
 		}
 	}
 
 	for (CWUINT i = 0; i < 8; ++i) {
 		if (pOctreeNode->m_pChildren[i])
-			intersection(pOctreeNode->m_pChildren[i], frustum, vecRet, eType);
+			intersection(pOctreeNode->m_pChildren[i], frustum, vecRet, eType, bVisible);
 	}
 }
 
-CWVOID cwOctree::intersection(const cwAABB& aabb, std::vector<cwRenderNode*>& vecRet, eSceneObjectType eType)
+CWVOID cwOctree::intersection(const cwAABB& aabb, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
 {
-	intersection(m_pRoot, aabb, vecRet, eType);
+	intersection(m_pRoot, aabb, vecRet, eType, bVisible);
 }
 
-CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwAABB& aabb, std::vector<cwRenderNode*>& vecRet, eSceneObjectType eType)
+CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwAABB& aabb, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
 {
 	if (!pOctreeNode) return;
 	if (!pOctreeNode->m_nBox.intersection(aabb)) return;
 
 	for (auto pNode : pOctreeNode->m_nListObjs) {
-		if (pNode->getType() == eType) {
+		if (pNode->getVisible() == bVisible && pNode->getType() == eType) {
 			if (aabb.intersection(pNode->getBoundingBox()))
-				vecRet.push_back(pNode);
+				vecRet.pushBack(pNode);
 		}
 	}
 
 	for (CWUINT i = 0; i < 8; ++i) {
 		if (pOctreeNode->m_pChildren[i])
-			intersection(pOctreeNode->m_pChildren[i], aabb, vecRet, eType);
+			intersection(pOctreeNode->m_pChildren[i], aabb, vecRet, eType, bVisible);
 	}
 }
 
-CWVOID cwOctree::intersection(const cwCircle& circle, std::vector<cwRenderNode*>& vecRet, eSceneObjectType eType)
+CWVOID cwOctree::intersection(const cwCircle& circle, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
 {
-	intersection(m_pRoot, circle, vecRet, eType);
+	intersection(m_pRoot, circle, vecRet, eType, bVisible);
 }
 
-CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwCircle& circle, std::vector<cwRenderNode*>& vecRet, eSceneObjectType eType)
+CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwCircle& circle, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
 {
 	if (!pOctreeNode) return;
 	if (!pOctreeNode->m_nBox.intersection(circle)) return;
 
 	for (auto pNode : pOctreeNode->m_nListObjs) {
-		if (pNode->getType() == eType) {
+		if (pNode->getVisible() == bVisible && pNode->getType() == eType) {
 			if (circle.intersection(pNode->getBoundingBox()))
-				vecRet.push_back(pNode);
+				vecRet.pushBack(pNode);
 		}
 	}
 
 	for (CWUINT i = 0; i < 8; ++i) {
 		if (pOctreeNode->m_pChildren[i])
-			intersection(pOctreeNode->m_pChildren[i], circle, vecRet, eType);
+			intersection(pOctreeNode->m_pChildren[i], circle, vecRet, eType, bVisible);
 	}
 }
 
@@ -456,8 +461,6 @@ CWVOID cwOctree::update()
 					}
 				}
 			}
-
-			//getRenderNodeChild(pNode, mapNodeTree);
 		}
 
 		for (auto nodeData : mapNodeTree) {
@@ -468,24 +471,24 @@ CWVOID cwOctree::update()
 			nodeData.first->refreshTransform();
 			nodeData.first->refreshBoundingBox();
 
-			if (nodeData.second->m_nBox.contained(nodeData.first->getBoundingBox())) continue;
-
 			auto it = std::find(nodeData.second->m_nListObjs.begin(), nodeData.second->m_nListObjs.end(), nodeData.first);
 			if (it != nodeData.second->m_nListObjs.end()) {
 				nodeData.second->m_nListObjs.erase(it);
 			}
 
+			//sOctreeNode* pOctreeNode = nodeData.second;
+			//if (nodeData.second->m_nBox.contained(nodeData.first->getBoundingBox())) continue;
+
 			insertNode(nodeData.first, m_pRoot, 0);
 		}
 
 		for (auto pOctreeNode : setOctreeNode) {
-			if (pOctreeNode->m_nListObjs.empty() && isLeafNode(pOctreeNode)) {
-				removeOctreeNode(pOctreeNode);
-			}
+			checkOctreeNodeEmpty(pOctreeNode);
 		}
 
-		for (auto pNode : m_nSetRefreshNode)
+		for (auto pNode : m_nSetRefreshNode) {
 			CW_SAFE_RELEASE(pNode);
+		}
 		m_nSetRefreshNode.clear();
 	}
 	
@@ -530,6 +533,9 @@ CWBOOL cwOctree::isLeafNode(sOctreeNode* pOctreeNode)
 CWVOID cwOctree::saveUnuseOctreeNode(sOctreeNode* pOctreeNode)
 {
 	if (pOctreeNode) {
+		pOctreeNode->m_pParent = nullptr;
+		memset(pOctreeNode->m_pChildren, 0, sizeof(sOctreeNode*)* 8);
+		pOctreeNode->m_nBox.zero();
 		m_nQueueUnuseOctreeNode.push(pOctreeNode);
 	}
 }
@@ -542,9 +548,20 @@ CWVOID cwOctree::removeOctreeNode(sOctreeNode* pOctreeNode)
 		for (CWUINT i = 0; i < 8; ++i) {
 			if (pOctreeNode->m_pParent->m_pChildren[i] == pOctreeNode) {
 				pOctreeNode->m_pParent->m_pChildren[i] = nullptr;
-				pOctreeNode->m_pParent = nullptr;
 				saveUnuseOctreeNode(pOctreeNode);
+				break;
 			}
+		}
+	}
+}
+
+CWVOID cwOctree::checkOctreeNodeEmpty(sOctreeNode* pOctreeNode)
+{
+	if (pOctreeNode) {
+		if (pOctreeNode->m_nListObjs.empty() && isLeafNode(pOctreeNode)) {
+			sOctreeNode* pOctreeParent = pOctreeNode->m_pParent;
+			removeOctreeNode(pOctreeNode);
+			checkOctreeNodeEmpty(pOctreeParent);
 		}
 	}
 }
@@ -579,11 +596,23 @@ CWVOID cwOctree::renderPrimitiveFrame()
 
 CWVOID cwOctree::renderOctreeNodePrimitiveFrame(sOctreeNode* pOctreeNode)
 {
-	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(pOctreeNode->m_nBox);
+	
 	for (CWUINT i = 0; i < 8; ++i)  {
 		if (pOctreeNode->m_pChildren[i])
 			renderOctreeNodePrimitiveFrame(pOctreeNode->m_pChildren[i]);
 	}
+
+	if (pOctreeNode->m_nListObjs.empty())
+		cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(pOctreeNode->m_nBox);
+	else
+		cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(pOctreeNode->m_nBox, cwColor::blue);
+}
+
+const cwAABB& cwOctree::getBoundingBox() const
+{
+	if (m_pRoot)
+		return m_pRoot->m_nBox;
+	return cwOctree::m_nDefaultSize;
 }
 
 NS_MINIR_END

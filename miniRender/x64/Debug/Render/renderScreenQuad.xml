@@ -3,7 +3,7 @@
 	<StageList>
 
 		<Stage Name="S1" Type="normal" Enable="True">
-			<Camera Name="default" />
+			<Camera Name="Default" />
 			<ViewPort Name="default" TopLeftX="0" TopLeftY="0" Width="-1" Height="-1" MinDepth="0" MaxDepth="1.0" />
 			<RenderTarget Type="texture" Width="1.0" Height="1.0" />
 		</Stage>

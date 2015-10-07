@@ -142,7 +142,7 @@ cwVector<cwEntity*>& cwScene::getVisibleEntities(cwCamera* pCamera, eSceneObject
 
 	while (!m_nVecStack.empty()) {
 		cwRenderNode* pLast = m_nVecStack.back();
-		if (pLast->getType() == eType)
+		if (pLast->getType() == eType && pLast->getVisible())
 			m_nVecVisibleEntity.pushBack(static_cast<cwEntity*>(pLast));
 
 		m_nVecStack.pop_back();

@@ -26,7 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-class cwSpatialFactory
+class CW_DLL cwSpatialFactory
 {
 public:
 	static cwSpatial* createSpatial(const CWSTRING& strType);

@@ -27,7 +27,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 NS_MINIR_BEGIN
 
 class cwEffect;
-class cwEntity;
+class cwRenderNode;
 class cwBlend;
 class cwStencil;
 
@@ -44,7 +44,7 @@ public:
 	cwEffect* m_pEffect;
 	cwBlend* m_pBlend;
 	cwStencil* m_pStencil;
-	cwEntity* m_pEntity;
+	cwRenderNode* m_pEntity;
 	cwMatrix4X4 m_nWorldTrans;
 
 };
