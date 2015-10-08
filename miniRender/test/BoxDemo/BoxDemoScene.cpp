@@ -63,10 +63,10 @@ bool BoxDemoScene::init()
 	pTouchListener->onTouchMoving = CW_CALLBACK_1(BoxDemoScene::onTouchMoving, this);
 	this->addEventListener(pTouchListener);
 
-	cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
-	pKeyListener->onKeyDown = CW_CALLBACK_1(BoxDemoScene::onKeyDown, this);
-	pKeyListener->onKeyUp   = CW_CALLBACK_1(BoxDemoScene::onKeyUp, this);
-	this->addEventListener(pKeyListener);
+	//cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
+	//pKeyListener->onKeyDown = CW_CALLBACK_1(BoxDemoScene::onKeyDown, this);
+	//pKeyListener->onKeyUp   = CW_CALLBACK_1(BoxDemoScene::onKeyUp, this);
+	//this->addEventListener(pKeyListener);
 
 	this->schedulerUpdate();
 

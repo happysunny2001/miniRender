@@ -17,37 +17,30 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwKeyboardEventInterface.h"
-#include "Event/cwEventManager.h"
-#include "Repertory/cwRepertory.h"
+#include "Base/cwBasicType.h"
+#include "Base/cwMacros.h"
+#include "Ref/cwRef.h"
+#include "Entity/cwRenderNode.h"
 
 NS_MINIR_BEGIN
 
-CWVOID cwKeyboardEventInterface::onKeyDown(cwKeyboard* pKey)
+class cwRenderObject;
+
+class cwText : public cwRenderNode
 {
-	//if (pKey) {
-	//	if (!isKeyDown(pKey->getKeyCode())) {
-	//		m_nMapKey[pKey->getKeyCode()] = 1;
-	//	}
-	//}
-}
+public:
+	static cwText* create(const CWSTRING& strText, const CWSTRING& strFontTexture, CWCHAR cStartChar, CWUINT uCharWidth);
 
-CWVOID cwKeyboardEventInterface::onKeyUp(cwKeyboard* pKey)
-{
-	//auto it = m_nMapKey.find(pKey->getKeyCode());
-	//if (it != m_nMapKey.end()) {
-	//	m_nMapKey.erase(it);
-	//}
-}
+	virtual ~cwText();
 
-CWBOOL cwKeyboardEventInterface::isKeyDown(KeyCode code)
-{
-	//auto it = m_nMapKey.find(code);
-	//if (it == m_nMapKey.end()) return CWFALSE;
+	virtual CWBOOL init();
 
-	//return CWTRUE;
+protected:
+	cwText();
 
-	return cwRepertory::getInstance().getEventManager()->isKeyDown(code);
-}
+protected:
+	CWSTRING m_nStrText;
+
+};
 
 NS_MINIR_END

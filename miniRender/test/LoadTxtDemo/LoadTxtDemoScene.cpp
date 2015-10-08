@@ -55,10 +55,10 @@ CWBOOL LoadTxtDemoScene::init()
 	pTouchListener->onTouchMoving = CW_CALLBACK_1(LoadTxtDemoScene::onTouchMoving, this);
 	this->addEventListener(pTouchListener);
 
-	cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
-	pKeyListener->onKeyDown = CW_CALLBACK_1(LoadTxtDemoScene::onKeyDown, this);
-	pKeyListener->onKeyUp = CW_CALLBACK_1(LoadTxtDemoScene::onKeyUp, this);
-	this->addEventListener(pKeyListener);
+	//cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
+	//pKeyListener->onKeyDown = CW_CALLBACK_1(LoadTxtDemoScene::onKeyDown, this);
+	//pKeyListener->onKeyUp = CW_CALLBACK_1(LoadTxtDemoScene::onKeyUp, this);
+	//this->addEventListener(pKeyListener);
 
 	this->schedulerUpdate();
 

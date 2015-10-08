@@ -35,10 +35,11 @@ eBufferUsage usage,
 eBufferBindFlag bindFlag,
 eAccessFlag uCpuFlag,
 CWUINT miscFlag,
-CWUINT structureByteStride)
+CWUINT structureByteStride,
+CWUINT offset)
 {
 	cwD3D11Buffer* pBuffer = new cwD3D11Buffer();
-	if (pBuffer && pBuffer->init(pData, uSize, usage, bindFlag, uCpuFlag, miscFlag, structureByteStride)) {
+	if (pBuffer && pBuffer->init(pData, uSize, usage, bindFlag, uCpuFlag, miscFlag, structureByteStride, offset)) {
 		pBuffer->autorelease();
 		return pBuffer;
 	}
@@ -56,7 +57,6 @@ m_pD3D11Buffer(NULL)
 cwD3D11Buffer::~cwD3D11Buffer()
 {
 	CW_RELEASE_COM(m_pD3D11Buffer);
-	m_pD3D11Buffer = NULL;
 }
 
 CWBOOL cwD3D11Buffer::init(
@@ -66,31 +66,12 @@ CWBOOL cwD3D11Buffer::init(
 	eBufferBindFlag bindFlag,
 	eAccessFlag uCpuFlag,
 	CWUINT miscFlag,
-	CWUINT structureByteStride)
+	CWUINT structureByteStride,
+	CWUINT offset)
 {
-	if (!cwBuffer::init(pData, uSize, usage, bindFlag, uCpuFlag, miscFlag, structureByteStride)) return CWFALSE;
+	if (!cwBuffer::init(pData, uSize, usage, bindFlag, uCpuFlag, miscFlag, structureByteStride, offset)) return CWFALSE;
 
-	CWUINT uD3D11CpuFlag = cwD3D11Device::getAccessFlag(uCpuFlag);
-	D3D11_USAGE uD3D11Usage = cwD3D11Device::getBufferUsage(usage);
-	CWUINT uBindFlag = cwD3D11Device::getBufferBindFlag(bindFlag);
-
-	D3D11_BUFFER_DESC d3dDesc;
-	d3dDesc.BindFlags = uBindFlag;
-	d3dDesc.ByteWidth = uSize;
-	d3dDesc.CPUAccessFlags = uD3D11CpuFlag;
-	d3dDesc.MiscFlags = miscFlag;
-	d3dDesc.StructureByteStride = structureByteStride;
-	d3dDesc.Usage = uD3D11Usage;
-
-	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
-	if (pData) {
-		D3D11_SUBRESOURCE_DATA subData;
-		subData.pSysMem = pData;
-		CW_HR(pD3D11Device->getD3D11Device()->CreateBuffer(&d3dDesc, &subData, &m_pD3D11Buffer));
-	}
-	else {
-		CW_HR(pD3D11Device->getD3D11Device()->CreateBuffer(&d3dDesc, 0, &m_pD3D11Buffer));
-	}
+	buildD3D11Buffer(pData);
 
 	return CWTRUE;
 }
@@ -150,6 +131,50 @@ CWVOID cwD3D11Buffer::copyTo(CWVOID* pData)
 	CW_HR(pD3D11Device->getD3D11DeviceContext()->Map(m_pD3D11Buffer, 0, D3D11_MAP_READ, 0, &mappedData));
 	memcpy(pData, mappedData.pData, this->getSize());
 	pD3D11Device->getD3D11DeviceContext()->Unmap(m_pD3D11Buffer, 0);
+}
+
+CWBOOL cwD3D11Buffer::rebuild(
+	CWVOID* pData,
+	CWUINT uSize,
+	eBufferUsage usage,
+	eBufferBindFlag bindFlag,
+	eAccessFlag uCpuFlag,
+	CWUINT miscFlag,
+	CWUINT structureByteStride,
+	CWUINT offset)
+{
+	cwBuffer::rebuild(pData, uSize, usage, bindFlag, uCpuFlag, miscFlag, structureByteStride, offset);
+
+	CW_RELEASE_COM(m_pD3D11Buffer);
+
+	buildD3D11Buffer(pData);
+
+	return CWTRUE;
+}
+
+CWVOID cwD3D11Buffer::buildD3D11Buffer(CWVOID* pData)
+{
+	CWUINT uD3D11CpuFlag = cwD3D11Device::getAccessFlag(m_nAccessFlag);
+	D3D11_USAGE uD3D11Usage = cwD3D11Device::getBufferUsage(m_nUsage);
+	CWUINT uBindFlag = cwD3D11Device::getBufferBindFlag(m_nBindingFlag);
+
+	D3D11_BUFFER_DESC d3dDesc;
+	d3dDesc.BindFlags = uBindFlag;
+	d3dDesc.ByteWidth = m_uBufferSize;
+	d3dDesc.CPUAccessFlags = uD3D11CpuFlag;
+	d3dDesc.MiscFlags = m_nMiscFlag;
+	d3dDesc.StructureByteStride = m_nStride;
+	d3dDesc.Usage = uD3D11Usage;
+
+	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+	if (pData) {
+		D3D11_SUBRESOURCE_DATA subData;
+		subData.pSysMem = pData;
+		CW_HR(pD3D11Device->getD3D11Device()->CreateBuffer(&d3dDesc, &subData, &m_pD3D11Buffer));
+	}
+	else {
+		CW_HR(pD3D11Device->getD3D11Device()->CreateBuffer(&d3dDesc, 0, &m_pD3D11Buffer));
+	}
 }
 
 NS_MINIR_END

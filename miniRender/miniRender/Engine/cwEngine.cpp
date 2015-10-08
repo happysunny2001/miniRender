@@ -222,6 +222,18 @@ cwVector<cwRenderNode*>* cwEngine::getVisibleNodes(cwCamera* pCamera, eSceneObje
 		m_nMapVisibleNodes[pCamera] = &vecNodes;
 
 		return &vecNodes;
+
+		//sVisibleNodesResult* pCacheResult = nullptr;
+		//for (auto it = m_nVisibleResult.begin(); it != m_nVisibleResult.end(); ++it) {
+		//	if (it->m_pCamera == pCamera && it->m_eType == eType) {
+		//		pCacheResult = &(*it);
+		//		break;
+		//	}
+		//}
+
+		//if (pCacheResult) {
+		//	return pCacheResult->m_pVecVisibleNodes;
+		//}
 	}
 
 	return nullptr;

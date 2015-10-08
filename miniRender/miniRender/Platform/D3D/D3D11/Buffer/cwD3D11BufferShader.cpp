@@ -32,10 +32,11 @@ cwD3D11BufferShader* cwD3D11BufferShader::create(
 CWVOID* pData,
 CWUINT uSize,
 eAccessFlag uCpuFlag,
-CWUINT structureByteStride)
+CWUINT structureByteStride,
+CWUINT offset)
 {
 	cwD3D11BufferShader* pBuffer = new cwD3D11BufferShader();
-	if (pBuffer && pBuffer->init(pData, uSize, eBufferUsageDefault, eBufferBindShader, uCpuFlag, D3D11_RESOURCE_MISC_BUFFER_STRUCTURED, structureByteStride)) {
+	if (pBuffer && pBuffer->init(pData, uSize, eBufferUsageDefault, eBufferBindShader, uCpuFlag, D3D11_RESOURCE_MISC_BUFFER_STRUCTURED, structureByteStride, offset)) {
 		pBuffer->autorelease();
 		return pBuffer;
 	}
@@ -63,9 +64,10 @@ CWBOOL cwD3D11BufferShader::init(
 	eBufferBindFlag bindFlag,
 	eAccessFlag uCpuFlag,
 	CWUINT miscFlag,
-	CWUINT structureByteStride)
+	CWUINT structureByteStride,
+	CWUINT offset)
 {
-	if (!cwD3D11Buffer::init(pData, uSize, usage, bindFlag, uCpuFlag, miscFlag, structureByteStride)) return CWFALSE;
+	if (!cwD3D11Buffer::init(pData, uSize, usage, bindFlag, uCpuFlag, miscFlag, structureByteStride, offset)) return CWFALSE;
 
 	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
 

@@ -38,7 +38,7 @@ public:
 	CWBOOL isKeyDown(KeyCode code);
 
 protected:
-	std::unordered_map<KeyCode, CWUINT> m_nMapKey;
+	//std::unordered_map<KeyCode, CWUINT> m_nMapKey;
 
 };
 

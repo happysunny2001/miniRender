@@ -46,6 +46,14 @@ class cwRenderNode;
 class CW_DLL cwEngine : public cwRef
 {
 public:
+	struct sVisibleNodesResult
+	{
+		cwCamera* m_pCamera;
+		eSceneObjectType m_eType;
+		cwVector<cwRenderNode*>* m_pVecVisibleNodes;
+	};
+
+public:
 	CWVOID setScene(cwScene* pScene);
 	cwScene* getCurrScene() { return m_pCurrScene; }
 
@@ -89,6 +97,7 @@ protected:
 
 	CWUINT m_uNodeVectorCounter;
 	std::vector<cwVector<cwRenderNode*>> m_nVecVisiableNodes;
+	std::vector<sVisibleNodesResult> m_nVisibleResult;
 	std::unordered_map<cwCamera*, cwVector<cwRenderNode*>*> m_nMapVisibleNodes;
 
 	cwRenderer* m_pRenderer;

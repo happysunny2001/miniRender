@@ -21,9 +21,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #define __CW_EVENT_MANAGER_H__
 
 #include "Base/cwMacros.h"
+#include "Base/cwVector.h"
 #include "Ref/cwRef.h"
 #include "Repertory/cwRepertory.h"
-#include "Base/cwVector.h"
+#include "cwEventDefine.h"
 
 #include <mutex>
 
@@ -35,14 +36,17 @@ class cwEvent;
 class cwEventManager : public cwRef
 {
 public:
-	void addEvent(cwEvent* pEvent);
-	void removeEvent(cwEvent* pEvent);
+	CWVOID addEvent(cwEvent* pEvent);
+	CWVOID removeEvent(cwEvent* pEvent);
 
-	bool addListener(cwEventListener* pListener);
-	bool addListener(cwEventListener* pListener, CWINT iPriority, bool swallow);
-	void removeListener(cwEventListener* pListener);
+	CWBOOL addListener(cwEventListener* pListener);
+	CWBOOL addListener(cwEventListener* pListener, CWINT iPriority, CWBOOL swallow);
+	CWVOID removeListener(cwEventListener* pListener);
 
-	void dispatchEvent();
+	CWVOID dispatchEvent();
+
+	inline CWBOOL isKeyDown(KeyCode code) const { return m_nGlobalKeyState[code] == KeyState::KeyDown; }
+	inline CWBOOL isKeyUp(KeyCode code) const { return m_nGlobalKeyState[code] == KeyState::keyUp; }
 
 protected:
 	static cwEventManager* create();
@@ -50,9 +54,9 @@ protected:
 	cwEventManager();
 	virtual ~cwEventManager();
 
-	bool init();
-	void clear();
-	void append();
+	CWBOOL init();
+	CWVOID clear();
+	CWVOID append();
 
 	friend class cwRepertory;
 
@@ -63,9 +67,11 @@ protected:
 	cwVector<cwEventListener*> m_nVecAppendListener;
 	cwVector<cwEvent*> m_nVecAppendEvent;
 
-	bool m_bDirty;
+	CWBOOL m_bDirty;
 	std::mutex m_nEventMutex;
 	std::mutex m_nListenerMutex;
+
+	static KeyState m_nGlobalKeyState[KeyCode::KeyMax];
 
 };
 

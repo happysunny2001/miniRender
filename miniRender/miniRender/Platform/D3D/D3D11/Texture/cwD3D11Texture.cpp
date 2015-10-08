@@ -57,13 +57,30 @@ bool cwD3D11Texture::init(const CWSTRING& strFileName)
 	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
 	CWWSTRING wstrName = cwStringConvert::convertToWideChar(strFileName);
 
-	CW_HR(D3DX11CreateShaderResourceViewFromFile(
-		pD3D11Device->getD3D11Device(),
-		wstrName.c_str(),
-		NULL,
-		NULL, 
-		&m_pShaderResource, 
-		NULL));
+	ID3D11Texture2D* pTexture2D = NULL;
+	CW_HR(D3DX11CreateTextureFromFile(pD3D11Device->getD3D11Device(), wstrName.c_str(), NULL, NULL, (ID3D11Resource**)&pTexture2D, NULL));
+
+	D3D11_TEXTURE2D_DESC textureDesc;
+	pTexture2D->GetDesc(&textureDesc);
+
+	m_fWidth = static_cast<CWFLOAT>(textureDesc.Width);
+	m_fHeight = static_cast<CWFLOAT>(textureDesc.Height);
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC resourceDesc;
+	resourceDesc.Format = textureDesc.Format;
+	resourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	resourceDesc.Texture2D.MostDetailedMip = 0;
+	resourceDesc.Texture2D.MipLevels = -1;
+
+	pD3D11Device->getD3D11Device()->CreateShaderResourceView(pTexture2D, &resourceDesc, &m_pShaderResource);
+
+	//CW_HR(D3DX11CreateShaderResourceViewFromFile(
+	//	pD3D11Device->getD3D11Device(),
+	//	wstrName.c_str(),
+	//	NULL,
+	//	NULL, 
+	//	&m_pShaderResource, 
+	//	NULL));
 
 	m_nStrName = strFileName;
 

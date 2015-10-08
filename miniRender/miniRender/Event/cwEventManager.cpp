@@ -20,12 +20,15 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwEventManager.h"
 #include "cwEvent.h"
 #include "cwEventListener.h"
+#include "cwKeyboardEvent.h"
 
 #include <algorithm>
 
 NS_MINIR_BEGIN
 
-static bool eventListenerComp(cwEventListener* left, cwEventListener* right)
+KeyState cwEventManager::m_nGlobalKeyState[KeyCode::KeyMax];
+
+static CWBOOL eventListenerComp(cwEventListener* left, cwEventListener* right)
 {
 	return left->getPriority() < right->getPriority();
 }
@@ -52,36 +55,46 @@ cwEventManager::~cwEventManager()
 
 }
 
-bool cwEventManager::init()
+CWBOOL cwEventManager::init()
 {
-	m_bDirty = false;
-	return true;
+	m_bDirty = CWFALSE;
+
+	for (CWUINT i = KeyCode::KeyNone; i < KeyCode::KeyMax; ++i) {
+		m_nGlobalKeyState[i] = KeyState::keyUp;
+	}
+
+	return CWTRUE;
 }
 
-void cwEventManager::addEvent(cwEvent* pEvent)
+CWVOID cwEventManager::addEvent(cwEvent* pEvent)
 {
 	if (!pEvent) return;
 
 	std::lock_guard<std::mutex> lg(m_nEventMutex);
 	m_nVecAppendEvent.pushBack(pEvent);
+
+	if (pEvent->getEventType() == EventType::EventTypeKeyboard) {
+		cwKeyboardEvent* pKeyBoardEvent = static_cast<cwKeyboardEvent*>(pEvent);
+		m_nGlobalKeyState[pKeyBoardEvent->getKeyboard()->getKeyCode()] = pKeyBoardEvent->getKeyState();
+	}
 }
 
-void cwEventManager::removeEvent(cwEvent* pEvent)
+CWVOID cwEventManager::removeEvent(cwEvent* pEvent)
 {
 	if (!pEvent) return;
 	pEvent->setEventState(EventStateDrop);
 }
 
-bool cwEventManager::addListener(cwEventListener* pListener)
+CWBOOL cwEventManager::addListener(cwEventListener* pListener)
 {
 	if (!pListener) return false;
 	return addListener(pListener, CW_EVENT_DEFAULT_PRIORITY, false);
 }
 
-bool cwEventManager::addListener(cwEventListener* pListener, CWINT iPriority, bool swallow)
+CWBOOL cwEventManager::addListener(cwEventListener* pListener, CWINT iPriority, bool swallow)
 {
-	if (!pListener) return false;
-	if (m_nVecListener.contains(pListener)) return false;
+	if (!pListener) return CWFALSE;
+	if (m_nVecListener.contains(pListener)) return CWFALSE;
 
 	pListener->setPriority(iPriority);
 	if (swallow)
@@ -89,26 +102,26 @@ bool cwEventManager::addListener(cwEventListener* pListener, CWINT iPriority, bo
 	else
 		pListener->setBehaviour(EventListenerBehaviourNormal);
 
-	m_bDirty = true;
+	m_bDirty = CWTRUE;
 
 	{
 		std::lock_guard<std::mutex> lg(m_nListenerMutex);
 		m_nVecAppendListener.pushBack(pListener);
 	}
 	
-	return true;
+	return CWTRUE;
 }
 
-void cwEventManager::removeListener(cwEventListener* pListener)
+CWVOID cwEventManager::removeListener(cwEventListener* pListener)
 {
 	if (!pListener) return;
 	if (m_nVecListener.contains(pListener)) {
 		pListener->setState(EventListenerStateDrop);
-		m_bDirty = true;
+		m_bDirty = CWTRUE;
 	} 
 }
 
-void cwEventManager::dispatchEvent()
+CWVOID cwEventManager::dispatchEvent()
 {
 	if (m_nVecEvent.empty() || m_nVecListener.empty()) {
 		clear();
@@ -119,7 +132,7 @@ void cwEventManager::dispatchEvent()
 	if (m_bDirty) {
 		//sort listener
 		std::sort(m_nVecListener.begin(), m_nVecListener.end(), eventListenerComp);
-		m_bDirty = false;
+		m_bDirty = CWFALSE;
 	}
 
 	for (auto itListener = m_nVecListener.begin(); itListener != m_nVecListener.end(); ++itListener) {
@@ -135,7 +148,7 @@ void cwEventManager::dispatchEvent()
 	append();
 }
 
-void cwEventManager::clear()
+CWVOID cwEventManager::clear()
 {
 	cwVector<cwEventListener*> tmpVecListener;
 
@@ -154,7 +167,7 @@ void cwEventManager::clear()
 	m_nVecEvent.clear();
 }
 
-void cwEventManager::append()
+CWVOID cwEventManager::append()
 {
 	if (true) {
 		std::lock_guard<std::mutex> lg(m_nEventMutex);

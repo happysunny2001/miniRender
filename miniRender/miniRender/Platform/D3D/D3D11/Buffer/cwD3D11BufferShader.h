@@ -37,7 +37,8 @@ public:
 		CWVOID* pData,
 		CWUINT uSize,
 		eAccessFlag uCpuFlag,
-		CWUINT structureByteStride);
+		CWUINT structureByteStride,
+		CWUINT offset = 0);
 
 	cwD3D11BufferShader();
 	virtual ~cwD3D11BufferShader();
@@ -49,7 +50,8 @@ public:
 		eBufferBindFlag bindFlag,
 		eAccessFlag uCpuFlag,
 		CWUINT miscFlag,
-		CWUINT structureByteStride) override;
+		CWUINT structureByteStride,
+		CWUINT offset) override;
 
 	virtual CWHANDLE getShaderHandle() override;
 

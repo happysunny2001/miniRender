@@ -41,10 +41,15 @@ public:
 
 	inline eRenderTextureType getType() const { return m_eType; }
 
+	inline CWFLOAT getWidth() const { return m_fWidth; }
+	inline CWFLOAT getHeight() const { return m_fHeight; }
+
 protected:
 	CWSTRING m_nStrName;
-
 	eRenderTextureType m_eType;
+
+	CWFLOAT m_fWidth;
+	CWFLOAT m_fHeight;
 
 };
 

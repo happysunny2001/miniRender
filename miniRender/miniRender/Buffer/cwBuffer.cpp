@@ -42,7 +42,8 @@ CWBOOL cwBuffer::init(
 	eBufferBindFlag bindFlag,
 	eAccessFlag uCpuFlag,
 	CWUINT miscFlag,
-	CWUINT structureByteStride)
+	CWUINT structureByteStride,
+	CWUINT offset)
 {
 	if (structureByteStride > 0)
 		m_iElementCnt = uSize / structureByteStride;
@@ -51,6 +52,9 @@ CWBOOL cwBuffer::init(
 	m_nStride = structureByteStride;
 	m_nUsage = usage;
 	m_nAccessFlag = uCpuFlag;
+	m_nOffset = offset;
+	m_nBindingFlag = bindFlag;
+	m_nMiscFlag = miscFlag;
 
 	return true;
 }
@@ -83,6 +87,30 @@ CWVOID cwBuffer::copyFrom(cwBuffer* pBuffer)
 CWVOID cwBuffer::copyTo(CWVOID* pData)
 {
 
+}
+
+CWBOOL cwBuffer::rebuild(
+	CWVOID* pData,
+	CWUINT uSize,
+	eBufferUsage usage,
+	eBufferBindFlag bindFlag,
+	eAccessFlag uCpuFlag,
+	CWUINT miscFlag,
+	CWUINT structureByteStride,
+	CWUINT offset)
+{
+	if (structureByteStride > 0)
+		m_iElementCnt = uSize / structureByteStride;
+
+	m_uBufferSize = uSize;
+	m_nStride = structureByteStride;
+	m_nUsage = usage;
+	m_nAccessFlag = uCpuFlag;
+	m_nOffset = offset;
+	m_nBindingFlag = bindFlag;
+	m_nMiscFlag = miscFlag;
+
+	return CWTRUE;
 }
 
 NS_MINIR_END

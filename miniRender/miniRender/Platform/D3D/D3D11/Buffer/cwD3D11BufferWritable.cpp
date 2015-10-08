@@ -33,10 +33,11 @@ CWVOID* pData,
 CWUINT uSize,
 eAccessFlag uCpuFlag,
 CWUINT structureByteStride,
+CWUINT offset,
 CWBOOL bAppend)
 {
 	cwD3D11BufferWritable* pBuffer = new cwD3D11BufferWritable();
-	if (pBuffer && pBuffer->init(pData, uSize, eBufferUsageDefault, eBufferBindWritable, uCpuFlag, D3D11_RESOURCE_MISC_BUFFER_STRUCTURED, structureByteStride, bAppend)) {
+	if (pBuffer && pBuffer->init(pData, uSize, eBufferUsageDefault, eBufferBindWritable, uCpuFlag, D3D11_RESOURCE_MISC_BUFFER_STRUCTURED, structureByteStride, offset, bAppend)) {
 		pBuffer->autorelease();
 		return pBuffer;
 	}
@@ -65,9 +66,10 @@ CWBOOL cwD3D11BufferWritable::init(
 	eAccessFlag uCpuFlag,
 	CWUINT miscFlag,
 	CWUINT structureByteStride,
+	CWUINT offset,
 	CWBOOL bAppend)
 {
-	if (!cwD3D11Buffer::init(pData, uSize, usage, bindFlag, uCpuFlag, miscFlag, structureByteStride)) return CWFALSE;
+	if (!cwD3D11Buffer::init(pData, uSize, usage, bindFlag, uCpuFlag, miscFlag, structureByteStride, offset)) return CWFALSE;
 
 	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
 

@@ -39,7 +39,8 @@ public:
 		eBufferBindFlag bindFlag,
 		eAccessFlag uCpuFlag,
 		CWUINT miscFlag,
-		CWUINT structureByteStride);
+		CWUINT structureByteStride,
+		CWUINT offset = 0);
 
 	cwD3D11Buffer();
 	virtual ~cwD3D11Buffer();
@@ -51,13 +52,26 @@ public:
 		eBufferBindFlag bindFlag,
 		eAccessFlag uCpuFlag,
 		CWUINT miscFlag,
-		CWUINT structureByteStride) override;
+		CWUINT structureByteStride,
+		CWUINT offset) override;
 
 	virtual CWHANDLE getHandle() override;
 	virtual CWVOID refresh(CWVOID* pData) override;
 	virtual CWVOID refresh(CWVOID* pData, CWUINT uSize) override;
 	virtual CWVOID copyFrom(cwBuffer* pBuffer) override;
 	virtual CWVOID copyTo(CWVOID* pData) override;
+	virtual CWBOOL rebuild(
+		CWVOID* pData,
+		CWUINT uSize,
+		eBufferUsage usage,
+		eBufferBindFlag bindFlag,
+		eAccessFlag uCpuFlag,
+		CWUINT miscFlag,
+		CWUINT structureByteStride,
+		CWUINT offset);
+
+protected:
+	CWVOID buildD3D11Buffer(CWVOID* pData);
 
 protected:
 	ID3D11Buffer* m_pD3D11Buffer;

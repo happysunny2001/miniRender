@@ -3,13 +3,13 @@
 	<StageList>
 
 		<Stage Name="S1" Type="normal" Enable="True">
-			<Camera Name="default" />
+			<Camera Name="Default" />
 			<ViewPort Name="default" TopLeftX="0" TopLeftY="0" Width="-1" Height="-1" MinDepth="0" MaxDepth="1.0" />
 			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" />
 		</Stage>
 
 		<Stage Name="S2" Type="normal" Enable="true" Generator="Mirror">
-			<Camera Name="default" />
+			<Camera Name="Default" />
 			<ViewPort Name="default" TopLeftX="0" TopLeftY="0" Width="-1" Height="-1" MinDepth="0" MaxDepth="1.0" />
 			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" IsClearColor="False" IsClearDepth="False" IsClearStencil="False" />
 

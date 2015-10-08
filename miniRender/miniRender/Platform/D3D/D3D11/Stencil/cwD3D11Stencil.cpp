@@ -54,22 +54,22 @@ cwD3D11Stencil::~cwD3D11Stencil()
 bool cwD3D11Stencil::init(const cwStencilData& stencilData)
 {
 	m_nDepthStencilDesc.DepthEnable = stencilData.depthEnable;
-	m_nDepthStencilDesc.DepthWriteMask = cwD3D11Device::getDepthWriteMask(stencilData.depthWriteMask);// static_cast<D3D11_DEPTH_WRITE_MASK>(depthWriteMask);
-	m_nDepthStencilDesc.DepthFunc = cwD3D11Device::getComparison(stencilData.depthFunc);//static_cast<D3D11_COMPARISON_FUNC>(depthFunc);
+	m_nDepthStencilDesc.DepthWriteMask = cwD3D11Device::getDepthWriteMask(stencilData.depthWriteMask);
+	m_nDepthStencilDesc.DepthFunc = cwD3D11Device::getComparison(stencilData.depthFunc);
 
 	m_nDepthStencilDesc.StencilEnable = stencilData.stencilEnable;
 	m_nDepthStencilDesc.StencilReadMask = stencilData.stencilReadMask;
 	m_nDepthStencilDesc.StencilWriteMask = stencilData.stencilWriteMask;
 
-	m_nDepthStencilDesc.FrontFace.StencilFailOp = cwD3D11Device::getStencilOp(stencilData.frontStencilFailOp);//static_cast<D3D11_STENCIL_OP>(frontFailOp);
-	m_nDepthStencilDesc.FrontFace.StencilDepthFailOp = cwD3D11Device::getStencilOp(stencilData.frontStencilDepthFailOp); //static_cast<D3D11_STENCIL_OP>(frontDepthFailOp);
-	m_nDepthStencilDesc.FrontFace.StencilPassOp = cwD3D11Device::getStencilOp(stencilData.frontStencilPassOp); //static_cast<D3D11_STENCIL_OP>(frontPassOp);
-	m_nDepthStencilDesc.FrontFace.StencilFunc = cwD3D11Device::getComparison(stencilData.frontStencilFunc); //static_cast<D3D11_COMPARISON_FUNC>(frontFunc);
+	m_nDepthStencilDesc.FrontFace.StencilFailOp = cwD3D11Device::getStencilOp(stencilData.frontStencilFailOp);
+	m_nDepthStencilDesc.FrontFace.StencilDepthFailOp = cwD3D11Device::getStencilOp(stencilData.frontStencilDepthFailOp); 
+	m_nDepthStencilDesc.FrontFace.StencilPassOp = cwD3D11Device::getStencilOp(stencilData.frontStencilPassOp);
+	m_nDepthStencilDesc.FrontFace.StencilFunc = cwD3D11Device::getComparison(stencilData.frontStencilFunc); 
 
-	m_nDepthStencilDesc.BackFace.StencilFailOp = cwD3D11Device::getStencilOp(stencilData.backStencilFailOp); //static_cast<D3D11_STENCIL_OP>(backFailOp);
-	m_nDepthStencilDesc.BackFace.StencilDepthFailOp = cwD3D11Device::getStencilOp(stencilData.backStencilDepthFailOp); //static_cast<D3D11_STENCIL_OP>(backDepthFailOp);
-	m_nDepthStencilDesc.BackFace.StencilPassOp = cwD3D11Device::getStencilOp(stencilData.backStencilPassOp); //static_cast<D3D11_STENCIL_OP>(backPassOp);
-	m_nDepthStencilDesc.BackFace.StencilFunc = cwD3D11Device::getComparison(stencilData.backStencilFunc); //static_cast<D3D11_COMPARISON_FUNC>(backFunc);
+	m_nDepthStencilDesc.BackFace.StencilFailOp = cwD3D11Device::getStencilOp(stencilData.backStencilFailOp); 
+	m_nDepthStencilDesc.BackFace.StencilDepthFailOp = cwD3D11Device::getStencilOp(stencilData.backStencilDepthFailOp); 
+	m_nDepthStencilDesc.BackFace.StencilPassOp = cwD3D11Device::getStencilOp(stencilData.backStencilPassOp); 
+	m_nDepthStencilDesc.BackFace.StencilFunc = cwD3D11Device::getComparison(stencilData.backStencilFunc); 
 
 	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
 	CW_HR(pD3D11Device->getD3D11Device()->CreateDepthStencilState(&m_nDepthStencilDesc, &m_pDepthStencilState));

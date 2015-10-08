@@ -169,6 +169,7 @@
     <ClInclude Include="Texture\cwTexture.h" />
     <ClInclude Include="Texture\cwTextureArray.h" />
     <ClInclude Include="Texture\cwTextureManager.h" />
+    <ClInclude Include="Text\cwText.h" />
     <ClInclude Include="Timer\cwTimer.h" />
     <ClInclude Include="ViewPort\cwViewPort.h" />
   </ItemGroup>
@@ -297,6 +298,7 @@
     <ClCompile Include="Texture\cwTexture.cpp" />
     <ClCompile Include="Texture\cwTextureArray.cpp" />
     <ClCompile Include="Texture\cwTextureManager.cpp" />
+    <ClCompile Include="Text\cwText.cpp" />
     <ClCompile Include="Timer\cwTimer.cpp" />
     <ClCompile Include="ViewPort\cwViewPort.cpp" />
   </ItemGroup>

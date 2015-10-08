@@ -49,8 +49,6 @@ public:
 	inline const cwVector4D& getClearColor() const { return m_nClearColor; }
 
 protected:
-	CWFLOAT m_fWidth;
-	CWFLOAT m_fHeight;
 	cwVector4D m_nClearColor;
 
 };

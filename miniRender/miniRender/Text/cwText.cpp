@@ -16,38 +16,3 @@ PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS B
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-
-#include "cwKeyboardEventInterface.h"
-#include "Event/cwEventManager.h"
-#include "Repertory/cwRepertory.h"
-
-NS_MINIR_BEGIN
-
-CWVOID cwKeyboardEventInterface::onKeyDown(cwKeyboard* pKey)
-{
-	//if (pKey) {
-	//	if (!isKeyDown(pKey->getKeyCode())) {
-	//		m_nMapKey[pKey->getKeyCode()] = 1;
-	//	}
-	//}
-}
-
-CWVOID cwKeyboardEventInterface::onKeyUp(cwKeyboard* pKey)
-{
-	//auto it = m_nMapKey.find(pKey->getKeyCode());
-	//if (it != m_nMapKey.end()) {
-	//	m_nMapKey.erase(it);
-	//}
-}
-
-CWBOOL cwKeyboardEventInterface::isKeyDown(KeyCode code)
-{
-	//auto it = m_nMapKey.find(code);
-	//if (it == m_nMapKey.end()) return CWFALSE;
-
-	//return CWTRUE;
-
-	return cwRepertory::getInstance().getEventManager()->isKeyDown(code);
-}
-
-NS_MINIR_END

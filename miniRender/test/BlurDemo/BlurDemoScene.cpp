@@ -51,10 +51,10 @@ CWBOOL BlurDemoScene::init()
 	pTouchListener->onTouchMoving = CW_CALLBACK_1(BlurDemoScene::onTouchMoving, this);
 	this->addEventListener(pTouchListener);
 
-	cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
-	pKeyListener->onKeyDown = CW_CALLBACK_1(BlurDemoScene::onKeyDown, this);
-	pKeyListener->onKeyUp = CW_CALLBACK_1(BlurDemoScene::onKeyUp, this);
-	this->addEventListener(pKeyListener);
+	//cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
+	//pKeyListener->onKeyDown = CW_CALLBACK_1(BlurDemoScene::onKeyDown, this);
+	//pKeyListener->onKeyUp = CW_CALLBACK_1(BlurDemoScene::onKeyUp, this);
+	//this->addEventListener(pKeyListener);
 
 	this->schedulerUpdate();
 

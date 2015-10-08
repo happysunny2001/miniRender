@@ -184,6 +184,7 @@ typedef enum _KeyCode
 	RControl,
 	LMenu,
 	RMenu,
+	KeyMax,
 }KeyCode;
 
 typedef enum _KeyState

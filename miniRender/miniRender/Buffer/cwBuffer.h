@@ -42,7 +42,8 @@ public:
 		eBufferBindFlag bindFlag,
 		eAccessFlag uCpuFlag,
 		CWUINT miscFlag,
-		CWUINT structureByteStride);
+		CWUINT structureByteStride,
+		CWUINT offset);
 
 	virtual CWHANDLE getHandle();
 	virtual CWHANDLE getShaderHandle();
@@ -51,21 +52,30 @@ public:
 	virtual CWVOID refresh(CWVOID* pData, CWUINT uSize);
 	virtual CWVOID copyFrom(cwBuffer* pBuffer);
 	virtual CWVOID copyTo(CWVOID* pData);
+	virtual CWBOOL rebuild(
+		CWVOID* pData,
+		CWUINT uSize,
+		eBufferUsage usage,
+		eBufferBindFlag bindFlag,
+		eAccessFlag uCpuFlag,
+		CWUINT miscFlag,
+		CWUINT structureByteStride,
+		CWUINT offset);
 
 	inline CWUINT getSize() const { return m_uBufferSize; }
-
-	inline CWVOID setStride(CWUINT uStride) { m_nStride = uStride; }
+	inline eAccessFlag getAcessFlag() const { return m_nAccessFlag; }
+	inline eBufferUsage getUsage() const { return m_nUsage; }
 	inline CWUINT getStride() const { return m_nStride; }
-	inline CWVOID setOffset(CWUINT uOffset) { m_nOffset = uOffset; }
 	inline CWUINT getOffset() const { return m_nOffset; }
-
-	const CWUINT getElementCount() const { return m_iElementCnt; }
+	inline CWUINT getElementCount() const { return m_iElementCnt; }
 
 protected:
 	eAccessFlag m_nAccessFlag;
 	eBufferUsage m_nUsage;
+	eBufferBindFlag m_nBindingFlag;
 	CWUINT m_nStride;
 	CWUINT m_nOffset;
+	CWUINT m_nMiscFlag;
 	CWUINT m_iElementCnt;
 	CWUINT m_uBufferSize;
 

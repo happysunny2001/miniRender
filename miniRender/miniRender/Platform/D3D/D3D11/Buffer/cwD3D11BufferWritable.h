@@ -38,6 +38,7 @@ public:
 		CWUINT uSize,
 		eAccessFlag uCpuFlag,
 		CWUINT structureByteStride, 
+		CWUINT offset = 0,
 		CWBOOL bAppend=CWFALSE);
 
 	cwD3D11BufferWritable();
@@ -51,6 +52,7 @@ public:
 		eAccessFlag uCpuFlag,
 		CWUINT miscFlag,
 		CWUINT structureByteStride,
+		CWUINT offset,
 		CWBOOL bAppend);
 
 	virtual CWHANDLE getShaderHandle() override;

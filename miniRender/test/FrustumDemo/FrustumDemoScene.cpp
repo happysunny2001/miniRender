@@ -56,10 +56,10 @@ CWBOOL FrustumDemoScene::init()
 	pTouchListener->onTouchMoving = CW_CALLBACK_1(FrustumDemoScene::onTouchMoving, this);
 	this->addEventListener(pTouchListener);
 
-	cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
-	pKeyListener->onKeyDown = CW_CALLBACK_1(FrustumDemoScene::onKeyDown, this);
-	pKeyListener->onKeyUp = CW_CALLBACK_1(FrustumDemoScene::onKeyUp, this);
-	this->addEventListener(pKeyListener);
+	//cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
+	//pKeyListener->onKeyDown = CW_CALLBACK_1(FrustumDemoScene::onKeyDown, this);
+	//pKeyListener->onKeyUp = CW_CALLBACK_1(FrustumDemoScene::onKeyUp, this);
+	//this->addEventListener(pKeyListener);
 
 	this->schedulerUpdate();
 	m_bTouchDown = false;
