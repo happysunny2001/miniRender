@@ -126,7 +126,7 @@ cwVector<cwRenderNode*>* cwStage::getRenderEntities(cwCamera* pCamera, eStageLay
 {
 	if (eType == eStageLayerFliterStage) return &m_nVecStageEntities;
 
-	cwScene* pScene = cwRepertory::getInstance().getEngine()->getCurrScene();
+	//cwScene* pScene = cwRepertory::getInstance().getEngine()->getCurrScene();
 	switch (eType) {
 		case eStageLayerFliterEntity:
 			//return &(pScene->getVisibleEntities(m_pCamera));

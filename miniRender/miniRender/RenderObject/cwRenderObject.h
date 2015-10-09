@@ -47,6 +47,8 @@ public:
 	CWVOID updateVertexData(CWVOID* pData);
 	virtual CWVOID updateVertexData(CWVOID* pData, CWUINT uSize);
 
+	virtual CWVOID updateIndexData(CWVOID* pData, CWUINT uSize);
+
 	inline cwLayouts* getInputLayout() { return m_pLayout; }
 	inline ePrimitiveType getPrimitiveTopology() { return m_nTopology; }
 

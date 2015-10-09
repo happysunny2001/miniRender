@@ -17,43 +17,36 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_MIRROR_H__
-#define __CW_MIRROR_H__
+#ifndef __TEXT_DEMO_SCENE_H__
+#define __TEXT_DEMO_SCENE_H__
 
-#include "Base/cwMacros.h"
-#include "Math/cwMath.h"
-#include "cwEntity.h"
+#include "cwMiniRender.h"
+NS_USING_MINIR;
 
-NS_MINIR_BEGIN
-
-class cwBlend;
-class cwStencil;
-class cwStage;
-
-class CW_DLL cwMirror : public cwEntity
+class TextDemoScene : public cwScene
 {
 public:
-	static cwMirror* create();
+	static TextDemoScene* create();
 
-	cwMirror();
-	virtual ~cwMirror();
+	TextDemoScene();
+	virtual ~TextDemoScene();
 
 	virtual CWBOOL init() override;
-	//virtual CWVOID transform() override;
-	virtual CWVOID refreshTransform() override;
 
-	virtual CWVOID setReflectPlane(const cwPlane& plane);
-	inline const cwMatrix4X4& getReclectMatrix() const { return m_nMatReflect; }
+	virtual CWVOID onTouchDown(cwTouch* pTouch) override;
+	virtual CWVOID onTouchUp(cwTouch* pTouch) override;
+	virtual CWVOID onTouchMoving(cwTouch* pTouch) override;
 
-protected:
-	CWVOID updatePlane();
+	virtual CWVOID update(CWFLOAT dt) override;
 
 protected:
-	cwPlane m_nReflectPlane;
-	cwMatrix4X4 m_nMatReflect;
+	CWVOID buildText();
+
+protected:
+	CWFLOAT m_fLastX;
+	CWFLOAT m_fLastY;
+	CWBOOL m_bTouchDown;
 
 };
-
-NS_MINIR_END
 
 #endif

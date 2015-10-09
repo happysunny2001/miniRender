@@ -74,14 +74,6 @@ bool cwD3D11Texture::init(const CWSTRING& strFileName)
 
 	pD3D11Device->getD3D11Device()->CreateShaderResourceView(pTexture2D, &resourceDesc, &m_pShaderResource);
 
-	//CW_HR(D3DX11CreateShaderResourceViewFromFile(
-	//	pD3D11Device->getD3D11Device(),
-	//	wstrName.c_str(),
-	//	NULL,
-	//	NULL, 
-	//	&m_pShaderResource, 
-	//	NULL));
-
 	m_nStrName = strFileName;
 
 	return CWTRUE;

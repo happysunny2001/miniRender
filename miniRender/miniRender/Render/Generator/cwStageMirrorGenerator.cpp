@@ -71,17 +71,19 @@ cwStageMirrorGenerator::~cwStageMirrorGenerator()
 
 CWVOID cwStageMirrorGenerator::generate()
 {
-	cwCamera* pStageCamera = cwRepertory::getInstance().getEngine()->getRenderer()->getCurrRenderStage()->getCamera();
+	cwEngine* pEngine = cwRepertory::getInstance().getEngine();
+	cwCamera* pStageCamera = pEngine->getRenderer()->getCurrRenderStage()->getCamera();
 	m_pStage->setCamera(pStageCamera);
 	m_pStage->clearStageLayer(CWFALSE);
 
-	cwScene* pScene = cwRepertory::getInstance().getEngine()->getCurrScene();
-	cwVector<cwEntity*>& vecEntity = pScene->getVisibleEntities(pStageCamera, eSceneObjectMirror);
+	//cwScene* pScene = cwRepertory::getInstance().getEngine()->getCurrScene();
+	//cwVector<cwEntity*>& vecEntity = pScene->getVisibleEntities(pStageCamera, eSceneObjectMirror);
+	cwVector<cwRenderNode*>* pVecNodes = pEngine->getVisibleNodes(pStageCamera, eSceneObjectMirror);
 
 	CWUINT iIndex = 0;
-	for (auto pEntity : vecEntity) {
+	for (auto it = pVecNodes->begin(); it != pVecNodes->end(); ++it) {
 		cwStageLayer* pStageLayer = m_nVecEntityStageLayer.at(iIndex);
-		cwMirror* pMirror = static_cast<cwMirror*>(pEntity);
+		cwMirror* pMirror = static_cast<cwMirror*>(*it);
 
 		cwPUStageLayerWorldTrans* pPUStageLayerWorldTrans = static_cast<cwPUStageLayerWorldTrans*>(pStageLayer->getPU(ePUStageLayerWorldTrans));
 		if (pPUStageLayerWorldTrans) {
@@ -94,11 +96,11 @@ CWVOID cwStageMirrorGenerator::generate()
 		}
 
 		m_pStage->addStageLayer(pStageLayer);
-		if (++iIndex >= vecEntity.size()) break;
+		if (++iIndex >= pVecNodes->size()) break;
 	}
 
 	m_pStage->addStageLayer(m_pMirrorStageLayer);
-	cwRepertory::getInstance().getEngine()->getRenderer()->addStageRealTime(m_pStage);
+	pEngine->getRenderer()->addStageRealTime(m_pStage);
 }
 
 CWVOID cwStageMirrorGenerator::buildStage()

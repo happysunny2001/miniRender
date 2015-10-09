@@ -95,6 +95,13 @@ CWVOID* cwRenderObject::getVertexData(CWUINT i)
 	return nullptr;
 }
 
+CWVOID cwRenderObject::updateIndexData(CWVOID* pData, CWUINT uSize)
+{
+	if (pData) {
+		memcpy(m_pIndexBuffer, pData, uSize);
+	}
+}
+
 CWVOID cwRenderObject::saveBufferData(
 	CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt, CWUINT uPositionOffset,
 	CWVOID* pIndexData, CWUINT uIndexCnt)

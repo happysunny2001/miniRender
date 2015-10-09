@@ -17,43 +17,39 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_MIRROR_H__
-#define __CW_MIRROR_H__
+#include "TextDemo.h"
+#include "TextDemoScene.h"
 
-#include "Base/cwMacros.h"
-#include "Math/cwMath.h"
-#include "cwEntity.h"
-
-NS_MINIR_BEGIN
-
-class cwBlend;
-class cwStencil;
-class cwStage;
-
-class CW_DLL cwMirror : public cwEntity
+TextDemo::TextDemo()
 {
-public:
-	static cwMirror* create();
 
-	cwMirror();
-	virtual ~cwMirror();
+}
 
-	virtual CWBOOL init() override;
-	//virtual CWVOID transform() override;
-	virtual CWVOID refreshTransform() override;
+TextDemo::~TextDemo()
+{
 
-	virtual CWVOID setReflectPlane(const cwPlane& plane);
-	inline const cwMatrix4X4& getReclectMatrix() const { return m_nMatReflect; }
+}
 
-protected:
-	CWVOID updatePlane();
+CWVOID TextDemo::gameBegin()
+{
+	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 0.0f, -50.0f);
 
-protected:
-	cwPlane m_nReflectPlane;
-	cwMatrix4X4 m_nMatReflect;
+	TextDemoScene* pScene = TextDemoScene::create();
+	cwRepertory::getInstance().getEngine()->setScene(pScene);
+}
 
-};
+CWVOID TextDemo::gameEnd()
+{
 
-NS_MINIR_END
+}
 
-#endif
+CWVOID TextDemo::gameBeginBackGround()
+{
+
+}
+
+CWVOID TextDemo::gameEndBackGround()
+{
+
+}

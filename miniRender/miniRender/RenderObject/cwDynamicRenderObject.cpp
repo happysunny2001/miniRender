@@ -42,7 +42,10 @@ const CWSTRING& strLayout, CWUINT uPositionOffset)
 }
 
 cwDynamicRenderObject::cwDynamicRenderObject() :
-m_bVertexRefresh(CWTRUE)
+m_bVertexRefresh(CWFALSE),
+m_uVertexRefreshSize(0),
+m_bIndexRefresh(CWFALSE),
+m_uIndexRefreshSize(0)
 {
 
 }
@@ -63,7 +66,7 @@ CWBOOL cwDynamicRenderObject::init(
 		pIndexData, uIndexCnt, strLayout, uPositionOffset)) return CWFALSE;
 
 	cwDevice* pDevice = cwRepertory::getInstance().getDevice();
-	m_pVertexBuffer = pDevice->createVertexBuffer(NULL, uVertexStride, uVertexCnt, eBufferUsageDynamic, eAccessFlagWrite);
+	m_pVertexBuffer = pDevice->createVertexBuffer(pVertexData, uVertexStride, uVertexCnt, eBufferUsageDynamic, eAccessFlagWrite);
 	CW_SAFE_RETAIN(m_pVertexBuffer);
 	if (!m_pVertexBuffer) return CWFALSE;
 
@@ -73,9 +76,15 @@ CWBOOL cwDynamicRenderObject::init(
 CWVOID cwDynamicRenderObject::preRender()
 {
 	if (m_bVertexRefresh) {
-		m_pVertexBuffer->refresh(m_pVertexData, m_uRefreshSize);
+		m_pVertexBuffer->refresh(m_pVertexData, m_uVertexRefreshSize);
 		m_bVertexRefresh = CWFALSE;
-		m_uRefreshSize = 0;
+		m_uVertexRefreshSize = 0;
+	}
+
+	if (m_bIndexRefresh) {
+		m_pIndexBuffer->refresh(m_pIndexData, m_uVertexRefreshSize);
+		m_bIndexRefresh = CWFALSE;
+		m_uIndexRefreshSize = 0;
 	}
 }
 
@@ -83,7 +92,14 @@ CWVOID cwDynamicRenderObject::updateVertexData(CWVOID* pData, CWUINT uSize)
 {
 	cwRenderObject::updateVertexData(pData, uSize);
 	m_bVertexRefresh = CWTRUE;
-	m_uRefreshSize = uSize;
+	m_uVertexRefreshSize = uSize;
+}
+
+CWVOID cwDynamicRenderObject::updateIndexData(CWVOID* pData, CWUINT uSize)
+{
+	cwRenderObject::updateIndexData(pData, uSize);
+	m_bIndexRefresh = CWTRUE;
+	m_uIndexRefreshSize = uSize;
 }
 
 NS_MINIR_END

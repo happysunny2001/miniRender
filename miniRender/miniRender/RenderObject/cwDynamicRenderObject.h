@@ -46,10 +46,14 @@ public:
 
 	virtual CWVOID preRender() override;
 	virtual CWVOID updateVertexData(CWVOID* pData, CWUINT uSize) override;
+	virtual CWVOID updateIndexData(CWVOID* pData, CWUINT uSize) override;
 
 protected:
 	CWBOOL m_bVertexRefresh;
-	CWUINT m_uRefreshSize;
+	CWUINT m_uVertexRefreshSize;
+
+	CWBOOL m_bIndexRefresh;
+	CWUINT m_uIndexRefreshSize;
 
 };
 

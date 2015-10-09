@@ -17,30 +17,51 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#ifndef __CW_TEXT_H__
+#define __CW_TEXT_H__
+
 #include "Base/cwBasicType.h"
 #include "Base/cwMacros.h"
+#include "Base/cwStruct.h"
 #include "Ref/cwRef.h"
 #include "Entity/cwRenderNode.h"
+#include "Entity/cwEntity.h"
 
 NS_MINIR_BEGIN
 
 class cwRenderObject;
+class cwTexture;
+class cwDynamicRenderObject;
 
-class cwText : public cwRenderNode
+class cwText : public cwEntity
 {
 public:
 	static cwText* create(const CWSTRING& strText, const CWSTRING& strFontTexture, CWCHAR cStartChar, CWUINT uCharWidth);
 
 	virtual ~cwText();
 
-	virtual CWBOOL init();
+	virtual CWBOOL init(const CWSTRING& strText, const CWSTRING& strFontTexture, CWCHAR cStartChar, CWUINT uCharWidth);
 
 protected:
 	cwText();
 
+	CWBOOL buildMaterial(const CWSTRING& strFontTexture);
+	CWBOOL buildVertexData();
+	CWBOOL refreshText();
+
 protected:
 	CWSTRING m_nStrText;
+	CWUINT m_uMaxCharCnt;
+	//cwTexture* m_pFontTexture;
+
+	cwVertexPosTex* m_pVertexData;
+	CWUINT* m_pIndexData;
+
+	CWCHAR m_cStartChar;
+	CWUINT m_uCharWidth;
 
 };
 
 NS_MINIR_END
+
+#endif

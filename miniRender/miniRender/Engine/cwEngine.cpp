@@ -213,35 +213,58 @@ CWVOID cwEngine::refreshSpatialNode(cwRenderNode* pNode)
 cwVector<cwRenderNode*>* cwEngine::getVisibleNodes(cwCamera* pCamera, eSceneObjectType eType)
 {
 	if (pCamera && m_pSpatial) {
-		auto it = m_nMapVisibleNodes.find(pCamera);
-		if (it != m_nMapVisibleNodes.end()) return (it->second);
+		//auto it = m_nMapVisibleNodes.find(pCamera);
+		//if (it != m_nMapVisibleNodes.end()) return (it->second);
 
-		cwVector<cwRenderNode*>& vecNodes = m_nVecVisiableNodes[m_uNodeVectorCounter++];
-		m_pSpatial->intersection(pCamera->getFrustum(), vecNodes, eType, CWTRUE);
+		//cwVector<cwRenderNode*>& vecNodes = m_nVecVisiableNodes[m_uNodeVectorCounter++];
+		//m_pSpatial->intersection(pCamera->getFrustum(), vecNodes, eType, CWTRUE);
 
-		m_nMapVisibleNodes[pCamera] = &vecNodes;
+		//m_nMapVisibleNodes[pCamera] = &vecNodes;
 
-		return &vecNodes;
+		//return &vecNodes;
 
-		//sVisibleNodesResult* pCacheResult = nullptr;
-		//for (auto it = m_nVisibleResult.begin(); it != m_nVisibleResult.end(); ++it) {
-		//	if (it->m_pCamera == pCamera && it->m_eType == eType) {
-		//		pCacheResult = &(*it);
-		//		break;
-		//	}
-		//}
+		sVisibleNodesResult* pCacheResult = nullptr;
+		for (auto it = m_nVisibleResult.begin(); it != m_nVisibleResult.end(); ++it) {
+			if (it->m_pCamera == pCamera && it->m_eType == eType) {
+				pCacheResult = &(*it);
+				break;
+			}
+		}
 
-		//if (pCacheResult) {
-		//	return pCacheResult->m_pVecVisibleNodes;
-		//}
+		if (pCacheResult) {
+			return pCacheResult->m_pVecVisibleNodes;
+		}
+
+		cwVector<cwRenderNode*>* pVisibleNode = getEmptyNodeList();
+		m_pSpatial->intersection(pCamera->getFrustum(), *pVisibleNode, eType, CWTRUE);
+
+		sVisibleNodesResult result;
+		result.m_eType = eType;
+		result.m_pCamera = pCamera;
+		result.m_pVecVisibleNodes = pVisibleNode;
+		m_nVisibleResult.push_back(result);
+
+		return pVisibleNode;
 	}
 
 	return nullptr;
 }
 
+cwVector<cwRenderNode*>* cwEngine::getEmptyNodeList()
+{
+	if (m_uNodeVectorCounter >= m_nVecVisiableNodes.size()) {
+		cwVector<cwRenderNode*> vecNodes;
+		vecNodes.reserve(100);
+		m_nVecVisiableNodes.push_back(vecNodes);
+	}
+
+	return &(m_nVecVisiableNodes[m_uNodeVectorCounter++]);
+}
+
 CWVOID cwEngine::clearVisibleNodes()
 {
-	m_nMapVisibleNodes.clear();
+	//m_nMapVisibleNodes.clear();
+	m_nVisibleResult.clear();
 	for (auto it = m_nVecVisiableNodes.begin(); it != m_nVecVisiableNodes.end(); ++it) {
 		it->clear();
 	}

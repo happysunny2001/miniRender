@@ -68,6 +68,8 @@ public:
 	inline CWUINT getStride() const { return m_nStride; }
 	inline CWUINT getOffset() const { return m_nOffset; }
 	inline CWUINT getElementCount() const { return m_iElementCnt; }
+	
+	inline CWVOID setElementCount(CWUINT u) { m_iElementCnt = u; }
 
 protected:
 	eAccessFlag m_nAccessFlag;

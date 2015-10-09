@@ -85,6 +85,7 @@ protected:
 
 	virtual CWVOID render();
 	CWVOID clearVisibleNodes();
+	cwVector<cwRenderNode*>* getEmptyNodeList();
 
 	friend class cwRepertory;
 
@@ -98,7 +99,7 @@ protected:
 	CWUINT m_uNodeVectorCounter;
 	std::vector<cwVector<cwRenderNode*>> m_nVecVisiableNodes;
 	std::vector<sVisibleNodesResult> m_nVisibleResult;
-	std::unordered_map<cwCamera*, cwVector<cwRenderNode*>*> m_nMapVisibleNodes;
+	//std::unordered_map<cwCamera*, cwVector<cwRenderNode*>*> m_nMapVisibleNodes;
 
 	cwRenderer* m_pRenderer;
 
