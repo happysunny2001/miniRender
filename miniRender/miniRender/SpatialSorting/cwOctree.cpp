@@ -113,27 +113,27 @@ CWBOOL cwOctree::init(const cwOctree::sOctreeInit& initData)
 	return CWTRUE;
 }
 
-CWBOOL cwOctree::build(cwScene* pScene)
-{
-	if (!pScene) return CWFALSE;
-
-	insert(pScene);
-
-	return CWTRUE;
-}
+//CWBOOL cwOctree::build(cwScene* pScene)
+//{
+//	if (!pScene) return CWFALSE;
+//
+//	insert(pScene);
+//
+//	return CWTRUE;
+//}
 
 CWBOOL cwOctree::insertNode(cwRenderNode* pNode)
 {
-	if (!pNode) return CWFALSE;
-	if (!m_pRoot) return CWFALSE;
+	if (pNode && m_pRoot) {
+		pNode->transform();
+		pNode->refreshTransform();
+		pNode->refreshBoundingBox();
 
-	pNode->transform();
-	pNode->refreshTransform();
-	pNode->refreshBoundingBox();
-	
-	insertNode(pNode, m_pRoot, 0);
+		insertNode(pNode, m_pRoot, 0);
+		return CWTRUE;
+	}
 
-	return CWTRUE;
+	return CWFALSE;
 }
 
 CWBOOL cwOctree::insertNode(cwRenderNode* pNode, sOctreeNode* pOctreeNode, CWUINT uDepth)
@@ -569,8 +569,12 @@ CWVOID cwOctree::checkOctreeNodeEmpty(sOctreeNode* pOctreeNode)
 CWVOID cwOctree::clear()
 {
 	clearOctreeNode(m_pRoot);
-	m_nSetRefreshNode.clear();
 	m_nVecAppend.clear();
+
+	for (auto pNode : m_nSetRefreshNode) {
+		CW_SAFE_RELEASE(pNode);
+	}
+	m_nSetRefreshNode.clear();
 	
 	for (auto pNode : m_nSetRemove) {
 		CW_SAFE_RELEASE(pNode);
@@ -608,7 +612,7 @@ CWVOID cwOctree::renderOctreeNodePrimitiveFrame(sOctreeNode* pOctreeNode)
 		cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(pOctreeNode->m_nBox, cwColor::blue);
 }
 
-const cwAABB& cwOctree::getBoundingBox() const
+const cwAABB& cwOctree::getBoundingBox()
 {
 	if (m_pRoot)
 		return m_pRoot->m_nBox;

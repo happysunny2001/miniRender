@@ -17,20 +17,22 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwSpatialFactory.h"
-#include "cwOctree.h"
-#include "cwNormalSorting.h"
+#ifndef __CW_ORTHO_CAMERA_H__
+#define __CW_ORTHO_CAMERA_H__
+
+#include "Base/cwMacros.h"
+#include "cwCamera.h"
 
 NS_MINIR_BEGIN
 
-cwSpatial* cwSpatialFactory::createSpatial(const CWSTRING& strType)
+class cwOrthoCamera : public cwCamera
 {
-	if (strType == "Octree")
-		return cwOctree::create();
-	else if (strType == "Normal")
-		return cwNormalSorting::create();
+public:
 
-	return nullptr;
-}
+protected:
+
+};
 
 NS_MINIR_END
+
+#endif

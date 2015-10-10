@@ -351,7 +351,7 @@ int cwAABB::intersection(const cwRay& ray) const
 	}
 
 	if (inside) {
-		return 0;
+		return 1;
 	}
 
 	int which = 0;

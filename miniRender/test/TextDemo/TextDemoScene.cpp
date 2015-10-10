@@ -93,7 +93,7 @@ CWVOID TextDemoScene::update(CWFLOAT dt)
 
 CWVOID TextDemoScene::buildText()
 {
-	cwText* pText = cwText::create("1234567890", "Textures/NO_pvp_B99.png", '0', 40);
+	cwText* pText = cwText::create("1234567890", "Textures/font_test.png", '0', 40);
 	if (pText) {
 		pText->setPosition(cwVector3D::ZERO);
 		this->addChild(pText);

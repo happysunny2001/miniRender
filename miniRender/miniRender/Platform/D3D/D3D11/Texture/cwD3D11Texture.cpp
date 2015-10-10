@@ -73,6 +73,7 @@ bool cwD3D11Texture::init(const CWSTRING& strFileName)
 	resourceDesc.Texture2D.MipLevels = -1;
 
 	pD3D11Device->getD3D11Device()->CreateShaderResourceView(pTexture2D, &resourceDesc, &m_pShaderResource);
+	CW_RELEASE_COM(pTexture2D);
 
 	m_nStrName = strFileName;
 

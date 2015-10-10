@@ -321,12 +321,22 @@ void cwMatrix4X4::perspectiveFov(float fFovY, float fAspect, float fNearZ, float
 	float xScale = yScale / fAspect;
 	float zf = fFarZ / (fFarZ - fNearZ);
 
-	this->identity();
-
 	m11 = xScale; m12 = 0;      m13 = 0;          m14 = 0;
 	m21 = 0;      m22 = yScale; m23 = 0;          m24 = 0;
 	m31 = 0;      m32 = 0;      m33 = zf;         m34 = 1.0f;
 	m41 = 0;      m42 = 0;      m43 = -fNearZ*zf; m44 = 0;
+}
+
+void cwMatrix4X4::orthoFov(float fFovY, float fAspect, float fNearZ, float fFarZ)
+{
+	float h = 2 * fNearZ*tanf(fFovY*0.5f);
+	float w = h* fAspect;
+	float zf = 1.0f / (fFarZ - fNearZ);
+	
+	m11 = 2.0f / w; m12 = 0;        m13 = 0;          m14 = 0;
+	m21 = 0;        m22 = 2.0f / h; m23 = 0;          m24 = 0;
+	m31 = 0;        m32 = 0;		m33 = zf;         m34 = 0;
+	m41 = 0;        m42 = 0;        m43 = -fNearZ*zf; m44 = 1.0f;
 }
 
 void cwMatrix4X4::reflect(const cwPlane& plane)

@@ -597,6 +597,12 @@
     <ClInclude Include="Text\cwText.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="SpatialSorting\cwNormalSorting.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\cwOrthoCamera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -978,6 +984,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Text\cwText.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialSorting\cwNormalSorting.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera\cwOrthoCamera.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

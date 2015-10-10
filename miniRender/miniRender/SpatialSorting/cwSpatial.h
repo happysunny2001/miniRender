@@ -39,7 +39,7 @@ class cwCircle;
 class CW_DLL cwSpatial : public cwRef
 {
 public:
-	virtual CWBOOL build(cwScene*) = 0;
+	//virtual CWBOOL build(cwScene*) = 0;
 	
 	virtual CWVOID intersection(const cwFrustum&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) = 0;
 	virtual CWVOID intersection(const cwAABB&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) = 0;
@@ -54,7 +54,7 @@ public:
 	virtual CWVOID clear() = 0;
 	virtual CWVOID renderPrimitiveFrame() = 0;
 
-	virtual const cwAABB& getBoundingBox() const = 0;
+	virtual const cwAABB& getBoundingBox() = 0;
 
 protected:
 

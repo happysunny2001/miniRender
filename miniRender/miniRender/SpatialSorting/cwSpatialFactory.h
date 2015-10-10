@@ -29,6 +29,7 @@ NS_MINIR_BEGIN
 class CW_DLL cwSpatialFactory
 {
 public:
+	//strType: [Octree,Normal]
 	static cwSpatial* createSpatial(const CWSTRING& strType);
 
 };

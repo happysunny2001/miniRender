@@ -147,7 +147,7 @@ CWBOOL cwText::refreshText()
 {
 	if (m_nStrText.empty()) return CWFALSE;
 	CWUINT uStrlen = (CWUINT)(m_nStrText.size());
-	if (m_uMaxCharCnt > uStrlen) return CWFALSE;
+	if (uStrlen > m_uMaxCharCnt) return CWFALSE;
 
 	CWFLOAT fTextureWidth = m_pMaterial->getDiffuseTexture()->getWidth();
 	CWFLOAT fUStep = 1.0f / (fTextureWidth/(CWFLOAT)m_uCharWidth);

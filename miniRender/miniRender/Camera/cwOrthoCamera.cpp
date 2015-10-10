@@ -16,21 +16,3 @@ PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS B
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
-
-#include "cwSpatialFactory.h"
-#include "cwOctree.h"
-#include "cwNormalSorting.h"
-
-NS_MINIR_BEGIN
-
-cwSpatial* cwSpatialFactory::createSpatial(const CWSTRING& strType)
-{
-	if (strType == "Octree")
-		return cwOctree::create();
-	else if (strType == "Normal")
-		return cwNormalSorting::create();
-
-	return nullptr;
-}
-
-NS_MINIR_END

@@ -79,7 +79,7 @@ public:
 	virtual CWBOOL init();
 	virtual CWBOOL init(const sOctreeInit&);
 
-	virtual CWBOOL build(cwScene*) override;
+	//virtual CWBOOL build(cwScene*) override;
 
 	virtual CWVOID intersection(const cwFrustum&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) override;
 	virtual CWVOID intersection(const cwAABB&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) override;
@@ -94,7 +94,7 @@ public:
 	virtual CWVOID clear() override;
 	virtual CWVOID renderPrimitiveFrame() override;
 
-	virtual const cwAABB& getBoundingBox() const override;
+	virtual const cwAABB& getBoundingBox() override;
 
 	inline CWUINT getMaxDepth() const { return m_uMaxDepth; }
 
@@ -136,7 +136,6 @@ protected:
 	std::queue<sOctreeNode*> m_nQueueUnuseOctreeNode;
 
 	cwVector<cwRenderNode*> m_nVecAppend;
-	//cwVector<cwRenderNode*> m_nVecRemove;
 	std::unordered_set<cwRenderNode*> m_nSetRemove;
 
 };
