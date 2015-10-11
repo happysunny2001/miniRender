@@ -58,13 +58,8 @@ CWBOOL cwRenderObject::init(
 	const CWSTRING& strLayout, CWUINT uPositionOffset)
 {
 	m_nTopology = topology;
-	if (pIndexData) {
-		m_pIndexBuffer = cwRepertory::getInstance().getDevice()->createIndexBuffer(pIndexData, sizeof(CWUINT), uIndexCnt);
-		CW_SAFE_RETAIN(m_pIndexBuffer);
-
-		if (!m_pIndexBuffer) return CWFALSE;
-	}
 	m_pLayout = cwRepertory::getInstance().getLayoutManager()->getLayouts(strLayout);
+	if (!buildIndexBuffer(pIndexData, uIndexCnt)) return CWFALSE;
 
 	if (!m_pLayout) return CWFALSE;
 
@@ -72,6 +67,27 @@ CWBOOL cwRenderObject::init(
 	saveBufferData(pVertexData, uVertexStride, uVertexCnt, uPositionOffset, pIndexData, uIndexCnt);
 
 	return CWTRUE;
+}
+
+CWBOOL cwRenderObject::buildIndexBuffer(CWVOID* pIndexData, CWUINT uIndexCnt)
+{
+	if (pIndexData) {
+		m_pIndexBuffer = cwRepertory::getInstance().getDevice()->createIndexBuffer(pIndexData, sizeof(CWUINT), uIndexCnt);
+		CW_SAFE_RETAIN(m_pIndexBuffer);
+
+		if (!m_pIndexBuffer) return CWFALSE;
+		return CWTRUE;
+	}
+
+	return CWFALSE;
+}
+
+CWBOOL cwRenderObject::rebuild(
+	CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
+	CWVOID* pIndexData, CWUINT uIndexCnt,
+	CWUINT uPositionOffset)
+{
+	return CWFALSE;
 }
 
 CWVOID cwRenderObject::updateVertexData(CWVOID* pData)

@@ -36,7 +36,7 @@ public:
 	cwStaticRenderObject();
 	virtual ~cwStaticRenderObject();
 
-	virtual bool init(
+	virtual CWBOOL init(
 		ePrimitiveType topology,
 		CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
 		CWVOID* pIndexData, CWUINT uIndexCnt, const CWSTRING& strLayout, CWUINT uPositionOffset = 0) override;

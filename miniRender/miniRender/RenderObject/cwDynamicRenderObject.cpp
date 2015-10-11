@@ -69,8 +69,39 @@ CWBOOL cwDynamicRenderObject::init(
 	m_pVertexBuffer = pDevice->createVertexBuffer(pVertexData, uVertexStride, uVertexCnt, eBufferUsageDynamic, eAccessFlagWrite);
 	CW_SAFE_RETAIN(m_pVertexBuffer);
 	if (!m_pVertexBuffer) return CWFALSE;
+	m_pVertexBuffer->setOffset(uPositionOffset);
 
 	return CWTRUE;
+}
+
+CWBOOL cwDynamicRenderObject::rebuild(
+	CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
+	CWVOID* pIndexData, CWUINT uIndexCnt,
+	CWUINT uPositionOffset)
+{
+	CWBOOL bVert = m_pVertexBuffer->rebuild(
+		pVertexData, uVertexStride*uVertexCnt,
+		eBufferUsageDynamic, eBufferBindVertex, eAccessFlagWrite, 0, uVertexStride, uPositionOffset);
+
+	CWBOOL bIndex = m_pIndexBuffer->rebuild(
+		pIndexData, sizeof(CWUINT)*uIndexCnt,
+		eBufferUsageDynamic, eBufferBindIndex, eAccessFlagWrite, 0, sizeof(CWUINT), 0);
+
+	return bVert&&bIndex;
+}
+
+CWBOOL cwDynamicRenderObject::buildIndexBuffer(CWVOID* pIndexData, CWUINT uIndexCnt)
+{
+	if (pIndexData) {
+		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+		m_pIndexBuffer = pDevice->createIndexBuffer(pIndexData, sizeof(CWUINT), uIndexCnt, eBufferUsageDynamic, eAccessFlagWrite);
+		CW_SAFE_RETAIN(m_pIndexBuffer);
+
+		if (!m_pIndexBuffer) return CWFALSE;
+		return CWTRUE;
+	}
+
+	return CWFALSE;
 }
 
 CWVOID cwDynamicRenderObject::preRender()

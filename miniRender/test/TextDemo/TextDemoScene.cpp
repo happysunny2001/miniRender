@@ -51,7 +51,10 @@ CWBOOL TextDemoScene::init()
 	pTouchListener->onTouchMoving = CW_CALLBACK_1(TextDemoScene::onTouchMoving, this);
 	this->addEventListener(pTouchListener);
 
-	this->schedulerUpdate();
+	cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
+	pKeyListener->onKeyDown = CW_CALLBACK_1(TextDemoScene::onKeyDown, this);
+	this->addEventListener(pKeyListener);
+
 	m_bTouchDown = false;
 
 	buildText();
@@ -86,9 +89,22 @@ CWVOID TextDemoScene::onTouchMoving(cwTouch* pTouch)
 	m_fLastY = pTouch->getScreenPos().y;
 }
 
-CWVOID TextDemoScene::update(CWFLOAT dt)
+CWVOID TextDemoScene::onKeyDown(cwKeyboard* pKey)
 {
-
+	if (pKey) {
+		if (pKey->getKeyCode() == KeyCode::W) {
+			cwRepertory::getInstance().getEngine()->getDefaultCamera()->walk(1.0f);
+		}
+		else if (pKey->getKeyCode() == KeyCode::S) {
+			cwRepertory::getInstance().getEngine()->getDefaultCamera()->walk(-1.0f);
+		}
+		else if (pKey->getKeyCode() == KeyCode::A) {
+			cwRepertory::getInstance().getEngine()->getDefaultCamera()->strafe(-1.0f);
+		}
+		else if (pKey->getKeyCode() == KeyCode::D) {
+			cwRepertory::getInstance().getEngine()->getDefaultCamera()->strafe(1.0f);
+		}
+	}
 }
 
 CWVOID TextDemoScene::buildText()

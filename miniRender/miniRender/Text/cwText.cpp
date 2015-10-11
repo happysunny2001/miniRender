@@ -100,6 +100,22 @@ CWBOOL cwText::buildVertexData()
 		m_uMaxCharCnt = (CWUINT)(m_nStrText.size()) * 2;
 	}
 
+	buildNativeBuffer();
+
+	m_pRenderObj = cwDynamicRenderObject::create(
+		ePrimitiveTypeTriangleList, m_pVertexData, sizeof(cwVertexPosTex), m_uMaxCharCnt * 4,
+		m_pIndexData, m_uMaxCharCnt * 6, "PosTex");
+	if (!m_pRenderObj) return CWFALSE;
+	CW_SAFE_RETAIN(m_pRenderObj);
+
+	return CWTRUE;
+}
+
+CWBOOL cwText::buildNativeBuffer()
+{
+	CW_SAFE_DELETE(m_pVertexData);
+	CW_SAFE_DELETE(m_pIndexData);
+
 	m_pVertexData = new cwVertexPosTex[m_uMaxCharCnt * 4];
 	if (!m_pVertexData) return CWFALSE;
 
@@ -133,14 +149,6 @@ CWBOOL cwText::buildVertexData()
 
 		fStartX += m_uCharWidth;
 	}
-
-	m_pRenderObj = cwDynamicRenderObject::create(
-		ePrimitiveTypeTriangleList, m_pVertexData, sizeof(cwVertexPosTex), m_uMaxCharCnt * 4,
-		m_pIndexData, m_uMaxCharCnt * 6, "PosTex");
-	if (!m_pRenderObj) return CWFALSE;
-	CW_SAFE_RETAIN(m_pRenderObj);
-
-	return CWTRUE;
 }
 
 CWBOOL cwText::refreshText()

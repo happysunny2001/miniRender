@@ -49,10 +49,11 @@ protected:
 	CWBOOL buildVertexData();
 	CWBOOL refreshText();
 
+	CWBOOL buildNativeBuffer();
+
 protected:
 	CWSTRING m_nStrText;
 	CWUINT m_uMaxCharCnt;
-	//cwTexture* m_pFontTexture;
 
 	cwVertexPosTex* m_pVertexData;
 	CWUINT* m_pIndexData;

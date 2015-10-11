@@ -399,6 +399,14 @@ cwBuffer* cwD3D11Device::createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT
 	return nullptr;
 }
 
+cwBuffer* cwD3D11Device::createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, eBufferUsage usage, eAccessFlag cpuFlag)
+{
+	cwD3D11Buffer* pIndexBuffer = cwD3D11Buffer::create(pData, uStride*uCnt, usage, eBufferBindIndex, cpuFlag, 0, uStride);
+	if (pIndexBuffer) return pIndexBuffer;
+
+	return nullptr;
+}
+
 cwBuffer* cwD3D11Device::createShaderBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, CWBOOL bWritable, CWBOOL bAppend)
 {
 	if (!bWritable) {

@@ -356,10 +356,10 @@ typedef enum {
 }eShaderParamIndex;
 
 typedef enum {
-	eSceneObjectNode = 1,
-	eSceneObjectEntity,
-	eSceneObjectScene,
-	eSceneObjectMirror,
+	eSceneObjectNode = 0,
+	eSceneObjectEntity = 1,
+	eSceneObjectScene = 2,
+	eSceneObjectMirror = 4,
 }eSceneObjectType;
 
 typedef enum {

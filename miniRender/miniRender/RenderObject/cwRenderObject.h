@@ -43,6 +43,11 @@ public:
 		CWVOID* pIndexData, CWUINT uIndexCnt, 
 		const CWSTRING& strLayout, CWUINT uPositionOffset=0);
 
+	virtual CWBOOL rebuild(
+		CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
+		CWVOID* pIndexData, CWUINT uIndexCnt,
+		CWUINT uPositionOffset = 0);
+
 	virtual CWVOID preRender() {}
 	CWVOID updateVertexData(CWVOID* pData);
 	virtual CWVOID updateVertexData(CWVOID* pData, CWUINT uSize);
@@ -68,6 +73,8 @@ public:
 protected:
 	CWVOID saveBufferData(CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt, CWUINT uPositionOffset, CWVOID* pIndexData, CWUINT uIndexCnt);
 	CWVOID calBoundingBox();
+
+	virtual CWBOOL buildIndexBuffer(CWVOID* pIndexData, CWUINT uIndexCnt);
 
 protected:
 	cwBuffer* m_pVertexBuffer;

@@ -64,25 +64,6 @@ CWBOOL cwMirror::init()
 	return CWTRUE;
 }
 
-//CWVOID cwMirror::transform()
-//{
-//	if (m_bTransDirty) {
-//		cwMatrix4X4 matTranslate, matScale, matRot;
-//		matTranslate.setTranslation(m_nPos);
-//		matScale.setScale(m_nScale);
-//		matRot.setRotation(m_nRot);
-//		m_nTrans = matScale * matRot * matTranslate;
-//
-//		updatePlane();
-//
-//		m_bTransDirty = CWFALSE;
-//	}
-//
-//	if (m_pParent) {
-//		m_nTrans = m_nTrans * m_pParent->getTransformMatrix();
-//	}
-//}
-
 CWVOID cwMirror::refreshTransform()
 {
 	cwEntity::refreshTransform();
@@ -97,6 +78,9 @@ CWVOID cwMirror::setReflectPlane(const cwPlane& plane)
 
 CWVOID cwMirror::updatePlane()
 {
+	m_nReflectPlane.m_nNormal.zero();
+	m_nReflectPlane.m_nNormal.y = 1.0f;
+
 	m_nReflectPlane.update(m_nTrans);
 	m_nMatReflect.reflect(m_nReflectPlane);
 }

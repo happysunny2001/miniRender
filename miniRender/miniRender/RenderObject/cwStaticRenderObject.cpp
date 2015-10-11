@@ -51,7 +51,7 @@ cwStaticRenderObject::~cwStaticRenderObject()
 
 }
 
-bool cwStaticRenderObject::init(
+CWBOOL cwStaticRenderObject::init(
 	ePrimitiveType topology,
 	CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt,
 	CWVOID* pIndexData, CWUINT uIndexCnt, 
@@ -60,11 +60,13 @@ bool cwStaticRenderObject::init(
 	if (!cwRenderObject::init(
 		topology, 
 		pVertexData, uVertexStride, uVertexCnt, 
-		pIndexData, uIndexCnt, strLayout, uPositionOffset)) return false;
+		pIndexData, uIndexCnt, strLayout, uPositionOffset)) return CWFALSE;
+
 	m_pVertexBuffer = cwRepertory::getInstance().getDevice()->createVertexBuffer(pVertexData, uVertexStride, uVertexCnt);
 	CW_SAFE_RETAIN(m_pVertexBuffer);
+	m_pVertexBuffer->setOffset(uPositionOffset);
 
-	return m_pVertexBuffer ? true : false;
+	return m_pVertexBuffer ? CWTRUE : CWFALSE;
 }
 
 NS_MINIR_END

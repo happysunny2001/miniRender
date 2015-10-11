@@ -70,6 +70,7 @@ public:
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) = 0;
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, eBufferUsage usage, eAccessFlag cpuFlag) = 0;
 	virtual cwBuffer* createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) = 0;
+	virtual cwBuffer* createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, eBufferUsage usage, eAccessFlag cpuFlag) = 0;
 	virtual cwBuffer* createShaderBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, CWBOOL bWritable = CWFALSE, CWBOOL bAppend = CWFALSE) = 0;
 	virtual cwBuffer* createBufferOutput(CWUINT uStride, CWUINT uCnt) = 0;
 	virtual cwBuffer* createBuffer(CWUINT uCnt, eBufferUsage usage, eBufferBindFlag bindFlag, eAccessFlag uCpuFlag, CWUINT miscFlag, CWUINT uStride) = 0;
