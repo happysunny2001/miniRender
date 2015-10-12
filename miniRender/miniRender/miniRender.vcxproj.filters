@@ -603,6 +603,15 @@
     <ClInclude Include="Camera\cwOrthoCamera.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="SpatialSorting\cwLooseOctree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite\cwSprite.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite\cwSpriteManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -990,6 +999,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Camera\cwOrthoCamera.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialSorting\cwLooseOctree.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite\cwSprite.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite\cwSpriteManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

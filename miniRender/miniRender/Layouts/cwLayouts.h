@@ -26,7 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-class cwInputElementDesc;
+//class cwInputElementDesc;
 class cwShader;
 
 class CW_DLL cwLayouts : public cwRef

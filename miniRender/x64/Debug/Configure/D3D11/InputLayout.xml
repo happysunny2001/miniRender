@@ -21,6 +21,12 @@
 		<Element Name="TEXCOORD" Index="0" Format="R32g32Float" Slot="0" Offset="12" Classification="Vertex" InstanceRate="0"/>
 	</Layout>
 
+	<Layout Name="PosTexColor" Shader="effect/D3D11/posColorTex.fx">
+		<Element Name="POSITION" Index="0" Format="R32g32b32Float"    Slot="0" Offset="0"  Classification="Vertex" InstanceRate="0"/>
+		<Element Name="TEXCOORD" Index="0" Format="R32g32Float"       Slot="0" Offset="12" Classification="Vertex" InstanceRate="0"/>
+		<Element Name="COLOR"    Index="0" Format="R32g32b32a32Float" Slot="0" Offset="20" Classification="Vertex" InstanceRate="0"/>
+	</Layout>
+
 	<Layout Name="BatchPosNormal" Shader="effect/D3D11/batchTest.fx">
 		<Element Name="POSITION" Index="0" Format="R32g32b32Float" Slot="0" Offset="0" Classification="Vertex" InstanceRate="0"/>
 		<Element Name="NORMAL" Index="0" Format="R32g32b32Float" Slot="0" Offset="12" Classification="Vertex" InstanceRate="0"/>

@@ -133,29 +133,52 @@ const cwVector<cwSpotLight*>& cwScene::getSpotLights() const
 	return m_nVecSpotLights;
 }
 
-cwVector<cwEntity*>& cwScene::getVisibleEntities(cwCamera* pCamera, eSceneObjectType eType)
+CWVOID cwScene::getRenderNode(eSceneObjectType eType, std::vector<cwRenderNode*>& vecNodes)
 {
-	m_nVecVisibleEntity.clear();
+	std::vector<cwRenderNode*> nVecStack;
+	nVecStack.reserve(10);
+	nVecStack.push_back(this);
 
-	std::vector<cwRenderNode*> m_nVecStack;
-	m_nVecStack.push_back(this);
+	while (!nVecStack.empty()) {
+		cwRenderNode* pLast = nVecStack.back();
+		if (pLast && (pLast->getType() & eType) && pLast->getVisible()) {
+			vecNodes.push_back(pLast);
+		}
 
-	while (!m_nVecStack.empty()) {
-		cwRenderNode* pLast = m_nVecStack.back();
-		if (pLast->getType() == eType && pLast->getVisible())
-			m_nVecVisibleEntity.pushBack(static_cast<cwEntity*>(pLast));
-
-		m_nVecStack.pop_back();
+		nVecStack.pop_back();
 
 		cwVector<cwRenderNode*>& nVecChildren = pLast->getChildren();
 		if (!nVecChildren.empty()) {
 			for (auto pNode : nVecChildren) {
-				m_nVecStack.push_back(pNode);
+				nVecStack.push_back(pNode);
 			}
 		}
 	}
-
-	return m_nVecVisibleEntity;
 }
+
+//cwVector<cwEntity*>& cwScene::getVisibleEntities(cwCamera* pCamera, eSceneObjectType eType)
+//{
+//	m_nVecVisibleEntity.clear();
+//
+//	std::vector<cwRenderNode*> m_nVecStack;
+//	m_nVecStack.push_back(this);
+//
+//	while (!m_nVecStack.empty()) {
+//		cwRenderNode* pLast = m_nVecStack.back();
+//		if (pLast->getType() == eType && pLast->getVisible())
+//			m_nVecVisibleEntity.pushBack(static_cast<cwEntity*>(pLast));
+//
+//		m_nVecStack.pop_back();
+//
+//		cwVector<cwRenderNode*>& nVecChildren = pLast->getChildren();
+//		if (!nVecChildren.empty()) {
+//			for (auto pNode : nVecChildren) {
+//				m_nVecStack.push_back(pNode);
+//			}
+//		}
+//	}
+//
+//	return m_nVecVisibleEntity;
+//}
 
 NS_MINIR_END

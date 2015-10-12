@@ -17,53 +17,48 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwOrthoCamera.h"
+#ifndef __CW_SPRITE_H__
+#define __CW_SPRITE_H__
+
+#include "Base/cwMacros.h"
+#include "Base/cwStruct.h"
+#include "Entity/cwRenderNode.h"
+#include "Math/cwMath.h"
 
 NS_MINIR_BEGIN
 
-cwOrthoCamera* cwOrthoCamera::create()
+class cwTexture;
+
+class cwSprite : public cwRenderNode
 {
-	cwOrthoCamera* pCamera = new cwOrthoCamera();
-	if (pCamera && pCamera->init()) {
-		pCamera->autorelease();
-		return pCamera;
-	}
+public:
+	static cwSprite* create();
+	static cwSprite* create(const std::string& strFile);
 
-	CW_SAFE_DELETE(pCamera);
-	return nullptr;
-}
+	cwSprite();
+	virtual ~cwSprite();
 
-cwOrthoCamera::cwOrthoCamera()
-{
+	virtual CWBOOL init() override;
+	virtual CWBOOL init(const std::string& strFile);
 
-}
+	inline const cwVertexPosTexColor* getVertexBuffer() const { return m_pVertexBuffer; }
 
-CWBOOL cwOrthoCamera::init()
-{
-	if (!cwCamera::init()) return CWFALSE;
+protected:
+	CWBOOL loadTexture(const std::string& strFile);
+	CWBOOL buildVertexBuffer();
+	CWVOID initVertexBuffer();
 
-	m_nPos = cwVector3D(0.0f, 0.0f, -10.0f);
-	updateViewMatrix();
+	virtual CWVOID insertSpatialNode(cwRenderNode* pNode) override;
+	virtual CWVOID removeSpatialNode(cwRenderNode* pNode) override;
+	virtual CWVOID refreshSpatialNode() override;
 
-	return CWTRUE;
-}
+protected:
+	cwTexture* m_pTexture;
+	cwVector4D m_nColor;
+	cwVertexPosTexColor* m_pVertexBuffer;
 
-CWVOID cwOrthoCamera::updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ)
-{
-
-}
-
-CWVOID cwOrthoCamera::updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
-{
-	m_fFovY   = fFov;
-	m_fAspect = fAspect;
-	m_fNearZ  = fNearZ;
-	m_fFarZ   = fFarZ;
-
-	m_nProjMatrix.orthoFov(m_fFovY, m_fAspect, m_fNearZ, m_fFarZ);
-	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;
-
-	m_nFrustum.refresh(this);
-}
+};
 
 NS_MINIR_END
+
+#endif

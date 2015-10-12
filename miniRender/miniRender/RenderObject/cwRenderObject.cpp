@@ -125,22 +125,23 @@ CWVOID cwRenderObject::saveBufferData(
 	CW_SAFE_FREE(m_pVertexData);
 	CW_SAFE_FREE(m_pIndexData);
 
-	if (pVertexData) {
-		m_pVertexData = (CWVOID*)malloc(uVertexStride*uVertexCnt);
-		if (m_pVertexData) {
-			memcpy(m_pVertexData, pVertexData, uVertexStride*uVertexCnt);
+	m_uStride = uVertexStride;
+	m_uVertexCnt = uVertexCnt;
+	m_pVertexData = (CWVOID*)malloc(uVertexStride*uVertexCnt);
 
-			m_uStride = uVertexStride;
-			m_uVertexCnt = uVertexCnt;
-		}
+	if (m_pVertexData) {
+		if (pVertexData)
+			memcpy(m_pVertexData, pVertexData, uVertexStride*uVertexCnt);
+		else
+			memset(m_pVertexData, 0, uVertexStride*uVertexCnt);
 	}
+
+	m_uIndexCnt = uIndexCnt;
 
 	if (pIndexData) {
 		m_pIndexData = (CWUINT*)malloc(sizeof(CWUINT)*uIndexCnt);
-		if (m_pIndexData) {
+		if (m_pIndexData)
 			memcpy(m_pIndexData, pIndexData, sizeof(CWUINT)*uIndexCnt);
-			m_uIndexCnt = uIndexCnt;
-		}
 	}
 
 	m_uPositionOffset = uPositionOffset;

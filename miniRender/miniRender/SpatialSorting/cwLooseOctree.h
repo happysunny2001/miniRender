@@ -17,53 +17,24 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwOrthoCamera.h"
+#ifndef __CW_LOOSE_OCTREE_H__
+#define __CW_LOOSE_OCTREE_H__
+
+#include "Base/cwMacros.h"
+#include "cwOctree.h"
 
 NS_MINIR_BEGIN
 
-cwOrthoCamera* cwOrthoCamera::create()
+class CW_DLL cwLooseOctree : public cwOctree
 {
-	cwOrthoCamera* pCamera = new cwOrthoCamera();
-	if (pCamera && pCamera->init()) {
-		pCamera->autorelease();
-		return pCamera;
-	}
+public:
+	static cwLooseOctree* create();
+	static cwLooseOctree* create(const sOctreeInit&);
 
-	CW_SAFE_DELETE(pCamera);
-	return nullptr;
-}
-
-cwOrthoCamera::cwOrthoCamera()
-{
-
-}
-
-CWBOOL cwOrthoCamera::init()
-{
-	if (!cwCamera::init()) return CWFALSE;
-
-	m_nPos = cwVector3D(0.0f, 0.0f, -10.0f);
-	updateViewMatrix();
-
-	return CWTRUE;
-}
-
-CWVOID cwOrthoCamera::updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ)
-{
-
-}
-
-CWVOID cwOrthoCamera::updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
-{
-	m_fFovY   = fFov;
-	m_fAspect = fAspect;
-	m_fNearZ  = fNearZ;
-	m_fFarZ   = fFarZ;
-
-	m_nProjMatrix.orthoFov(m_fFovY, m_fAspect, m_fNearZ, m_fFarZ);
-	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;
-
-	m_nFrustum.refresh(this);
-}
+protected:
+	virtual CWVOID getChildrenBoundingBox(sOctreeNode*, cwAABB*) override;
+};
 
 NS_MINIR_END
+
+#endif

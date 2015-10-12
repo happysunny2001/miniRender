@@ -97,7 +97,12 @@ CWVOID cwEntity::render(cwRenderBatch* pRenderBatch)
 		pDevice->draw(pRenderBatch->m_pEffect->getShader(), pRenderBatch->m_pEffect->getTech(), m_pRenderObj);
 	}
 
-	cwRenderNode::render();
+	this->render();
+}
+
+CWVOID cwEntity::render()
+{
+
 }
 
 NS_MINIR_END

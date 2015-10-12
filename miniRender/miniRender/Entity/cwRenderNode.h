@@ -117,6 +117,8 @@ protected:
 	CWVOID clearEventListener();
 	CWVOID updateChildrenTransform();
 
+	virtual CWVOID insertSpatialNode(cwRenderNode* pNode);
+	virtual CWVOID removeSpatialNode(cwRenderNode* pNode);
 	virtual CWVOID refreshSpatialNode();
 	
 protected:

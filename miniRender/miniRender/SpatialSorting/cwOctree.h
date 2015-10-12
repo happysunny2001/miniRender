@@ -108,7 +108,7 @@ protected:
 
 	CWVOID clearOctreeNode(sOctreeNode*);
 	
-	CWVOID getChildrenBoundingBox(sOctreeNode*, cwAABB*);
+	virtual CWVOID getChildrenBoundingBox(sOctreeNode*, cwAABB*);
 	sOctreeNode* getTreeNodeBelong(cwRenderNode*);
 	sOctreeNode* getTreeNodeBelong(cwRenderNode*, sOctreeNode*);
 	sOctreeNode* getTreeNodeBelongRude(cwRenderNode*, sOctreeNode*);

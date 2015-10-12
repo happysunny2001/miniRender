@@ -141,10 +141,10 @@ CWVOID cwCamera::updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ)
 
 CWVOID cwCamera::updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
 {
-	m_fFovY = fFov;
+	m_fFovY   = fFov;
 	m_fAspect = fAspect;
-	m_fNearZ = fNearZ;
-	m_fFarZ = fFarZ;
+	m_fNearZ  = fNearZ;
+	m_fFarZ   = fFarZ;
 
 	m_nProjMatrix.perspectiveFov(m_fFovY, m_fAspect, m_fNearZ, m_fFarZ);
 	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;

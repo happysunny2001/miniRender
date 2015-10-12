@@ -162,10 +162,13 @@
     <ClInclude Include="Shader\cwShader.h" />
     <ClInclude Include="Shader\cwShaderConstant.h" />
     <ClInclude Include="Shader\cwShaderManager.h" />
+    <ClInclude Include="SpatialSorting\cwLooseOctree.h" />
     <ClInclude Include="SpatialSorting\cwNormalSorting.h" />
     <ClInclude Include="SpatialSorting\cwOctree.h" />
     <ClInclude Include="SpatialSorting\cwSpatial.h" />
     <ClInclude Include="SpatialSorting\cwSpatialFactory.h" />
+    <ClInclude Include="Sprite\cwSpriteManager.h" />
+    <ClInclude Include="Sprite\cwSprite.h" />
     <ClInclude Include="Stencil\cwStencil.h" />
     <ClInclude Include="Texture\cwRenderTexture.h" />
     <ClInclude Include="Texture\cwTexture.h" />
@@ -293,10 +296,13 @@
     <ClCompile Include="Scheduler\cwSchedulerManager.cpp" />
     <ClCompile Include="Shader\cwShader.cpp" />
     <ClCompile Include="Shader\cwShaderManager.cpp" />
+    <ClCompile Include="SpatialSorting\cwLooseOctree.cpp" />
     <ClCompile Include="SpatialSorting\cwNormalSorting.cpp" />
     <ClCompile Include="SpatialSorting\cwOctree.cpp" />
     <ClCompile Include="SpatialSorting\cwSpatial.cpp" />
     <ClCompile Include="SpatialSorting\cwSpatialFactory.cpp" />
+    <ClCompile Include="Sprite\cwSprite.cpp" />
+    <ClCompile Include="Sprite\cwSpriteManager.cpp" />
     <ClCompile Include="Stencil\cwStencil.cpp" />
     <ClCompile Include="Texture\cwRenderTexture.cpp" />
     <ClCompile Include="Texture\cwTexture.cpp" />

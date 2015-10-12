@@ -43,9 +43,6 @@ public:
 
 	virtual CWBOOL init() override;
 
-	//virtual CWBOOL addChild(cwRenderNode* pNode) override;
-	//virtual CWBOOL removeChild(cwRenderNode* pNode) override;
-
 	virtual CWVOID addDirectionalLight(cwDirectionalLight* pLight);
 	virtual CWVOID addPointLight(cwPointLight* pLight);
 	virtual CWVOID addSpotLight(cwSpotLight* pLight);
@@ -58,13 +55,13 @@ public:
 	const cwVector<cwPointLight*>& getPointLights() const;
 	const cwVector<cwSpotLight*>& getSpotLights() const;
 
-	cwVector<cwEntity*>& getVisibleEntities(cwCamera* pCamera, eSceneObjectType eType = eSceneObjectEntity);
+	CWVOID getRenderNode(eSceneObjectType eType, std::vector<cwRenderNode*>& vecNodes);
 
 protected:
 	cwVector<cwDirectionalLight*> m_nVecDirectionalLights;
 	cwVector<cwPointLight*> m_nVecPointLights;
 	cwVector<cwSpotLight*> m_nVecSpotLights;
-	cwVector<cwEntity*> m_nVecVisibleEntity;
+	//cwVector<cwEntity*> m_nVecVisibleEntity;
 
 };
 

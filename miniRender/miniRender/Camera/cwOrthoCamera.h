@@ -28,6 +28,14 @@ NS_MINIR_BEGIN
 class cwOrthoCamera : public cwCamera
 {
 public:
+	static cwOrthoCamera* create();
+
+	cwOrthoCamera();
+
+	virtual CWBOOL init() override;
+
+	virtual CWVOID updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ) override;
+	virtual CWVOID updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ) override;
 
 protected:
 

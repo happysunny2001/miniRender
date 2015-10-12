@@ -54,6 +54,7 @@ public:
 	virtual CWVOID setMaterial(cwMaterial* pMaterial);
 	inline cwMaterial* getMaterial() { return m_pMaterial; }
 	
+	virtual CWVOID render() override;
 	virtual CWVOID render(cwRenderBatch* pRenderBatch) override;
 
 protected:

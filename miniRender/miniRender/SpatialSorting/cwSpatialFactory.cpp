@@ -19,6 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwSpatialFactory.h"
 #include "cwOctree.h"
+#include "cwLooseOctree.h"
 #include "cwNormalSorting.h"
 
 NS_MINIR_BEGIN
@@ -29,6 +30,8 @@ cwSpatial* cwSpatialFactory::createSpatial(const CWSTRING& strType)
 		return cwOctree::create();
 	else if (strType == "Normal")
 		return cwNormalSorting::create();
+	else if (strType == "LooseOctree")
+		return cwLooseOctree::create();
 
 	return nullptr;
 }

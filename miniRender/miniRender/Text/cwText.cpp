@@ -149,6 +149,8 @@ CWBOOL cwText::buildNativeBuffer()
 
 		fStartX += m_uCharWidth;
 	}
+
+	return CWTRUE;
 }
 
 CWBOOL cwText::refreshText()

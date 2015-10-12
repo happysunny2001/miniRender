@@ -93,9 +93,9 @@ CWBOOL cwRenderNode::addChild(cwRenderNode* pNode)
 			m_nVecChildren.pushBack(pNode);
 			pNode->setParent(this);
 
-			cwRepertory::getInstance().getEngine()->insertSpatialNode(pNode);
-			cwRepertory::getInstance().getEngine()->refreshSpatialNode(pNode);
-			//insertSpatialNode(pNode);
+			//cwRepertory::getInstance().getEngine()->insertSpatialNode(pNode);
+			//cwRepertory::getInstance().getEngine()->refreshSpatialNode(pNode);
+			insertSpatialNode(pNode);
 			return CWTRUE;
 		}
 	}
@@ -107,7 +107,8 @@ CWBOOL cwRenderNode::removeChild(cwRenderNode* pNode)
 {
 	if (pNode && pNode->getParent() == this) {
 		pNode->setParent(nullptr);
-		cwRepertory::getInstance().getEngine()->removeSpatialNode(pNode);
+		//cwRepertory::getInstance().getEngine()->removeSpatialNode(pNode);
+		removeSpatialNode(pNode);
 		m_nVecChildren.erase(pNode);
 		return CWTRUE;
 	}
@@ -122,6 +123,27 @@ CWBOOL cwRenderNode::removeFromParent()
 	}
 
 	return CWFALSE;
+}
+
+CWVOID cwRenderNode::insertSpatialNode(cwRenderNode* pNode)
+{
+	if (pNode && !(pNode->getType() & eSceneObjectSprite)) {
+		cwRepertory::getInstance().getEngine()->insertSpatialNode(pNode);
+		cwRepertory::getInstance().getEngine()->refreshSpatialNode(pNode);
+	}
+}
+
+CWVOID cwRenderNode::removeSpatialNode(cwRenderNode* pNode)
+{
+	if (pNode && !(pNode->getType() & eSceneObjectSprite)) {
+		cwRepertory::getInstance().getEngine()->removeSpatialNode(pNode);
+	}
+}
+
+CWVOID cwRenderNode::refreshSpatialNode()
+{
+	if (m_pParent)
+		cwRepertory::getInstance().getEngine()->refreshSpatialNode(this);
 }
 
 //CWVOID cwRenderNode::removeChildren()
@@ -293,12 +315,6 @@ CWVOID cwRenderNode::setStencil(cwStencil* pStencil)
 	CW_SAFE_RETAIN(pStencil);
 	CW_SAFE_RELEASE_NULL(m_pStencil);
 	m_pStencil = pStencil;
-}
-
-CWVOID cwRenderNode::refreshSpatialNode()
-{
-	if (m_pParent)
-		cwRepertory::getInstance().getEngine()->refreshSpatialNode(this);
 }
 
 CWVOID cwRenderNode::setVisible(bool b)

@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Material/cwMaterial.h"
 #include "Camera/cwCamera.h"
 #include "Camera/cwHomogeneousCamera.h"
+#include "Camera/cwOrthoCamera.h"
 #include "Device/cwDevice.h"
 #include "Ref/cwAutoReleasePool.h"
 #include "Event/cwEventManager.h"
@@ -138,6 +139,11 @@ CWVOID cwEngine::buildDefaultCamera()
 	pHomoCamera->setName("Homo");
 	this->addCamera(pHomoCamera);
 
+	cwOrthoCamera* pOrthoCamera = cwOrthoCamera::create();
+	pOrthoCamera->setName("Ortho");
+	pOrthoCamera->updateProjMatrix(0.25f*cwMathUtil::cwPI, fScreenWidth / fScreenHeight, 1.0f, 1000.0f);
+	this->addCamera(pOrthoCamera);
+
 	m_pDefaultCamera = getCamera("Default"); 
 }
 
@@ -213,16 +219,6 @@ CWVOID cwEngine::refreshSpatialNode(cwRenderNode* pNode)
 cwVector<cwRenderNode*>* cwEngine::getVisibleNodes(cwCamera* pCamera, eSceneObjectType eType)
 {
 	if (pCamera && m_pSpatial) {
-		//auto it = m_nMapVisibleNodes.find(pCamera);
-		//if (it != m_nMapVisibleNodes.end()) return (it->second);
-
-		//cwVector<cwRenderNode*>& vecNodes = m_nVecVisiableNodes[m_uNodeVectorCounter++];
-		//m_pSpatial->intersection(pCamera->getFrustum(), vecNodes, eType, CWTRUE);
-
-		//m_nMapVisibleNodes[pCamera] = &vecNodes;
-
-		//return &vecNodes;
-
 		sVisibleNodesResult* pCacheResult = nullptr;
 		for (auto it = m_nVisibleResult.begin(); it != m_nVisibleResult.end(); ++it) {
 			if (it->m_pCamera == pCamera && it->m_eType == eType) {

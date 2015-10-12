@@ -17,53 +17,47 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwOrthoCamera.h"
+#ifndef __CW_SPRITE_MANAGER_H__
+#define __CW_SPRITE_MANAGER_H__
+
+#include "Base/cwMacros.h"
+#include "Ref/cwRef.h"
+#include "Render/cwRenderer.h"
+
+#include <vector>
 
 NS_MINIR_BEGIN
 
-cwOrthoCamera* cwOrthoCamera::create()
+class cwSprite;
+class cwRenderNode;
+class cwDynamicRenderObject;
+class cwCamera;
+
+class cwSpriteManager : public cwRef
 {
-	cwOrthoCamera* pCamera = new cwOrthoCamera();
-	if (pCamera && pCamera->init()) {
-		pCamera->autorelease();
-		return pCamera;
-	}
+public:
+	CWVOID begin();
+	CWVOID render();
+	CWVOID end();
 
-	CW_SAFE_DELETE(pCamera);
-	return nullptr;
-}
+protected:
+	static cwSpriteManager* create();
 
-cwOrthoCamera::cwOrthoCamera()
-{
+	cwSpriteManager();
+	virtual ~cwSpriteManager();
 
-}
+	CWBOOL init();
+	CWBOOL buildRenderObjects();
 
-CWBOOL cwOrthoCamera::init()
-{
-	if (!cwCamera::init()) return CWFALSE;
+	friend class cwRenderer;
 
-	m_nPos = cwVector3D(0.0f, 0.0f, -10.0f);
-	updateViewMatrix();
+protected:
+	std::vector<cwRenderNode*> m_nVecSprites;
+	cwDynamicRenderObject* m_pRenderObjects;
+	cwCamera* m_pCurrCamera;
 
-	return CWTRUE;
-}
-
-CWVOID cwOrthoCamera::updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ)
-{
-
-}
-
-CWVOID cwOrthoCamera::updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
-{
-	m_fFovY   = fFov;
-	m_fAspect = fAspect;
-	m_fNearZ  = fNearZ;
-	m_fFarZ   = fFarZ;
-
-	m_nProjMatrix.orthoFov(m_fFovY, m_fAspect, m_fNearZ, m_fFarZ);
-	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;
-
-	m_nFrustum.refresh(this);
-}
+};
 
 NS_MINIR_END
+
+#endif
