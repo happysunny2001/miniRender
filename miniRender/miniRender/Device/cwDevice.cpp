@@ -24,6 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Texture/cwTextureManager.h"
 #include "ViewPort/cwViewPort.h"
 #include "Repertory/cwRepertory.h"
+#include "Stencil/cwStencil.h"
 
 NS_MINIR_BEGIN
 
@@ -38,7 +39,8 @@ m_bRefreshRenderTarget(false),
 m_pDefaultViewPort(nullptr),
 m_pCurrViewPort(nullptr),
 m_bRefreshViewPort(false),
-m_pStencil(nullptr)
+m_pStencil(nullptr),
+m_pDisableZBuffer(nullptr)
 {
 
 }
@@ -52,6 +54,7 @@ cwDevice::~cwDevice()
 
 	CW_SAFE_RELEASE_NULL(m_pRenderTargetBkBuffer);
 	CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
+	CW_SAFE_RELEASE_NULL(m_pDisableZBuffer);
 }
 
 eRenderState cwDevice::getRenderState()
@@ -115,9 +118,54 @@ CWVOID cwDevice::createDefaultRenderTarget()
 	this->setRenderTarget(m_pRenderTargetBkBuffer);
 }
 
-void cwDevice::setClearColor(const cwVector4D& color)
+CWVOID cwDevice::createDefaultStencil()
+{
+	cwStencilData stencilData;
+	
+	stencilData.depthEnable = CWFALSE;
+	stencilData.depthWriteMask = eDepthWriteMaskAll;
+	stencilData.depthFunc = eComparisonLess;
+
+	stencilData.stencilEnable = CWTRUE;
+	stencilData.stencilReadMask = 0xFF;
+	stencilData.stencilWriteMask = 0xFF;
+
+	stencilData.frontStencilFailOp = eStencilOpKeep;
+	stencilData.frontStencilDepthFailOp = eStencilOpIncr;
+	stencilData.frontStencilPassOp = eStencilOpKeep;
+	stencilData.frontStencilFunc = eComparisonAlways;
+
+	stencilData.backStencilFailOp = eStencilOpKeep;
+	stencilData.backStencilDepthFailOp = eStencilOpDecr;
+	stencilData.backStencilPassOp = eStencilOpKeep;
+	stencilData.backStencilFunc = eComparisonAlways;
+
+	m_pDisableZBuffer = this->createStencil(stencilData);
+	CW_SAFE_RETAIN(m_pDisableZBuffer);
+	if (m_pDisableZBuffer) {
+		m_pDisableZBuffer->setStencilRef(1);
+	}
+}
+
+CWVOID cwDevice::setClearColor(const cwVector4D& color)
 {
 	m_fvClearColor = color;
+}
+
+CWBOOL cwDevice::disableZBuffer()
+{
+	if (m_pDisableZBuffer) {
+		this->setStencil(m_pDisableZBuffer);
+		return CWTRUE;
+	}
+
+	return CWFALSE;
+}
+
+CWBOOL cwDevice::enableZBuffer()
+{
+	this->setStencil(nullptr);
+	return CWTRUE;
 }
 
 NS_MINIR_END

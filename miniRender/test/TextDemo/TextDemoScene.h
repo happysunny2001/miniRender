@@ -41,6 +41,7 @@ public:
 
 protected:
 	CWVOID buildText();
+	CWVOID buildSprite();
 
 protected:
 	CWFLOAT m_fLastX;

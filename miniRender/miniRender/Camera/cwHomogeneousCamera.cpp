@@ -52,9 +52,14 @@ CWVOID cwHomogeneousCamera::updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT f
 	
 }
 
-CWVOID cwHomogeneousCamera::updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
+CWVOID cwHomogeneousCamera::updateProjMatrixFov(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
 {
 	
+}
+
+CWVOID cwHomogeneousCamera::updateProjMatrix(CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fNearZ, CWFLOAT fFarZ)
+{
+
 }
 
 NS_MINIR_END

@@ -67,7 +67,7 @@ CWBOOL cwCamera::init()
 
 CWBOOL cwCamera::init(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
 {
-	updateProjMatrix(fFov, fAspect, fNearZ, fFarZ);
+	updateProjMatrixFov(fFov, fAspect, fNearZ, fFarZ);
 	return CWTRUE;
 }
 
@@ -139,7 +139,7 @@ CWVOID cwCamera::updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ)
 	updateViewMatrix();
 }
 
-CWVOID cwCamera::updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
+CWVOID cwCamera::updateProjMatrixFov(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
 {
 	m_fFovY   = fFov;
 	m_fAspect = fAspect;
@@ -147,6 +147,18 @@ CWVOID cwCamera::updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ,
 	m_fFarZ   = fFarZ;
 
 	m_nProjMatrix.perspectiveFov(m_fFovY, m_fAspect, m_fNearZ, m_fFarZ);
+	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;
+
+	m_nFrustum.refresh(this);
+}
+
+CWVOID cwCamera::updateProjMatrix(CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fNearZ, CWFLOAT fFarZ)
+{
+	m_fNearZ  = fNearZ;
+	m_fFarZ   = fFarZ;
+	m_fAspect = fWidth / fHeight;
+
+	m_nProjMatrix.perspective(fWidth, m_fAspect, fHeight, m_fFarZ);
 	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;
 
 	m_nFrustum.refresh(this);

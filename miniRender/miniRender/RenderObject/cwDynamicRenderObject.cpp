@@ -101,7 +101,7 @@ CWBOOL cwDynamicRenderObject::buildIndexBuffer(CWVOID* pIndexData, CWUINT uIndex
 		return CWTRUE;
 	}
 
-	return CWFALSE;
+	return CWTRUE;
 }
 
 CWVOID cwDynamicRenderObject::preRender()

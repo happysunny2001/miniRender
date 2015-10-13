@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #define __CW_SPRITE_MANAGER_H__
 
 #include "Base/cwMacros.h"
+#include "Base/cwStruct.h"
 #include "Ref/cwRef.h"
 #include "Render/cwRenderer.h"
 
@@ -32,6 +33,8 @@ class cwSprite;
 class cwRenderNode;
 class cwDynamicRenderObject;
 class cwCamera;
+class cwEffect;
+class cwStencil;
 
 class cwSpriteManager : public cwRef
 {
@@ -48,13 +51,26 @@ protected:
 
 	CWBOOL init();
 	CWBOOL buildRenderObjects();
+	CWBOOL buildEffect();
+
+	CWVOID renderBatch(cwSprite* pSprite);
+
+	CWVOID refreshSprite();
+	CWVOID addRefreshNode(cwRenderNode* pNode);
 
 	friend class cwRenderer;
 
 protected:
 	std::vector<cwRenderNode*> m_nVecSprites;
+	CWUINT m_uVertexCnt;
+	cwVertexPosTexColor m_nVertexBuffer[1000];
 	cwDynamicRenderObject* m_pRenderObjects;
+
+	cwRenderNode* m_pRootSprite;
+	std::vector<cwRenderNode*> m_nDirtyNodes;
+
 	cwCamera* m_pCurrCamera;
+	cwEffect* m_pDefEffect;
 
 };
 

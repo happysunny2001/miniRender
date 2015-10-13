@@ -58,6 +58,7 @@ CWBOOL TextDemoScene::init()
 	m_bTouchDown = false;
 
 	buildText();
+	buildSprite();
 
 	return CWTRUE;
 }
@@ -114,4 +115,11 @@ CWVOID TextDemoScene::buildText()
 		pText->setPosition(cwVector3D::ZERO);
 		this->addChild(pText);
 	}
+}
+
+CWVOID TextDemoScene::buildSprite()
+{
+	cwSprite* pSprite = cwSprite::create("Textures/checkboard.dds");
+	pSprite->setPosition(100, 0, 0);
+	this->addChild(pSprite);
 }

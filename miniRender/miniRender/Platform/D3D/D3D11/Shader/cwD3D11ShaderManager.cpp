@@ -56,18 +56,20 @@ CWBOOL cwD3D11ShaderManager::init()
 
 CWVOID cwD3D11ShaderManager::loadDefaultShader()
 {
-	//init d3d shader first
+	//init d3d11 shader first
 	auto fileSystem = cwRepertory::getInstance().getFileSystem();
 
 	this->loadShader("effect/D3D11/color.fx");
 	this->loadShader("effect/D3D11/lighting.fx");
 	this->loadShader("effect/D3D11/lightingTex.fx");
 	this->loadShader("effect/D3D11/colorTex.fx");
+	this->loadShader("effect/D3D11/posColorTex.fx");
 
 	m_nMapDefShader.insert(eDefShaderColor, getShader("effect/D3D11/color.fx"));
 	m_nMapDefShader.insert(eDefShaderLighting, getShader("effect/D3D11/lighting.fx"));
 	m_nMapDefShader.insert(eDefShaderLightingTex, getShader("effect/D3D11/lightingTex.fx"));
 	m_nMapDefShader.insert(eDefShaderTex, getShader("effect/D3D11/colorTex.fx"));
+	m_nMapDefShader.insert(eDefShaderPosTexColor, getShader("effect/D3D11/posColorTex.fx"));
 }
 
 NS_MINIR_END

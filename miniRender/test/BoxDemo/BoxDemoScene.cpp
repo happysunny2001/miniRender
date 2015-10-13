@@ -212,13 +212,6 @@ void BoxDemoScene::buildScene()
 	pEntityBox01->setPosition(cwVector3D(3.0, 3.0, 2.0));
 	this->addChild(pEntityBox01);
 	m_nVecEntities.pushBack(pEntityBox01);
-
-	//cwEntity* pEntityBox02 = buildEntity();
-	//pEntityBox02->setPosition(cwVector3D(-5.0f, 1.0f, -3.0f));
-	//pEntityBox01->addChild(pEntityBox02);
-	//m_nVecEntities.pushBack(pEntityBox02);
-
-//	m_pEntityBox01->rotate(0, cwMathUtil::cwPI*0.1f, 0);
 }
 
 CWVOID BoxDemoScene::createRandomEntity()

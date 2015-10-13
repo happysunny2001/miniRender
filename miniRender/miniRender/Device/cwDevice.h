@@ -62,6 +62,9 @@ public:
 	virtual CWVOID endDraw() = 0;
 	virtual CWVOID swap() = 0;
 
+	virtual CWBOOL disableZBuffer();
+	virtual CWBOOL enableZBuffer();
+
 	virtual CWVOID setInputLayout(cwLayouts* pInputLayout) = 0;
 	virtual CWVOID setPrimitiveTopology(ePrimitiveType topology) = 0;
 	virtual CWVOID setClearColor(const cwVector4D& fvColor) = 0;
@@ -102,18 +105,21 @@ public:
 	virtual CWVOID drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo) = 0;
 
 	inline CWBOOL getEnableMsaa4X() const { return m_bEnableMsaa4x; }
+	inline cwStencil* getStencil() const { return m_pStencil; }
 
 protected:
 	cwDevice();
 
 	virtual CWVOID createDefaultViewPort();
 	virtual CWVOID createDefaultRenderTarget();
+	virtual CWVOID createDefaultStencil();
 
 protected:
 	cwVector4D m_fvClearColor;
 	eRenderState m_eRenderState;
 	cwBlend* m_pBlendState; //current blend state, just for record
-	cwStencil* m_pStencil;
+	cwStencil* m_pStencil;  //current stencil state, just for record
+	cwStencil* m_pDisableZBuffer; //for disable z-buffer
 	CWBOOL m_bEnableMsaa4x;
 
 	cwRenderTexture* m_pRenderTargetBkBuffer;

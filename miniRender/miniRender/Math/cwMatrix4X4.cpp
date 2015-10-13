@@ -327,16 +327,36 @@ void cwMatrix4X4::perspectiveFov(float fFovY, float fAspect, float fNearZ, float
 	m41 = 0;      m42 = 0;      m43 = -fNearZ*zf; m44 = 0;
 }
 
+void cwMatrix4X4::perspective(float fWidth, float fHeight, float fNearZ, float fFarZ)
+{
+	float zf = fFarZ / (fFarZ - fNearZ);
+
+	m11 = 2.0f*fNearZ/fWidth; m12 = 0;                   m13 = 0;          m14 = 0;
+	m21 = 0;                  m22 = 2.0f*fNearZ/fHeight; m23 = 0;          m24 = 0;
+	m31 = 0;                  m32 = 0;                   m33 = zf;         m34 = 1.0f;
+	m41 = 0;                  m42 = 0;                   m43 = -fNearZ*zf; m44 = 0;
+}
+
 void cwMatrix4X4::orthoFov(float fFovY, float fAspect, float fNearZ, float fFarZ)
 {
-	float h = 2 * fNearZ*tanf(fFovY*0.5f);
-	float w = h* fAspect;
+	float h = 2.0f * fNearZ*tanf(fFovY*0.5f);
+	float w = h * fAspect;
 	float zf = 1.0f / (fFarZ - fNearZ);
 	
 	m11 = 2.0f / w; m12 = 0;        m13 = 0;          m14 = 0;
 	m21 = 0;        m22 = 2.0f / h; m23 = 0;          m24 = 0;
 	m31 = 0;        m32 = 0;		m33 = zf;         m34 = 0;
 	m41 = 0;        m42 = 0;        m43 = -fNearZ*zf; m44 = 1.0f;
+}
+
+void cwMatrix4X4::ortho(float fWidth, float fHeight, float fNearZ, float fFarZ)
+{
+	float zf = 1.0f / (fFarZ - fNearZ);
+
+	m11 = 2.0f / fWidth; m12 = 0;              m13 = 0;          m14 = 0;
+	m21 = 0;             m22 = 2.0f / fHeight; m23 = 0;          m24 = 0;
+	m31 = 0;             m32 = 0;		       m33 = zf;         m34 = 0;
+	m41 = 0;             m42 = 0;              m43 = -fNearZ*zf; m44 = 1.0f;
 }
 
 void cwMatrix4X4::reflect(const cwPlane& plane)

@@ -132,7 +132,7 @@ CWVOID cwEngine::buildDefaultCamera()
 
 	cwCamera* pDefCamera = cwCamera::create();
 	pDefCamera->setName("Default");
-	pDefCamera->updateProjMatrix(0.25f*cwMathUtil::cwPI, fScreenWidth / fScreenHeight, 1.0f, 1000.0f);
+	pDefCamera->updateProjMatrixFov(0.25f*cwMathUtil::cwPI, fScreenWidth / fScreenHeight, 1.0f, 1000.0f);
 	this->addCamera(pDefCamera);
 
 	cwHomogeneousCamera* pHomoCamera = cwHomogeneousCamera::create();
@@ -141,7 +141,7 @@ CWVOID cwEngine::buildDefaultCamera()
 
 	cwOrthoCamera* pOrthoCamera = cwOrthoCamera::create();
 	pOrthoCamera->setName("Ortho");
-	pOrthoCamera->updateProjMatrix(0.25f*cwMathUtil::cwPI, fScreenWidth / fScreenHeight, 1.0f, 1000.0f);
+	pOrthoCamera->updateProjMatrix(fScreenWidth, fScreenHeight, 1.0f, 1000.0f);
 	this->addCamera(pOrthoCamera);
 
 	m_pDefaultCamera = getCamera("Default"); 

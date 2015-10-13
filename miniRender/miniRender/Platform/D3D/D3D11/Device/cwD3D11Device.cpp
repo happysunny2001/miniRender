@@ -228,6 +228,7 @@ bool cwD3D11Device::initDevice()
 	createRenderState();
 	createDefaultRenderTarget();
 	createDefaultViewPort();
+	createDefaultStencil();
 
 	m_pMaterialDefault = cwMaterial::create(
 		cwVector4D(1.0f, 1.0f, 1.0f, 1.0f),

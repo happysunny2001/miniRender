@@ -53,7 +53,7 @@ CWVOID cwOrthoCamera::updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ)
 
 }
 
-CWVOID cwOrthoCamera::updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
+CWVOID cwOrthoCamera::updateProjMatrixFov(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ)
 {
 	m_fFovY   = fFov;
 	m_fAspect = fAspect;
@@ -61,6 +61,18 @@ CWVOID cwOrthoCamera::updateProjMatrix(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fN
 	m_fFarZ   = fFarZ;
 
 	m_nProjMatrix.orthoFov(m_fFovY, m_fAspect, m_fNearZ, m_fFarZ);
+	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;
+
+	m_nFrustum.refresh(this);
+}
+
+CWVOID cwOrthoCamera::updateProjMatrix(CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fNearZ, CWFLOAT fFarZ)
+{
+	m_fNearZ  = fNearZ;
+	m_fFarZ   = fFarZ;
+	m_fAspect = fWidth / fHeight;
+
+	m_nProjMatrix.ortho(fWidth, fHeight, m_fNearZ, m_fFarZ);
 	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;
 
 	m_nFrustum.refresh(this);

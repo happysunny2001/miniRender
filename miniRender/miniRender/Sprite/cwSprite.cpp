@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Texture/cwTexture.h"
 #include "Texture/cwTextureManager.h"
+#include "Math/cwMath.h"
 
 NS_MINIR_BEGIN
 
@@ -105,12 +106,12 @@ CWBOOL cwSprite::buildVertexBuffer()
 	m_pVertexBuffer = new cwVertexPosTexColor[6];
 	if (!m_pVertexBuffer) return CWFALSE;
 
-	initVertexBuffer();
+	initVertexBuffer(m_pVertexBuffer);
 
 	return CWTRUE;
 }
 
-CWVOID cwSprite::initVertexBuffer()
+CWVOID cwSprite::initVertexBuffer(cwVertexPosTexColor* pVertexBuffer)
 {
 	CWFLOAT fHalfTexWidth  = 0.5f;
 	CWFLOAT fHalfTexHeight = 0.5f;
@@ -120,29 +121,54 @@ CWVOID cwSprite::initVertexBuffer()
 		fHalfTexHeight = m_pTexture->getWidth()*0.5f;
 	}
 
-	m_pVertexBuffer[0].pos.set(-fHalfTexWidth, -fHalfTexHeight, 0);
-	m_pVertexBuffer[0].tex.set(0, 1.0f);
-	m_pVertexBuffer[0].color = m_nColor;
+	pVertexBuffer[0].pos.set(-fHalfTexWidth, -fHalfTexHeight, 0);
+	pVertexBuffer[0].tex.set(0, 1.0f);
+	pVertexBuffer[0].color = m_nColor;
 
-	m_pVertexBuffer[1].pos.set(-fHalfTexWidth, fHalfTexHeight, 0);
-	m_pVertexBuffer[1].tex.set(0, 0);
-	m_pVertexBuffer[1].color = m_nColor;
+	pVertexBuffer[1].pos.set(-fHalfTexWidth, fHalfTexHeight, 0);
+	pVertexBuffer[1].tex.set(0, 0);
+	pVertexBuffer[1].color = m_nColor;
 
-	m_pVertexBuffer[2].pos.set(fHalfTexWidth, -fHalfTexHeight, 0);
-	m_pVertexBuffer[2].tex.set(0, 1.0f);
-	m_pVertexBuffer[2].color = m_nColor;
+	pVertexBuffer[2].pos.set(fHalfTexWidth, -fHalfTexHeight, 0);
+	pVertexBuffer[2].tex.set(1.0f, 1.0f);
+	pVertexBuffer[2].color = m_nColor;
 
-	m_pVertexBuffer[3].pos.set(-fHalfTexWidth, fHalfTexHeight, 0);
-	m_pVertexBuffer[3].tex.set(0, 0);
-	m_pVertexBuffer[3].color = m_nColor;
+	pVertexBuffer[3].pos.set(-fHalfTexWidth, fHalfTexHeight, 0);
+	pVertexBuffer[3].tex.set(0, 0);
+	pVertexBuffer[3].color = m_nColor;
 
-	m_pVertexBuffer[4].pos.set(fHalfTexWidth, fHalfTexHeight, 0);
-	m_pVertexBuffer[4].tex.set(0, 0);
-	m_pVertexBuffer[4].color = m_nColor;
+	pVertexBuffer[4].pos.set(fHalfTexWidth, fHalfTexHeight, 0);
+	pVertexBuffer[4].tex.set(1.0f, 0);
+	pVertexBuffer[4].color = m_nColor;
 
-	m_pVertexBuffer[5].pos.set(fHalfTexWidth, -fHalfTexHeight, 0);
-	m_pVertexBuffer[5].tex.set(0, 1.0f);
-	m_pVertexBuffer[5].color = m_nColor;
+	pVertexBuffer[5].pos.set(fHalfTexWidth, -fHalfTexHeight, 0);
+	pVertexBuffer[5].tex.set(1.0f, 1.0f);
+	pVertexBuffer[5].color = m_nColor;
+
+	m_nBoundingBox.m_nMin = pVertexBuffer[0].pos;
+	m_nBoundingBox.m_nMax = pVertexBuffer[4].pos;
+}
+
+CWVOID cwSprite::initVertexBuffer(cwVector4D* pVertexBuffer)
+{
+	CWFLOAT fHalfTexWidth = 0.5f;
+	CWFLOAT fHalfTexHeight = 0.5f;
+
+	if (m_pTexture) {
+		fHalfTexWidth = m_pTexture->getWidth()*0.5f;
+		fHalfTexHeight = m_pTexture->getWidth()*0.5f;
+	}
+
+	pVertexBuffer[0].set(-fHalfTexWidth, -fHalfTexHeight, 0, 1.0f);
+	pVertexBuffer[1].set(-fHalfTexWidth, fHalfTexHeight, 0, 1.0f);
+	pVertexBuffer[2].set(fHalfTexWidth, -fHalfTexHeight, 0, 1.0f);
+
+	pVertexBuffer[3].set(-fHalfTexWidth, fHalfTexHeight, 0, 1.0f);
+	pVertexBuffer[4].set(fHalfTexWidth, fHalfTexHeight, 0, 1.0f);
+	pVertexBuffer[5].set(fHalfTexWidth, -fHalfTexHeight, 0, 1.0f);
+
+	m_nBoundingBox.m_nMin = pVertexBuffer[0];
+	m_nBoundingBox.m_nMax = pVertexBuffer[4];
 }
 
 CWVOID cwSprite::insertSpatialNode(cwRenderNode* pNode)
@@ -158,6 +184,24 @@ CWVOID cwSprite::removeSpatialNode(cwRenderNode* pNode)
 CWVOID cwSprite::refreshSpatialNode()
 {
 
+}
+
+CWVOID cwSprite::refreshTransform()
+{
+	cwRenderNode::refreshTransform();
+
+	cwVector4D nVertex[6];
+	initVertexBuffer(nVertex);
+
+	for (CWUINT i = 0; i < 6; ++i) {
+		m_pVertexBuffer[i].pos = nVertex[i] * m_nTrans;
+	}
+}
+
+CWVOID cwSprite::refreshBoundingBox()
+{
+	cwAABB nAabb = m_nBoundingBox;
+	m_nBoundingBox.update(nAabb, m_nTrans);
 }
 
 NS_MINIR_END

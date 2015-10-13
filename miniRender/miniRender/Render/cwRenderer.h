@@ -35,6 +35,7 @@ class cwRenderBatch;
 class cwShader;
 class cwEffect;
 class cwPrimitiveEntity;
+class cwSpriteManager;
 
 class cwRenderer : public cwRef
 {
@@ -89,6 +90,9 @@ protected:
 	CWVOID buildPrimitiveEntity();
 	CWVOID renderPrimitiveEntity();
 
+	CWVOID buildSpriteManager();
+	CWVOID renderSprite();
+
 	sRendererListNode* getAvaiableListNode();
 	sRendererListNode* buildStageList();
 
@@ -100,6 +104,8 @@ protected:
 
 	cwPrimitiveEntity* m_pPrimitiveEntity;
 	cwRenderBatch* m_pPrimitiveBatch;
+
+	cwSpriteManager* m_pSpriteManager;
 
 	sRendererListNode m_nListNodePool[CW_RENDERER_LIST_POOL_SIZE];
 	CWUINT m_iListPoolIndex;
