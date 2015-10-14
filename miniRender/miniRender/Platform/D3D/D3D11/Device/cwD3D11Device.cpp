@@ -579,12 +579,14 @@ void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& tr
 	}
 
 	if (pCamera) {
+		const cwMatrix4X4& matViewProj = pCamera->getViewProjMatrix();
+
 		if (pShader->hasVariable(eShaderParamWorldViewProj)) {
-			const cwMatrix4X4& matViewProj = pCamera->getViewProjMatrix();
 			cwMatrix4X4 worldViewProj = trans*matViewProj;
 			pShader->setVariableMatrix(eShaderParamWorldViewProj, reinterpret_cast<CWFLOAT*>(&worldViewProj));
-			pShader->setVariableMatrix(eShaderParamViewProj, (CWFLOAT*)(&matViewProj));
 		}
+
+		pShader->setVariableMatrix(eShaderParamViewProj, (CWFLOAT*)(&matViewProj));
 
 		const cwVector3D& pos = pCamera->getPos();
 		pShader->setVariableData(eShaderParamEyePosWorld, (CWVOID*)&pos, 0, sizeof(cwVector3D));

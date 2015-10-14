@@ -54,7 +54,8 @@ cwSprite::cwSprite():
 m_pTexture(nullptr),
 m_pVertexBuffer(nullptr)
 {
-
+	m_eType = eSceneObjectSprite;
+	m_nColor.set(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 cwSprite::~cwSprite()
@@ -65,11 +66,7 @@ cwSprite::~cwSprite()
 
 CWBOOL cwSprite::init()
 {
-	if (!cwRenderNode::init()) return CWFALSE;
-
-	m_eType = eSceneObjectSprite;
-	m_nColor.set(1.0f, 1.0f, 1.0f, 1.0f);
-
+	if (!cwRenderNode2D::init()) return CWFALSE;
 	if (!buildVertexBuffer()) return CWFALSE;
 
 	return CWTRUE;
@@ -77,11 +74,7 @@ CWBOOL cwSprite::init()
 
 CWBOOL cwSprite::init(const std::string& strFile)
 {
-	if (!cwRenderNode::init()) return CWFALSE;
-
-	m_eType = eSceneObjectSprite;
-	m_nColor.set(1.0f, 1.0f, 1.0f, 1.0f);
-
+	if (!cwRenderNode2D::init()) return CWFALSE;
 	if (!loadTexture(strFile)) return CWFALSE;
 	if (!buildVertexBuffer()) return CWFALSE;
 
@@ -171,21 +164,6 @@ CWVOID cwSprite::initVertexBuffer(cwVector4D* pVertexBuffer)
 	m_nBoundingBox.m_nMax = pVertexBuffer[4];
 }
 
-CWVOID cwSprite::insertSpatialNode(cwRenderNode* pNode)
-{
-
-}
-
-CWVOID cwSprite::removeSpatialNode(cwRenderNode* pNode)
-{
-
-}
-
-CWVOID cwSprite::refreshSpatialNode()
-{
-
-}
-
 CWVOID cwSprite::refreshTransform()
 {
 	cwRenderNode::refreshTransform();
@@ -196,12 +174,6 @@ CWVOID cwSprite::refreshTransform()
 	for (CWUINT i = 0; i < 6; ++i) {
 		m_pVertexBuffer[i].pos = nVertex[i] * m_nTrans;
 	}
-}
-
-CWVOID cwSprite::refreshBoundingBox()
-{
-	cwAABB nAabb = m_nBoundingBox;
-	m_nBoundingBox.update(nAabb, m_nTrans);
 }
 
 NS_MINIR_END

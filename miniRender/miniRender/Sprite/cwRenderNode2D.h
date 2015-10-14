@@ -17,39 +17,43 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __TEXT_DEMO_SCENE_H__
-#define __TEXT_DEMO_SCENE_H__
+#ifndef __CW_RENDER_NODE_2D_H__
+#define __CW_RENDER_NODE_2D_H__
 
-#include "cwMiniRender.h"
-NS_USING_MINIR;
+#include "Base/cwMacros.h"
+#include "Entity/cwRenderNode.h"
 
-class TextDemoScene : public cwScene
+NS_MINIR_BEGIN
+
+class CW_DLL cwRenderNode2D : public cwRenderNode
 {
 public:
-	static TextDemoScene* create();
+	static cwRenderNode2D* create();
 
-	TextDemoScene();
-	virtual ~TextDemoScene();
+	cwRenderNode2D();
+	virtual ~cwRenderNode2D();
 
 	virtual CWBOOL init() override;
 
-	virtual CWVOID onTouchDown(cwTouch* pTouch) override;
-	virtual CWVOID onTouchUp(cwTouch* pTouch) override;
-	virtual CWVOID onTouchMoving(cwTouch* pTouch) override;
+	virtual CWVOID setPosition(CWFLOAT x, CWFLOAT y);
+	virtual CWVOID setPosition(CWFLOAT x, CWFLOAT y, CWFLOAT z) override;
+	virtual CWVOID setPosition(const cwVector3D& v) override;
 
-	virtual CWVOID onKeyDown(cwKeyboard* pKey) override;
+	virtual CWVOID refreshBoundingBox() override;
+
+	inline CWUINT getRenderOrder() const { return m_uRenderOrder; }
+	virtual CWVOID setRenderOrder(CWUINT uOrder);
 
 protected:
-	CWVOID buildText();
-	CWVOID buildSprite();
+	virtual CWVOID insertSpatialNode(cwRenderNode* pNode) override;
+	virtual CWVOID removeSpatialNode(cwRenderNode* pNode) override;
+	virtual CWVOID refreshSpatialNode() override;
 
 protected:
-	CWFLOAT m_fLastX;
-	CWFLOAT m_fLastY;
-	CWBOOL m_bTouchDown;
-
-	cwSprite* m_pSpriteCenter;
+	CWUINT m_uRenderOrder;
 
 };
+
+NS_MINIR_END
 
 #endif

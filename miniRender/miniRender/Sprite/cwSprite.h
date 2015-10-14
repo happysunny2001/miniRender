@@ -22,14 +22,14 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Base/cwStruct.h"
-#include "Entity/cwRenderNode.h"
 #include "Math/cwMath.h"
+#include "cwRenderNode2D.h"
 
 NS_MINIR_BEGIN
 
 class cwTexture;
 
-class cwSprite : public cwRenderNode
+class CW_DLL cwSprite : public cwRenderNode2D
 {
 public:
 	static cwSprite* create();
@@ -43,21 +43,15 @@ public:
 
 	inline const cwVertexPosTexColor* getVertexBuffer() const { return m_pVertexBuffer; }
 	inline CWUINT getVertexCnt() const { return 6; }
-
 	inline cwTexture* getTexture() { return m_pTexture; }
 
 	virtual CWVOID refreshTransform() override;
-	virtual CWVOID refreshBoundingBox() override;
 
 protected:
 	CWBOOL loadTexture(const std::string& strFile);
 	CWBOOL buildVertexBuffer();
 	CWVOID initVertexBuffer(cwVertexPosTexColor* pVertexBuffer);
 	CWVOID initVertexBuffer(cwVector4D* pVertexBuffer);
-
-	virtual CWVOID insertSpatialNode(cwRenderNode* pNode) override;
-	virtual CWVOID removeSpatialNode(cwRenderNode* pNode) override;
-	virtual CWVOID refreshSpatialNode() override;
 
 protected:
 	cwTexture* m_pTexture;

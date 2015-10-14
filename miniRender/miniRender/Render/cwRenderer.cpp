@@ -54,8 +54,7 @@ m_iListPoolIndex(0),
 m_pRenderListHead(nullptr),
 m_pCurrRenderStage(nullptr),
 m_pPrimitiveEntity(nullptr),
-m_pPrimitiveBatch(nullptr),
-m_pSpriteManager(nullptr)
+m_pPrimitiveBatch(nullptr)
 {
 
 }
@@ -65,7 +64,6 @@ cwRenderer::~cwRenderer()
 	m_nVecStage.clear();
 	CW_SAFE_RELEASE_NULL(m_pPrimitiveEntity);
 	CW_SAFE_DELETE(m_pPrimitiveBatch);
-	CW_SAFE_RELEASE_NULL(m_pSpriteManager);
 
 	m_pCurrCamera = nullptr;
 	m_pCurrShader = nullptr;
@@ -76,7 +74,6 @@ cwRenderer::~cwRenderer()
 CWBOOL cwRenderer::init()
 {
 	buildPrimitiveEntity();
-	buildSpriteManager();
 
 	return true;
 }
@@ -127,21 +124,6 @@ CWVOID cwRenderer::renderPrimitive(cwCamera* pCamera, const cwVector4D& color)
 {
 	if (m_pPrimitiveEntity) {
 		m_pPrimitiveEntity->addPrimitive(pCamera, color);
-	}
-}
-
-CWVOID cwRenderer::buildSpriteManager()
-{
-	m_pSpriteManager = cwSpriteManager::create();
-	CW_SAFE_RETAIN(m_pSpriteManager);
-}
-
-CWVOID cwRenderer::renderSprite()
-{
-	if (m_pSpriteManager) {
-		m_pSpriteManager->begin();
-		m_pSpriteManager->render();
-		m_pSpriteManager->end();
 	}
 }
 
@@ -209,7 +191,7 @@ CWVOID cwRenderer::render()
 		}
 	}
 
-	renderSprite();
+	cwRepertory::getInstance().getEngine()->renderSprite();
 }
 
 CWVOID cwRenderer::end()

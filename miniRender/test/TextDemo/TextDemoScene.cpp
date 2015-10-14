@@ -31,7 +31,8 @@ TextDemoScene* TextDemoScene::create()
 	return nullptr;
 }
 
-TextDemoScene::TextDemoScene()
+TextDemoScene::TextDemoScene():
+m_pSpriteCenter(nullptr)
 {
 
 }
@@ -119,7 +120,7 @@ CWVOID TextDemoScene::buildText()
 
 CWVOID TextDemoScene::buildSprite()
 {
-	cwSprite* pSprite = cwSprite::create("Textures/checkboard.dds");
-	pSprite->setPosition(100, 0, 0);
-	this->addChild(pSprite);
+	m_pSpriteCenter = cwSprite::create("Textures/cc.png");
+	m_pSpriteCenter->setPosition(0, 0);
+	cwRepertory::getInstance().getEngine()->addNode2D(m_pSpriteCenter);
 }

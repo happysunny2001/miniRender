@@ -23,25 +23,28 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwMacros.h"
 #include "Base/cwStruct.h"
 #include "Ref/cwRef.h"
-#include "Render/cwRenderer.h"
+#include "Engine/cwEngine.h"
 
 #include <vector>
 
 NS_MINIR_BEGIN
 
 class cwSprite;
-class cwRenderNode;
+class cwRenderNode2D;
 class cwDynamicRenderObject;
 class cwCamera;
 class cwEffect;
 class cwStencil;
 
-class cwSpriteManager : public cwRef
+class CW_DLL cwSpriteManager : public cwRef
 {
 public:
 	CWVOID begin();
 	CWVOID render();
 	CWVOID end();
+
+	CWVOID addNode(cwRenderNode2D* pNode);
+	CWVOID removeNode(cwRenderNode2D* pNode);
 
 protected:
 	static cwSpriteManager* create();
@@ -56,18 +59,19 @@ protected:
 	CWVOID renderBatch(cwSprite* pSprite);
 
 	CWVOID refreshSprite();
-	CWVOID addRefreshNode(cwRenderNode* pNode);
+	CWVOID addRefreshNode(cwRenderNode2D* pNode);
 
-	friend class cwRenderer;
+	CWVOID renderNode();
+
+	friend class cwEngine;
 
 protected:
-	std::vector<cwRenderNode*> m_nVecSprites;
 	CWUINT m_uVertexCnt;
 	cwVertexPosTexColor m_nVertexBuffer[1000];
 	cwDynamicRenderObject* m_pRenderObjects;
 
-	cwRenderNode* m_pRootSprite;
-	std::vector<cwRenderNode*> m_nDirtyNodes;
+	cwRenderNode2D* m_pRootSprite;
+	std::vector<cwRenderNode2D*> m_nDirtyNodes;
 
 	cwCamera* m_pCurrCamera;
 	cwEffect* m_pDefEffect;

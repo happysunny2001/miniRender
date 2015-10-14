@@ -612,6 +612,9 @@
     <ClInclude Include="Sprite\cwSpriteManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Sprite\cwRenderNode2D.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -1008,6 +1011,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Sprite\cwSpriteManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite\cwRenderNode2D.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

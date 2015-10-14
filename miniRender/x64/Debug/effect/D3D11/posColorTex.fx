@@ -3,7 +3,7 @@
 
 struct VertexIn
 {
-	float3 PosL  : POSITION;
+	float3 PosW  : POSITION;
 	float2 Tex   : TEXCOORD;
 	float4 Color : COLOR;
 };
@@ -20,7 +20,7 @@ VertexOut VS(VertexIn vin)
 	VertexOut vout;
 	
 	// Transform to homogeneous clip space.
-	vout.PosH = mul(float4(vin.PosL, 1.0f), gMatWorldViewProj);
+	vout.PosH = mul(float4(vin.PosW, 1.0f), gViewProj);
 	vout.Tex   = vin.Tex;
 	vout.Color = vin.Color;
     

@@ -19,6 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwSpriteManager.h"
 #include "cwSprite.h"
+#include "cwRenderNode2D.h"
 #include "Base/cwStruct.h"
 #include "Repertory/cwRepertory.h"
 #include "Engine/cwEngine.h"
@@ -31,7 +32,14 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "Stencil/cwStencil.h"
 
+#include <algorithm>
+
 NS_MINIR_BEGIN
+
+static bool compRenderOrder(cwRenderNode2D* pLeft, cwRenderNode2D* pRight)
+{
+	return pLeft->getRenderOrder() < pRight->getRenderOrder();
+}
 
 cwSpriteManager* cwSpriteManager::create()
 {
@@ -48,7 +56,9 @@ cwSpriteManager* cwSpriteManager::create()
 cwSpriteManager::cwSpriteManager():
 m_pRenderObjects(nullptr),
 m_pDefEffect(nullptr),
-m_pRootSprite(nullptr)
+m_pRootSprite(nullptr),
+m_uVertexCnt(0),
+m_pCurrCamera(nullptr)
 {
 
 }
@@ -65,8 +75,9 @@ CWBOOL cwSpriteManager::init()
 	if (!buildRenderObjects()) return CWFALSE;
 	if (!buildEffect()) return CWFALSE;
 
-	m_pRootSprite = cwRenderNode::create();
+	m_pRootSprite = cwRenderNode2D::create();
 	CW_SAFE_RETAIN(m_pRootSprite);
+	m_nDirtyNodes.reserve(100);
 
 	return CWTRUE;
 }
@@ -96,44 +107,50 @@ CWBOOL cwSpriteManager::buildEffect()
 
 CWVOID cwSpriteManager::begin()
 {
-	m_nVecSprites.clear();
-
 	cwRepertory& repertory = cwRepertory::getInstance();
-	cwScene* pScene = repertory.getEngine()->getCurrScene();
-	if (pScene) {
-		pScene->getRenderNode(eSceneObjectSprite, m_nVecSprites);
-	}
 
 	cwCamera* pOrthoCamera = repertory.getEngine()->getCamera("Ortho");
 	m_pCurrCamera = cwRepertory::getInstance().getEngine()->getRenderer()->getCurrCamera();
 	repertory.getEngine()->getRenderer()->setCurrCamera(pOrthoCamera);
-
 	repertory.getDevice()->disableZBuffer();
+
+	refreshSprite();
 }
 
 CWVOID cwSpriteManager::render()
 {
-	if (m_nVecSprites.empty()) return;
-	m_pDefEffect->config();
+	if (m_pRootSprite) {
+		renderNode();
+	}
+}
 
-	for (auto pNode : m_nVecSprites) {
-		if (!pNode) continue;
+CWVOID cwSpriteManager::renderNode()
+{
+	std::vector<cwRenderNode2D*> vecStack;
+	vecStack.reserve(10);
+	vecStack.push_back(m_pRootSprite);
 
-		m_uVertexCnt = 0;
+	while (!vecStack.empty()) {
+		cwRenderNode2D* pLast = vecStack.back();
+		vecStack.pop_back();
 
-		cwSprite* pSprite = static_cast<cwSprite*>(pNode);
-		pSprite->transform();
-		pSprite->refreshTransform();
-		pSprite->refreshBoundingBox();
-		const cwVertexPosTexColor* pSpriteVertexBuffer = pSprite->getVertexBuffer();
-		if (pSpriteVertexBuffer) {
-			CWUINT iCnt = pSprite->getVertexCnt();
-			for (CWUINT i = 0; i < iCnt; ++i) {
-				m_nVertexBuffer[m_uVertexCnt++] = pSpriteVertexBuffer[i];
-			}
-
-			renderBatch(pSprite);
+		if (pLast->getType() == eSceneObjectSprite) {
+			renderBatch(static_cast<cwSprite*>(pLast));
 		}
+
+		cwVector<cwRenderNode*>& nVecChildren = pLast->getChildren();
+		std::vector<cwRenderNode2D*> nVecNodes;
+		nVecNodes.reserve(nVecChildren.size());
+
+		for (auto pNode : nVecChildren) {
+			if (pNode->getType() & eSceneObjectNode2D)
+				nVecNodes.push_back(static_cast<cwRenderNode2D*>(pNode));
+		}
+
+		std::sort(nVecNodes.begin(), nVecNodes.end(), compRenderOrder);
+
+		for (auto pNode2D : nVecNodes)
+			vecStack.push_back(pNode2D);
 	}
 }
 
@@ -141,6 +158,13 @@ CWVOID cwSpriteManager::renderBatch(cwSprite* pSprite)
 {
 	cwRepertory& repertory = cwRepertory::getInstance();
 	cwCamera* pOrthoCamera = repertory.getEngine()->getCamera("Ortho");
+
+	m_uVertexCnt = 0;
+	const cwVertexPosTexColor* pSpriteVertexBuffer = pSprite->getVertexBuffer();
+	CWUINT iCnt = pSprite->getVertexCnt();
+	for (CWUINT i = 0; i < iCnt; ++i) {
+		m_nVertexBuffer[m_uVertexCnt++] = pSpriteVertexBuffer[i];
+	}
 
 	m_pRenderObjects->updateVertexData(m_nVertexBuffer, m_uVertexCnt*sizeof(cwVertexPosTexColor));
 
@@ -155,30 +179,53 @@ CWVOID cwSpriteManager::end()
 {
 	cwRepertory::getInstance().getEngine()->getRenderer()->setCurrCamera(m_pCurrCamera);
 	cwRepertory::getInstance().getDevice()->enableZBuffer();
-	m_nVecSprites.clear();
 }
 
 CWVOID cwSpriteManager::refreshSprite()
 {
 	m_nDirtyNodes.clear();
+	if (!m_pRootSprite) return;
 
-	std::vector<cwRenderNode*> vecStack;
+	std::vector<cwRenderNode2D*> vecStack;
 	vecStack.reserve(10);
 	vecStack.push_back(m_pRootSprite);
 
 	while (!vecStack.empty()) {
+		cwRenderNode2D* pLast = vecStack.back();
+		vecStack.pop_back();
+		
+		if (pLast->getTransDirty()) {
+			addRefreshNode(pLast);
+		}
+		else {
+			cwVector<cwRenderNode*>& nVecChildren = pLast->getChildren();
+			if (!nVecChildren.empty()) {
+				for (auto pChildNode : nVecChildren) {
+					if (pChildNode && pChildNode->getType()&eSceneObjectNode2D)
+						vecStack.push_back(static_cast<cwRenderNode2D*>(pChildNode));
+				}
+			}
+		}
+	}
 
+	for (auto pNode : m_nDirtyNodes) {
+		pNode->transform();
+	}
+
+	for (auto pNode : m_nDirtyNodes) {
+		pNode->refreshTransform();
+		pNode->refreshBoundingBox();
 	}
 }
 
-CWVOID cwSpriteManager::addRefreshNode(cwRenderNode* pNode)
+CWVOID cwSpriteManager::addRefreshNode(cwRenderNode2D* pNode)
 {
-	std::vector<cwRenderNode*> vecStack;
+	std::vector<cwRenderNode2D*> vecStack;
 	vecStack.reserve(10);
 	vecStack.push_back(pNode);
 
 	while (!vecStack.empty()) {
-		cwRenderNode* pLast = vecStack.back();
+		cwRenderNode2D* pLast = vecStack.back();
 		vecStack.pop_back();
 
 		m_nDirtyNodes.push_back(pLast);
@@ -186,11 +233,23 @@ CWVOID cwSpriteManager::addRefreshNode(cwRenderNode* pNode)
 		cwVector<cwRenderNode*>& nVecChildren = pLast->getChildren();
 		if (!nVecChildren.empty()) {
 			for (auto pChildNode : nVecChildren) {
-				if (pChildNode)
-					vecStack.push_back(pChildNode);
+				if (pChildNode && pChildNode->getType()&eSceneObjectNode2D)
+					vecStack.push_back(static_cast<cwRenderNode2D*>(pChildNode));
 			}
 		}
 	}
+}
+
+CWVOID cwSpriteManager::addNode(cwRenderNode2D* pNode)
+{
+	if (pNode && m_pRootSprite)
+		m_pRootSprite->addChild(pNode);
+}
+
+CWVOID cwSpriteManager::removeNode(cwRenderNode2D* pNode)
+{
+	if (pNode && m_pRootSprite)
+		m_pRootSprite->removeChild(pNode);
 }
 
 NS_MINIR_END

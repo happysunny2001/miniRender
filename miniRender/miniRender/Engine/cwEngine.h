@@ -42,6 +42,8 @@ class cwEffect;
 class cwRenderer;
 class cwSpatial;
 class cwRenderNode;
+class cwRenderNode2D;
+class cwSpriteManager;
 
 class CW_DLL cwEngine : public cwRef
 {
@@ -72,6 +74,9 @@ public:
 	inline cwRenderer* getRenderer() const { return m_pRenderer; }
 	virtual CWVOID loadRenderer(const CWSTRING& strConfFile);
 
+	CWVOID addNode2D(cwRenderNode2D* pNode2D);
+	CWVOID removeNode2D(cwRenderNode2D* pNode2D);
+
 	virtual cwVector<cwRenderNode*>* getVisibleNodes(cwCamera*, eSceneObjectType eType = eSceneObjectEntity);
 
 protected:
@@ -87,11 +92,17 @@ protected:
 	CWVOID clearVisibleNodes();
 	cwVector<cwRenderNode*>* getEmptyNodeList();
 
+	CWVOID buildSpriteManager();
+	CWVOID renderSprite();
+
+	friend class cwRenderer;
 	friend class cwRepertory;
 
 protected:
 	cwScene* m_pCurrScene;
 	cwSpatial* m_pSpatial;
+	cwRenderer* m_pRenderer;
+	cwSpriteManager* m_pSpriteManager;
 
 	cwCamera* m_pDefaultCamera;
 	cwMap<CWSTRING, cwCamera*> m_nMapCameras;
@@ -99,9 +110,6 @@ protected:
 	CWUINT m_uNodeVectorCounter;
 	std::vector<cwVector<cwRenderNode*>> m_nVecVisiableNodes;
 	std::vector<sVisibleNodesResult> m_nVisibleResult;
-	//std::unordered_map<cwCamera*, cwVector<cwRenderNode*>*> m_nMapVisibleNodes;
-
-	cwRenderer* m_pRenderer;
 
 };
 

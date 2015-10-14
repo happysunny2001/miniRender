@@ -37,6 +37,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "SpatialSorting/cwSpatial.h"
 #include "SpatialSorting/cwSpatialFactory.h"
+#include "Sprite/cwRenderNode2D.h"
+#include "Sprite/cwSpriteManager.h"
 
 NS_MINIR_BEGIN
 
@@ -57,7 +59,8 @@ m_pCurrScene(nullptr),
 m_pRenderer(nullptr),
 m_pDefaultCamera(nullptr),
 m_pSpatial(nullptr),
-m_uNodeVectorCounter(0)
+m_uNodeVectorCounter(0),
+m_pSpriteManager(nullptr)
 {
 
 }
@@ -67,15 +70,18 @@ cwEngine::~cwEngine()
 	CW_SAFE_RELEASE_NULL(m_pCurrScene);
 	CW_SAFE_RELEASE_NULL(m_pRenderer);
 	CW_SAFE_RELEASE_NULL(m_pSpatial);
+	CW_SAFE_RELEASE_NULL(m_pSpriteManager);
 	m_pDefaultCamera = nullptr;
 }
 
 CWBOOL cwEngine::init()
 {
 	buildDefaultCamera();
-
+	
 	m_pSpatial = cwSpatialFactory::createSpatial("Octree");
 	CW_SAFE_RETAIN(m_pSpatial);
+
+	buildSpriteManager();
 
 	return true;
 }
@@ -92,6 +98,12 @@ CWVOID cwEngine::loadRenderer(const CWSTRING& strConfFile)
 
 		pRendererParser->deferParse(m_pRenderer);
 	}
+}
+
+CWVOID cwEngine::buildSpriteManager()
+{
+	m_pSpriteManager = cwSpriteManager::create();
+	CW_SAFE_RETAIN(m_pSpriteManager);
 }
 
 CWVOID cwEngine::setScene(cwScene* pScene)
@@ -196,6 +208,27 @@ CWVOID cwEngine::render()
 	clearVisibleNodes();
 }
 
+CWVOID cwEngine::renderSprite()
+{
+	if (m_pSpriteManager) {
+		m_pSpriteManager->begin();
+		m_pSpriteManager->render();
+		m_pSpriteManager->end();
+	}
+}
+
+CWVOID cwEngine::addNode2D(cwRenderNode2D* pNode2D)
+{
+	if (m_pSpriteManager)
+		m_pSpriteManager->addNode(pNode2D);
+}
+
+CWVOID cwEngine::removeNode2D(cwRenderNode2D* pNode2D)
+{
+	if (m_pSpriteManager)
+		m_pSpriteManager->removeNode(pNode2D);
+}
+
 CWBOOL cwEngine::insertSpatialNode(cwRenderNode* pNode)
 {
 	if (m_pSpatial)
@@ -259,7 +292,6 @@ cwVector<cwRenderNode*>* cwEngine::getEmptyNodeList()
 
 CWVOID cwEngine::clearVisibleNodes()
 {
-	//m_nMapVisibleNodes.clear();
 	m_nVisibleResult.clear();
 	for (auto it = m_nVecVisiableNodes.begin(); it != m_nVecVisiableNodes.end(); ++it) {
 		it->clear();

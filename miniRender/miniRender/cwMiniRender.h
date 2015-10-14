@@ -77,6 +77,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "SpatialSorting/cwSpatial.h"
 #include "SpatialSorting/cwSpatialFactory.h"
 #include "Text/cwText.h"
+#include "Sprite/cwRenderNode2D.h"
 #include "Sprite/cwSprite.h"
 
 #if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_

@@ -167,6 +167,7 @@
     <ClInclude Include="SpatialSorting\cwOctree.h" />
     <ClInclude Include="SpatialSorting\cwSpatial.h" />
     <ClInclude Include="SpatialSorting\cwSpatialFactory.h" />
+    <ClInclude Include="Sprite\cwRenderNode2D.h" />
     <ClInclude Include="Sprite\cwSpriteManager.h" />
     <ClInclude Include="Sprite\cwSprite.h" />
     <ClInclude Include="Stencil\cwStencil.h" />
@@ -301,6 +302,7 @@
     <ClCompile Include="SpatialSorting\cwOctree.cpp" />
     <ClCompile Include="SpatialSorting\cwSpatial.cpp" />
     <ClCompile Include="SpatialSorting\cwSpatialFactory.cpp" />
+    <ClCompile Include="Sprite\cwRenderNode2D.cpp" />
     <ClCompile Include="Sprite\cwSprite.cpp" />
     <ClCompile Include="Sprite\cwSpriteManager.cpp" />
     <ClCompile Include="Stencil\cwStencil.cpp" />

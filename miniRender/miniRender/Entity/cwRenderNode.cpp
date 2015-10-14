@@ -127,17 +127,13 @@ CWBOOL cwRenderNode::removeFromParent()
 
 CWVOID cwRenderNode::insertSpatialNode(cwRenderNode* pNode)
 {
-	if (pNode && !(pNode->getType() & eSceneObjectSprite)) {
-		cwRepertory::getInstance().getEngine()->insertSpatialNode(pNode);
-		cwRepertory::getInstance().getEngine()->refreshSpatialNode(pNode);
-	}
+	cwRepertory::getInstance().getEngine()->insertSpatialNode(pNode);
+	cwRepertory::getInstance().getEngine()->refreshSpatialNode(pNode);
 }
 
 CWVOID cwRenderNode::removeSpatialNode(cwRenderNode* pNode)
 {
-	if (pNode && !(pNode->getType() & eSceneObjectSprite)) {
-		cwRepertory::getInstance().getEngine()->removeSpatialNode(pNode);
-	}
+	cwRepertory::getInstance().getEngine()->removeSpatialNode(pNode);
 }
 
 CWVOID cwRenderNode::refreshSpatialNode()
