@@ -478,14 +478,14 @@ CWVOID cwD3D11Device::setVertexBuffer(cwBuffer** pBuffers, CWUINT uCnt)
 	m_pD3D11DeviceContext->IASetVertexBuffers(0, uCnt, arrD3D11Buffer, arrStride, arrOffset);
 }
 
-void cwD3D11Device::setIndexBuffer(cwBuffer* pIndexBuffer)
+CWVOID cwD3D11Device::setIndexBuffer(cwBuffer* pIndexBuffer)
 {
 	if (pIndexBuffer) {
 		m_pD3D11DeviceContext->IASetIndexBuffer(static_cast<ID3D11Buffer*>(pIndexBuffer->getHandle()), DXGI_FORMAT_R32_UINT, 0);
 	}
 }
 
-void cwD3D11Device::setBlend(const cwBlend* pBlendOper)
+CWVOID cwD3D11Device::setBlend(const cwBlend* pBlendOper)
 {
 	if (!pBlendOper) {
 		//restore blend state
@@ -514,7 +514,7 @@ void cwD3D11Device::setBlend(const cwBlend* pBlendOper)
 	m_pBlendState = pD3DBlendOp;
 }
 
-void cwD3D11Device::setStencil(const cwStencil* pStencil)
+CWVOID cwD3D11Device::setStencil(const cwStencil* pStencil)
 {
 	if (!pStencil) {
 		if (!m_pStencil) return;
@@ -522,6 +522,8 @@ void cwD3D11Device::setStencil(const cwStencil* pStencil)
 		m_pStencil = nullptr;
 		return;
 	}
+
+	if (m_pStencil == pStencil) return;
 
 	ID3D11DepthStencilState* pState = static_cast<ID3D11DepthStencilState*>(pStencil->getHandle());
 	if (!pState) return;

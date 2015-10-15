@@ -67,9 +67,84 @@ CWVOID cwRenderNode2D::setPosition(const cwVector3D& v)
 	cwRenderNode::setPosition(v.x, v.y, 0.0f);
 }
 
+CWVOID cwRenderNode2D::move(CWFLOAT x, CWFLOAT y, CWFLOAT z)
+{
+	cwRenderNode::move(x, y, 0.0f);
+}
+
+CWVOID cwRenderNode2D::move(const cwVector3D& v)
+{
+	cwRenderNode2D::move(v.x, v.y, 0.0f);
+}
+
 CWVOID cwRenderNode2D::setPosition(CWFLOAT x, CWFLOAT y)
 {
 	cwRenderNode::setPosition(x, y, 0.0f);
+}
+
+CWVOID cwRenderNode2D::move(CWFLOAT x, CWFLOAT y)
+{
+	cwRenderNode::move(x, y, 0.0f);
+}
+
+CWVOID cwRenderNode2D::setRotation(CWFLOAT x, CWFLOAT y, CWFLOAT z)
+{
+	cwRenderNode::setRotation(0.0f, 0.0f, z);
+}
+
+CWVOID cwRenderNode2D::setRotation(const cwVector3D& v)
+{
+	cwRenderNode::setRotation(0.0f, 0.0f, v.z);
+}
+
+CWVOID cwRenderNode2D::rotate(CWFLOAT x, CWFLOAT y, CWFLOAT z)
+{
+	cwRenderNode::rotate(0.0f, 0.0f, z);
+}
+
+CWVOID cwRenderNode2D::rotate(const cwVector3D& v)
+{
+	cwRenderNode::rotate(0.0f, 0.0f, v.z);
+}
+
+CWVOID cwRenderNode2D::setRotation(CWFLOAT f)
+{
+	cwRenderNode::setRotation(0.0f, 0.0f, f);
+}
+
+CWVOID cwRenderNode2D::rotate(CWFLOAT f)
+{
+	cwRenderNode::rotate(0.0f, 0.0f, f);
+}
+
+CWVOID cwRenderNode2D::setScale(CWFLOAT x, CWFLOAT y, CWFLOAT z)
+{
+	cwRenderNode::setScale(x, y, 0.0f);
+}
+
+CWVOID cwRenderNode2D::setScale(const cwVector3D& v)
+{
+	cwRenderNode::setScale(v.x, v.y, 0.0f);
+}
+
+CWVOID cwRenderNode2D::scale(CWFLOAT x, CWFLOAT y, CWFLOAT z)
+{
+	cwRenderNode::scale(x, y, 0.0f);
+}
+
+CWVOID cwRenderNode2D::scale(const cwVector3D& v)
+{
+	cwRenderNode::scale(v.x, v.y, 0.0f);
+}
+
+CWVOID cwRenderNode2D::setScale(CWFLOAT x, CWFLOAT y)
+{
+	cwRenderNode::setScale(x, y, 0.0f);
+}
+
+CWVOID cwRenderNode2D::scale(CWFLOAT x, CWFLOAT y)
+{
+	cwRenderNode::scale(x, y, 0.0f);
 }
 
 CWVOID cwRenderNode2D::setRenderOrder(CWUINT uOrder)

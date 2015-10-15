@@ -36,8 +36,25 @@ public:
 	virtual CWBOOL init() override;
 
 	virtual CWVOID setPosition(CWFLOAT x, CWFLOAT y);
+	virtual CWVOID move(CWFLOAT x, CWFLOAT y);
 	virtual CWVOID setPosition(CWFLOAT x, CWFLOAT y, CWFLOAT z) override;
+	virtual CWVOID move(CWFLOAT x, CWFLOAT y, CWFLOAT z) override;
+	virtual CWVOID move(const cwVector3D& v) override;
 	virtual CWVOID setPosition(const cwVector3D& v) override;
+
+	virtual CWVOID setRotation(CWFLOAT f);
+	virtual CWVOID rotate(CWFLOAT f);
+	virtual CWVOID setRotation(CWFLOAT x, CWFLOAT y, CWFLOAT z) override;
+	virtual CWVOID setRotation(const cwVector3D& v) override;
+	virtual CWVOID rotate(CWFLOAT x, CWFLOAT y, CWFLOAT z) override;
+	virtual CWVOID rotate(const cwVector3D& v) override;
+
+	virtual CWVOID setScale(CWFLOAT x, CWFLOAT y);
+	virtual CWVOID scale(CWFLOAT x, CWFLOAT y);
+	virtual CWVOID setScale(CWFLOAT x, CWFLOAT y, CWFLOAT z) override;
+	virtual CWVOID setScale(const cwVector3D& v) override;
+	virtual CWVOID scale(CWFLOAT x, CWFLOAT y, CWFLOAT z) override;
+	virtual CWVOID scale(const cwVector3D& v) override;
 
 	virtual CWVOID refreshBoundingBox() override;
 

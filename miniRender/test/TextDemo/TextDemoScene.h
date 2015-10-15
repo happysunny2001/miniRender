@@ -37,6 +37,7 @@ public:
 	virtual CWVOID onTouchUp(cwTouch* pTouch) override;
 	virtual CWVOID onTouchMoving(cwTouch* pTouch) override;
 
+	virtual CWVOID update(CWFLOAT dt) override;
 	virtual CWVOID onKeyDown(cwKeyboard* pKey) override;
 
 protected:
@@ -49,6 +50,8 @@ protected:
 	CWBOOL m_bTouchDown;
 
 	cwSprite* m_pSpriteCenter;
+	cwSprite* m_pSpriteLeft;
+	cwSprite* m_pSpriteRight;
 
 };
 

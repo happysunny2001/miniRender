@@ -32,7 +32,9 @@ TextDemoScene* TextDemoScene::create()
 }
 
 TextDemoScene::TextDemoScene():
-m_pSpriteCenter(nullptr)
+m_pSpriteCenter(nullptr),
+m_pSpriteLeft(nullptr),
+m_pSpriteRight(nullptr)
 {
 
 }
@@ -55,6 +57,8 @@ CWBOOL TextDemoScene::init()
 	cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
 	pKeyListener->onKeyDown = CW_CALLBACK_1(TextDemoScene::onKeyDown, this);
 	this->addEventListener(pKeyListener);
+
+	this->schedulerUpdate();
 
 	m_bTouchDown = false;
 
@@ -109,6 +113,21 @@ CWVOID TextDemoScene::onKeyDown(cwKeyboard* pKey)
 	}
 }
 
+CWVOID TextDemoScene::update(CWFLOAT dt)
+{
+	if (m_pSpriteCenter) {
+		m_pSpriteCenter->rotate(dt*cwMathUtil::cwPI*0.1f);
+	}
+
+	if (m_pSpriteLeft) {
+		m_pSpriteLeft->rotate(dt*cwMathUtil::cwPI*0.2f);
+	}
+
+	if (m_pSpriteRight) {
+		m_pSpriteRight->rotate(-dt*cwMathUtil::cwPI*0.2f);
+	}
+}
+
 CWVOID TextDemoScene::buildText()
 {
 	cwText* pText = cwText::create("1234567890", "Textures/font_test.png", '0', 40);
@@ -123,4 +142,25 @@ CWVOID TextDemoScene::buildSprite()
 	m_pSpriteCenter = cwSprite::create("Textures/cc.png");
 	m_pSpriteCenter->setPosition(0, 0);
 	cwRepertory::getInstance().getEngine()->addNode2D(m_pSpriteCenter);
+	m_pSpriteCenter->setTag(100);
+
+	m_pSpriteLeft = cwSprite::create("Textures/cc.png");
+	m_pSpriteLeft->setPosition(-100, 0);
+	m_pSpriteCenter->addChild(m_pSpriteLeft);
+	m_pSpriteLeft->setTag(101);
+
+	m_pSpriteRight = cwSprite::create("Textures/cc.png");
+	m_pSpriteRight->setPosition(100, 0);
+	m_pSpriteCenter->addChild(m_pSpriteRight);
+	m_pSpriteRight->setTag(102);
+
+	cwSprite* pSpLeftChild01 = cwSprite::create("Textures/cc.png");
+	pSpLeftChild01->setPosition(-20, 80);
+	m_pSpriteLeft->addChild(pSpLeftChild01);
+	pSpLeftChild01->setTag(103);
+
+	cwSprite* pSpRightChild01 = cwSprite::create("Textures/cc.png");
+	pSpRightChild01->setPosition(20, -80);
+	m_pSpriteRight->addChild(pSpRightChild01);
+	pSpRightChild01->setTag(104);
 }

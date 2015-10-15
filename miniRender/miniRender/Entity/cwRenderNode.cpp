@@ -52,7 +52,8 @@ m_nScale(1.0f, 1.0f ,1.0f),
 m_bTransDirty(CWFALSE),
 m_pEffect(nullptr),
 m_pBlend(nullptr),
-m_pStencil(nullptr)
+m_pStencil(nullptr),
+m_iTag(0)
 {
 	m_eType = eSceneObjectNode;
 }
@@ -93,8 +94,6 @@ CWBOOL cwRenderNode::addChild(cwRenderNode* pNode)
 			m_nVecChildren.pushBack(pNode);
 			pNode->setParent(this);
 
-			//cwRepertory::getInstance().getEngine()->insertSpatialNode(pNode);
-			//cwRepertory::getInstance().getEngine()->refreshSpatialNode(pNode);
 			insertSpatialNode(pNode);
 			return CWTRUE;
 		}
@@ -107,7 +106,7 @@ CWBOOL cwRenderNode::removeChild(cwRenderNode* pNode)
 {
 	if (pNode && pNode->getParent() == this) {
 		pNode->setParent(nullptr);
-		//cwRepertory::getInstance().getEngine()->removeSpatialNode(pNode);
+
 		removeSpatialNode(pNode);
 		m_nVecChildren.erase(pNode);
 		return CWTRUE;

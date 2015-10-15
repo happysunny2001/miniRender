@@ -17,66 +17,36 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_SPRITE_MANAGER_H__
-#define __CW_SPRITE_MANAGER_H__
+#ifndef __CW_LABEL_H__
+#define __CW_LABEL_H__
 
 #include "Base/cwMacros.h"
-#include "Base/cwStruct.h"
-#include "Ref/cwRef.h"
-#include "Engine/cwEngine.h"
-
-#include <vector>
+#include "Base/cwBasicType.h"
+#include "Math/cwMath.h"
+#include "cwSprite.h"
 
 NS_MINIR_BEGIN
 
-class cwSprite;
-class cwRenderNode2D;
-class cwDynamicRenderObject;
-class cwCamera;
-class cwEffect;
-class cwBlend;
-
-class CW_DLL cwSpriteManager : public cwRef
+class cwLabel : public cwSprite
 {
 public:
-	CWVOID begin();
-	CWVOID render();
-	CWVOID end();
+	static cwLabel* create(const CWSTRING& strText, const CWSTRING& strFontTexture, CWCHAR cStartChar, CWUINT uCharWidth);
 
-	CWVOID addNode(cwRenderNode2D* pNode);
-	CWVOID removeNode(cwRenderNode2D* pNode);
+	cwLabel();
+	virtual ~cwLabel();
 
-protected:
-	static cwSpriteManager* create();
-
-	cwSpriteManager();
-	virtual ~cwSpriteManager();
-
-	CWBOOL init();
-	CWBOOL buildRenderObjects();
-	CWBOOL buildEffect();
-	CWBOOL buildBlend();
-
-	CWVOID renderBatch(cwSprite* pSprite);
-
-	CWVOID refreshSprite();
-	CWVOID addRefreshNode(cwRenderNode2D* pNode);
-
-	CWVOID renderNode();
-
-	friend class cwEngine;
+	virtual CWBOOL init(const CWSTRING& strText, const CWSTRING& strFontTexture, CWCHAR cStartChar, CWUINT uCharWidth);
 
 protected:
-	CWUINT m_uVertexCnt;
-	cwVertexPosTexColor m_nVertexBuffer[1000];
-	cwDynamicRenderObject* m_pRenderObjects;
+	virtual CWBOOL buildVertexBuffer() override;
+	virtual CWVOID refreshVertexBuffer();
 
-	cwRenderNode2D* m_pRootSprite;
-	std::vector<cwRenderNode2D*> m_nDirtyNodes;
-
-	cwCamera* m_pCurrCamera;
-	cwEffect* m_pDefEffect;
-	cwBlend* m_pAlphaBlend;
+protected:
+	CWSTRING m_nStrText;
+	CWUINT m_uMaxCharCnt;
+	CWUINT m_uVertexSize;
+	CWCHAR m_cStartChar;
+	CWUINT m_uCharWidth;
 
 };
 

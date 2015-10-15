@@ -49,7 +49,7 @@ public:
 
 protected:
 	CWBOOL loadTexture(const std::string& strFile);
-	CWBOOL buildVertexBuffer();
+	virtual CWBOOL buildVertexBuffer();
 	CWVOID initVertexBuffer(cwVertexPosTexColor* pVertexBuffer);
 	CWVOID initVertexBuffer(cwVector4D* pVertexBuffer);
 

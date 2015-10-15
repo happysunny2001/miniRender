@@ -90,6 +90,9 @@ public:
 	inline CWBOOL getTransDirty() const { return m_bTransDirty; }
 	inline cwRenderNode* getParent() const { return m_pParent; }
 
+	inline CWINT getTag() const { return m_iTag; }
+	inline CWVOID setTag(CWINT i) { m_iTag = i; }
+
 	cwVector<cwRenderNode*>& getChildren() { return m_nVecChildren; }
 
 	virtual CWVOID refreshBoundingBox();
@@ -144,6 +147,8 @@ protected:
 
 	cwAABB m_nBoundingBox;
 	cwAABB m_nGroupBoundingBox;
+
+	CWINT m_iTag;
 
 };
 
