@@ -19,6 +19,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "TextDemoScene.h"
 
+#include <sstream>
+
 TextDemoScene* TextDemoScene::create()
 {
 	TextDemoScene* pScene = new TextDemoScene();
@@ -34,7 +36,9 @@ TextDemoScene* TextDemoScene::create()
 TextDemoScene::TextDemoScene():
 m_pSpriteCenter(nullptr),
 m_pSpriteLeft(nullptr),
-m_pSpriteRight(nullptr)
+m_pSpriteRight(nullptr),
+m_pLabel(nullptr),
+m_fNumber(0)
 {
 
 }
@@ -126,6 +130,15 @@ CWVOID TextDemoScene::update(CWFLOAT dt)
 	if (m_pSpriteRight) {
 		m_pSpriteRight->rotate(-dt*cwMathUtil::cwPI*0.2f);
 	}
+
+	if (m_pLabel) {
+		m_fNumber += dt;
+		if (m_fNumber >= 1.0f) {
+			stringstream ss;
+			ss << (CWUINT)(m_fNumber);
+			m_pLabel->setString(ss.str());
+		}
+	}
 }
 
 CWVOID TextDemoScene::buildText()
@@ -163,4 +176,9 @@ CWVOID TextDemoScene::buildSprite()
 	pSpRightChild01->setPosition(20, -80);
 	m_pSpriteRight->addChild(pSpRightChild01);
 	pSpRightChild01->setTag(104);
+
+	m_pLabel = cwLabel::create("0", "Textures/frame_text.png", '0', 10);
+	m_pLabel->setPosition(-100, -100);
+	cwRepertory::getInstance().getEngine()->addNode2D(m_pLabel);
+	m_pLabel->setTag(200);
 }

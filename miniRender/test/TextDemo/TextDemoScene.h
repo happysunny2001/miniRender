@@ -53,6 +53,9 @@ protected:
 	cwSprite* m_pSpriteLeft;
 	cwSprite* m_pSpriteRight;
 
+	cwLabel* m_pLabel;
+	CWFLOAT m_fNumber;
+
 };
 
 #endif

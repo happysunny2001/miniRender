@@ -34,6 +34,7 @@ CWVOID TextDemo::gameBegin()
 {
 	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
 	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 0.0f, -50.0f);
+	cwRepertory::getInstance().getEngine()->setFrameEnable(CWTRUE);
 
 	TextDemoScene* pScene = TextDemoScene::create();
 	cwRepertory::getInstance().getEngine()->setScene(pScene);

@@ -36,10 +36,14 @@ public:
 	virtual ~cwLabel();
 
 	virtual CWBOOL init(const CWSTRING& strText, const CWSTRING& strFontTexture, CWCHAR cStartChar, CWUINT uCharWidth);
+	virtual CWUINT getVertexCnt() const override;
+
+	virtual CWVOID setString(const CWSTRING& strText);
 
 protected:
 	virtual CWBOOL buildVertexBuffer() override;
 	virtual CWVOID refreshVertexBuffer();
+	virtual CWVOID transformBuffer() override;
 
 protected:
 	CWSTRING m_nStrText;

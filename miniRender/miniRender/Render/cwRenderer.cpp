@@ -190,8 +190,6 @@ CWVOID cwRenderer::render()
 			}
 		}
 	}
-
-	cwRepertory::getInstance().getEngine()->renderSprite();
 }
 
 CWVOID cwRenderer::end()

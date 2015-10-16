@@ -62,10 +62,15 @@ CWBOOL cwLabel::init(const CWSTRING& strText, const CWSTRING& strFontTexture, CW
 	return CWTRUE;
 }
 
+CWUINT cwLabel::getVertexCnt() const
+{
+	return (CWUINT)(m_nStrText.size()) * 6;
+}
+
 CWBOOL cwLabel::buildVertexBuffer()
 {
 	if (m_nStrText.empty()) {
-		m_uMaxCharCnt = 10;
+		m_uMaxCharCnt = 5;
 	}
 	else {
 		m_uMaxCharCnt = (CWUINT)((CWFLOAT)(m_nStrText.size())*1.5f + 1.0f);
@@ -117,7 +122,47 @@ CWVOID cwLabel::refreshVertexBuffer()
 		m_pVertexBuffer[6 * i + 5].pos.set(fStartX + m_uCharWidth, -fHalfTextureHeight, 0.0f);
 		m_pVertexBuffer[6 * i + 5].tex.set(fStartU + fUStep, 1.0f);
 		m_pVertexBuffer[6 * i + 5].color = m_nColor;
+
+		fStartX += m_uCharWidth;
 	}
+
+	m_nBoundingBox.m_nMin = m_pVertexBuffer[0].pos;
+	m_nBoundingBox.m_nMax = m_pVertexBuffer[iChatSize * 6 - 2].pos;
+}
+
+CWVOID cwLabel::transformBuffer()
+{
+	refreshVertexBuffer();
+
+	CWUINT iChatSize = (CWUINT)(m_nStrText.size());
+	if (iChatSize == 0) return;
+
+	cwVector4D pos;
+	for (CWUINT i = 0; i < iChatSize * 6; ++i) {
+		pos.set(m_pVertexBuffer[i].pos.x, m_pVertexBuffer[i].pos.y, 0, 1.0f);
+		m_pVertexBuffer[i].pos = pos * m_nTrans;
+	}
+
+	m_nBoundingBox.m_nMin = m_pVertexBuffer[0].pos;
+	m_nBoundingBox.m_nMax = m_pVertexBuffer[iChatSize * 6 - 2].pos;
+}
+
+CWVOID cwLabel::setString(const CWSTRING& strText)
+{
+	if (strText == m_nStrText) return;
+
+	CWUINT uSize = (CWUINT)(strText.size());
+	if (uSize > m_uMaxCharCnt) {
+		m_uMaxCharCnt = (CWUINT)(uSize*1.5f + 1.0f);
+
+		CW_SAFE_DELETE(m_pVertexBuffer);
+		m_uVertexSize = m_uMaxCharCnt * 6;
+		m_pVertexBuffer = new cwVertexPosTexColor[m_uVertexSize];
+		if (!m_pVertexBuffer) return;
+	}
+
+	m_nStrText = strText;
+	transformBuffer();
 }
 
 NS_MINIR_END

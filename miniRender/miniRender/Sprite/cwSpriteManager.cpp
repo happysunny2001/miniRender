@@ -64,7 +64,8 @@ m_pDefEffect(nullptr),
 m_pRootSprite(nullptr),
 m_uVertexCnt(0),
 m_pCurrCamera(nullptr),
-m_pAlphaBlend(nullptr)
+m_pAlphaBlend(nullptr),
+m_pOrthoCamera(nullptr)
 {
 
 }
@@ -140,9 +141,9 @@ CWVOID cwSpriteManager::begin()
 {
 	cwRepertory& repertory = cwRepertory::getInstance();
 
-	cwCamera* pOrthoCamera = repertory.getEngine()->getCamera("Ortho");
+	m_pOrthoCamera = repertory.getEngine()->getCamera("Ortho");
 	m_pCurrCamera = cwRepertory::getInstance().getEngine()->getRenderer()->getCurrCamera();
-	repertory.getEngine()->getRenderer()->setCurrCamera(pOrthoCamera);
+	repertory.getEngine()->getRenderer()->setCurrCamera(m_pOrthoCamera);
 	repertory.getDevice()->disableZBuffer();
 
 	refreshSprite();
@@ -187,12 +188,12 @@ CWVOID cwSpriteManager::renderNode()
 CWVOID cwSpriteManager::renderBatch(cwSprite* pSprite)
 {
 	cwRepertory& repertory = cwRepertory::getInstance();
-	cwCamera* pOrthoCamera = repertory.getEngine()->getCamera("Ortho");
 
 	m_uVertexCnt = 0;
 	const cwVertexPosTexColor* pSpriteVertexBuffer = pSprite->getVertexBuffer();
 	CWUINT iCnt = pSprite->getVertexCnt();
 
+	if (!pSpriteVertexBuffer || iCnt == 0) return;
 	if (m_uVertexCnt + iCnt >= CW_DEF_SPRITE_BUFFER_CNT) return;
 
 	for (CWUINT i = 0; i < iCnt; ++i) {
@@ -209,11 +210,9 @@ CWVOID cwSpriteManager::renderBatch(cwSprite* pSprite)
 	if (pSprite->getStencil())
 		repertory.getDevice()->setStencil(pSprite->getStencil());
 
-	repertory.getDevice()->setShaderWorldTrans(m_pDefEffect->getShader(), pSprite->getTransformMatrix(), pOrthoCamera);
+	repertory.getDevice()->setShaderWorldTrans(m_pDefEffect->getShader(), pSprite->getTransformMatrix(), m_pOrthoCamera);
 	m_pDefEffect->getShader()->setVariableTexture(eShaderParamTexture0, pSprite->getTexture());
 	repertory.getDevice()->draw(m_pDefEffect->getShader(), m_pDefEffect->getTech(), m_pRenderObjects);
-
-	cwLog::print("render:%d\n", pSprite->getTag());
 }
 
 CWVOID cwSpriteManager::end()

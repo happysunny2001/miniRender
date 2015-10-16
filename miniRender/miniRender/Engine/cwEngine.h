@@ -44,6 +44,7 @@ class cwSpatial;
 class cwRenderNode;
 class cwRenderNode2D;
 class cwSpriteManager;
+class cwLabel;
 
 class CW_DLL cwEngine : public cwRef
 {
@@ -71,6 +72,10 @@ public:
 	CWBOOL removeCamera(cwCamera* pCamera);
 	CWVOID addCamera(cwCamera* pCamera);
 
+	inline CWUINT getFrameRate() const { return m_uFrameRate; }
+	inline CWBOOL getFrameEnable() const { return m_bShowFrame; }
+	inline CWVOID setFrameEnable(CWBOOL b) { m_bShowFrame = b; }
+
 	inline cwRenderer* getRenderer() const { return m_pRenderer; }
 	virtual CWVOID loadRenderer(const CWSTRING& strConfFile);
 
@@ -93,7 +98,9 @@ protected:
 	cwVector<cwRenderNode*>* getEmptyNodeList();
 
 	CWVOID buildSpriteManager();
+	CWVOID buildFrameRateLabel();
 	CWVOID renderSprite();
+	CWVOID refreshFrameRate(CWFLOAT dt);
 
 	friend class cwRenderer;
 	friend class cwRepertory;
@@ -110,6 +117,12 @@ protected:
 	CWUINT m_uNodeVectorCounter;
 	std::vector<cwVector<cwRenderNode*>> m_nVecVisiableNodes;
 	std::vector<sVisibleNodesResult> m_nVisibleResult;
+
+	CWUINT m_uFrameRate;
+	CWUINT m_uFrameCounter;
+	CWFLOAT m_fFrameCounter;
+	cwLabel* m_pLabelFrameRate;
+	CWBOOL m_bShowFrame;
 
 };
 

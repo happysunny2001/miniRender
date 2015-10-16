@@ -75,6 +75,7 @@ protected:
 	std::vector<cwRenderNode2D*> m_nDirtyNodes;
 
 	cwCamera* m_pCurrCamera;
+	cwCamera* m_pOrthoCamera;
 	cwEffect* m_pDefEffect;
 	cwBlend* m_pAlphaBlend;
 

@@ -39,6 +39,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "SpatialSorting/cwSpatialFactory.h"
 #include "Sprite/cwRenderNode2D.h"
 #include "Sprite/cwSpriteManager.h"
+#include "Sprite/cwLabel.h"
+
+#include <sstream>
 
 NS_MINIR_BEGIN
 
@@ -60,7 +63,12 @@ m_pRenderer(nullptr),
 m_pDefaultCamera(nullptr),
 m_pSpatial(nullptr),
 m_uNodeVectorCounter(0),
-m_pSpriteManager(nullptr)
+m_pSpriteManager(nullptr),
+m_fFrameCounter(0),
+m_uFrameRate(0),
+m_uFrameCounter(0),
+m_bShowFrame(CWFALSE),
+m_pLabelFrameRate(nullptr)
 {
 
 }
@@ -71,6 +79,7 @@ cwEngine::~cwEngine()
 	CW_SAFE_RELEASE_NULL(m_pRenderer);
 	CW_SAFE_RELEASE_NULL(m_pSpatial);
 	CW_SAFE_RELEASE_NULL(m_pSpriteManager);
+	CW_SAFE_RELEASE_NULL(m_pLabelFrameRate);
 	m_pDefaultCamera = nullptr;
 }
 
@@ -82,6 +91,7 @@ CWBOOL cwEngine::init()
 	CW_SAFE_RETAIN(m_pSpatial);
 
 	buildSpriteManager();
+	buildFrameRateLabel();
 
 	return true;
 }
@@ -106,6 +116,20 @@ CWVOID cwEngine::buildSpriteManager()
 	CW_SAFE_RETAIN(m_pSpriteManager);
 }
 
+CWVOID cwEngine::buildFrameRateLabel()
+{
+	m_pLabelFrameRate = cwLabel::create("0", "Textures/frame_text.png", '0', 10);
+	CW_SAFE_RETAIN(m_pLabelFrameRate);
+
+	CWINT m_uScreenWidth  = cwRepertory::getInstance().getUInt(gValueWinWidth);
+	CWINT m_uScreenHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
+
+	m_pLabelFrameRate->setPosition(CWFLOAT(-(m_uScreenWidth >> 1)) + 30.0f, CWFLOAT(-(m_uScreenHeight >> 1)) + 10.0f);
+	m_pLabelFrameRate->transform();
+	m_pLabelFrameRate->refreshTransform();
+	m_pLabelFrameRate->refreshBoundingBox();
+}
+
 CWVOID cwEngine::setScene(cwScene* pScene)
 {
 	if (pScene == m_pCurrScene) return;
@@ -117,8 +141,6 @@ CWVOID cwEngine::setScene(cwScene* pScene)
 
 	CW_SAFE_RELEASE_NULL(m_pCurrScene);
 	m_pCurrScene = pScene;
-
-	
 }
 
 CWVOID cwEngine::mainLoop(CWFLOAT dt)
@@ -134,6 +156,27 @@ CWVOID cwEngine::mainLoop(CWFLOAT dt)
 
 	render();
 	repertory.getAutoReleasePool()->clear();
+
+	refreshFrameRate(dt);
+}
+
+CWVOID cwEngine::refreshFrameRate(CWFLOAT dt)
+{
+	if (m_bShowFrame) {
+		m_uFrameCounter++;
+		m_fFrameCounter += dt;
+		if (m_fFrameCounter >= 1.0f) {
+			m_fFrameCounter = 0;
+			m_uFrameRate = m_uFrameCounter;
+			m_uFrameCounter = 0;
+
+			stringstream ss;
+			ss << m_uFrameRate;
+			if (m_pLabelFrameRate) {
+				m_pLabelFrameRate->setString(ss.str());
+			}
+		}
+	}
 }
 
 CWVOID cwEngine::buildDefaultCamera()
@@ -202,6 +245,11 @@ CWVOID cwEngine::render()
 	if (m_pRenderer) {
 		m_pRenderer->begin();
 		m_pRenderer->render();
+	}
+	
+	this->renderSprite();
+
+	if (m_pRenderer) {
 		m_pRenderer->end();
 	}
 
@@ -213,6 +261,11 @@ CWVOID cwEngine::renderSprite()
 	if (m_pSpriteManager) {
 		m_pSpriteManager->begin();
 		m_pSpriteManager->render();
+
+		if (m_bShowFrame && m_pLabelFrameRate) {
+			m_pSpriteManager->renderBatch(m_pLabelFrameRate);
+		}
+
 		m_pSpriteManager->end();
 	}
 }

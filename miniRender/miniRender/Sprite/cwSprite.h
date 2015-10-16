@@ -42,16 +42,19 @@ public:
 	virtual CWBOOL init(const std::string& strFile);
 
 	inline const cwVertexPosTexColor* getVertexBuffer() const { return m_pVertexBuffer; }
-	inline CWUINT getVertexCnt() const { return 6; }
+	virtual CWUINT getVertexCnt() const { return 6; }
 	inline cwTexture* getTexture() { return m_pTexture; }
 
 	virtual CWVOID refreshTransform() override;
+	virtual CWVOID refreshBoundingBox() override;
 
 protected:
 	CWBOOL loadTexture(const std::string& strFile);
 	virtual CWBOOL buildVertexBuffer();
 	CWVOID initVertexBuffer(cwVertexPosTexColor* pVertexBuffer);
 	CWVOID initVertexBuffer(cwVector4D* pVertexBuffer);
+	
+	virtual CWVOID transformBuffer();
 
 protected:
 	cwTexture* m_pTexture;

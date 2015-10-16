@@ -159,21 +159,30 @@ CWVOID cwSprite::initVertexBuffer(cwVector4D* pVertexBuffer)
 	pVertexBuffer[3].set(-fHalfTexWidth, fHalfTexHeight, 0, 1.0f);
 	pVertexBuffer[4].set(fHalfTexWidth, fHalfTexHeight, 0, 1.0f);
 	pVertexBuffer[5].set(fHalfTexWidth, -fHalfTexHeight, 0, 1.0f);
-
-	m_nBoundingBox.m_nMin = pVertexBuffer[0];
-	m_nBoundingBox.m_nMax = pVertexBuffer[4];
 }
 
 CWVOID cwSprite::refreshTransform()
 {
 	cwRenderNode::refreshTransform();
+	transformBuffer();
+}
 
+CWVOID cwSprite::transformBuffer()
+{
 	cwVector4D nVertex[6];
 	initVertexBuffer(nVertex);
 
 	for (CWUINT i = 0; i < 6; ++i) {
 		m_pVertexBuffer[i].pos = nVertex[i] * m_nTrans;
 	}
+
+	m_nBoundingBox.m_nMin = m_pVertexBuffer[0].pos;
+	m_nBoundingBox.m_nMax = m_pVertexBuffer[4].pos;
+}
+
+CWVOID cwSprite::refreshBoundingBox()
+{
+
 }
 
 NS_MINIR_END
