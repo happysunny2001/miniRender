@@ -353,4 +353,29 @@ CWVOID cwEngine::clearVisibleNodes()
 	m_uNodeVectorCounter = 0;
 }
 
+CWVOID cwEngine::resize()
+{
+	cwRepertory& repertory = cwRepertory::getInstance();
+
+	CWFLOAT fov = repertory.getFloat(gValueFov);
+	CWFLOAT nearZ = repertory.getFloat(gValueNearZ);
+	CWFLOAT farZ = repertory.getFloat(gValueFarZ);
+	CWINT width = repertory.getUInt(gValueWinWidth);
+	CWINT height = repertory.getUInt(gValueWinHeight);
+	CWFLOAT aspect = (CWFLOAT)width / (CWFLOAT)height;
+
+	for (auto it = m_nMapCameras.begin(); it != m_nMapCameras.end(); ++it) {
+		it->second->updateProjMatrixFov(fov, aspect, nearZ, farZ);
+	}
+
+	m_pLabelFrameRate->setPosition(CWFLOAT(-(width >> 1)) + 30.0f, CWFLOAT(-(height >> 1)) + 10.0f);
+	m_pLabelFrameRate->transform();
+	m_pLabelFrameRate->refreshTransform();
+	m_pLabelFrameRate->refreshBoundingBox();
+
+	if (m_pRenderer) {
+		m_pRenderer->resize();
+	}
+}
+
 NS_MINIR_END

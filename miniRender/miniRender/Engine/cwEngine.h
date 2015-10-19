@@ -82,6 +82,8 @@ public:
 	CWVOID addNode2D(cwRenderNode2D* pNode2D);
 	CWVOID removeNode2D(cwRenderNode2D* pNode2D);
 
+	CWVOID resize();
+
 	virtual cwVector<cwRenderNode*>* getVisibleNodes(cwCamera*, eSceneObjectType eType = eSceneObjectEntity);
 
 protected:

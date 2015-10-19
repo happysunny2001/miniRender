@@ -39,6 +39,11 @@ public:
 		CWFLOAT fWidth, CWFLOAT fHeight,
 		CWFLOAT fMinDepth, CWFLOAT fMaxDepth);
 
+	virtual CWVOID refresh(
+		CWFLOAT fTopLeftX, CWFLOAT fTopLeftY,
+		CWFLOAT fWidth, CWFLOAT fHeight,
+		CWFLOAT fMinDepth, CWFLOAT fMaxDepth);
+
 	virtual CWVOID binding();
 
 	inline CWFLOAT getTopLeftX() const { return m_fTopLeftX; }

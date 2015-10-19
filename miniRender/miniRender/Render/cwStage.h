@@ -58,7 +58,7 @@ public:
 	inline cwCamera* getCamera() const { return m_pCamera; }
 	CWVOID setCamera(cwCamera* pCamera);
 
-	inline cwViewPort* getViewPort() const { return m_pViewPort; }
+	//inline cwViewPort* getViewPort() const { return m_pViewPort; }
 	inline cwRenderTexture* getRenderTexture() const { return m_pRenderTarget; }
 
 	CWVOID addStageTexture(const CWSTRING& strName, cwTexture* pTexture);
@@ -88,7 +88,6 @@ public:
 	CWVOID setName(const CWSTRING& strName) { m_strName = strName; }
 	CWVOID setType(eStageType eType) { m_eType = eType; }
 	CWVOID setEnable(CWBOOL bEnable) { m_bEnable = bEnable; }
-	CWVOID setViewPort(cwViewPort* pView);
 	CWVOID setRenderTexture(cwRenderTexture* pRenderTexture);
 	CWVOID setRefreshRenderTarget(CWBOOL bRefresh);
 	CWVOID addRenderGenerator(cwRenderGenerator* pGenerator);
@@ -105,7 +104,6 @@ protected:
 	CWSTRING m_strCameraName;
 	cwCamera* m_pCamera;
 	
-	cwViewPort* m_pViewPort;
 	cwRenderTexture* m_pRenderTarget;
 	CWBOOL m_bRefreshRenderTarget;
 	CWBOOL m_bClearColor;

@@ -46,7 +46,6 @@ protected:
 	CWVOID parseElement(cwStage* pStage, tinyxml2::XMLElement* pStageData);
 	CWVOID parseAttribute(cwStage* pStage, tinyxml2::XMLElement* pStageData);
 	CWVOID parseCamera(cwStage* pStage, tinyxml2::XMLElement* pStageData);
-	CWVOID parseViewPort(cwStage* pStage, tinyxml2::XMLElement* pStageData);
 	CWVOID parseRenderTarget(cwStage* pStage, tinyxml2::XMLElement* pStageData);
 	CWVOID parseLayer(cwStage* pStage, tinyxml2::XMLElement* pStageData);
 

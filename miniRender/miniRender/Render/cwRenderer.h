@@ -36,6 +36,7 @@ class cwShader;
 class cwEffect;
 class cwPrimitiveEntity;
 class cwSpriteManager;
+class cwViewPort;
 
 class cwRenderer : public cwRef
 {
@@ -56,7 +57,10 @@ public:
 	virtual CWBOOL init();
 
 	virtual CWVOID setCurrCamera(cwCamera* pCamera);
+	virtual CWVOID setRendererCamera(cwCamera* pCamera);
 	virtual CWVOID setCurrShader(cwShader* pShader);
+
+	virtual CWVOID createViewPort(CWFLOAT fTopLeftX, CWFLOAT fTopLeftY, CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fMinDepth, CWFLOAT fMaxDepth);
 
 	virtual CWVOID addStage(cwStage* pStage);
 	virtual CWVOID addStageRealTime(cwStage* pStage);
@@ -64,6 +68,8 @@ public:
 	virtual cwStage* getStage(const CWSTRING& strName);
 	inline cwStage* getCurrRenderStage() const { return m_pCurrRenderStage; }
 	inline cwCamera* getCurrCamera() const { return m_pCurrCamera; }
+	inline cwCamera* getRendererCamera() const { return m_pRendererCamera; }
+	virtual cwRay getWorldRay(CWFLOAT fPosX, CWFLOAT fPosY);
 
 	const CWSTRING& getFullPath() const { return m_strFullPath; }
 	CWVOID setFullPath(const CWSTRING& strPath) { m_strFullPath = strPath; }
@@ -71,6 +77,7 @@ public:
 	virtual CWVOID begin();
 	virtual CWVOID render();
 	virtual CWVOID end();
+	virtual CWVOID resize();
 
 	virtual CWVOID render(cwRenderBatch* pBatch);
 	virtual CWVOID configLight();
@@ -105,6 +112,16 @@ protected:
 	sRendererListNode m_nListNodePool[CW_RENDERER_LIST_POOL_SIZE];
 	CWUINT m_iListPoolIndex;
 	sRendererListNode* m_pRenderListHead;
+
+	cwViewPort* m_pViewPort;
+	CWFLOAT m_fViewPortTopLeftX;
+	CWFLOAT m_fViewPortTopLeftY;
+	CWFLOAT m_fViewPortWidth;
+	CWFLOAT m_fViewPortHeight;
+	CWFLOAT m_fViewPortMinDepth;
+	CWFLOAT m_fViewPortMaxDepth;
+
+	cwCamera* m_pRendererCamera;
 
 	cwCamera* m_pCurrCamera;
 	cwShader* m_pCurrShader;

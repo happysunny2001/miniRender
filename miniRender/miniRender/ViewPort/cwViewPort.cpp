@@ -51,6 +51,19 @@ CWBOOL cwViewPort::init(
 	return true;
 }
 
+CWVOID cwViewPort::refresh(
+	CWFLOAT fTopLeftX, CWFLOAT fTopLeftY,
+	CWFLOAT fWidth, CWFLOAT fHeight,
+	CWFLOAT fMinDepth, CWFLOAT fMaxDepth)
+{
+	m_fTopLeftX = fTopLeftX;
+	m_fTopLeftY = fTopLeftY;
+	m_fWidth = fWidth;
+	m_fHeight = fHeight;
+	m_fMinDepth = fMinDepth;
+	m_fMaxDepth = fMaxDepth;
+}
+
 CWVOID cwViewPort::binding()
 {
 

@@ -46,7 +46,6 @@ cwStage::cwStage() :
 m_pCamera(nullptr),
 m_bEnable(CWTRUE),
 m_eType(eStageTypeNormal),
-m_pViewPort(nullptr),
 m_pRenderTarget(nullptr),
 m_bClearColor(CWTRUE),
 m_bClearDepth(CWTRUE),
@@ -59,21 +58,11 @@ m_bRefreshRenderTarget(CWTRUE)
 cwStage::~cwStage()
 {
 	CW_SAFE_RELEASE_NULL(m_pCamera);
-	CW_SAFE_RELEASE_NULL(m_pViewPort);
 	CW_SAFE_RELEASE_NULL(m_pRenderTarget);
 
 	clearStageEntity();
 	clearStageLayer(CWTRUE);
 	clearStageGenerator();
-}
-
-CWVOID cwStage::setViewPort(cwViewPort* pView)
-{
-	if (m_pViewPort == pView) return;
-
-	CW_SAFE_RETAIN(pView);
-	CW_SAFE_RELEASE_NULL(m_pViewPort);
-	m_pViewPort = pView;
 }
 
 CWVOID cwStage::setRenderTexture(cwRenderTexture* pRenderTexture)
@@ -115,7 +104,6 @@ CWVOID cwStage::begin()
 	reset();
 
 	cwRepertory::getInstance().getEngine()->getRenderer()->setCurrCamera(m_pCamera);
-	cwRepertory::getInstance().getDevice()->setViewPort(m_pViewPort);
 	if (m_bRefreshRenderTarget) {
 		cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTarget);
 		cwRepertory::getInstance().getDevice()->beginDraw(m_bClearColor, m_bClearDepth, m_bClearStencil);
@@ -126,13 +114,10 @@ cwVector<cwRenderNode*>* cwStage::getRenderEntities(cwCamera* pCamera, eStageLay
 {
 	if (eType == eStageLayerFliterStage) return &m_nVecStageEntities;
 
-	//cwScene* pScene = cwRepertory::getInstance().getEngine()->getCurrScene();
 	switch (eType) {
 		case eStageLayerFliterEntity:
-			//return &(pScene->getVisibleEntities(m_pCamera));
 			return cwRepertory::getInstance().getEngine()->getVisibleNodes(m_pCamera);
 		case eStageLayerFliterMirror:
-			//return &(pScene->getVisibleEntities(m_pCamera, eSceneObjectMirror));
 			return cwRepertory::getInstance().getEngine()->getVisibleNodes(m_pCamera, eSceneObjectMirror);
 	}
 

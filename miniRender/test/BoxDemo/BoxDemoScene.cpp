@@ -241,5 +241,5 @@ void BoxDemoScene::buildCamera()
 	m_pTestCamera->yaw(-0.5f*cwMathUtil::cwPI);
 	m_pTestCamera->walk(-20);
 
-	m_pTestCamera->updateProjMatrix(0.25f*cwMathUtil::cwPI, 800.0f / 600.0f, 1.0f, 30.0f);
+	m_pTestCamera->updateProjMatrixFov(0.25f*cwMathUtil::cwPI, 800.0f / 600.0f, 1.0f, 30.0f);
 }

@@ -24,6 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwTextureParser.h"
 #include "Render/cwStage.h"
 #include "Render/cwStageLayer.h"
+#include "Render/cwRenderer.h"
 #include "Device/cwDevice.h"
 #include "Repertory/cwRepertory.h"
 #include "ViewPort/cwViewPort.h"
@@ -49,7 +50,6 @@ cwStageParser::cwStageParser()
 {
 	m_nMapParser["Stage"]        = CW_CALLBACK_2(cwStageParser::parseAttribute, this);
 	m_nMapParser["Camera"]       = CW_CALLBACK_2(cwStageParser::parseCamera, this);
-	m_nMapParser["ViewPort"]     = CW_CALLBACK_2(cwStageParser::parseViewPort, this);
 	m_nMapParser["RenderTarget"] = CW_CALLBACK_2(cwStageParser::parseRenderTarget, this);
 	m_nMapParser["Layer"]        = CW_CALLBACK_2(cwStageParser::parseLayer, this);
 }
@@ -121,33 +121,8 @@ CWVOID cwStageParser::parseAttribute(cwStage* pStage, tinyxml2::XMLElement* pSta
 CWVOID cwStageParser::parseCamera(cwStage* pStage, tinyxml2::XMLElement* pCameraData)
 {
 	const CWCHAR* pcCameraName = pCameraData->Attribute("Name");
-	pStage->setCameraName(pcCameraName);
-}
-
-CWVOID cwStageParser::parseViewPort(cwStage* pStage, tinyxml2::XMLElement* pViewPortData)
-{
-	const CWCHAR* pcViewPortName = pViewPortData->Attribute("Name");
-	if (pcViewPortName && strncmp(pcViewPortName, "default", 7) == 0) return;
-
-	CWFLOAT fTopLeftX = pViewPortData->FloatAttribute("TopLeftX");
-	CWFLOAT fTopLeftY = pViewPortData->FloatAttribute("TopLeftY");
-	CWFLOAT fWidth    = pViewPortData->FloatAttribute("Width");
-	CWFLOAT fHeight   = pViewPortData->FloatAttribute("Height");
-	CWFLOAT fMinDepth = pViewPortData->FloatAttribute("MinDepth");
-	CWFLOAT fMaxDepth = pViewPortData->FloatAttribute("MaxDepth");
-
-	if (fWidth < 0) {
-		fWidth = static_cast<CWFLOAT>(cwRepertory::getInstance().getUInt(gValueWinWidth));
-	}
-
-	if (fHeight < 0) {
-		fHeight = static_cast<CWFLOAT>(cwRepertory::getInstance().getUInt(gValueWinHeight));
-	}
-
-	cwViewPort* pViewPort = cwRepertory::getInstance().getDevice()->createViewPort(fTopLeftX, fTopLeftY, fWidth, fHeight, fMinDepth, fMaxDepth);
-	if (!pViewPort) return;
-
-	pStage->setViewPort(pViewPort);
+	if (pcCameraName)
+		pStage->setCameraName(pcCameraName);
 }
 
 CWVOID cwStageParser::parseRenderTarget(cwStage* pStage, tinyxml2::XMLElement* pRenderTarget)
@@ -239,7 +214,11 @@ CWVOID cwStageParser::deferParse(cwStage* pStage, tinyxml2::XMLElement* pStageEl
 		}
 	}
 
-	pStage->setCamera(cwRepertory::getInstance().getEngine()->getCamera(pStage->getCameraName()));
+	const CWSTRING& strCameraName = pStage->getCameraName();
+	if (strCameraName.empty())
+		pStage->setCamera(cwRepertory::getInstance().getEngine()->getRenderer()->getRendererCamera());
+	else
+		pStage->setCamera(cwRepertory::getInstance().getEngine()->getCamera(pStage->getCameraName()));
 
 	m_nMapStageLayer.clear();
 }

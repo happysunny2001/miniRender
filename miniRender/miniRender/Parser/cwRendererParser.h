@@ -24,6 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwBasicType.h"
 #include "Ref/cwRef.h"
 #include "Render/cwRenderer.h"
+#include "tinyxml2.h"
 
 NS_MINIR_BEGIN
 
@@ -33,6 +34,8 @@ public:
 	static cwRendererParser* create();
 	
 	cwRenderer* parse(const CWSTRING& strFileName);
+	CWVOID parseViewPort(cwRenderer* pRenderer, tinyxml2::XMLElement* pViewPortData);
+	CWVOID parseCamera(cwRenderer* pRenderer, tinyxml2::XMLElement* pCameraData);
 	CWVOID deferParse(cwRenderer* pRender);
 
 };

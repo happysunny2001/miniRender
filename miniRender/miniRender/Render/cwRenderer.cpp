@@ -54,7 +54,9 @@ m_iListPoolIndex(0),
 m_pRenderListHead(nullptr),
 m_pCurrRenderStage(nullptr),
 m_pPrimitiveEntity(nullptr),
-m_pPrimitiveBatch(nullptr)
+m_pPrimitiveBatch(nullptr),
+m_pViewPort(nullptr),
+m_pRendererCamera(nullptr)
 {
 
 }
@@ -64,6 +66,8 @@ cwRenderer::~cwRenderer()
 	m_nVecStage.clear();
 	CW_SAFE_RELEASE_NULL(m_pPrimitiveEntity);
 	CW_SAFE_DELETE(m_pPrimitiveBatch);
+	CW_SAFE_RELEASE_NULL(m_pViewPort);
+	CW_SAFE_RELEASE_NULL(m_pRendererCamera);
 
 	m_pCurrCamera = nullptr;
 	m_pCurrShader = nullptr;
@@ -132,11 +136,53 @@ CWVOID cwRenderer::setCurrCamera(cwCamera* pCamera)
 	m_pCurrCamera = pCamera;
 }
 
+CWVOID cwRenderer::setRendererCamera(cwCamera* pCamera)
+{
+	if (m_pRendererCamera == pCamera) return;
+	CW_SAFE_RETAIN(pCamera);
+	CW_SAFE_RELEASE_NULL(m_pRendererCamera);
+	m_pRendererCamera = pCamera;
+}
+
 CWVOID cwRenderer::setCurrShader(cwShader* pShader)
 {
 	if (m_pCurrShader == pShader) return;
 	m_pCurrShader = pShader;
 	configLight();
+}
+
+CWVOID cwRenderer::createViewPort(CWFLOAT fTopLeftX, CWFLOAT fTopLeftY, CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fMinDepth, CWFLOAT fMaxDepth)
+{
+	m_fViewPortTopLeftX = fTopLeftX;
+	m_fViewPortTopLeftY = fTopLeftY;
+	m_fViewPortWidth = fWidth;
+	m_fViewPortHeight = fHeight;
+	m_fViewPortMinDepth = fMinDepth;
+	m_fViewPortMaxDepth = fMaxDepth;
+
+	CW_SAFE_RELEASE_NULL(m_pViewPort);
+
+	CWUINT winWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
+	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
+
+	m_pViewPort = cwRepertory::getInstance().getDevice()->createViewPort(
+		m_fViewPortTopLeftX*(CWFLOAT)winWidth, m_fViewPortTopLeftY*(CWFLOAT)winHeight,
+		m_fViewPortWidth*(CWFLOAT)winWidth, m_fViewPortHeight*(CWFLOAT)winHeight,
+		m_fViewPortMinDepth, m_fViewPortMaxDepth);
+	CW_SAFE_RETAIN(m_pViewPort);
+}
+
+CWVOID cwRenderer::resize()
+{
+	CWUINT winWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
+	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
+
+	if (m_pViewPort) {
+		m_pViewPort->refresh(
+			m_fViewPortTopLeftX*(CWFLOAT)winWidth, m_fViewPortTopLeftY*(CWFLOAT)winHeight,
+			m_fViewPortWidth*(CWFLOAT)winWidth, m_fViewPortHeight*(CWFLOAT)winHeight,
+			m_fViewPortMinDepth, m_fViewPortMaxDepth);
+	}
 }
 
 CWVOID cwRenderer::addStage(cwStage* pStage)
@@ -176,6 +222,8 @@ CWVOID cwRenderer::begin()
 CWVOID cwRenderer::render()
 {
 	CWBOOL bPrimitive = CWFALSE;
+
+	cwRepertory::getInstance().getDevice()->setViewPort(m_pViewPort);
 
 	if (m_pRenderListHead) {
 		sRendererListNode* pElement = nullptr;
@@ -317,6 +365,20 @@ CWVOID cwRenderer::configSpotLight()
 	}
 
 	m_pCurrShader->setVariableInt(eShaderParamSpotLightCnt, (CWINT)(vecLight.size()));
+}
+
+cwRay cwRenderer::getWorldRay(CWFLOAT fPosX, CWFLOAT fPosY)
+{
+	cwRay ray;
+
+	const cwMatrix4X4& matProj = m_pRendererCamera->getViewProjMatrix();
+	CWUINT winWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
+	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
+
+	CWFLOAT fViewPortLeftX = fPosX - (CWFLOAT)winWidth*m_fViewPortTopLeftX;
+	CWFLOAT fViewPortLeftY = fPosY - (CWFLOAT)winWidth*m_fViewPortTopLeftY;
+
+	return ray;
 }
 
 NS_MINIR_END

@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwParserManager.h"
 #include "Render/cwStage.h"
 #include "Repertory/cwRepertory.h"
+#include "Engine/cwEngine.h"
 #include "tinyxml2.h"
 
 NS_MINIR_BEGIN
@@ -67,9 +68,40 @@ cwRenderer* cwRendererParser::parse(const CWSTRING& strFileName)
 		}
 	}
 
+	tinyxml2::XMLElement* pViewPortNode = pRendererElement->FirstChildElement("ViewPort");
+	parseViewPort(pRenderer, pViewPortNode);
+
+	tinyxml2::XMLElement* pCameraNode = pRendererElement->FirstChildElement("Camera");
+	parseCamera(pRenderer, pCameraNode);
+
 	pRenderer->setFullPath(strFileName);
 
 	return pRenderer;
+}
+
+CWVOID cwRendererParser::parseViewPort(cwRenderer* pRenderer, tinyxml2::XMLElement* pViewPortData)
+{
+	if (!pRenderer || !pViewPortData) return;
+
+	CWFLOAT fTopLeftX = pViewPortData->FloatAttribute("TopLeftX");
+	CWFLOAT fTopLeftY = pViewPortData->FloatAttribute("TopLeftY");
+	CWFLOAT fWidth = pViewPortData->FloatAttribute("Width");
+	CWFLOAT fHeight = pViewPortData->FloatAttribute("Height");
+	CWFLOAT fMinDepth = pViewPortData->FloatAttribute("MinDepth");
+	CWFLOAT fMaxDepth = pViewPortData->FloatAttribute("MaxDepth");
+
+	pRenderer->createViewPort(fTopLeftX, fTopLeftY, fWidth, fHeight, fMinDepth, fMaxDepth);
+}
+
+CWVOID cwRendererParser::parseCamera(cwRenderer* pRenderer, tinyxml2::XMLElement* pCameraData)
+{
+	if (!pRenderer || !pCameraData) return;
+
+	const CWCHAR* pcCameraName = pCameraData->Attribute("Name");
+	if (pcCameraName)
+		pRenderer->setRendererCamera(cwRepertory::getInstance().getEngine()->getCamera(pcCameraName));
+	else
+		pRenderer->setRendererCamera(cwRepertory::getInstance().getEngine()->getCamera("Default"));
 }
 
 CWVOID cwRendererParser::deferParse(cwRenderer* pRenderer)

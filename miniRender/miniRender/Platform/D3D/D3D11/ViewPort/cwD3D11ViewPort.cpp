@@ -56,6 +56,21 @@ CWBOOL cwD3D11ViewPort::init(
 	return true;
 }
 
+CWVOID cwD3D11ViewPort::refresh(
+	CWFLOAT fTopLeftX, CWFLOAT fTopLeftY,
+	CWFLOAT fWidth, CWFLOAT fHeight,
+	CWFLOAT fMinDepth, CWFLOAT fMaxDepth)
+{
+	cwViewPort::refresh(fTopLeftX, fTopLeftY, fWidth, fHeight, fMinDepth, fMaxDepth);
+
+	m_nD3D11ViewPort.TopLeftX = fTopLeftX;
+	m_nD3D11ViewPort.TopLeftY = fTopLeftY;
+	m_nD3D11ViewPort.Width = fWidth;
+	m_nD3D11ViewPort.Height = fHeight;
+	m_nD3D11ViewPort.MinDepth = fMinDepth;
+	m_nD3D11ViewPort.MaxDepth = fMaxDepth;
+}
+
 CWVOID cwD3D11ViewPort::binding()
 {
 	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());

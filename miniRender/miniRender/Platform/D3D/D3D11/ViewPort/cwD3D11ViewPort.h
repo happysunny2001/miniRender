@@ -42,6 +42,11 @@ public:
 		CWFLOAT fWidth, CWFLOAT fHeight,
 		CWFLOAT fMinDepth, CWFLOAT fMaxDepth) override;
 
+	virtual CWVOID refresh(
+		CWFLOAT fTopLeftX, CWFLOAT fTopLeftY,
+		CWFLOAT fWidth, CWFLOAT fHeight,
+		CWFLOAT fMinDepth, CWFLOAT fMaxDepth) override;
+
 	virtual CWVOID binding() override;
 
 protected:

@@ -165,16 +165,17 @@ CWVOID cwApplication::onResize(CWUINT width, CWUINT height)
 	repertory.addValue(gValueWinWidth, cwValueMap(width));
 	repertory.addValue(gValueWinHeight, cwValueMap(height));
 	repertory.getDevice()->resize();
+	repertory.getEngine()->resize();
 
-	CWFLOAT fov = repertory.getFloat(gValueFov);
-	CWFLOAT nearZ = repertory.getFloat(gValueNearZ);
-	CWFLOAT farZ = repertory.getFloat(gValueFarZ);
-	CWFLOAT aspect = (CWFLOAT)width / (CWFLOAT)height;
+	//CWFLOAT fov = repertory.getFloat(gValueFov);
+	//CWFLOAT nearZ = repertory.getFloat(gValueNearZ);
+	//CWFLOAT farZ = repertory.getFloat(gValueFarZ);
+	//CWFLOAT aspect = (CWFLOAT)width / (CWFLOAT)height;
 
-	cwCamera* pCamera = repertory.getEngine()->getCamera("Default");
-	if (pCamera) {
-		pCamera->updateProjMatrixFov(fov, aspect, nearZ, farZ);
-	}
+	//cwCamera* pCamera = repertory.getEngine()->getCamera("Default");
+	//if (pCamera) {
+	//	pCamera->updateProjMatrixFov(fov, aspect, nearZ, farZ);
+	//}
 }
 
 CWVOID cwApplication::onResize()
