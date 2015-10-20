@@ -135,6 +135,22 @@ CWVOID cwPrimitiveEntity::addPrimitive(const cwAABB& aabb, const cwVector4D& col
 	m_uVertexCnt += 24;
 }
 
+CWVOID cwPrimitiveEntity::addPrimitive(const cwRay& ray)
+{
+	addPrimitive(ray, 100.0f, m_pMaterial->getDiffuse());
+}
+
+CWVOID cwPrimitiveEntity::addPrimitive(const cwRay& ray, CWFLOAT fLen, const cwVector4D& color)
+{
+	m_pVertexData[m_uVertexCnt + 0].pos = ray.m_nOrigin;
+	m_pVertexData[m_uVertexCnt + 0].color = color;
+
+	m_pVertexData[m_uVertexCnt + 1].pos = ray.m_nOrigin + ray.m_nDir*fLen;
+	m_pVertexData[m_uVertexCnt + 1].color = color;
+
+	m_uVertexCnt += 2;
+}
+
 CWVOID cwPrimitiveEntity::addPrimitive(cwCamera* pCamera)
 {
 	addPrimitive(pCamera, m_pMaterial->getDiffuse());

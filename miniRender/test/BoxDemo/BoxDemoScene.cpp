@@ -141,11 +141,17 @@ void BoxDemoScene::update(CWFLOAT dt)
 		m_nVecEntities.at(0)->rotate(0, dt*cwMathUtil::cwPI*0.03f, 0);
 	}
 
-	//repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox01->getBoundingBox(), cwColor::sliver);
+	if (m_nTestRay.intersection(m_pEntity01->getBoundingBox()))
+		repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntity01->getBoundingBox(), cwColor::blue);
+	else
+		repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntity01->getBoundingBox(), cwColor::sliver);
+
+	repertory.getEngine()->getRenderer()->renderPrimitive(m_nTestRay);
+	//repertory.getEngine()->getRenderer()->renderPrimitive(m_nTestRay, cwColor::sliver);
 	//repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox02->getBoundingBox(), cwColor::sliver);
 	//repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox01->getGroupBoundingBox(), cwColor::sliver);
-	repertory.getEngine()->getSpatial()->renderPrimitiveFrame();
-	repertory.getEngine()->getRenderer()->renderPrimitive(m_pTestCamera);
+	//repertory.getEngine()->getSpatial()->renderPrimitiveFrame();
+	//repertory.getEngine()->getRenderer()->renderPrimitive(m_pTestCamera);
 
 	//for (auto pEntity : m_nVecEntities)
 	//	pEntity->setVisible(CWTRUE);
@@ -208,10 +214,10 @@ void BoxDemoScene::buildScene()
 	buildRenderObject();
 	buildAxis();
 
-	cwEntity* pEntityBox01 = buildEntity();
-	pEntityBox01->setPosition(cwVector3D(3.0, 3.0, 2.0));
-	this->addChild(pEntityBox01);
-	m_nVecEntities.pushBack(pEntityBox01);
+	m_pEntity01 = buildEntity();
+	m_pEntity01->setPosition(cwVector3D(3.0, 3.0, 2.0));
+	this->addChild(m_pEntity01);
+	m_nVecEntities.pushBack(m_pEntity01);
 }
 
 CWVOID BoxDemoScene::createRandomEntity()
@@ -242,4 +248,8 @@ void BoxDemoScene::buildCamera()
 	m_pTestCamera->walk(-20);
 
 	m_pTestCamera->updateProjMatrixFov(0.25f*cwMathUtil::cwPI, 800.0f / 600.0f, 1.0f, 30.0f);
+
+	m_nTestRay.m_nOrigin.set(3.0f, 3.0f, -10.0f);
+	m_nTestRay.m_nDir.set(0, 0, 1.0f);
+	m_nTestRay.m_fT = 1000.0f;
 }

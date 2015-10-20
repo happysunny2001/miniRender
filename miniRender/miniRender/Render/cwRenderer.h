@@ -69,7 +69,7 @@ public:
 	inline cwStage* getCurrRenderStage() const { return m_pCurrRenderStage; }
 	inline cwCamera* getCurrCamera() const { return m_pCurrCamera; }
 	inline cwCamera* getRendererCamera() const { return m_pRendererCamera; }
-	virtual cwRay getWorldRay(CWFLOAT fPosX, CWFLOAT fPosY);
+	virtual cwRay getPickingRayWorld(CWFLOAT fPosX, CWFLOAT fPosY);
 
 	const CWSTRING& getFullPath() const { return m_strFullPath; }
 	CWVOID setFullPath(const CWSTRING& strPath) { m_strFullPath = strPath; }
@@ -84,6 +84,9 @@ public:
 
 	CWVOID renderPrimitive(const cwAABB& aabb);
 	CWVOID renderPrimitive(const cwAABB& aabb, const cwVector4D& color);
+
+	CWVOID renderPrimitive(const cwRay& ray);
+	CWVOID renderPrimitive(const cwRay& ray, CWFLOAT fLen, const cwVector4D& color);
 
 	CWVOID renderPrimitive(cwCamera* pCamera);
 	CWVOID renderPrimitive(cwCamera* pCamera, const cwVector4D& color);

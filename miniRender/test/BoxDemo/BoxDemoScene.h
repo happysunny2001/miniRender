@@ -56,7 +56,9 @@ protected:
 	cwEntity* m_pEntityAxis;
 	cwVector<cwEntity*> m_nVecEntities;
 
+	cwEntity* m_pEntity01;
 	cwCamera* m_pTestCamera;
+	cwRay m_nTestRay;
 
 };
 

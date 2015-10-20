@@ -4,7 +4,7 @@
 	<ViewPort TopLeftX="0.0" TopLeftY="0.0" Width="1.0" Height="1.0" MinDepth="0.0" MaxDepth="1.0" />
 	<Camera Name="Default" />
 	<StageList>
-		<!-- stage Type:[normal, specific], default value:[normal].
+		<!-- stage Type:[normal, ...], default value:[normal], if others, the parser will create specific stage
 			Enable:[True,False], default value:[true]
 			Generator:[None,Mirror...]. Generator:None means none .  Mirror:Generate mirror stage when current stage render over
 			-->

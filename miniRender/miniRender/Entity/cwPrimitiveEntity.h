@@ -46,6 +46,9 @@ public:
 	CWVOID addPrimitive(const cwAABB& aabb);
 	CWVOID addPrimitive(const cwAABB& aabb, const cwVector4D& color);
 
+	CWVOID addPrimitive(const cwRay& ray);
+	CWVOID addPrimitive(const cwRay& ray, CWFLOAT fLen, const cwVector4D& color);
+
 	CWVOID addPrimitive(cwCamera* pCamera);
 	CWVOID addPrimitive(cwCamera* pCamera, const cwVector4D& color);
 

@@ -117,6 +117,20 @@ CWVOID cwRenderer::renderPrimitive(const cwAABB& aabb, const cwVector4D& color)
 	}
 }
 
+CWVOID cwRenderer::renderPrimitive(const cwRay& ray)
+{
+	if (m_pPrimitiveEntity) {
+		m_pPrimitiveEntity->addPrimitive(ray);
+	}
+}
+
+CWVOID cwRenderer::renderPrimitive(const cwRay& ray, CWFLOAT fLen, const cwVector4D& color)
+{
+	if (m_pPrimitiveEntity) {
+		m_pPrimitiveEntity->addPrimitive(ray, fLen, color);
+	}
+}
+
 CWVOID cwRenderer::renderPrimitive(cwCamera* pCamera)
 {
 	if (m_pPrimitiveEntity) {
@@ -367,16 +381,30 @@ CWVOID cwRenderer::configSpotLight()
 	m_pCurrShader->setVariableInt(eShaderParamSpotLightCnt, (CWINT)(vecLight.size()));
 }
 
-cwRay cwRenderer::getWorldRay(CWFLOAT fPosX, CWFLOAT fPosY)
+cwRay cwRenderer::getPickingRayWorld(CWFLOAT fPosX, CWFLOAT fPosY)
 {
 	cwRay ray;
 
-	const cwMatrix4X4& matProj = m_pRendererCamera->getViewProjMatrix();
+	const cwMatrix4X4& matProj = m_pRendererCamera->getProjMatrix();
 	CWUINT winWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
 	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
 
 	CWFLOAT fViewPortLeftX = fPosX - (CWFLOAT)winWidth*m_fViewPortTopLeftX;
-	CWFLOAT fViewPortLeftY = fPosY - (CWFLOAT)winWidth*m_fViewPortTopLeftY;
+	CWFLOAT fViewPortLeftY = fPosY - (CWFLOAT)winHeight*m_fViewPortTopLeftY;
+
+	CWFLOAT fViewWidth  = (CWFLOAT)winWidth*m_fViewPortWidth;
+	CWFLOAT fViewHeight = (CWFLOAT)winHeight*m_fViewPortHeight;
+
+	CWFLOAT vx = (+2.0f * fViewPortLeftX / fViewWidth - 1.0f) / matProj.m11;
+	CWFLOAT vy = (-2.0f * fViewPortLeftY / fViewHeight + 1.0f) / matProj.m22;
+
+	const cwMatrix4X4& matView = m_pRendererCamera->getViewMatrix();
+	if (matView.inverseExist()) {
+		cwMatrix4X4 matInvView = matView.inverse();
+
+		ray.m_nOrigin = cwVector4D(0.0f, 0.0f, 0.0f, 1.0f) * matInvView;
+		ray.m_nDir = cwVector3D(vx, vy, 1.0f) * matInvView;
+	}
 
 	return ray;
 }

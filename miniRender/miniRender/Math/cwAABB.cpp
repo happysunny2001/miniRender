@@ -287,7 +287,7 @@ float cwAABB::closestPoint(const cwPoint3D& p, cwVector3D& ret) const
 //    
 //    return false;
 //}
-
+/*
 int cwAABB::intersection(const cwRay& ray) const
 {
 	cwVector3D rayDelta = ray.m_nDir*(ray.m_fT*0.5f);
@@ -391,6 +391,56 @@ int cwAABB::intersection(const cwRay& ray) const
 			  if (y < this->m_nMin.y || y > this->m_nMax.y) return 0;
 	}
 		break;
+	}
+
+	return 1;
+}*/
+
+int cwAABB::intersection(const cwRay& ray) const
+{
+	float tmin = 0.0f;
+	float tmax = FLT_MAX;
+
+	if (fabs(ray.m_nDir.x) < FLT_EPSILON) {
+		if (ray.m_nOrigin.x < m_nMin.x || ray.m_nOrigin.x > m_nMax.x) return 0;
+	}
+	else {
+		float odd = 1.0f / ray.m_nDir.x;
+		float t1 = (m_nMin.x - ray.m_nOrigin.x)*odd;
+		float t2 = (m_nMax.x - ray.m_nOrigin.x)*odd;
+
+		if (t1 > t2) std::swap(t1, t2);
+		if (t1 > tmin) tmin = t1;
+		if (t2 > tmax) tmax = t2;
+		if (tmin > tmax) return 0;
+	}
+
+	if (fabs(ray.m_nDir.y) < FLT_EPSILON) {
+		if (ray.m_nOrigin.y < m_nMin.y || ray.m_nOrigin.y > m_nMax.y) return 0;
+	}
+	else {
+		float odd = 1.0f / ray.m_nDir.y;
+		float t1 = (m_nMin.y - ray.m_nOrigin.y)*odd;
+		float t2 = (m_nMax.y - ray.m_nOrigin.y)*odd;
+
+		if (t1 > t2) std::swap(t1, t2);
+		if (t1 > tmin) tmin = t1;
+		if (t2 > tmax) tmax = t2;
+		if (tmin > tmax) return 0;
+	}
+
+	if (fabs(ray.m_nDir.z) < FLT_EPSILON) {
+		if (ray.m_nOrigin.z < m_nMin.z || ray.m_nOrigin.z > m_nMax.z) return 0;
+	}
+	else {
+		float odd = 1.0f / ray.m_nDir.z;
+		float t1 = (m_nMin.z - ray.m_nOrigin.z)*odd;
+		float t2 = (m_nMax.z - ray.m_nOrigin.z)*odd;
+
+		if (t1 > t2) std::swap(t1, t2);
+		if (t1 > tmin) tmin = t1;
+		if (t2 > tmax) tmax = t2;
+		if (tmin > tmax) return 0;
 	}
 
 	return 1;
