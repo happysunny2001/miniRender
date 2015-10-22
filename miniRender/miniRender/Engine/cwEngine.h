@@ -45,6 +45,7 @@ class cwRenderNode;
 class cwRenderNode2D;
 class cwSpriteManager;
 class cwLabel;
+class cwTouch;
 
 class CW_DLL cwEngine : public cwRef
 {
@@ -85,6 +86,7 @@ public:
 	CWVOID resize();
 
 	virtual cwVector<cwRenderNode*>* getVisibleNodes(cwCamera*, eSceneObjectType eType = eSceneObjectEntity);
+	virtual cwRenderNode* getScreenClickNode(cwTouch* pTouch);
 
 protected:
 	static cwEngine* create();

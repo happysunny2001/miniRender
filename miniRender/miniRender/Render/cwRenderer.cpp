@@ -404,9 +404,22 @@ cwRay cwRenderer::getPickingRayWorld(CWFLOAT fPosX, CWFLOAT fPosY)
 
 		ray.m_nOrigin = cwVector4D(0.0f, 0.0f, 0.0f, 1.0f) * matInvView;
 		ray.m_nDir = cwVector3D(vx, vy, 1.0f) * matInvView;
+		ray.m_nDir.normalize();
 	}
 
 	return ray;
+}
+
+cwRay cwRenderer::getPickingRayWorld(cwTouch* pTouch)
+{
+	CWUINT winWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
+	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
+
+	CWFLOAT fX = pTouch->getScreenPos().x;
+	CWFLOAT fY = pTouch->getScreenPos().y;
+
+	fY = winHeight - fY;
+	return getPickingRayWorld(fX, fY);
 }
 
 NS_MINIR_END

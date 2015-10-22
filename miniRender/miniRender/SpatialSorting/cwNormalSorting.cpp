@@ -219,7 +219,7 @@ CWVOID cwNormalSorting::renderPrimitiveFrame()
 CWVOID cwNormalSorting::intersection(const cwFrustum& frustum, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
 {
 	for (auto pNode : m_nListNodes) {
-		if (pNode->getType() == eType && pNode->getVisible() == bVisible) {
+		if ((pNode->getType() & eType) && pNode->getVisible() == bVisible) {
 			int iRet = frustum.intersection(pNode->getBoundingBox());
 			if (frustum.isCollide(iRet)) vecRet.pushBack(pNode);
 		}
@@ -229,7 +229,7 @@ CWVOID cwNormalSorting::intersection(const cwFrustum& frustum, cwVector<cwRender
 CWVOID cwNormalSorting::intersection(const cwAABB& aabb, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
 {
 	for (auto pNode : m_nListNodes) {
-		if (pNode->getType() == eType && pNode->getVisible() == bVisible) {
+		if ((pNode->getType() & eType) && pNode->getVisible() == bVisible) {
 			if(aabb.intersection(pNode->getBoundingBox()))
 				vecRet.pushBack(pNode);
 		}
@@ -239,11 +239,42 @@ CWVOID cwNormalSorting::intersection(const cwAABB& aabb, cwVector<cwRenderNode*>
 CWVOID cwNormalSorting::intersection(const cwCircle& circle, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
 {
 	for (auto pNode : m_nListNodes) {
-		if (pNode->getType() == eType && pNode->getVisible() == bVisible) {
+		if ((pNode->getType() & eType) && pNode->getVisible() == bVisible) {
 			if (circle.intersection(pNode->getBoundingBox()))
 				vecRet.pushBack(pNode);
 		}
 	}
+}
+
+CWVOID cwNormalSorting::intersection(const cwRay& ray, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
+{
+	for (auto pNode : m_nListNodes) {
+		if ((pNode->getType() & eType) && pNode->getVisible() == bVisible) {
+			if (pNode->getBoundingBox().intersection(ray)) {
+				vecRet.pushBack(pNode);
+			}
+		}
+	}
+}
+
+cwRenderNode* cwNormalSorting::getNearestNode(const cwRay& ray)
+{
+	cwVector<cwRenderNode*> vecRet;
+
+	intersection(ray, vecRet, eSceneObjectEntity, CWTRUE);
+
+	if (vecRet.empty()) return nullptr;
+
+	cwRenderNode* pNearestNode = nullptr;
+	CWFLOAT fMinDist = cwMathUtil::cwFloatMax;
+	for (auto pNode : vecRet) {
+		if (pNode->getPosition().z < fMinDist) {
+			fMinDist = pNode->getPosition().z;
+			pNearestNode = pNode;
+		}
+	}
+
+	return pNearestNode;
 }
 
 NS_MINIR_END

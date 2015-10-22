@@ -287,114 +287,114 @@ float cwAABB::closestPoint(const cwPoint3D& p, cwVector3D& ret) const
 //    
 //    return false;
 //}
-/*
-int cwAABB::intersection(const cwRay& ray) const
-{
-	cwVector3D rayDelta = ray.m_nDir*(ray.m_fT*0.5f);
-	int inside = 1;
 
-	float xt, xn;
-	if (ray.m_nOrigin.x < this->m_nMin.x) {
-		xt = this->m_nMin.x - ray.m_nOrigin.x;
-		if (xt > rayDelta.x) return 0;
-		xt /= rayDelta.x;
-		inside = 0;
-		xn = -1.0f;
-	}
-	else if (ray.m_nOrigin.x > this->m_nMax.x) {
-		xt = this->m_nMax.x - ray.m_nOrigin.x;
-		if (xt < rayDelta.x) return 0;
-		xt /= rayDelta.x;
-		inside = 0;
-		xn = 1.0f;
-	}
-	else {
-		xt = -1.0f;
-	}
-
-	float yt, yn;
-	if (ray.m_nOrigin.y < this->m_nMin.y) {
-		yt = this->m_nMin.y - ray.m_nOrigin.y;
-		if (yt > rayDelta.y) return 0;
-		yt /= rayDelta.y;
-		inside = 0;
-		yn = -1.0f;
-	}
-	else if (ray.m_nOrigin.y > this->m_nMax.y) {
-		yt = this->m_nMax.y - ray.m_nOrigin.y;
-		if (yt < rayDelta.y) return 0;
-		yt /= rayDelta.y;
-		inside = 0;
-		yn = 1.0f;
-	}
-	else {
-		yt = -1.0f;
-	}
-
-	float zt, zn;
-	if (ray.m_nOrigin.z < this->m_nMin.z) {
-		zt = this->m_nMin.z - ray.m_nOrigin.z;
-		if (zt > rayDelta.z) return 0;
-		zt /= rayDelta.z;
-		inside = 0;
-		zn = -1.0f;
-	}
-	else if (ray.m_nOrigin.z > this->m_nMax.z) {
-		zt = this->m_nMax.z - ray.m_nOrigin.z;
-		if (zt < rayDelta.z) return 0;
-		zt /= rayDelta.z;
-		inside = 0;
-		zn = 1.0f;
-	}
-	else {
-		zt = -1.0f;
-	}
-
-	if (inside) {
-		return 1;
-	}
-
-	int which = 0;
-	float t = xt;
-	if (yt > t) {
-		which = 1;
-		t = yt;
-	}
-
-	if (zt > t) {
-		which = 2;
-		t = zt;
-	}
-
-	switch (which) {
-	case 0:
-	{
-			  float y = ray.m_nOrigin.y + rayDelta.y*t;
-			  if (y < this->m_nMin.y || y > this->m_nMax.y) return 0;
-			  float z = ray.m_nOrigin.z + rayDelta.z*t;
-			  if (z < this->m_nMin.z || z > this->m_nMax.z) return 0;
-	}
-		break;
-	case 1:
-	{
-			  float x = ray.m_nOrigin.x + rayDelta.x*t;
-			  if (x < this->m_nMin.x || x > this->m_nMax.x) return 0;
-			  float z = ray.m_nOrigin.z + rayDelta.z*t;
-			  if (z < this->m_nMin.z || z > this->m_nMax.z) return 0;
-	}
-		break;
-	case 2:
-	{
-			  float x = ray.m_nOrigin.x + rayDelta.x*t;
-			  if (x < this->m_nMin.x || x > this->m_nMax.x) return 0;
-			  float y = ray.m_nOrigin.y + rayDelta.y*t;
-			  if (y < this->m_nMin.y || y > this->m_nMax.y) return 0;
-	}
-		break;
-	}
-
-	return 1;
-}*/
+//int cwAABB::intersection(const cwRay& ray) const
+//{
+//	cwVector3D rayDelta = ray.m_nDir*(ray.m_fT*0.5f);
+//	int inside = 1;
+//
+//	float xt, xn;
+//	if (ray.m_nOrigin.x < this->m_nMin.x) {
+//		xt = this->m_nMin.x - ray.m_nOrigin.x;
+//		if (xt > rayDelta.x) return 0;
+//		xt /= rayDelta.x;
+//		inside = 0;
+//		xn = -1.0f;
+//	}
+//	else if (ray.m_nOrigin.x > this->m_nMax.x) {
+//		xt = this->m_nMax.x - ray.m_nOrigin.x;
+//		if (xt < rayDelta.x) return 0;
+//		xt /= rayDelta.x;
+//		inside = 0;
+//		xn = 1.0f;
+//	}
+//	else {
+//		xt = -1.0f;
+//	}
+//
+//	float yt, yn;
+//	if (ray.m_nOrigin.y < this->m_nMin.y) {
+//		yt = this->m_nMin.y - ray.m_nOrigin.y;
+//		if (yt > rayDelta.y) return 0;
+//		yt /= rayDelta.y;
+//		inside = 0;
+//		yn = -1.0f;
+//	}
+//	else if (ray.m_nOrigin.y > this->m_nMax.y) {
+//		yt = this->m_nMax.y - ray.m_nOrigin.y;
+//		if (yt < rayDelta.y) return 0;
+//		yt /= rayDelta.y;
+//		inside = 0;
+//		yn = 1.0f;
+//	}
+//	else {
+//		yt = -1.0f;
+//	}
+//
+//	float zt, zn;
+//	if (ray.m_nOrigin.z < this->m_nMin.z) {
+//		zt = this->m_nMin.z - ray.m_nOrigin.z;
+//		if (zt > rayDelta.z) return 0;
+//		zt /= rayDelta.z;
+//		inside = 0;
+//		zn = -1.0f;
+//	}
+//	else if (ray.m_nOrigin.z > this->m_nMax.z) {
+//		zt = this->m_nMax.z - ray.m_nOrigin.z;
+//		if (zt < rayDelta.z) return 0;
+//		zt /= rayDelta.z;
+//		inside = 0;
+//		zn = 1.0f;
+//	}
+//	else {
+//		zt = -1.0f;
+//	}
+//
+//	if (inside) {
+//		return 1;
+//	}
+//
+//	int which = 0;
+//	float t = xt;
+//	if (yt > t) {
+//		which = 1;
+//		t = yt;
+//	}
+//
+//	if (zt > t) {
+//		which = 2;
+//		t = zt;
+//	}
+//
+//	switch (which) {
+//	case 0:
+//	{
+//			  float y = ray.m_nOrigin.y + rayDelta.y*t;
+//			  if (y < this->m_nMin.y || y > this->m_nMax.y) return 0;
+//			  float z = ray.m_nOrigin.z + rayDelta.z*t;
+//			  if (z < this->m_nMin.z || z > this->m_nMax.z) return 0;
+//	}
+//		break;
+//	case 1:
+//	{
+//			  float x = ray.m_nOrigin.x + rayDelta.x*t;
+//			  if (x < this->m_nMin.x || x > this->m_nMax.x) return 0;
+//			  float z = ray.m_nOrigin.z + rayDelta.z*t;
+//			  if (z < this->m_nMin.z || z > this->m_nMax.z) return 0;
+//	}
+//		break;
+//	case 2:
+//	{
+//			  float x = ray.m_nOrigin.x + rayDelta.x*t;
+//			  if (x < this->m_nMin.x || x > this->m_nMax.x) return 0;
+//			  float y = ray.m_nOrigin.y + rayDelta.y*t;
+//			  if (y < this->m_nMin.y || y > this->m_nMax.y) return 0;
+//	}
+//		break;
+//	}
+//
+//	return 1;
+//}
 
 int cwAABB::intersection(const cwRay& ray) const
 {
@@ -411,7 +411,7 @@ int cwAABB::intersection(const cwRay& ray) const
 
 		if (t1 > t2) std::swap(t1, t2);
 		if (t1 > tmin) tmin = t1;
-		if (t2 > tmax) tmax = t2;
+		if (t2 < tmax) tmax = t2;
 		if (tmin > tmax) return 0;
 	}
 
@@ -425,7 +425,7 @@ int cwAABB::intersection(const cwRay& ray) const
 
 		if (t1 > t2) std::swap(t1, t2);
 		if (t1 > tmin) tmin = t1;
-		if (t2 > tmax) tmax = t2;
+		if (t2 < tmax) tmax = t2;
 		if (tmin > tmax) return 0;
 	}
 
@@ -439,7 +439,7 @@ int cwAABB::intersection(const cwRay& ray) const
 
 		if (t1 > t2) std::swap(t1, t2);
 		if (t1 > tmin) tmin = t1;
-		if (t2 > tmax) tmax = t2;
+		if (t2 < tmax) tmax = t2;
 		if (tmin > tmax) return 0;
 	}
 

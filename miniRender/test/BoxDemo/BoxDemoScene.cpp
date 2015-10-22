@@ -36,10 +36,9 @@ BoxDemoScene* BoxDemoScene::create()
 BoxDemoScene::BoxDemoScene():
 m_bTouchDown(CWFALSE),
 m_pEntityAxis(nullptr),
-//m_pEntityBox01(nullptr),
-//m_pEntityBox02(nullptr),
 m_pTestCamera(nullptr),
-m_pBoxRenderObj(nullptr)
+m_pBoxRenderObj(nullptr),
+m_pEntityClicked(nullptr)
 {
 
 }
@@ -47,10 +46,9 @@ m_pBoxRenderObj(nullptr)
 BoxDemoScene::~BoxDemoScene()
 {
 	CW_SAFE_RELEASE_NULL(m_pEntityAxis);
-	//CW_SAFE_RELEASE_NULL(m_pEntityBox01);
-	//CW_SAFE_RELEASE_NULL(m_pEntityBox02);
 	CW_SAFE_RELEASE_NULL(m_pTestCamera);
 	CW_SAFE_RELEASE_NULL(m_pBoxRenderObj);
+	m_pEntityClicked = nullptr;
 }
 
 bool BoxDemoScene::init()
@@ -90,6 +88,19 @@ void BoxDemoScene::onTouchDown(cwTouch* pTouch)
 
 void BoxDemoScene::onTouchUp(cwTouch* pTouch)
 {
+	if (m_bTouchDown && pTouch) {
+		/*cwRay ray = cwRepertory::getInstance().getEngine()->getRenderer()->getPickingRayWorld(pTouch);
+
+		for (auto pEntity : m_nVecCollideEntities) {
+			if (ray.intersection(pEntity->getBoundingBox())) {
+				m_pEntityClicked = pEntity;
+				break;
+			}
+		}*/
+
+		m_pEntityClicked = cwRepertory::getInstance().getEngine()->getScreenClickNode(pTouch);
+	}
+
 	m_bTouchDown = false;
 }
 
@@ -125,9 +136,14 @@ void BoxDemoScene::update(CWFLOAT dt)
 		repertory.getEngine()->getDefaultCamera()->walk(-10 * dt);
 	}
 	else if (isKeyDown(KeyCode::P)) {
-		if (m_nVecEntities.size() > 1) {
+		if (m_nVecEntities.size() > 0) {
 			cwEntity* pLastEntity = m_nVecEntities.at(m_nVecEntities.size() - 1);
 			pLastEntity->removeFromParent();
+
+			if (m_pEntityClicked == pLastEntity) {
+				m_pEntityClicked = nullptr;
+			}
+
 			m_nVecEntities.popBack();
 		}
 	}
@@ -135,36 +151,33 @@ void BoxDemoScene::update(CWFLOAT dt)
 		createRandomEntity();
 	}
 
-	m_pTestCamera->yaw(dt*cwMathUtil::cwPI*0.1f);
-
-	if (m_nVecEntities.size() >= 1) {
-		m_nVecEntities.at(0)->rotate(0, dt*cwMathUtil::cwPI*0.03f, 0);
+	static CWFLOAT fRadian = 0;
+	static CWFLOAT fSpeed = cwMathUtil::cwPI*0.1f;
+	if (fRadian >= 2.0f*cwMathUtil::cwPI) {
+		fRadian -= 2.0f*cwMathUtil::cwPI;
 	}
 
-	if (m_nTestRay.intersection(m_pEntity01->getBoundingBox()))
-		repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntity01->getBoundingBox(), cwColor::blue);
-	else
-		repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntity01->getBoundingBox(), cwColor::sliver);
+	fRadian += fSpeed*dt;
+	cwMatrix4X4 mat;
+	mat.setRotation(fRadian, 0, 0);
+	m_nTestRay.m_nDir = cwVector3D(0, 0, 1.0f) * mat;
+	m_nTestRay.m_nDir.normalize();
+
+	m_pTestCamera->yaw(dt*cwMathUtil::cwPI*0.1f);
+	//m_pEntity01->rotate(0, dt*cwMathUtil::cwPI*0.03f, 0);
+
+	//for (auto pEntity : m_nVecCollideEntities) {
+	//	if (m_nTestRay.intersection(pEntity->getBoundingBox()))
+	//		repertory.getEngine()->getRenderer()->renderPrimitive(pEntity->getBoundingBox(), cwColor::blue);
+	//	else
+	//		repertory.getEngine()->getRenderer()->renderPrimitive(pEntity->getBoundingBox(), cwColor::sliver);
+	//}
+
+	if (m_pEntityClicked) {
+		repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityClicked->getBoundingBox(), cwColor::blue);
+	}
 
 	repertory.getEngine()->getRenderer()->renderPrimitive(m_nTestRay);
-	//repertory.getEngine()->getRenderer()->renderPrimitive(m_nTestRay, cwColor::sliver);
-	//repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox02->getBoundingBox(), cwColor::sliver);
-	//repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityBox01->getGroupBoundingBox(), cwColor::sliver);
-	//repertory.getEngine()->getSpatial()->renderPrimitiveFrame();
-	//repertory.getEngine()->getRenderer()->renderPrimitive(m_pTestCamera);
-
-	//for (auto pEntity : m_nVecEntities)
-	//	pEntity->setVisible(CWTRUE);
-
-	//cwVector<cwRenderNode*> vecNode;
-	//repertory.getEngine()->getSpatial()->intersection(m_pTestCamera->getFrustum(), vecNode, eSceneObjectEntity, CWTRUE);
-
-	//for (auto pEntity : m_nVecEntities)
-	//	pEntity->setVisible(CWFALSE);
-
-	//for (auto pNode : vecNode) {
-	//	pNode->setVisible(CWTRUE);
-	//}
 }
 
 void BoxDemoScene::buildRenderObject()
@@ -217,7 +230,27 @@ void BoxDemoScene::buildScene()
 	m_pEntity01 = buildEntity();
 	m_pEntity01->setPosition(cwVector3D(3.0, 3.0, 2.0));
 	this->addChild(m_pEntity01);
-	m_nVecEntities.pushBack(m_pEntity01);
+
+	m_nVecCollideEntities.pushBack(m_pEntity01);
+
+	//cwVector3D v(0, 0, 10.0f);
+	//CWFLOAT fRadian = 0;
+	//CWFLOAT fStep = cwMathUtil::cwPI*2.0f*0.1f;
+
+	//for (CWUINT i = 0; i < 10; ++i) {
+	//	cwEntity* pEntity = buildEntity();
+	//	if (!pEntity) continue;
+
+	//	cwMatrix4X4 mat;
+	//	mat.setRotation(fRadian, 0, 0);
+
+	//	pEntity->setPosition(v*mat);
+	//	m_pEntity01->addChild(pEntity);
+
+	//	m_nVecCollideEntities.pushBack(pEntity);
+
+	//	fRadian += fStep;
+	//}
 }
 
 CWVOID BoxDemoScene::createRandomEntity()
@@ -233,8 +266,8 @@ CWVOID BoxDemoScene::createRandomEntity()
 
 	pEntity->setPosition(pos);
 
-	if (m_nVecEntities.size() >= 1) {
-		m_nVecEntities.at(0)->addChild(pEntity);
+	if (m_pEntity01) {
+		m_pEntity01->addChild(pEntity);
 		m_nVecEntities.pushBack(pEntity);
 	}
 }
@@ -249,7 +282,7 @@ void BoxDemoScene::buildCamera()
 
 	m_pTestCamera->updateProjMatrixFov(0.25f*cwMathUtil::cwPI, 800.0f / 600.0f, 1.0f, 30.0f);
 
-	m_nTestRay.m_nOrigin.set(3.0f, 3.0f, -10.0f);
+	m_nTestRay.m_nOrigin.set(6.0f, 3.0f, -3.0f);
 	m_nTestRay.m_nDir.set(0, 0, 1.0f);
 	m_nTestRay.m_fT = 1000.0f;
 }

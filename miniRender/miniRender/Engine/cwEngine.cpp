@@ -40,6 +40,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Sprite/cwRenderNode2D.h"
 #include "Sprite/cwSpriteManager.h"
 #include "Sprite/cwLabel.h"
+#include "Event/cwTouchEvent.h"
 
 #include <sstream>
 
@@ -330,6 +331,12 @@ cwVector<cwRenderNode*>* cwEngine::getVisibleNodes(cwCamera* pCamera, eSceneObje
 	}
 
 	return nullptr;
+}
+
+cwRenderNode* cwEngine::getScreenClickNode(cwTouch* pTouch)
+{
+	cwRay ray = m_pRenderer->getPickingRayWorld(pTouch);
+	return m_pSpatial->getNearestNode(ray);
 }
 
 cwVector<cwRenderNode*>* cwEngine::getEmptyNodeList()

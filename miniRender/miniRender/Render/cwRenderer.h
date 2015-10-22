@@ -37,6 +37,7 @@ class cwEffect;
 class cwPrimitiveEntity;
 class cwSpriteManager;
 class cwViewPort;
+class cwTouch;
 
 class cwRenderer : public cwRef
 {
@@ -70,6 +71,7 @@ public:
 	inline cwCamera* getCurrCamera() const { return m_pCurrCamera; }
 	inline cwCamera* getRendererCamera() const { return m_pRendererCamera; }
 	virtual cwRay getPickingRayWorld(CWFLOAT fPosX, CWFLOAT fPosY);
+	virtual cwRay getPickingRayWorld(cwTouch* pTouch);
 
 	const CWSTRING& getFullPath() const { return m_strFullPath; }
 	CWVOID setFullPath(const CWSTRING& strPath) { m_strFullPath = strPath; }

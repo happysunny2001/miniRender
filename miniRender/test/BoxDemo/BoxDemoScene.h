@@ -57,8 +57,11 @@ protected:
 	cwVector<cwEntity*> m_nVecEntities;
 
 	cwEntity* m_pEntity01;
+	cwVector<cwEntity*> m_nVecCollideEntities;
 	cwCamera* m_pTestCamera;
 	cwRay m_nTestRay;
+
+	cwRenderNode* m_pEntityClicked;
 
 };
 

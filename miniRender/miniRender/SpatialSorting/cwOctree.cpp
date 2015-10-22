@@ -355,7 +355,7 @@ CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwFrustum& frustum
 	if (!frustum.isCollide(iRet)) return;
 
 	for (auto pNode : pOctreeNode->m_nListObjs) {
-		if (pNode->getVisible() == bVisible && pNode->getType() == eType) {
+		if (pNode->getVisible() == bVisible && (pNode->getType() & eType)) {
 			int iRet = frustum.intersection(pNode->getBoundingBox());
 			if (frustum.isCollide(iRet)) vecRet.pushBack(pNode);
 		}
@@ -378,7 +378,7 @@ CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwAABB& aabb, cwVe
 	if (!pOctreeNode->m_nBox.intersection(aabb)) return;
 
 	for (auto pNode : pOctreeNode->m_nListObjs) {
-		if (pNode->getVisible() == bVisible && pNode->getType() == eType) {
+		if (pNode->getVisible() == bVisible && (pNode->getType() & eType)) {
 			if (aabb.intersection(pNode->getBoundingBox()))
 				vecRet.pushBack(pNode);
 		}
@@ -401,7 +401,7 @@ CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwCircle& circle, 
 	if (!pOctreeNode->m_nBox.intersection(circle)) return;
 
 	for (auto pNode : pOctreeNode->m_nListObjs) {
-		if (pNode->getVisible() == bVisible && pNode->getType() == eType) {
+		if (pNode->getVisible() == bVisible && (pNode->getType() & eType)) {
 			if (circle.intersection(pNode->getBoundingBox()))
 				vecRet.pushBack(pNode);
 		}
@@ -410,6 +410,49 @@ CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwCircle& circle, 
 	for (CWUINT i = 0; i < 8; ++i) {
 		if (pOctreeNode->m_pChildren[i])
 			intersection(pOctreeNode->m_pChildren[i], circle, vecRet, eType, bVisible);
+	}
+}
+
+cwRenderNode* cwOctree::getNearestNode(const cwRay& ray)
+{
+	cwVector<cwRenderNode*> vecRet;
+
+	intersection(ray, vecRet, eSceneObjectEntity, CWTRUE);
+
+	if (vecRet.empty()) return nullptr;
+
+	cwRenderNode* pNearestNode = nullptr;
+	CWFLOAT fMinDist = cwMathUtil::cwFloatMax;
+	for (auto pNode : vecRet) {
+		if (pNode->getPosition().z < fMinDist) {
+			fMinDist = pNode->getPosition().z;
+			pNearestNode = pNode;
+		}
+	}
+
+	return pNearestNode;
+}
+
+CWVOID cwOctree::intersection(const cwRay& ray, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
+{
+	intersection(m_pRoot, ray, vecRet, eType, bVisible);
+}
+
+CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwRay& ray, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
+{
+	if (!pOctreeNode) return;
+	if (!pOctreeNode->m_nBox.intersection(ray)) return;
+
+	for (auto pNode : pOctreeNode->m_nListObjs) {
+		if (pNode->getVisible() == bVisible && (pNode->getType() & eType)) {
+			if (pNode->getBoundingBox().intersection(ray))
+				vecRet.pushBack(pNode);
+		}
+	}
+
+	for (CWUINT i = 0; i < 8; ++i) {
+		if (pOctreeNode->m_pChildren[i])
+			intersection(pOctreeNode->m_pChildren[i], ray, vecRet, eType, bVisible);
 	}
 }
 
