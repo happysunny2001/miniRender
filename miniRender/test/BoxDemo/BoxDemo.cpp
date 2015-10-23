@@ -33,6 +33,7 @@ void BoxDemo::gameBegin()
 	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderScreenQuad.xml");
 	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 30.0f, 0.0f);
 	cwRepertory::getInstance().getEngine()->getDefaultCamera()->pitch(cwMathUtil::cwPI*0.5f);
+	cwRepertory::getInstance().getEngine()->setFrameEnable(CWTRUE);
 
 	BoxDemoScene* pScene = BoxDemoScene::create();
 	cwRepertory::getInstance().getEngine()->setScene(pScene);

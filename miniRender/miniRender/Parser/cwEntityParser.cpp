@@ -33,7 +33,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Effect/cwEffect.h"
 #include "Engine/cwEngine.h"
 #include "Render/cwRenderer.h"
-#include "Render/cwStage.h"
+#include "Render/Stage/cwStage.h"
 #include "cwEffectParser.h"
 #include "cwParserManager.h"
 

@@ -26,8 +26,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Entity/cwEntity.h"
 #include "Device/cwDevice.h"
 #include "cwStageLayer.h"
-#include "cwRenderer.h"
-#include "Generator/cwRenderGenerator.h"
+#include "Render/cwRenderer.h"
+#include "Render/Generator/cwRenderGenerator.h"
 
 NS_MINIR_BEGIN
 

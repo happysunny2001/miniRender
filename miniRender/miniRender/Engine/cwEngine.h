@@ -80,6 +80,7 @@ public:
 	inline cwRenderer* getRenderer() const { return m_pRenderer; }
 	virtual CWVOID loadRenderer(const CWSTRING& strConfFile);
 
+	CWVOID renderSprite();
 	CWVOID addNode2D(cwRenderNode2D* pNode2D);
 	CWVOID removeNode2D(cwRenderNode2D* pNode2D);
 
@@ -103,7 +104,6 @@ protected:
 
 	CWVOID buildSpriteManager();
 	CWVOID buildFrameRateLabel();
-	CWVOID renderSprite();
 	CWVOID refreshFrameRate(CWFLOAT dt);
 
 	friend class cwRenderer;

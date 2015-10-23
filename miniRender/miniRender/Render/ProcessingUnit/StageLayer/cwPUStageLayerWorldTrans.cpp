@@ -18,7 +18,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwPUStageLayerWorldTrans.h"
-#include "Render/cwStageLayer.h"
+#include "Render/Stage/cwStageLayer.h"
 #include "Render/cwRenderPipeline.h"
 #include "Render/cwRenderBatch.h"
 

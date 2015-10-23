@@ -24,8 +24,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Blend/cwBlend.h"
 #include "Stencil/cwStencil.h"
 #include "Engine/cwEngine.h"
-#include "Render/cwStageLayer.h"
-#include "Render/cwStage.h"
+#include "Render/Stage/cwStageLayer.h"
+#include "Render/Stage/cwStage.h"
 #include "Render/cwRenderer.h"
 #include "Render/cwRenderer.h"
 

@@ -27,7 +27,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "ViewPort/cwViewPort.h"
 #include "Texture/cwRenderTexture.h"
 #include "Parser/cwStageParser.h"
-#include "cwRenderPipeline.h"
+#include "Render/cwRenderPipeline.h"
 #include "Ref/cwRef.h"
 
 #include <unordered_map>
@@ -70,10 +70,10 @@ public:
 	inline CWVOID setIsClearDepth(CWBOOL bClear) { m_bClearDepth = bClear; }
 	inline CWVOID setIsClearStencil(CWBOOL bClear) { m_bClearStencil = bClear; }
 
-	CWVOID reset();
-	CWVOID begin();
-	CWVOID render();
-	CWVOID end();
+	virtual CWVOID reset();
+	virtual CWVOID begin();
+	virtual CWVOID render();
+	virtual CWVOID end();
 
 	CWVOID addStageEntity(cwEntity* pEntity);
 	CWVOID addStageLayer(cwStageLayer* pLayer);

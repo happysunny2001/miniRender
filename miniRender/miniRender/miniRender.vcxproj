@@ -144,8 +144,10 @@
     <ClInclude Include="Render\cwRenderBatch.h" />
     <ClInclude Include="Render\cwRenderer.h" />
     <ClInclude Include="Render\cwRenderPipeline.h" />
-    <ClInclude Include="Render\cwStage.h" />
-    <ClInclude Include="Render\cwStageLayer.h" />
+    <ClInclude Include="Render\Stage\cwPrimitiveStage.h" />
+    <ClInclude Include="Render\Stage\cwSpriteStage.h" />
+    <ClInclude Include="Render\Stage\cwStage.h" />
+    <ClInclude Include="Render\Stage\cwStageLayer.h" />
     <ClInclude Include="Render\Generator\cwRenderGenerator.h" />
     <ClInclude Include="Render\Generator\cwStageMirrorGenerator.h" />
     <ClInclude Include="Render\ProcessingUnit\cwPURender.h" />
@@ -281,8 +283,10 @@
     <ClCompile Include="Render\cwRenderBatch.cpp" />
     <ClCompile Include="Render\cwRenderer.cpp" />
     <ClCompile Include="Render\cwRenderPipeline.cpp" />
-    <ClCompile Include="Render\cwStage.cpp" />
-    <ClCompile Include="Render\cwStageLayer.cpp" />
+    <ClCompile Include="Render\Stage\cwPrimitiveStage.cpp" />
+    <ClCompile Include="Render\Stage\cwSpriteStage.cpp" />
+    <ClCompile Include="Render\Stage\cwStage.cpp" />
+    <ClCompile Include="Render\Stage\cwStageLayer.cpp" />
     <ClCompile Include="Render\Generator\cwRenderGenerator.cpp" />
     <ClCompile Include="Render\Generator\cwStageMirrorGenerator.cpp" />
     <ClCompile Include="Render\ProcessingUnit\cwPURender.cpp" />

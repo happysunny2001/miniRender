@@ -52,6 +52,8 @@ protected:
 	CWVOID parseTextureList(cwStage* pStage, tinyxml2::XMLElement* pStageElement);
 	CWVOID parseEntityList(cwStage* pStage, tinyxml2::XMLElement* pStageElement);
 
+	cwStage* createStage(tinyxml2::XMLElement* pStageData);
+
 protected:
 	std::unordered_map<CWSTRING, std::function<CWVOID(cwStage*, tinyxml2::XMLElement*)>> m_nMapParser;
 	std::unordered_map<cwStageLayer*, tinyxml2::XMLElement*> m_nMapStageLayer;

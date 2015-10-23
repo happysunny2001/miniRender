@@ -164,7 +164,7 @@ void BoxDemoScene::update(CWFLOAT dt)
 	m_nTestRay.m_nDir.normalize();
 
 	m_pTestCamera->yaw(dt*cwMathUtil::cwPI*0.1f);
-	//m_pEntity01->rotate(0, dt*cwMathUtil::cwPI*0.03f, 0);
+	m_pEntity01->rotate(0, dt*cwMathUtil::cwPI*0.03f, 0);
 
 	//for (auto pEntity : m_nVecCollideEntities) {
 	//	if (m_nTestRay.intersection(pEntity->getBoundingBox()))

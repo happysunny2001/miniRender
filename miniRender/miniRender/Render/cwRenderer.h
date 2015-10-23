@@ -93,6 +93,8 @@ public:
 	CWVOID renderPrimitive(cwCamera* pCamera);
 	CWVOID renderPrimitive(cwCamera* pCamera, const cwVector4D& color);
 
+	CWVOID renderPrimitiveEntity();
+
 protected:
 	virtual CWVOID render(cwStage* pStage);
 	virtual CWVOID configDirectionalLight();
@@ -100,7 +102,6 @@ protected:
 	virtual CWVOID configSpotLight();
 
 	CWVOID buildPrimitiveEntity();
-	CWVOID renderPrimitiveEntity();
 
 	sRendererListNode* getAvaiableListNode();
 	sRendererListNode* buildStageList();

@@ -20,7 +20,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwRendererParser.h"
 #include "cwStageParser.h"
 #include "cwParserManager.h"
-#include "Render/cwStage.h"
+#include "Render/Stage/cwStage.h"
 #include "Repertory/cwRepertory.h"
 #include "Engine/cwEngine.h"
 #include "tinyxml2.h"

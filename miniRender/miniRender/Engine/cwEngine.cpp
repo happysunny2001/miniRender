@@ -126,6 +126,7 @@ CWVOID cwEngine::buildFrameRateLabel()
 	CWINT m_uScreenHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
 
 	m_pLabelFrameRate->setPosition(CWFLOAT(-(m_uScreenWidth >> 1)) + 30.0f, CWFLOAT(-(m_uScreenHeight >> 1)) + 10.0f);
+	//m_pLabelFrameRate->setPosition(cwVector3D::ZERO);
 	m_pLabelFrameRate->transform();
 	m_pLabelFrameRate->refreshTransform();
 	m_pLabelFrameRate->refreshBoundingBox();
@@ -246,11 +247,6 @@ CWVOID cwEngine::render()
 	if (m_pRenderer) {
 		m_pRenderer->begin();
 		m_pRenderer->render();
-	}
-	
-	this->renderSprite();
-
-	if (m_pRenderer) {
 		m_pRenderer->end();
 	}
 
@@ -336,7 +332,24 @@ cwVector<cwRenderNode*>* cwEngine::getVisibleNodes(cwCamera* pCamera, eSceneObje
 cwRenderNode* cwEngine::getScreenClickNode(cwTouch* pTouch)
 {
 	cwRay ray = m_pRenderer->getPickingRayWorld(pTouch);
-	return m_pSpatial->getNearestNode(ray);
+
+	cwVector<cwRenderNode*> vecRet;
+	m_pSpatial->intersection(ray, vecRet, eSceneObjectEntity, CWTRUE);
+	if (vecRet.empty()) return nullptr;
+
+	const cwMatrix4X4& matView = m_pRenderer->getRendererCamera()->getViewMatrix();
+
+	cwRenderNode* pNearestNode = nullptr;
+	CWFLOAT fMinDist = cwMathUtil::cwFloatMax;
+	for (auto pNode : vecRet) {
+		cwMatrix4X4 matTrans = pNode->getTransformMatrix()*matView;
+		if (matTrans.m43 < fMinDist) {
+			fMinDist = matTrans.m43;
+			pNearestNode = pNode;
+		}
+	}
+
+	return pNearestNode;
 }
 
 cwVector<cwRenderNode*>* cwEngine::getEmptyNodeList()
@@ -373,6 +386,11 @@ CWVOID cwEngine::resize()
 
 	for (auto it = m_nMapCameras.begin(); it != m_nMapCameras.end(); ++it) {
 		it->second->updateProjMatrixFov(fov, aspect, nearZ, farZ);
+	}
+
+	cwCamera* pOrthoCamera = this->getCamera("Ortho");
+	if (pOrthoCamera) {
+		pOrthoCamera->updateProjMatrix((CWFLOAT)width, (CWFLOAT)height, nearZ, farZ);
 	}
 
 	m_pLabelFrameRate->setPosition(CWFLOAT(-(width >> 1)) + 30.0f, CWFLOAT(-(height >> 1)) + 10.0f);

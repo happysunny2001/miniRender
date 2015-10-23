@@ -4,11 +4,15 @@
 	<Camera Name="Default" />
 	<StageList>
 
-		<Stage Name="S1" Type="normal" Enable="True">
+		<Stage Name="S1" Type="Normal" Enable="True">
 			<RenderTarget Type="texture" Width="1.0" Height="1.0" />
 		</Stage>
 
-		<Stage Name="S2" Type="normal" Enable="True">
+		<Stage Name="SPrimitive" Type="Primitive" Enable="True">
+			<RenderTarget Type="texture" Width="1.0" Height="1.0" />
+		</Stage>
+
+		<Stage Name="S2" Type="Normal" Enable="True">
 			<Camera Name="Homo" />
 			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" />
 			<Layer EntityType="Stage"/>
@@ -34,6 +38,9 @@
 					</Effect>
 				</Entity>
 			</EntityList>
+		</Stage>
+
+		<Stage Name="SSprite" Type="Sprite" Enable="True">
 		</Stage>
 
 	</StageList>

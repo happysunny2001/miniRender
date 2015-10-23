@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Ref/cwRef.h"
-#include "Render/cwStageLayer.h"
+#include "Render/Stage/cwStageLayer.h"
 #include "tinyxml2.h"
 
 #include <functional>

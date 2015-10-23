@@ -24,7 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "Blend/cwBlend.h"
 #include "Stencil/cwStencil.h"
-#include "ProcessingUnit/StageLayer/cwPUStageLayer.h"
+#include "Render/ProcessingUnit/StageLayer/cwPUStageLayer.h"
 
 NS_MINIR_BEGIN
 

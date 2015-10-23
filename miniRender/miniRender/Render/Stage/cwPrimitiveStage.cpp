@@ -17,43 +17,50 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwPUStageLayerRenderState.h"
-#include "Render/Stage/cwStageLayer.h"
+#include "cwPrimitiveStage.h"
+#include "Repertory/cwRepertory.h"
+#include "Engine/cwEngine.h"
+#include "Render/cwRenderer.h"
 
 NS_MINIR_BEGIN
 
-cwPUStageLayerRenderState* cwPUStageLayerRenderState::create()
+cwPrimitiveStage* cwPrimitiveStage::create()
 {
-	cwPUStageLayerRenderState* pPUStageLayer = new cwPUStageLayerRenderState();
-	if (pPUStageLayer) {
-		pPUStageLayer->autorelease();
-		return pPUStageLayer;
+	cwPrimitiveStage* pStage = new cwPrimitiveStage();
+	if (pStage) {
+		pStage->autorelease();
+		return pStage;
 	}
 
 	return nullptr;
 }
 
-cwPUStageLayerRenderState::cwPUStageLayerRenderState() : 
-m_eRenderState(eRenderStateNone)
+cwPrimitiveStage::cwPrimitiveStage()
 {
 
 }
 
-cwPUStageLayerRenderState::~cwPUStageLayerRenderState()
+cwPrimitiveStage::~cwPrimitiveStage()
 {
 
 }
 
-CWVOID cwPUStageLayerRenderState::begin()
+CWVOID cwPrimitiveStage::reset()
 {
-	if (!m_pStageLayer) return;
 
-	if (m_eRenderState != eRenderStateNone) {
-		m_pStageLayer->setRenderState(m_eRenderState);
-	}
 }
 
-CWVOID cwPUStageLayerRenderState::end()
+CWVOID cwPrimitiveStage::begin()
+{
+	reset();
+}
+
+CWVOID cwPrimitiveStage::render()
+{
+	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitiveEntity();
+}
+
+CWVOID cwPrimitiveStage::end()
 {
 
 }

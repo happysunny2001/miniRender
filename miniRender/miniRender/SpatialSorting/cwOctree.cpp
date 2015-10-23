@@ -413,26 +413,6 @@ CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwCircle& circle, 
 	}
 }
 
-cwRenderNode* cwOctree::getNearestNode(const cwRay& ray)
-{
-	cwVector<cwRenderNode*> vecRet;
-
-	intersection(ray, vecRet, eSceneObjectEntity, CWTRUE);
-
-	if (vecRet.empty()) return nullptr;
-
-	cwRenderNode* pNearestNode = nullptr;
-	CWFLOAT fMinDist = cwMathUtil::cwFloatMax;
-	for (auto pNode : vecRet) {
-		if (pNode->getPosition().z < fMinDist) {
-			fMinDist = pNode->getPosition().z;
-			pNearestNode = pNode;
-		}
-	}
-
-	return pNearestNode;
-}
-
 CWVOID cwOctree::intersection(const cwRay& ray, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
 {
 	intersection(m_pRoot, ray, vecRet, eType, bVisible);

@@ -28,7 +28,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Material/cwMaterial.h"
 #include "Effect/cwEffect.h"
 #include "Sprite/cwSpriteManager.h"
-#include "cwStage.h"
+#include "Stage/cwStage.h"
 #include "cwRenderBatch.h"
 
 #include "utlist.h"
@@ -235,8 +235,6 @@ CWVOID cwRenderer::begin()
 
 CWVOID cwRenderer::render()
 {
-	CWBOOL bPrimitive = CWFALSE;
-
 	cwRepertory::getInstance().getDevice()->setViewPort(m_pViewPort);
 
 	if (m_pRenderListHead) {
@@ -244,12 +242,8 @@ CWVOID cwRenderer::render()
 
 		DL_FOREACH(m_pRenderListHead, pElement) {
 			m_pCurrRenderStage = pElement->m_pStage;
-			this->render(m_pCurrRenderStage);
-
-			if (!bPrimitive) {
-				renderPrimitiveEntity();
-				bPrimitive = CWTRUE;
-			}
+			if (m_pCurrRenderStage->getEnable())
+				this->render(m_pCurrRenderStage);
 		}
 	}
 }

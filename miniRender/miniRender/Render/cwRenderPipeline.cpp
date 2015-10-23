@@ -23,7 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Render/cwRenderer.h"
 #include "Engine/cwEngine.h"
 #include "Effect/cwEffect.h"
-#include "cwStageLayer.h"
+#include "Render/Stage/cwStageLayer.h"
 
 NS_MINIR_BEGIN
 

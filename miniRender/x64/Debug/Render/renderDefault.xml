@@ -8,5 +8,8 @@
 			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" />
 		</Stage>
 
+		<Stage Name="SSprite" Type="Sprite" Enable="True">
+		</Stage>
+
 	</StageList>
 </Renderer>

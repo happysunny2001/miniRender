@@ -24,7 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwUtils.h"
 #include "Base/cwVector.h"
 #include "Ref/cwRef.h"
-#include "cwRenderPipeline.h"
+#include "Render/cwRenderPipeline.h"
 
 #include <unordered_map>
 #include <vector>

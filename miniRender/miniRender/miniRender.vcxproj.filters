@@ -360,9 +360,6 @@
     <ClInclude Include="Scheduler\cwScheduleInterface.h">
       <Filter>源文件\Scheduler</Filter>
     </ClInclude>
-    <ClInclude Include="Render\cwStage.h">
-      <Filter>源文件\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Texture\cwRenderTexture.h">
       <Filter>源文件\Texture</Filter>
     </ClInclude>
@@ -407,9 +404,6 @@
     </ClInclude>
     <ClInclude Include="Parser\cwEntityParser.h">
       <Filter>源文件\Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\cwStageLayer.h">
-      <Filter>源文件\Render</Filter>
     </ClInclude>
     <ClInclude Include="Camera\cwHomogeneousCamera.h">
       <Filter>源文件\Camera</Filter>
@@ -618,6 +612,18 @@
     <ClInclude Include="Sprite\cwLabel.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Render\Stage\cwStageLayer.h">
+      <Filter>源文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Stage\cwSpriteStage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Stage\cwStage.h">
+      <Filter>源文件\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Stage\cwPrimitiveStage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -794,9 +800,6 @@
     <ClCompile Include="Scheduler\cwScheduleInterface.cpp">
       <Filter>源文件\Scheduler</Filter>
     </ClCompile>
-    <ClCompile Include="Render\cwStage.cpp">
-      <Filter>源文件\Render</Filter>
-    </ClCompile>
     <ClCompile Include="Texture\cwRenderTexture.cpp">
       <Filter>源文件\Texture</Filter>
     </ClCompile>
@@ -841,9 +844,6 @@
     </ClCompile>
     <ClCompile Include="Parser\cwEntityParser.cpp">
       <Filter>源文件\Parser</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\cwStageLayer.cpp">
-      <Filter>源文件\Render</Filter>
     </ClCompile>
     <ClCompile Include="Camera\cwHomogeneousCamera.cpp">
       <Filter>源文件\Camera</Filter>
@@ -1020,6 +1020,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Sprite\cwLabel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Stage\cwSpriteStage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Stage\cwStage.cpp">
+      <Filter>源文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Stage\cwStageLayer.cpp">
+      <Filter>源文件\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Stage\cwPrimitiveStage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

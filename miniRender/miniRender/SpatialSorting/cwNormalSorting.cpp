@@ -257,24 +257,4 @@ CWVOID cwNormalSorting::intersection(const cwRay& ray, cwVector<cwRenderNode*>& 
 	}
 }
 
-cwRenderNode* cwNormalSorting::getNearestNode(const cwRay& ray)
-{
-	cwVector<cwRenderNode*> vecRet;
-
-	intersection(ray, vecRet, eSceneObjectEntity, CWTRUE);
-
-	if (vecRet.empty()) return nullptr;
-
-	cwRenderNode* pNearestNode = nullptr;
-	CWFLOAT fMinDist = cwMathUtil::cwFloatMax;
-	for (auto pNode : vecRet) {
-		if (pNode->getPosition().z < fMinDist) {
-			fMinDist = pNode->getPosition().z;
-			pNearestNode = pNode;
-		}
-	}
-
-	return pNearestNode;
-}
-
 NS_MINIR_END
