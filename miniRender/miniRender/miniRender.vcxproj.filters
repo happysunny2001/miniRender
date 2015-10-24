@@ -624,6 +624,9 @@
     <ClInclude Include="Render\Stage\cwPrimitiveStage.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\cwBaseScene.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -1032,6 +1035,9 @@
       <Filter>源文件\Render</Filter>
     </ClCompile>
     <ClCompile Include="Render\Stage\cwPrimitiveStage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\cwBaseScene.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

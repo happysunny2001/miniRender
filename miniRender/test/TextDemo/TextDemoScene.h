@@ -23,7 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwMiniRender.h"
 NS_USING_MINIR;
 
-class TextDemoScene : public cwScene
+class TextDemoScene : public cwBaseScene
 {
 public:
 	static TextDemoScene* create();
@@ -32,23 +32,13 @@ public:
 	virtual ~TextDemoScene();
 
 	virtual CWBOOL init() override;
-
-	virtual CWVOID onTouchDown(cwTouch* pTouch) override;
-	virtual CWVOID onTouchUp(cwTouch* pTouch) override;
-	virtual CWVOID onTouchMoving(cwTouch* pTouch) override;
-
 	virtual CWVOID update(CWFLOAT dt) override;
-	virtual CWVOID onKeyDown(cwKeyboard* pKey) override;
 
 protected:
 	CWVOID buildText();
 	CWVOID buildSprite();
 
 protected:
-	CWFLOAT m_fLastX;
-	CWFLOAT m_fLastY;
-	CWBOOL m_bTouchDown;
-
 	cwSprite* m_pSpriteCenter;
 	cwSprite* m_pSpriteLeft;
 	cwSprite* m_pSpriteRight;

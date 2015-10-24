@@ -34,7 +34,6 @@ BoxDemoScene* BoxDemoScene::create()
 }
 
 BoxDemoScene::BoxDemoScene():
-m_bTouchDown(CWFALSE),
 m_pEntityAxis(nullptr),
 m_pTestCamera(nullptr),
 m_pBoxRenderObj(nullptr),
@@ -53,37 +52,12 @@ BoxDemoScene::~BoxDemoScene()
 
 bool BoxDemoScene::init()
 {
-	if (!cwScene::init()) return false;
-
-	cwTouchEventListener* pTouchListener = cwTouchEventListener::create();
-	pTouchListener->onTouchDown   = CW_CALLBACK_1(BoxDemoScene::onTouchDown, this);
-	pTouchListener->onTouchUp     = CW_CALLBACK_1(BoxDemoScene::onTouchUp, this);
-	pTouchListener->onTouchMoving = CW_CALLBACK_1(BoxDemoScene::onTouchMoving, this);
-	this->addEventListener(pTouchListener);
-
-	//cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
-	//pKeyListener->onKeyDown = CW_CALLBACK_1(BoxDemoScene::onKeyDown, this);
-	//pKeyListener->onKeyUp   = CW_CALLBACK_1(BoxDemoScene::onKeyUp, this);
-	//this->addEventListener(pKeyListener);
-
-	this->schedulerUpdate();
+	if (!cwBaseScene::init()) return false;
 
 	buildCamera();
 	buildScene();
 
 	return true;
-}
-
-void BoxDemoScene::onTouchDown(cwTouch* pTouch)
-{
-	wstringstream wss;
-	wss << pTouch->getScreenPos().x << "," << pTouch->getScreenPos().y << "\n";
-	OutputDebugString(wss.str().c_str());
-
-	m_fLastX = pTouch->getScreenPos().x;
-	m_fLastY = pTouch->getScreenPos().y;
-
-	m_bTouchDown = true;
 }
 
 void BoxDemoScene::onTouchUp(cwTouch* pTouch)
@@ -101,41 +75,14 @@ void BoxDemoScene::onTouchUp(cwTouch* pTouch)
 		m_pEntityClicked = cwRepertory::getInstance().getEngine()->getScreenClickNode(pTouch);
 	}
 
-	m_bTouchDown = false;
-}
-
-void BoxDemoScene::onTouchMoving(cwTouch* pTouch)
-{
-	if (m_bTouchDown) {
-		CWFLOAT dx = cwMathUtil::angleRadian(pTouch->getScreenPos().x - m_fLastX);
-		CWFLOAT dy = cwMathUtil::angleRadian(pTouch->getScreenPos().y - m_fLastY);
-
-		cwRepertory::getInstance().getEngine()->getDefaultCamera()->yaw(dx);
-		cwRepertory::getInstance().getEngine()->getDefaultCamera()->pitch(-dy);
-	}
-
-	m_fLastX = pTouch->getScreenPos().x;
-	m_fLastY = pTouch->getScreenPos().y;
+	cwBaseScene::onTouchUp(pTouch);
 }
 
 void BoxDemoScene::update(CWFLOAT dt)
 {
 	cwRepertory& repertory = cwRepertory::getInstance();
 
-	if (isKeyDown(KeyCode::A)) {
-		repertory.getEngine()->getDefaultCamera()->strafe(-10 * dt);
-	}
-	else if (isKeyDown(KeyCode::D)) {
-		repertory.getEngine()->getDefaultCamera()->strafe(10 * dt);
-	}
-
-	if (isKeyDown(KeyCode::W)) {
-		repertory.getEngine()->getDefaultCamera()->walk(10 * dt);
-	}
-	else if (isKeyDown(KeyCode::S)) {
-		repertory.getEngine()->getDefaultCamera()->walk(-10 * dt);
-	}
-	else if (isKeyDown(KeyCode::P)) {
+	if (isKeyDown(KeyCode::P)) {
 		if (m_nVecEntities.size() > 0) {
 			cwEntity* pLastEntity = m_nVecEntities.at(m_nVecEntities.size() - 1);
 			pLastEntity->removeFromParent();
@@ -177,6 +124,7 @@ void BoxDemoScene::update(CWFLOAT dt)
 		repertory.getEngine()->getRenderer()->renderPrimitive(m_pEntityClicked->getBoundingBox(), cwColor::blue);
 	}
 
+	//repertory.getEngine()->getSpatial()->renderPrimitiveFrame();
 	repertory.getEngine()->getRenderer()->renderPrimitive(m_nTestRay);
 }
 

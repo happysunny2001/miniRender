@@ -52,7 +52,7 @@ CWVOID cwLooseOctree::getChildrenBoundingBox(sOctreeNode* pOctreeNode, cwAABB* p
 	const cwVector3D& minPos = pOctreeNode->m_nBox.m_nMin;
 	const cwVector3D& maxPos = pOctreeNode->m_nBox.m_nMax;
 	cwVector3D center = pOctreeNode->m_nBox.center();
-	float fOffset = (maxPos.x - minPos.x)*0.25f;
+	float fOffset = (maxPos.x - minPos.x)*0.1f;
 	cwVector3D offset(fOffset, fOffset, fOffset);
 
 	pAabb[eOctreeTopFarLeft].m_nMin.set(minPos.x - fOffset, center.y - fOffset, center.z - fOffset);

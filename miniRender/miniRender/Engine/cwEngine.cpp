@@ -88,7 +88,7 @@ CWBOOL cwEngine::init()
 {
 	buildDefaultCamera();
 	
-	m_pSpatial = cwSpatialFactory::createSpatial("Octree");
+	m_pSpatial = cwSpatialFactory::createSpatial("LooseOctree");
 	CW_SAFE_RETAIN(m_pSpatial);
 
 	buildSpriteManager();

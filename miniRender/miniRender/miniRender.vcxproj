@@ -180,6 +180,7 @@
     <ClInclude Include="Texture\cwTextureManager.h" />
     <ClInclude Include="Text\cwText.h" />
     <ClInclude Include="Timer\cwTimer.h" />
+    <ClInclude Include="Utils\cwBaseScene.h" />
     <ClInclude Include="ViewPort\cwViewPort.h" />
   </ItemGroup>
   <ItemGroup>
@@ -318,6 +319,7 @@
     <ClCompile Include="Texture\cwTextureManager.cpp" />
     <ClCompile Include="Text\cwText.cpp" />
     <ClCompile Include="Timer\cwTimer.cpp" />
+    <ClCompile Include="Utils\cwBaseScene.cpp" />
     <ClCompile Include="ViewPort\cwViewPort.cpp" />
   </ItemGroup>
   <ItemGroup>

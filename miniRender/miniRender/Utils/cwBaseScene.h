@@ -17,45 +17,36 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __BOX_DEMO_SCENE_H__
-#define __BOX_DEMO_SCENE_H__
+#ifndef __CW_BASE_SCENE_H__
+#define __CW_BASE_SCENE_H__
 
-#include "cwMiniRender.h"
-NS_USING_MINIR;
+#include "Base/cwMacros.h"
+#include "Entity/cwScene.h"
 
-class BoxDemoScene : public cwBaseScene
+NS_MINIR_BEGIN
+
+class cwBaseScene : public cwScene
 {
 public:
-	static BoxDemoScene* create();
+	cwBaseScene();
+	virtual ~cwBaseScene();
 
-	BoxDemoScene();
-	virtual ~BoxDemoScene();
+	virtual CWBOOL init() override;
 
-	virtual bool init() override;
-	virtual CWVOID update(CWFLOAT dt) override;
+	virtual CWVOID onTouchDown(cwTouch* pTouch) override;
 	virtual CWVOID onTouchUp(cwTouch* pTouch) override;
+	virtual CWVOID onTouchMoving(cwTouch* pTouch) override;
+
+	virtual CWVOID update(CWFLOAT dt) override;
+	virtual CWVOID onKeyDown(cwKeyboard* pKey) override;
 
 protected:
-	void buildRenderObject();
-	void buildAxis();
-	void buildScene();
-	void buildCamera();
-	cwEntity* buildEntity();
-	CWVOID createRandomEntity();
-
-protected:
-	cwRenderObject* m_pBoxRenderObj;
-	cwEntity* m_pEntityAxis;
-	cwVector<cwEntity*> m_nVecEntities;
-
-	cwEntity* m_pEntity01;
-	cwVector<cwEntity*> m_nVecCollideEntities;
-	cwCamera* m_pTestCamera;
-	cwRay m_nTestRay;
-
-	cwRenderNode* m_pEntityClicked;
+	CWFLOAT m_fLastX;
+	CWFLOAT m_fLastY;
+	CWBOOL m_bTouchDown;
 
 };
 
-#endif
+NS_MINIR_END
 
+#endif

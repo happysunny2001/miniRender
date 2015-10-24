@@ -43,71 +43,12 @@ BlurDemoScene::~BlurDemoScene()
 
 CWBOOL BlurDemoScene::init()
 {
-	if (!cwScene::init()) return CWFALSE;
-
-	cwTouchEventListener* pTouchListener = cwTouchEventListener::create();
-	pTouchListener->onTouchDown = CW_CALLBACK_1(BlurDemoScene::onTouchDown, this);
-	pTouchListener->onTouchUp = CW_CALLBACK_1(BlurDemoScene::onTouchUp, this);
-	pTouchListener->onTouchMoving = CW_CALLBACK_1(BlurDemoScene::onTouchMoving, this);
-	this->addEventListener(pTouchListener);
-
-	//cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
-	//pKeyListener->onKeyDown = CW_CALLBACK_1(BlurDemoScene::onKeyDown, this);
-	//pKeyListener->onKeyUp = CW_CALLBACK_1(BlurDemoScene::onKeyUp, this);
-	//this->addEventListener(pKeyListener);
-
-	this->schedulerUpdate();
-
-	m_bTouchDown = false;
+	if (!cwBaseScene::init()) return CWFALSE;
 
 	buildEntity();
 	buildLight();
 
 	return CWTRUE;
-}
-
-CWVOID BlurDemoScene::onTouchDown(cwTouch* pTouch)
-{
-	m_fLastX = pTouch->getScreenPos().x;
-	m_fLastY = pTouch->getScreenPos().y;
-
-	m_bTouchDown = true;
-}
-
-CWVOID BlurDemoScene::onTouchUp(cwTouch* pTouch)
-{
-	m_bTouchDown = false;
-}
-
-CWVOID BlurDemoScene::onTouchMoving(cwTouch* pTouch)
-{
-	if (m_bTouchDown) {
-		CWFLOAT dx = cwMathUtil::angleRadian(pTouch->getScreenPos().x - m_fLastX);
-		CWFLOAT dy = cwMathUtil::angleRadian(pTouch->getScreenPos().y - m_fLastY);
-
-		cwRepertory::getInstance().getEngine()->getDefaultCamera()->yaw(dx);
-		cwRepertory::getInstance().getEngine()->getDefaultCamera()->pitch(-dy);
-	}
-
-	m_fLastX = pTouch->getScreenPos().x;
-	m_fLastY = pTouch->getScreenPos().y;
-}
-
-void BlurDemoScene::update(CWFLOAT dt)
-{
-	if (isKeyDown(KeyCode::A)) {
-		cwRepertory::getInstance().getEngine()->getDefaultCamera()->strafe(-50 * dt);
-	}
-	else if (isKeyDown(KeyCode::D)) {
-		cwRepertory::getInstance().getEngine()->getDefaultCamera()->strafe(50 * dt);
-	}
-
-	if (isKeyDown(KeyCode::W)) {
-		cwRepertory::getInstance().getEngine()->getDefaultCamera()->walk(50 * dt);
-	}
-	else if (isKeyDown(KeyCode::S)) {
-		cwRepertory::getInstance().getEngine()->getDefaultCamera()->walk(-50 * dt);
-	}
 }
 
 CWVOID BlurDemoScene::buildEntity()

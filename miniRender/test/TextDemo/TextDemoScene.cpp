@@ -50,71 +50,12 @@ TextDemoScene::~TextDemoScene()
 
 CWBOOL TextDemoScene::init()
 {
-	if (!cwScene::init()) return CWFALSE;
-
-	cwTouchEventListener* pTouchListener = cwTouchEventListener::create();
-	pTouchListener->onTouchDown = CW_CALLBACK_1(TextDemoScene::onTouchDown, this);
-	pTouchListener->onTouchUp = CW_CALLBACK_1(TextDemoScene::onTouchUp, this);
-	pTouchListener->onTouchMoving = CW_CALLBACK_1(TextDemoScene::onTouchMoving, this);
-	this->addEventListener(pTouchListener);
-
-	cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
-	pKeyListener->onKeyDown = CW_CALLBACK_1(TextDemoScene::onKeyDown, this);
-	this->addEventListener(pKeyListener);
-
-	this->schedulerUpdate();
-
-	m_bTouchDown = false;
+	if (!cwBaseScene::init()) return CWFALSE;
 
 	buildText();
 	buildSprite();
 
 	return CWTRUE;
-}
-
-CWVOID TextDemoScene::onTouchDown(cwTouch* pTouch)
-{
-	m_fLastX = pTouch->getScreenPos().x;
-	m_fLastY = pTouch->getScreenPos().y;
-
-	m_bTouchDown = true;
-}
-
-CWVOID TextDemoScene::onTouchUp(cwTouch* pTouch)
-{
-	m_bTouchDown = false;
-}
-
-CWVOID TextDemoScene::onTouchMoving(cwTouch* pTouch)
-{
-	if (m_bTouchDown) {
-		CWFLOAT dx = cwMathUtil::angleRadian(pTouch->getScreenPos().x - m_fLastX);
-		CWFLOAT dy = cwMathUtil::angleRadian(pTouch->getScreenPos().y - m_fLastY);
-
-		cwRepertory::getInstance().getEngine()->getDefaultCamera()->yaw(dx);
-		cwRepertory::getInstance().getEngine()->getDefaultCamera()->pitch(-dy);
-	}
-
-	m_fLastX = pTouch->getScreenPos().x;
-	m_fLastY = pTouch->getScreenPos().y;
-}
-
-CWVOID TextDemoScene::onKeyDown(cwKeyboard* pKey)
-{
-	if (pKey) {
-		if (pKey->getKeyCode() == KeyCode::W) {
-			cwRepertory::getInstance().getEngine()->getDefaultCamera()->walk(1.0f);
-		}
-		else if (pKey->getKeyCode() == KeyCode::S) {
-			cwRepertory::getInstance().getEngine()->getDefaultCamera()->walk(-1.0f);
-		}
-		else if (pKey->getKeyCode() == KeyCode::A) {
-			cwRepertory::getInstance().getEngine()->getDefaultCamera()->strafe(-1.0f);
-		}
-		else if (pKey->getKeyCode() == KeyCode::D) {
-			cwRepertory::getInstance().getEngine()->getDefaultCamera()->strafe(1.0f);
-		}
-	}
 }
 
 CWVOID TextDemoScene::update(CWFLOAT dt)

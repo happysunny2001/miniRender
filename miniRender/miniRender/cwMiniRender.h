@@ -80,6 +80,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Sprite/cwRenderNode2D.h"
 #include "Sprite/cwSprite.h"
 #include "Sprite/cwLabel.h"
+#include "Utils/cwBaseScene.h"
 
 #if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
 #include "Platform/Windows/cwWinApplication.h"

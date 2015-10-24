@@ -23,7 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwMiniRender.h"
 NS_USING_MINIR;
 
-class BlurDemoScene : public cwScene
+class BlurDemoScene : public cwBaseScene
 {
 public:
 	static BlurDemoScene* create();
@@ -33,20 +33,11 @@ public:
 
 	virtual CWBOOL init() override;
 
-	virtual CWVOID onTouchDown(cwTouch* pTouch) override;
-	virtual CWVOID onTouchUp(cwTouch* pTouch) override;
-	virtual CWVOID onTouchMoving(cwTouch* pTouch) override;
-
-	virtual void update(CWFLOAT dt) override;
-
 protected:
 	CWVOID buildEntity();
 	CWVOID buildLight();
 
 protected:
-	CWFLOAT m_fLastX;
-	CWFLOAT m_fLastY;
-	CWBOOL m_bTouchDown;
 
 };
 
