@@ -53,6 +53,7 @@ NS_MINIR_BEGIN
 #define CW_SHADER_FOG_START             "gFogStart"
 #define CW_SHADER_FOG_RANGE             "gFogRange"
 #define CW_SHADER_FOG_COLOR             "gFogColor"
+#define CW_SHADER_SKY_CUBE_MAP          "gSkyCubeMap"
 
 typedef enum {
 	eDefShaderColor = 0,
@@ -60,6 +61,7 @@ typedef enum {
 	eDefShaderLightingTex,
 	eDefShaderTex,
 	eDefShaderPosTexColor,
+	eDefShaderSkyDome,
 	eDefShaderMax
 }eDefShaderID;
 

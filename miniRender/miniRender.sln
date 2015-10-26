@@ -25,6 +25,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FrustumDemo", "test\Frustum
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextDemo", "test\TextDemo\TextDemo.vcxproj", "{9E5E0D86-AC3C-4A81-9539-E6F3BDDC951A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CubeMapDemo", "test\CubeMapDemo\CubeMapDemo.vcxproj", "{AAA9B681-B0D8-4B56-86BF-6F12CC95D585}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -159,6 +161,18 @@ Global
 		{9E5E0D86-AC3C-4A81-9539-E6F3BDDC951A}.Release|Win32.ActiveCfg = Release|Win32
 		{9E5E0D86-AC3C-4A81-9539-E6F3BDDC951A}.Release|Win32.Build.0 = Release|Win32
 		{9E5E0D86-AC3C-4A81-9539-E6F3BDDC951A}.Release|x64.ActiveCfg = Release|Win32
+		{AAA9B681-B0D8-4B56-86BF-6F12CC95D585}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{AAA9B681-B0D8-4B56-86BF-6F12CC95D585}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
+		{AAA9B681-B0D8-4B56-86BF-6F12CC95D585}.Debug|Mixed Platforms.Build.0 = Debug|x64
+		{AAA9B681-B0D8-4B56-86BF-6F12CC95D585}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AAA9B681-B0D8-4B56-86BF-6F12CC95D585}.Debug|Win32.Build.0 = Debug|Win32
+		{AAA9B681-B0D8-4B56-86BF-6F12CC95D585}.Debug|x64.ActiveCfg = Debug|Win32
+		{AAA9B681-B0D8-4B56-86BF-6F12CC95D585}.Release|Any CPU.ActiveCfg = Release|Win32
+		{AAA9B681-B0D8-4B56-86BF-6F12CC95D585}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{AAA9B681-B0D8-4B56-86BF-6F12CC95D585}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{AAA9B681-B0D8-4B56-86BF-6F12CC95D585}.Release|Win32.ActiveCfg = Release|Win32
+		{AAA9B681-B0D8-4B56-86BF-6F12CC95D585}.Release|Win32.Build.0 = Release|Win32
+		{AAA9B681-B0D8-4B56-86BF-6F12CC95D585}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -173,5 +187,6 @@ Global
 		{8C10E201-AE29-4EE2-8B75-0C0469DADB9E} = {873F1DFA-D35C-41AC-90AC-1D57C7A7446E}
 		{51E6F88C-CB9C-47AA-9900-5DC904AE16BF} = {873F1DFA-D35C-41AC-90AC-1D57C7A7446E}
 		{9E5E0D86-AC3C-4A81-9539-E6F3BDDC951A} = {873F1DFA-D35C-41AC-90AC-1D57C7A7446E}
+		{AAA9B681-B0D8-4B56-86BF-6F12CC95D585} = {873F1DFA-D35C-41AC-90AC-1D57C7A7446E}
 	EndGlobalSection
 EndGlobal

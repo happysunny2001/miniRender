@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Renderer>
+	<ViewPort TopLeftX="0.0" TopLeftY="0.0" Width="1.0" Height="1.0" MinDepth="0.0" MaxDepth="1.0" />
+	<Camera Name="Default" />
+	<StageList>
+
+		<Stage Name="S1" Type="normal" Enable="True">
+			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" />
+		</Stage>
+
+		<Stage Name="SSky" Type="SkyDome" Enable="True">
+		</Stage>
+
+		<Stage Name="SSprite" Type="Sprite" Enable="True">
+		</Stage>
+
+	</StageList>
+</Renderer>

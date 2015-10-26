@@ -82,6 +82,7 @@ public:
 	virtual cwStencil* createStencil(const cwStencilData& stencliData) = 0;
 
 	virtual cwTexture* createTexture(const CWSTRING& strFileName) = 0;
+	virtual cwTexture* createCubeTexture(const CWSTRING& strFileName) = 0;
 	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) = 0;
 	virtual cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles) = 0;
 

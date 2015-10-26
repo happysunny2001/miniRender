@@ -352,6 +352,7 @@ typedef enum {
 	eShaderParamFogStart,
 	eShaderParamFogRange,
 	eShaderParamFogColor,
+	eShaderParamSkyCubeMap,
 	eShaderParamMax,
 }eShaderParamIndex;
 

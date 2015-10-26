@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Engine/cwEngine.h"
 #include "cwEntity.h"
+#include "cwSkyDome.h"
 
 NS_MINIR_BEGIN
 
@@ -36,14 +37,15 @@ cwScene* cwScene::create()
 	return nullptr;
 }
 
-cwScene::cwScene()
+cwScene::cwScene():
+m_pSkyDome(nullptr)
 {
 	m_eType = eSceneObjectScene;
 }
 
 cwScene::~cwScene()
 {
-
+	CW_SAFE_RELEASE_NULL(m_pSkyDome);
 }
 
 CWBOOL cwScene::init()
@@ -52,32 +54,6 @@ CWBOOL cwScene::init()
 
 	return CWTRUE;
 }
-
-//CWBOOL cwScene::addChild(cwRenderNode* pNode)
-//{
-//	CWBOOL b = cwRenderNode::addChild(pNode);
-//	if (b) {
-//		if (cwRepertory::getInstance().getEngine()->getCurrScene() == this)
-//			cwRepertory::getInstance().getEngine()->insertSpatialNode(pNode);
-//	}
-//	return b;
-//}
-//
-//CWBOOL cwScene::removeChild(cwRenderNode* pNode)
-//{
-//	if (pNode) {
-//		CW_SAFE_RETAIN(pNode);
-//		CWBOOL b = cwRenderNode::removeChild(pNode);
-//		if (b) {
-//			if (cwRepertory::getInstance().getEngine()->getCurrScene() == this)
-//				cwRepertory::getInstance().getEngine()->removeSpatialNode(pNode);
-//		}
-//		CW_SAFE_RELEASE(pNode);
-//		return b;
-//	}
-//
-//	return CWFALSE;
-//}
 
 CWVOID cwScene::addDirectionalLight(cwDirectionalLight* pLight)
 {
@@ -133,28 +109,38 @@ const cwVector<cwSpotLight*>& cwScene::getSpotLights() const
 	return m_nVecSpotLights;
 }
 
-CWVOID cwScene::getRenderNode(eSceneObjectType eType, std::vector<cwRenderNode*>& vecNodes)
+CWBOOL cwScene::createSkyDome(const std::string& strSkyTexture)
 {
-	std::vector<cwRenderNode*> nVecStack;
-	nVecStack.reserve(10);
-	nVecStack.push_back(this);
+	CW_SAFE_RELEASE_NULL(m_pSkyDome);
+	m_pSkyDome = cwSkyDome::create(strSkyTexture);
+	CW_SAFE_RETAIN(m_pSkyDome);
+	if (!m_pSkyDome) return CWFALSE;
 
-	while (!nVecStack.empty()) {
-		cwRenderNode* pLast = nVecStack.back();
-		if (pLast && (pLast->getType() & eType) && pLast->getVisible()) {
-			vecNodes.push_back(pLast);
-		}
-
-		nVecStack.pop_back();
-
-		cwVector<cwRenderNode*>& nVecChildren = pLast->getChildren();
-		if (!nVecChildren.empty()) {
-			for (auto pNode : nVecChildren) {
-				nVecStack.push_back(pNode);
-			}
-		}
-	}
+	return CWTRUE;
 }
+
+//CWVOID cwScene::getRenderNode(eSceneObjectType eType, std::vector<cwRenderNode*>& vecNodes)
+//{
+//	std::vector<cwRenderNode*> nVecStack;
+//	nVecStack.reserve(10);
+//	nVecStack.push_back(this);
+//
+//	while (!nVecStack.empty()) {
+//		cwRenderNode* pLast = nVecStack.back();
+//		if (pLast && (pLast->getType() & eType) && pLast->getVisible()) {
+//			vecNodes.push_back(pLast);
+//		}
+//
+//		nVecStack.pop_back();
+//
+//		cwVector<cwRenderNode*>& nVecChildren = pLast->getChildren();
+//		if (!nVecChildren.empty()) {
+//			for (auto pNode : nVecChildren) {
+//				nVecStack.push_back(pNode);
+//			}
+//		}
+//	}
+//}
 
 //cwVector<cwEntity*>& cwScene::getVisibleEntities(cwCamera* pCamera, eSceneObjectType eType)
 //{

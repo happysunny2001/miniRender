@@ -32,6 +32,7 @@ NS_MINIR_BEGIN
 
 class cwEntity;
 class cwCamera;
+class cwSkyDome;
 
 class CW_DLL cwScene : public cwRenderNode
 {
@@ -42,6 +43,8 @@ public:
 	virtual ~cwScene();
 
 	virtual CWBOOL init() override;
+
+	virtual CWBOOL createSkyDome(const std::string& strSkyTexture);
 
 	virtual CWVOID addDirectionalLight(cwDirectionalLight* pLight);
 	virtual CWVOID addPointLight(cwPointLight* pLight);
@@ -54,14 +57,15 @@ public:
 	const cwVector<cwDirectionalLight*>& getDirectionalLights() const;
 	const cwVector<cwPointLight*>& getPointLights() const;
 	const cwVector<cwSpotLight*>& getSpotLights() const;
+	inline cwSkyDome* getSkyDome() { return m_pSkyDome; }
 
-	CWVOID getRenderNode(eSceneObjectType eType, std::vector<cwRenderNode*>& vecNodes);
+	//CWVOID getRenderNode(eSceneObjectType eType, std::vector<cwRenderNode*>& vecNodes);
 
 protected:
 	cwVector<cwDirectionalLight*> m_nVecDirectionalLights;
 	cwVector<cwPointLight*> m_nVecPointLights;
 	cwVector<cwSpotLight*> m_nVecSpotLights;
-	//cwVector<cwEntity*> m_nVecVisibleEntity;
+	cwSkyDome* m_pSkyDome;
 
 };
 

@@ -35,13 +35,13 @@ struct SpotLight
 
 cbuffer cbLighting
 {
-	DirectionalLight gDirectionalLight[2];  //maxumun supported directional light count is 2
+	DirectionalLight gDirectionalLight[5];  //maxumun supported directional light count is 5
 	int gDirectionalLightCount;             //current active directional light count
 
 	PointLight gPointLight[5];              //maxumun supported point light count is 5
 	int gPointLightCount;                   //current active point light count
 
-	SpotLight gSpotLight[3];                //maxumun supported spot light count is 3
+	SpotLight gSpotLight[5];                //maxumun supported spot light count is 5
 	int gSpotLightCount;			//current active spot light count
 };
 

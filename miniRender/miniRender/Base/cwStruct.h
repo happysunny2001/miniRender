@@ -27,6 +27,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
+typedef struct
+{
+	cwVector3D pos;
+}cwVertexPos;
+
 //vertex structure
 typedef struct 
 {

@@ -627,6 +627,12 @@
     <ClInclude Include="Utils\cwBaseScene.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Entity\cwSkyDome.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Stage\cwSkyDomeStage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -1038,6 +1044,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Utils\cwBaseScene.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\cwSkyDome.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Stage\cwSkyDomeStage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

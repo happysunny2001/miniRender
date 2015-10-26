@@ -36,6 +36,7 @@ public:
 	virtual ~cwTextureManager();
 
 	cwTexture* getTexture(const CWSTRING& strName);
+	cwTexture* getCubeTexture(const CWSTRING& strName);
 	cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles);
 	CWVOID removeTexture(const CWSTRING& strName);
 

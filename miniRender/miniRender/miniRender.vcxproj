@@ -53,6 +53,7 @@
     <ClInclude Include="Entity\cwPrimitiveEntity.h" />
     <ClInclude Include="Entity\cwRenderNode.h" />
     <ClInclude Include="Entity\cwScene.h" />
+    <ClInclude Include="Entity\cwSkyDome.h" />
     <ClInclude Include="Event\cwEvent.h" />
     <ClInclude Include="Event\cwEventDefine.h" />
     <ClInclude Include="Event\cwEventListener.h" />
@@ -145,6 +146,7 @@
     <ClInclude Include="Render\cwRenderer.h" />
     <ClInclude Include="Render\cwRenderPipeline.h" />
     <ClInclude Include="Render\Stage\cwPrimitiveStage.h" />
+    <ClInclude Include="Render\Stage\cwSkyDomeStage.h" />
     <ClInclude Include="Render\Stage\cwSpriteStage.h" />
     <ClInclude Include="Render\Stage\cwStage.h" />
     <ClInclude Include="Render\Stage\cwStageLayer.h" />
@@ -208,6 +210,7 @@
     <ClCompile Include="Entity\cwPrimitiveEntity.cpp" />
     <ClCompile Include="Entity\cwRenderNode.cpp" />
     <ClCompile Include="Entity\cwScene.cpp" />
+    <ClCompile Include="Entity\cwSkyDome.cpp" />
     <ClCompile Include="Event\cwEvent.cpp" />
     <ClCompile Include="Event\cwEventListener.cpp" />
     <ClCompile Include="Event\cwEventManager.cpp" />
@@ -285,6 +288,7 @@
     <ClCompile Include="Render\cwRenderer.cpp" />
     <ClCompile Include="Render\cwRenderPipeline.cpp" />
     <ClCompile Include="Render\Stage\cwPrimitiveStage.cpp" />
+    <ClCompile Include="Render\Stage\cwSkyDomeStage.cpp" />
     <ClCompile Include="Render\Stage\cwSpriteStage.cpp" />
     <ClCompile Include="Render\Stage\cwStage.cpp" />
     <ClCompile Include="Render\Stage\cwStageLayer.cpp" />

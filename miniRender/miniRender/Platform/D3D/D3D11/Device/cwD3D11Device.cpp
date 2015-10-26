@@ -534,8 +534,12 @@ CWVOID cwD3D11Device::setStencil(const cwStencil* pStencil)
 
 cwTexture* cwD3D11Device::createTexture(const CWSTRING& strFileName)
 {
-	cwTexture* pTexture = cwD3D11Texture::create(strFileName);
-	return pTexture;
+	return cwD3D11Texture::create(strFileName);
+}
+
+cwTexture* cwD3D11Device::createCubeTexture(const CWSTRING& strFileName)
+{
+	return cwD3D11Texture::create(strFileName);
 }
 
 cwRenderTexture* cwD3D11Device::createRenderTexture(float fWidth, float fHeight, eRenderTextureType eType)

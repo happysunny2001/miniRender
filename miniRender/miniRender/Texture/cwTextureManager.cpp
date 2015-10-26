@@ -56,6 +56,22 @@ cwTexture* cwTextureManager::getTexture(const string& strName)
 	return nullptr;
 }
 
+cwTexture* cwTextureManager::getCubeTexture(const CWSTRING& strName)
+{
+	auto itFind = m_mapTexture.find(strName);
+	if (itFind != m_mapTexture.end()) return itFind->second;
+
+	CWSTRING strFullPath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strName);
+
+	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createCubeTexture(strFullPath);
+	if (pTex) {
+		m_mapTexture.insert(strName, pTex);
+		return pTex;
+	}
+
+	return nullptr;
+}
+
 void cwTextureManager::removeTexture(const string& strName)
 {
 	m_mapTexture.erase(strName);

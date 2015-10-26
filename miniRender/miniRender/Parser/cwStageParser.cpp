@@ -25,6 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Render/Stage/cwStage.h"
 #include "Render/Stage/cwSpriteStage.h"
 #include "Render/Stage/cwPrimitiveStage.h"
+#include "Render/Stage/cwSkyDomeStage.h"
 #include "Render/Stage/cwStageLayer.h"
 #include "Render/cwRenderer.h"
 #include "Device/cwDevice.h"
@@ -70,6 +71,9 @@ cwStage* cwStageParser::createStage(tinyxml2::XMLElement* pStageData)
 		}
 		else if (strncmp(pcType, "Primitive", 9) == 0) {
 			return cwPrimitiveStage::create();
+		}
+		else if (strncmp(pcType, "SkyDome", 7) == 0) {
+			return cwSkyDomeStage::create();
 		}
 	}
 
