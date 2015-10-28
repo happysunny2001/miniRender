@@ -88,6 +88,8 @@
     <ClInclude Include="Light\cwPointLight.h" />
     <ClInclude Include="Light\cwSpotLight.h" />
     <ClInclude Include="Material\cwMaterial.h" />
+    <ClInclude Include="Material\MaterialUnit\cwMaterialUnit.h" />
+    <ClInclude Include="Material\MaterialUnit\cwMaterialUnitReflect.h" />
     <ClInclude Include="Math\cwAABB.h" />
     <ClInclude Include="Math\cwCircle.h" />
     <ClInclude Include="Math\cwFrustum.h" />
@@ -231,6 +233,8 @@
     <ClCompile Include="Light\cwPointLight.cpp" />
     <ClCompile Include="Light\cwSpotLight.cpp" />
     <ClCompile Include="Material\cwMaterial.cpp" />
+    <ClCompile Include="Material\MaterialUnit\cwMaterialUnit.cpp" />
+    <ClCompile Include="Material\MaterialUnit\cwMaterialUnitReflect.cpp" />
     <ClCompile Include="Math\cwAABB.cpp" />
     <ClCompile Include="Math\cwCircle.cpp" />
     <ClCompile Include="Math\cwFrustum.cpp" />

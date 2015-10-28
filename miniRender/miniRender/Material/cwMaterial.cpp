@@ -176,12 +176,12 @@ void cwMaterial::updateDiffuseTexture()
 
 void cwMaterial::configEffect(cwEffect* pEffect)
 {
-	if (!pEffect) return;
-	cwShader* pShader = pEffect->getShader();
-	if (!pShader) return;
-
-	pShader->setVariableData(eShaderParamMaterial, this->getColorData(), 0, this->getColorDataSize());
-	pShader->setVariableTexture(eShaderParamTexture0, this->getDiffuseTexture());
+	if (pEffect) {
+		cwShader* pShader = pEffect->getShader();
+		if (pShader) {
+			configShader(pShader);
+		}
+	}
 }
 
 CWVOID cwMaterial::configShader(cwShader* pShader)

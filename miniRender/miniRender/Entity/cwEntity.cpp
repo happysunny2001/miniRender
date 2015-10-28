@@ -91,7 +91,7 @@ CWVOID cwEntity::render(cwRenderBatch* pRenderBatch)
 {
 	if (pRenderBatch && pRenderBatch->m_pEffect) {
 		if (m_pMaterial)
-			m_pMaterial->configShader(pRenderBatch->m_pEffect->getShader());
+			m_pMaterial->configEffect(pRenderBatch->m_pEffect);
 
 		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
 		pDevice->draw(pRenderBatch->m_pEffect->getShader(), pRenderBatch->m_pEffect->getTech(), m_pRenderObj);
