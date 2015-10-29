@@ -32,6 +32,7 @@ public:
 	virtual ~CubeMapDemoScene();
 
 	virtual CWBOOL init() override;
+	virtual CWVOID update(CWFLOAT dt) override;
 
 protected:
 	CWVOID buildSphereMaterial();

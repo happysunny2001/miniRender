@@ -52,7 +52,7 @@ public:
 	CWVOID setFliterType(eStageLayerFliterType eType) { m_eFilterType = eType; }
 
 	CWVOID reset();
-	CWVOID begin(cwVector<cwRenderNode*>* vecEntities);
+	CWVOID begin(std::vector<cwRenderNode*>* vecEntities);
 	CWVOID render();
 	CWVOID end();
 
@@ -71,7 +71,7 @@ protected:
 	cwRenderPipeline* getPipeline(cwRenderNode* pEntity);
 	cwRenderPipeline* getUnusePipeline(cwShader* pShader);
 
-	CWVOID addEntities(cwVector<cwRenderNode*>& vecEntities);
+	CWVOID addEntities(std::vector<cwRenderNode*>* vecEntities);
 
 protected:
 	CWSTRING m_nStrName;

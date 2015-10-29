@@ -343,19 +343,19 @@ cwOctree::sOctreeNode* cwOctree::getTreeNodeBelongRude(cwRenderNode* pNode, sOct
 	return nullptr;
 }
 
-CWVOID cwOctree::intersection(const cwFrustum& frustum, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
+CWVOID cwOctree::intersection(const cwFrustum& frustum, cwVector<cwRenderNode*>& vecRet, CWBOOL bVisible)
 {
-	intersection(m_pRoot, frustum, vecRet, eType, bVisible);
+	intersection(m_pRoot, frustum, vecRet, bVisible);
 }
 
-CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwFrustum& frustum, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
+CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwFrustum& frustum, cwVector<cwRenderNode*>& vecRet, CWBOOL bVisible)
 {
 	if (!pOctreeNode) return;
 	int iRet = frustum.intersection(pOctreeNode->m_nBox);
 	if (!frustum.isCollide(iRet)) return;
 
 	for (auto pNode : pOctreeNode->m_nListObjs) {
-		if (pNode->getVisible() == bVisible && (pNode->getType() & eType)) {
+		if (pNode->getVisible() == bVisible) {
 			int iRet = frustum.intersection(pNode->getBoundingBox());
 			if (frustum.isCollide(iRet)) vecRet.pushBack(pNode);
 		}
@@ -363,22 +363,22 @@ CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwFrustum& frustum
 
 	for (CWUINT i = 0; i < 8; ++i) {
 		if (pOctreeNode->m_pChildren[i])
-			intersection(pOctreeNode->m_pChildren[i], frustum, vecRet, eType, bVisible);
+			intersection(pOctreeNode->m_pChildren[i], frustum, vecRet, bVisible);
 	}
 }
 
-CWVOID cwOctree::intersection(const cwAABB& aabb, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
+CWVOID cwOctree::intersection(const cwAABB& aabb, cwVector<cwRenderNode*>& vecRet, CWBOOL bVisible)
 {
-	intersection(m_pRoot, aabb, vecRet, eType, bVisible);
+	intersection(m_pRoot, aabb, vecRet, bVisible);
 }
 
-CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwAABB& aabb, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
+CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwAABB& aabb, cwVector<cwRenderNode*>& vecRet, CWBOOL bVisible)
 {
 	if (!pOctreeNode) return;
 	if (!pOctreeNode->m_nBox.intersection(aabb)) return;
 
 	for (auto pNode : pOctreeNode->m_nListObjs) {
-		if (pNode->getVisible() == bVisible && (pNode->getType() & eType)) {
+		if (pNode->getVisible() == bVisible) {
 			if (aabb.intersection(pNode->getBoundingBox()))
 				vecRet.pushBack(pNode);
 		}
@@ -386,22 +386,22 @@ CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwAABB& aabb, cwVe
 
 	for (CWUINT i = 0; i < 8; ++i) {
 		if (pOctreeNode->m_pChildren[i])
-			intersection(pOctreeNode->m_pChildren[i], aabb, vecRet, eType, bVisible);
+			intersection(pOctreeNode->m_pChildren[i], aabb, vecRet, bVisible);
 	}
 }
 
-CWVOID cwOctree::intersection(const cwCircle& circle, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
+CWVOID cwOctree::intersection(const cwCircle& circle, cwVector<cwRenderNode*>& vecRet, CWBOOL bVisible)
 {
-	intersection(m_pRoot, circle, vecRet, eType, bVisible);
+	intersection(m_pRoot, circle, vecRet, bVisible);
 }
 
-CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwCircle& circle, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
+CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwCircle& circle, cwVector<cwRenderNode*>& vecRet, CWBOOL bVisible)
 {
 	if (!pOctreeNode) return;
 	if (!pOctreeNode->m_nBox.intersection(circle)) return;
 
 	for (auto pNode : pOctreeNode->m_nListObjs) {
-		if (pNode->getVisible() == bVisible && (pNode->getType() & eType)) {
+		if (pNode->getVisible() == bVisible) {
 			if (circle.intersection(pNode->getBoundingBox()))
 				vecRet.pushBack(pNode);
 		}
@@ -409,22 +409,22 @@ CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwCircle& circle, 
 
 	for (CWUINT i = 0; i < 8; ++i) {
 		if (pOctreeNode->m_pChildren[i])
-			intersection(pOctreeNode->m_pChildren[i], circle, vecRet, eType, bVisible);
+			intersection(pOctreeNode->m_pChildren[i], circle, vecRet, bVisible);
 	}
 }
 
-CWVOID cwOctree::intersection(const cwRay& ray, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
+CWVOID cwOctree::intersection(const cwRay& ray, cwVector<cwRenderNode*>& vecRet, CWBOOL bVisible)
 {
-	intersection(m_pRoot, ray, vecRet, eType, bVisible);
+	intersection(m_pRoot, ray, vecRet, bVisible);
 }
 
-CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwRay& ray, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
+CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwRay& ray, cwVector<cwRenderNode*>& vecRet, CWBOOL bVisible)
 {
 	if (!pOctreeNode) return;
 	if (!pOctreeNode->m_nBox.intersection(ray)) return;
 
 	for (auto pNode : pOctreeNode->m_nListObjs) {
-		if (pNode->getVisible() == bVisible && (pNode->getType() & eType)) {
+		if (pNode->getVisible() == bVisible) {
 			if (pNode->getBoundingBox().intersection(ray))
 				vecRet.pushBack(pNode);
 		}
@@ -432,7 +432,7 @@ CWVOID cwOctree::intersection(sOctreeNode* pOctreeNode, const cwRay& ray, cwVect
 
 	for (CWUINT i = 0; i < 8; ++i) {
 		if (pOctreeNode->m_pChildren[i])
-			intersection(pOctreeNode->m_pChildren[i], ray, vecRet, eType, bVisible);
+			intersection(pOctreeNode->m_pChildren[i], ray, vecRet, bVisible);
 	}
 }
 

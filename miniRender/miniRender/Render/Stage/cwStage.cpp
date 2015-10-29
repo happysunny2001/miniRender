@@ -110,24 +110,26 @@ CWVOID cwStage::begin()
 	}
 }
 
-cwVector<cwRenderNode*>* cwStage::getRenderEntities(cwCamera* pCamera, eStageLayerFliterType eType)
+std::vector<cwRenderNode*>* cwStage::getRenderEntities(eStageLayerFliterType eType)
 {
 	if (eType == eStageLayerFliterStage) return &m_nVecStageEntities;
 
+	m_nVecRenderNodes.clear();
+
 	switch (eType) {
 		case eStageLayerFliterEntity:
-			return cwRepertory::getInstance().getEngine()->getVisibleNodes(m_pCamera);
+			cwRepertory::getInstance().getEngine()->getVisibleNodes(m_pCamera, eRenderTypeEntity, m_nVecRenderNodes);
 		case eStageLayerFliterMirror:
-			return cwRepertory::getInstance().getEngine()->getVisibleNodes(m_pCamera, eSceneObjectMirror);
+			cwRepertory::getInstance().getEngine()->getVisibleNodes(m_pCamera, eRenderTypeMirror, m_nVecRenderNodes);
 	}
 
-	return nullptr;
+	return &m_nVecRenderNodes;
 }
 
 CWVOID cwStage::render()
 {
 	for (auto pLayer : m_nVecLayer) {
-		cwVector<cwRenderNode*>* vecEntities = getRenderEntities(nullptr, pLayer->getFliterType());
+		std::vector<cwRenderNode*>* vecEntities = getRenderEntities(pLayer->getFliterType());
 		if (vecEntities) {
 			pLayer->begin(vecEntities);
 		}
@@ -152,7 +154,8 @@ CWVOID cwStage::end()
 CWVOID cwStage::addStageEntity(cwEntity* pEntity)
 {
 	if (!pEntity) return;
-	m_nVecStageEntities.pushBack(pEntity);
+	m_nVecStageEntities.push_back(pEntity);
+	CW_SAFE_RETAIN(pEntity);
 }
 
 CWVOID cwStage::addStageLayer(cwStageLayer* pLayer)
@@ -225,6 +228,9 @@ CWVOID cwStage::clearStageGenerator()
 
 CWVOID cwStage::clearStageEntity()
 {
+	for (auto pNode : m_nVecStageEntities) {
+		CW_SAFE_RELEASE(pNode);
+	}
 	m_nVecStageEntities.clear();
 }
 

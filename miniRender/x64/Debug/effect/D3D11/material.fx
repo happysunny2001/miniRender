@@ -23,6 +23,13 @@ SamplerState samLinear
 	AddressV = WRAP;
 };
 
+SamplerState samTriLinearSam
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
+};
+
 cbuffer cbFog
 {
 	float  gFogStart;             //start fog distance
@@ -43,3 +50,11 @@ Texture2D gTexture4;
 Texture2D gTexture5;
 Texture2D gTexture6;
 Texture2D gTexture7;
+
+TextureCube gSkyCubeMap;
+
+TextureCube gReflectCubeMap;
+cbuffer cbReflectFactor
+{
+	float fReflectFactor;
+};

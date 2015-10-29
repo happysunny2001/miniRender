@@ -41,10 +41,10 @@ public:
 
 	//virtual CWBOOL build(cwScene*) override;
 
-	virtual CWVOID intersection(const cwFrustum&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) override;
-	virtual CWVOID intersection(const cwAABB&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) override;
-	virtual CWVOID intersection(const cwCircle&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) override;
-	virtual CWVOID intersection(const cwRay&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) override;
+	virtual CWVOID intersection(const cwFrustum&, cwVector<cwRenderNode*>&, CWBOOL) override;
+	virtual CWVOID intersection(const cwAABB&, cwVector<cwRenderNode*>&, CWBOOL) override;
+	virtual CWVOID intersection(const cwCircle&, cwVector<cwRenderNode*>&, CWBOOL) override;
+	virtual CWVOID intersection(const cwRay&, cwVector<cwRenderNode*>&, CWBOOL) override;
 
 	virtual CWBOOL insert(cwRenderNode*) override;
 	virtual CWBOOL remove(cwRenderNode*) override;

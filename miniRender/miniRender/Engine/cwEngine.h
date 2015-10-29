@@ -53,7 +53,6 @@ public:
 	struct sVisibleNodesResult
 	{
 		cwCamera* m_pCamera;
-		eSceneObjectType m_eType;
 		cwVector<cwRenderNode*>* m_pVecVisibleNodes;
 	};
 
@@ -86,7 +85,7 @@ public:
 
 	CWVOID resize();
 
-	virtual cwVector<cwRenderNode*>* getVisibleNodes(cwCamera*, eSceneObjectType eType = eSceneObjectEntity);
+	virtual CWVOID getVisibleNodes(cwCamera*, eRenderType, std::vector<cwRenderNode*>&);
 	virtual cwRenderNode* getScreenClickNode(cwTouch* pTouch);
 
 protected:
@@ -105,6 +104,7 @@ protected:
 	CWVOID buildSpriteManager();
 	CWVOID buildFrameRateLabel();
 	CWVOID refreshFrameRate(CWFLOAT dt);
+	CWVOID extractRenderNodes(sVisibleNodesResult&, std::vector<cwRenderNode*>&, eRenderType);
 
 	friend class cwRenderer;
 	friend class cwRepertory;

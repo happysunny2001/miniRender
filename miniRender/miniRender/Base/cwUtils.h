@@ -353,17 +353,23 @@ typedef enum {
 	eShaderParamFogRange,
 	eShaderParamFogColor,
 	eShaderParamSkyCubeMap,
+	eShaderParamReflectCubeMap,
+	eShaderParamReflectFactor,
 	eShaderParamMax,
 }eShaderParamIndex;
 
 typedef enum {
-	eSceneObjectNode   = 1,
-	eSceneObjectEntity = 2,
-	eSceneObjectScene  = 4,
-	eSceneObjectMirror = 8,
-	eSceneObjectNode2D = 16,
-	eSceneObjectSprite = 32 | eSceneObjectNode2D,
-}eSceneObjectType;
+	eRenderTypeNode = 1,
+	eRenderTypeEntity,
+	eRenderTypeBatchEntity,
+	eRenderTypePrimitiveEntity,
+	eRenderTypeScene,
+	eRenderTypeMirror,
+	eRenderTypeNode2D,
+	eRenderTypeSprite,
+
+	eRenderTypeUserBegin = 10000,
+}eRenderType;
 
 typedef enum {
 	eParserStage = 0,

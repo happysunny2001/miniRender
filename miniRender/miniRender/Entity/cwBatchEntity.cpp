@@ -26,7 +26,7 @@ cwBatchEntity::cwBatchEntity() :
 m_uInstanceMaxCount(0),
 m_uInstanceCount(0)
 {
-
+	m_eRenderType = eRenderTypeBatchEntity;
 }
 
 cwBatchEntity::~cwBatchEntity()

@@ -102,6 +102,8 @@ CWVOID cwShaderManager::buildShaderParam()
 	m_strShaderParam[eShaderParamFogRange]            = CW_SHADER_FOG_RANGE;
 	m_strShaderParam[eShaderParamFogColor]            = CW_SHADER_FOG_COLOR;
 	m_strShaderParam[eShaderParamSkyCubeMap]          = CW_SHADER_SKY_CUBE_MAP;
+	m_strShaderParam[eShaderParamReflectCubeMap]      = CW_SHADER_REFLECT_CUBE_MAP;
+	m_strShaderParam[eShaderParamReflectFactor]       = CW_SHADER_REFLECT_FACTOR;
 }
 
 const CWSTRING& cwShaderManager::getShaderParamString(eShaderParamIndex eParam) const

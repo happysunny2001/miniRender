@@ -181,6 +181,8 @@ void cwMaterial::configEffect(cwEffect* pEffect)
 		if (pShader) {
 			configShader(pShader);
 		}
+
+		configUnits(pEffect);
 	}
 }
 
@@ -190,6 +192,21 @@ CWVOID cwMaterial::configShader(cwShader* pShader)
 		pShader->setVariableData(eShaderParamMaterial, this->getColorData(), 0, this->getColorDataSize());
 		pShader->setVariableTexture(eShaderParamTexture0, this->getDiffuseTexture());
 	}
+}
+
+CWVOID cwMaterial::configUnits(cwEffect* pEffect)
+{
+	if (!m_nVecMatUnits.empty()) {
+		for (auto pUnit : m_nVecMatUnits) {
+			pUnit->config(pEffect);
+		}
+	}
+}
+
+CWVOID cwMaterial::addMaterialUnit(cwMaterialUnit* pMatUnit)
+{
+	m_nVecMatUnits.pushBack(pMatUnit);
+	pMatUnit->setParentMaterial(this);
 }
 
 NS_MINIR_END

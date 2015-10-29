@@ -1,13 +1,5 @@
 #include "util.fx"
-
-TextureCube gSkyCubeMap;
-
-SamplerState samTriLinearSam
-{
-	Filter = MIN_MAG_MIP_LINEAR;
-	AddressU = Wrap;
-	AddressV = Wrap;
-};
+#include "material.fx"
 
 struct VertexIn
 {

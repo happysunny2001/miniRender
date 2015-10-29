@@ -216,40 +216,40 @@ CWVOID cwNormalSorting::renderPrimitiveFrame()
 	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(getBoundingBox());
 }
 
-CWVOID cwNormalSorting::intersection(const cwFrustum& frustum, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
+CWVOID cwNormalSorting::intersection(const cwFrustum& frustum, cwVector<cwRenderNode*>& vecRet, CWBOOL bVisible)
 {
 	for (auto pNode : m_nListNodes) {
-		if ((pNode->getType() & eType) && pNode->getVisible() == bVisible) {
+		if (pNode->getVisible() == bVisible) {
 			int iRet = frustum.intersection(pNode->getBoundingBox());
 			if (frustum.isCollide(iRet)) vecRet.pushBack(pNode);
 		}
 	}
 }
 
-CWVOID cwNormalSorting::intersection(const cwAABB& aabb, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
+CWVOID cwNormalSorting::intersection(const cwAABB& aabb, cwVector<cwRenderNode*>& vecRet, CWBOOL bVisible)
 {
 	for (auto pNode : m_nListNodes) {
-		if ((pNode->getType() & eType) && pNode->getVisible() == bVisible) {
+		if (pNode->getVisible() == bVisible) {
 			if(aabb.intersection(pNode->getBoundingBox()))
 				vecRet.pushBack(pNode);
 		}
 	}
 }
 
-CWVOID cwNormalSorting::intersection(const cwCircle& circle, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
+CWVOID cwNormalSorting::intersection(const cwCircle& circle, cwVector<cwRenderNode*>& vecRet, CWBOOL bVisible)
 {
 	for (auto pNode : m_nListNodes) {
-		if ((pNode->getType() & eType) && pNode->getVisible() == bVisible) {
+		if (pNode->getVisible() == bVisible) {
 			if (circle.intersection(pNode->getBoundingBox()))
 				vecRet.pushBack(pNode);
 		}
 	}
 }
 
-CWVOID cwNormalSorting::intersection(const cwRay& ray, cwVector<cwRenderNode*>& vecRet, eSceneObjectType eType, CWBOOL bVisible)
+CWVOID cwNormalSorting::intersection(const cwRay& ray, cwVector<cwRenderNode*>& vecRet, CWBOOL bVisible)
 {
 	for (auto pNode : m_nListNodes) {
-		if ((pNode->getType() & eType) && pNode->getVisible() == bVisible) {
+		if (pNode->getVisible() == bVisible) {
 			if (pNode->getBoundingBox().intersection(ray)) {
 				vecRet.pushBack(pNode);
 			}

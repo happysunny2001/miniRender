@@ -57,7 +57,7 @@ CWBOOL cwMirror::init()
 {
 	if (!cwEntity::init()) return CWFALSE;
 
-	m_eType = eSceneObjectMirror;
+	m_eRenderType = eRenderTypeMirror;
 	m_nReflectPlane.m_nNormal.zero();
 	m_nReflectPlane.m_nNormal.y = 1.0f;
 

@@ -76,10 +76,11 @@ CWVOID cwStageMirrorGenerator::generate()
 	m_pStage->setCamera(pStageCamera);
 	m_pStage->clearStageLayer(CWFALSE);
 
-	cwVector<cwRenderNode*>* pVecNodes = pEngine->getVisibleNodes(pStageCamera, eSceneObjectMirror);
+	std::vector<cwRenderNode*> vecNodes;
+	pEngine->getVisibleNodes(pStageCamera, eRenderTypeMirror, vecNodes);
 
 	CWUINT iIndex = 0;
-	for (auto it = pVecNodes->begin(); it != pVecNodes->end(); ++it) {
+	for (auto it = vecNodes.begin(); it != vecNodes.end(); ++it) {
 		cwStageLayer* pStageLayer = m_nVecEntityStageLayer.at(iIndex);
 		cwMirror* pMirror = static_cast<cwMirror*>(*it);
 
@@ -94,7 +95,7 @@ CWVOID cwStageMirrorGenerator::generate()
 		}
 
 		m_pStage->addStageLayer(pStageLayer);
-		if (++iIndex >= pVecNodes->size()) break;
+		if (++iIndex >= vecNodes.size()) break;
 	}
 
 	m_pStage->addStageLayer(m_pMirrorStageLayer);

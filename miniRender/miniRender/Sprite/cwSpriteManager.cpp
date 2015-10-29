@@ -165,7 +165,7 @@ CWVOID cwSpriteManager::renderNode()
 		cwRenderNode2D* pFront = queueNode.front();
 		queueNode.pop();
 
-		if (pFront->getType() == eSceneObjectSprite) {
+		if (pFront->getRenderType() == eRenderTypeSprite) {
 			renderBatch(static_cast<cwSprite*>(pFront));
 		}
 
@@ -174,7 +174,7 @@ CWVOID cwSpriteManager::renderNode()
 		nVecNodes.reserve(nVecChildren.size());
 
 		for (auto pNode : nVecChildren) {
-			if (pNode->getType() & eSceneObjectNode2D)
+			if (pNode && pNode->getVisible())
 				nVecNodes.push_back(static_cast<cwRenderNode2D*>(pNode));
 		}
 
@@ -241,15 +241,11 @@ CWVOID cwSpriteManager::refreshSprite()
 			cwVector<cwRenderNode*>& nVecChildren = pLast->getChildren();
 			if (!nVecChildren.empty()) {
 				for (auto pChildNode : nVecChildren) {
-					if (pChildNode && pChildNode->getType()&eSceneObjectNode2D)
+					if (pChildNode && pChildNode->getVisible())
 						vecStack.push_back(static_cast<cwRenderNode2D*>(pChildNode));
 				}
 			}
 		}
-	}
-
-	for (auto pNode : m_nDirtyNodes) {
-		pNode->transform();
 	}
 
 	for (auto pNode : m_nDirtyNodes) {
@@ -268,12 +264,16 @@ CWVOID cwSpriteManager::addRefreshNode(cwRenderNode2D* pNode)
 		cwRenderNode2D* pLast = vecStack.back();
 		vecStack.pop_back();
 
+		if (pLast->getTransDirty()) {
+			pLast->transform();
+		}
+
 		m_nDirtyNodes.push_back(pLast);
 
 		cwVector<cwRenderNode*>& nVecChildren = pLast->getChildren();
 		if (!nVecChildren.empty()) {
 			for (auto pChildNode : nVecChildren) {
-				if (pChildNode && pChildNode->getType()&eSceneObjectNode2D)
+				if (pChildNode && pChildNode->getVisible())
 					vecStack.push_back(static_cast<cwRenderNode2D*>(pChildNode));
 			}
 		}

@@ -55,7 +55,7 @@ m_pBlend(nullptr),
 m_pStencil(nullptr),
 m_iTag(0)
 {
-	m_eType = eSceneObjectNode;
+	m_eRenderType = eRenderTypeNode;
 }
 
 cwRenderNode::~cwRenderNode()

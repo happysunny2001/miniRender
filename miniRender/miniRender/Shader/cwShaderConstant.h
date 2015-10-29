@@ -54,6 +54,8 @@ NS_MINIR_BEGIN
 #define CW_SHADER_FOG_RANGE             "gFogRange"
 #define CW_SHADER_FOG_COLOR             "gFogColor"
 #define CW_SHADER_SKY_CUBE_MAP          "gSkyCubeMap"
+#define CW_SHADER_REFLECT_CUBE_MAP      "gReflectCubeMap"
+#define CW_SHADER_REFLECT_FACTOR        "fReflectFactor"
 
 typedef enum {
 	eDefShaderColor = 0,

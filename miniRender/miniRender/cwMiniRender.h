@@ -43,6 +43,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "RenderObject/cwDynamicRenderObject.h"
 #include "Generator/cwGeometryGenerator.h"
 #include "Material/cwMaterial.h"
+#include "Material/MaterialUnit/cwMaterialUnit.h"
+#include "Material/MaterialUnit/cwMaterialUnitReflect.h"
 #include "Light/cwLight.h"
 #include "Light/cwDirectionalLight.h"
 #include "Light/cwPointLight.h"

@@ -54,7 +54,7 @@ cwSprite::cwSprite():
 m_pTexture(nullptr),
 m_pVertexBuffer(nullptr)
 {
-	m_eType = eSceneObjectSprite;
+	m_eRenderType = eRenderTypeSprite;
 	m_nColor.set(1.0f, 1.0f, 1.0f, 1.0f);
 }
 

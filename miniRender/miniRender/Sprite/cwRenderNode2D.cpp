@@ -36,7 +36,7 @@ cwRenderNode2D* cwRenderNode2D::create()
 cwRenderNode2D::cwRenderNode2D():
 m_uRenderOrder(0)
 {
-	m_eType = eSceneObjectNode2D;
+	m_eRenderType = eRenderTypeNode2D;
 }
 
 cwRenderNode2D::~cwRenderNode2D()

@@ -22,8 +22,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
+#include "Base/cwVector.h"
 #include "Math/cwMath.h"
 #include "Ref/cwRef.h"
+#include "MaterialUnit/cwMaterialUnit.h"
 
 NS_MINIR_BEGIN
 
@@ -31,6 +33,7 @@ class cwShader;
 class cwTexture;
 class cwBlend;
 class cwEffect;
+class cwMaterialUnit;
 
 class CW_DLL cwMaterial : public cwRef
 {
@@ -93,7 +96,12 @@ public:
 	inline CWUINT getColorDataSize() { return sizeof(matColor); }
 
 	virtual CWVOID configEffect(cwEffect* pEffect);
+
+	CWVOID addMaterialUnit(cwMaterialUnit* pMatUnit);
+
+protected:
 	virtual CWVOID configShader(cwShader* pShader);
+	virtual CWVOID configUnits(cwEffect* pEffect);
 
 public:
 	matColor m_nMatData;
@@ -103,6 +111,8 @@ public:
 	cwMatrix4X4 m_nDiffuseTrans; //the diffuse texture transform matrix
 	cwVector2D m_nDiffTextureTrans;
 	cwVector2D m_nDiffTextureScale;
+
+	cwVector<cwMaterialUnit*> m_nVecMatUnits;
 	
 };
 

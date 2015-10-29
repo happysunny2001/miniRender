@@ -47,7 +47,7 @@ cwPrimitiveEntity::cwPrimitiveEntity():
 m_pVertexData(nullptr),
 m_uVertexCnt(0)
 {
-
+	m_eRenderType = eRenderTypePrimitiveEntity;
 }
 
 cwPrimitiveEntity::~cwPrimitiveEntity()

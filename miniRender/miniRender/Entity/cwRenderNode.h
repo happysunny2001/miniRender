@@ -75,8 +75,7 @@ public:
 	virtual CWVOID setVisible(CWBOOL b);
 	inline CWBOOL getVisible() const { return m_bVisible; }
 
-	inline eSceneObjectType getType() const { return m_eType; }
-	inline CWVOID setType(eSceneObjectType eType) { m_eType = eType; }
+	inline eRenderType getRenderType() const { return m_eRenderType; }
 
 	virtual CWVOID setEffect(cwEffect* pEffect);
 	inline cwEffect* getEffect() const { return m_pEffect; }
@@ -125,7 +124,7 @@ protected:
 	virtual CWVOID refreshSpatialNode();
 	
 protected:
-	eSceneObjectType m_eType;
+	eRenderType m_eRenderType;
 	CWBOOL m_bVisible;
 
 	cwVector3D m_nPos;

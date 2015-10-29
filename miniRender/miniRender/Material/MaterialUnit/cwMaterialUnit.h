@@ -34,7 +34,7 @@ public:
 	cwMaterialUnit();
 	virtual ~cwMaterialUnit();
 
-	virtual CWBOOL init(cwMaterial* pMaterial);
+	virtual CWBOOL init();
 
 	inline CWVOID setParentMaterial(cwMaterial* pMaterial) { m_pParentMaterial = pMaterial; }
 	inline cwMaterial* getParentMaterial() const { return m_pParentMaterial; }

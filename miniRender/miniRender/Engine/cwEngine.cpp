@@ -299,34 +299,39 @@ CWVOID cwEngine::refreshSpatialNode(cwRenderNode* pNode)
 		m_pSpatial->refresh(pNode);
 }
 
-cwVector<cwRenderNode*>* cwEngine::getVisibleNodes(cwCamera* pCamera, eSceneObjectType eType)
+CWVOID cwEngine::extractRenderNodes(sVisibleNodesResult& result, std::vector<cwRenderNode*>& vecNodes, eRenderType eType)
+{
+	for (auto it = result.m_pVecVisibleNodes->begin(); it != result.m_pVecVisibleNodes->end(); ++it) {
+		if ((*it)->getRenderType() == eType)
+			vecNodes.push_back(*it);
+	}
+}
+
+CWVOID cwEngine::getVisibleNodes(cwCamera* pCamera, eRenderType eType, std::vector<cwRenderNode*>& vecNodes)
 {
 	if (pCamera && m_pSpatial) {
 		sVisibleNodesResult* pCacheResult = nullptr;
 		for (auto it = m_nVisibleResult.begin(); it != m_nVisibleResult.end(); ++it) {
-			if (it->m_pCamera == pCamera && it->m_eType == eType) {
+			if (it->m_pCamera == pCamera) {
 				pCacheResult = &(*it);
 				break;
 			}
 		}
 
 		if (pCacheResult) {
-			return pCacheResult->m_pVecVisibleNodes;
+			extractRenderNodes(*pCacheResult, vecNodes, eType);
 		}
 
 		cwVector<cwRenderNode*>* pVisibleNode = getEmptyNodeList();
-		m_pSpatial->intersection(pCamera->getFrustum(), *pVisibleNode, eType, CWTRUE);
+		m_pSpatial->intersection(pCamera->getFrustum(), *pVisibleNode, CWTRUE);
 
 		sVisibleNodesResult result;
-		result.m_eType = eType;
 		result.m_pCamera = pCamera;
 		result.m_pVecVisibleNodes = pVisibleNode;
 		m_nVisibleResult.push_back(result);
 
-		return pVisibleNode;
+		extractRenderNodes(result, vecNodes, eType);
 	}
-
-	return nullptr;
 }
 
 cwRenderNode* cwEngine::getScreenClickNode(cwTouch* pTouch)
@@ -334,7 +339,7 @@ cwRenderNode* cwEngine::getScreenClickNode(cwTouch* pTouch)
 	cwRay ray = m_pRenderer->getPickingRayWorld(pTouch);
 
 	cwVector<cwRenderNode*> vecRet;
-	m_pSpatial->intersection(ray, vecRet, eSceneObjectEntity, CWTRUE);
+	m_pSpatial->intersection(ray, vecRet, CWTRUE);
 	if (vecRet.empty()) return nullptr;
 
 	const cwMatrix4X4& matView = m_pRenderer->getRendererCamera()->getViewMatrix();
@@ -342,10 +347,12 @@ cwRenderNode* cwEngine::getScreenClickNode(cwTouch* pTouch)
 	cwRenderNode* pNearestNode = nullptr;
 	CWFLOAT fMinDist = cwMathUtil::cwFloatMax;
 	for (auto pNode : vecRet) {
-		cwMatrix4X4 matTrans = pNode->getTransformMatrix()*matView;
-		if (matTrans.m43 < fMinDist) {
-			fMinDist = matTrans.m43;
-			pNearestNode = pNode;
+		if (pNode->getRenderType() == eRenderTypeEntity) {
+			cwMatrix4X4 matTrans = pNode->getTransformMatrix()*matView;
+			if (matTrans.m43 < fMinDist) {
+				fMinDist = matTrans.m43;
+				pNearestNode = pNode;
+			}
 		}
 	}
 

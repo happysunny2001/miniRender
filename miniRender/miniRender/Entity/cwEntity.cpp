@@ -48,7 +48,7 @@ cwEntity::cwEntity():
 m_pRenderObj(nullptr),
 m_pMaterial(nullptr)
 {
-	m_eType = eSceneObjectEntity;
+	m_eRenderType = eRenderTypeEntity;
 }
 
 cwEntity::~cwEntity()

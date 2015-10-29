@@ -30,12 +30,13 @@ class cwTexture;
 class cwMaterialUnitReflect : public cwMaterialUnit
 {
 public:
-	static cwMaterialUnitReflect* create(cwMaterial* pParentMaterial, const CWSTRING& strTexture, CWFLOAT fFactor);
+	static cwMaterialUnitReflect* create(const CWSTRING& strTexture, CWFLOAT fFactor=0.5f);
 
 	cwMaterialUnitReflect();
 	virtual ~cwMaterialUnitReflect();
 
-	virtual CWBOOL init(cwMaterial* pParentMaterial, const CWSTRING& strTexture, CWFLOAT fFactor);
+	virtual CWBOOL init(const CWSTRING& strTexture, CWFLOAT fFactor);
+	virtual CWVOID config(cwEffect* pEffect) override;
 
 protected:
 	cwTexture* m_pReflectTexture;

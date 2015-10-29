@@ -18,19 +18,61 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwMaterialUnitReflect.h"
+#include "Texture/cwTexture.h"
+#include "Texture/cwTextureManager.h"
+#include "Repertory/cwRepertory.h"
+#include "Shader/cwShader.h"
+#include "effect/cwEffect.h"
 
 NS_MINIR_BEGIN
 
-cwMaterialUnitReflect* cwMaterialUnitReflect::create(cwMaterial* pParentMaterial, const CWSTRING& strTexture, CWFLOAT fFactor)
+cwMaterialUnitReflect* cwMaterialUnitReflect::create(const CWSTRING& strTexture, CWFLOAT fFactor)
 {
 	cwMaterialUnitReflect* pMUReflect = new cwMaterialUnitReflect();
-	if (pMUReflect && pMUReflect->init(pParentMaterial, strTexture, fFactor)) {
+	if (pMUReflect && pMUReflect->init(strTexture, fFactor)) {
 		pMUReflect->autorelease();
 		return pMUReflect;
 	}
 
 	CW_SAFE_DELETE(pMUReflect);
 	return nullptr;
+}
+
+cwMaterialUnitReflect::cwMaterialUnitReflect():
+m_pReflectTexture(nullptr),
+m_fReflectFactor(0.5f)
+{
+
+}
+
+cwMaterialUnitReflect::~cwMaterialUnitReflect()
+{
+	CW_SAFE_RELEASE_NULL(m_pReflectTexture);
+}
+
+CWBOOL cwMaterialUnitReflect::init(const CWSTRING& strTexture, CWFLOAT fFactor)
+{
+	if (!cwMaterialUnit::init()) return CWFALSE;
+
+	m_pReflectTexture = cwRepertory::getInstance().getTextureManager()->getCubeTexture(strTexture);
+	if (!m_pReflectTexture) return CWFALSE;
+	CW_SAFE_RETAIN(m_pReflectTexture);
+
+	m_fReflectFactor = fFactor;
+
+	return CWTRUE;
+}
+
+CWVOID cwMaterialUnitReflect::config(cwEffect* pEffect)
+{
+	cwShader* pShader = pEffect->getShader();
+	if (pShader) {
+		if (m_pReflectTexture) {
+			pShader->setVariableTexture(eShaderParamReflectCubeMap, m_pReflectTexture);
+		}
+
+		pShader->setVariableFloat(eShaderParamReflectFactor, m_fReflectFactor);
+	}
 }
 
 NS_MINIR_END

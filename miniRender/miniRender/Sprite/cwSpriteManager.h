@@ -26,6 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Engine/cwEngine.h"
 
 #include <vector>
+#include <unordered_set>
 
 NS_MINIR_BEGIN
 

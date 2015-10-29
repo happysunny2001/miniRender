@@ -32,9 +32,8 @@ cwMaterialUnit::~cwMaterialUnit()
 	m_pParentMaterial = nullptr;
 }
 
-CWBOOL cwMaterialUnit::init(cwMaterial* pMaterial)
+CWBOOL cwMaterialUnit::init()
 {
-	m_pParentMaterial = pMaterial;
 	return CWTRUE;
 }
 

@@ -29,41 +29,22 @@ float4 PS(VertexOut pIn) : SV_Target
 	pIn.NormalW = normalize(pIn.NormalW);
 	float3 toEyeW = normalize(gEyePosWorld - pIn.PosW);
 
-	float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	float4 spec    = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	return processLight(gMaterial, pIn.PosW, pIn.NormalW, toEyeW);
+}
 
-	//light result
-	float4 A, D, S;
-	int i;
+float4 PSReflect(VertexOut pIn) : SV_Target
+{
+	pIn.NormalW = normalize(pIn.NormalW);
+	float3 toEyeW = normalize(gEyePosWorld - pIn.PosW);
 
-	for(i = 0; i < gDirectionalLightCount; ++i) {
-		ProcessDirectionalLight(gMaterial, gDirectionalLight[i], pIn.NormalW, toEyeW, A, D, S);
+	float4 litColor = processLight(gMaterial, pIn.PosW, pIn.NormalW, toEyeW);
+	float4 reflectionColor = processReflection(gMaterial, gReflectCubeMap, pIn.NormalW, toEyeW);
 
-		ambient += A;
-		diffuse += D;
-		spec    += S;
-	}
+	float factor = saturate(fReflectFactor);
+	float4 finalColor = reflectionColor*factor + litColor*(1.0f-factor);
+	finalColor.a = gMaterial.diffuse.a;
 
-	for(i = 0; i < gPointLightCount; ++i) {
-		ProcessPointLight(gMaterial, gPointLight[i], pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
-
-		ambient += A;
-		diffuse += D;
-		spec    += S;
-	}
-
-	for(i = 0; i < gSpotLightCount; ++i) {
-		processSpotLight(gMaterial, gSpotLight[i], pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
-
-		ambient += A;
-		diffuse += D;
-		spec    += S;
-	}
-
-	float4 litColor = ambient + diffuse + spec;
-	litColor.a = gMaterial.diffuse.a;
-	return litColor;
+	return finalColor;
 }
 
 technique11 LightTech
@@ -73,6 +54,16 @@ technique11 LightTech
         SetVertexShader( CompileShader( vs_5_0, VS() ) );
 	SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PS() ) );
+    }
+}
+
+technique11 LightTechReflect
+{
+    pass P0
+    {
+        SetVertexShader( CompileShader( vs_5_0, VS() ) );
+	SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_5_0, PSReflect() ) );
     }
 }
 

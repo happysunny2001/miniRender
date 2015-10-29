@@ -81,10 +81,10 @@ public:
 
 	//virtual CWBOOL build(cwScene*) override;
 
-	virtual CWVOID intersection(const cwFrustum&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) override;
-	virtual CWVOID intersection(const cwAABB&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) override;
-	virtual CWVOID intersection(const cwCircle&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) override;
-	virtual CWVOID intersection(const cwRay&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) override;
+	virtual CWVOID intersection(const cwFrustum&, cwVector<cwRenderNode*>&, CWBOOL) override;
+	virtual CWVOID intersection(const cwAABB&, cwVector<cwRenderNode*>&, CWBOOL) override;
+	virtual CWVOID intersection(const cwCircle&, cwVector<cwRenderNode*>&, CWBOOL) override;
+	virtual CWVOID intersection(const cwRay&, cwVector<cwRenderNode*>&, CWBOOL) override;
 
 	virtual CWBOOL insert(cwRenderNode*) override;
 	virtual CWBOOL remove(cwRenderNode*) override;
@@ -114,10 +114,10 @@ protected:
 	sOctreeNode* getTreeNodeBelong(cwRenderNode*, sOctreeNode*);
 	sOctreeNode* getTreeNodeBelongRude(cwRenderNode*, sOctreeNode*);
 
-	CWVOID intersection(sOctreeNode*, const cwFrustum&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL);
-	CWVOID intersection(sOctreeNode*, const cwAABB&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL);
-	CWVOID intersection(sOctreeNode*, const cwCircle&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL);
-	CWVOID intersection(sOctreeNode*, const cwRay&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL);
+	CWVOID intersection(sOctreeNode*, const cwFrustum&, cwVector<cwRenderNode*>&, CWBOOL);
+	CWVOID intersection(sOctreeNode*, const cwAABB&, cwVector<cwRenderNode*>&, CWBOOL);
+	CWVOID intersection(sOctreeNode*, const cwCircle&, cwVector<cwRenderNode*>&, CWBOOL);
+	CWVOID intersection(sOctreeNode*, const cwRay&, cwVector<cwRenderNode*>&, CWBOOL);
 
 	CWVOID getRenderNodeChild(cwRenderNode*, std::unordered_map<cwRenderNode*, sOctreeNode*>&);
 	CWVOID updateRenderNode(cwRenderNode*, sOctreeNode*);

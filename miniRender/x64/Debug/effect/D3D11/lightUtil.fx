@@ -145,3 +145,50 @@ void processSpotLight(Material mat, SpotLight light, float3 pos, float3 normal, 
 	diffuse  *= att;
 	specular *= att;
 }
+
+float4 processLight(Material mat, float3 pos, float3 normal, float3 toEye)
+{
+	//light result
+	float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	float4 spec    = float4(0.0f, 0.0f, 0.0f, 0.0f);
+
+	float4 A, D, S;
+	int i;
+
+	for(i = 0; i < gDirectionalLightCount; ++i) {
+		ProcessDirectionalLight(mat, gDirectionalLight[i], normal, toEye, A, D, S);
+
+		ambient += A;
+		diffuse += D;
+		spec    += S;
+	}
+
+	for(i = 0; i < gPointLightCount; ++i) {
+		ProcessPointLight(mat, gPointLight[i], pos, normal, toEye, A, D, S);
+
+		ambient += A;
+		diffuse += D;
+		spec    += S;
+	}
+
+	for(i = 0; i < gSpotLightCount; ++i) {
+		processSpotLight(mat, gSpotLight[i], pos, normal, toEye, A, D, S);
+
+		ambient += A;
+		diffuse += D;
+		spec    += S;
+	}
+
+	float4 litColor = ambient + diffuse + spec;
+	litColor.a = mat.diffuse.a;
+	return litColor;
+}
+
+float4 processReflection(Material mat, TextureCube cubemap, float3 normal, float3 toEye)
+{
+	float3 incidentDir = -toEye;
+	float3 reflectionDir = reflect(incidentDir, normal);
+	float4 reflectionColor = cubemap.Sample(samAnisotropic, reflectionDir);
+	return mat.reflect*reflectionColor;
+}

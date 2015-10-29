@@ -30,6 +30,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Render/cwRenderPipeline.h"
 #include "Ref/cwRef.h"
 
+#include <vector>
 #include <unordered_map>
 
 NS_MINIR_BEGIN
@@ -94,7 +95,7 @@ public:
 	
 protected:
 	cwStage();
-	cwVector<cwRenderNode*>* getRenderEntities(cwCamera* pCamera, eStageLayerFliterType eType);
+	std::vector<cwRenderNode*>* getRenderEntities(eStageLayerFliterType eType);
 
 protected:
 	CWBOOL m_bEnable;
@@ -110,9 +111,10 @@ protected:
 	CWBOOL m_bClearDepth;
 	CWBOOL m_bClearStencil;
 
-	cwVector<cwRenderGenerator*> m_nVecGenerator;
+	std::vector<cwRenderNode*> m_nVecRenderNodes;
+	std::vector<cwRenderNode*> m_nVecStageEntities;
 
-	cwVector<cwRenderNode*> m_nVecStageEntities;
+	cwVector<cwRenderGenerator*> m_nVecGenerator;
 	cwMap<CWSTRING, cwTexture*> m_nMapStageTextures;
 	cwVector<cwStageLayer*> m_nVecLayer;
 

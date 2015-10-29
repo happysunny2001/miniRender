@@ -48,7 +48,7 @@ cwSkyDome* cwSkyDome::create(const CWSTRING& strSkyTexture)
 cwSkyDome::cwSkyDome():
 m_pTexSkyCubMap(nullptr)
 {
-
+	m_eRenderType = eRenderTypeEntity;
 }
 
 cwSkyDome::~cwSkyDome()

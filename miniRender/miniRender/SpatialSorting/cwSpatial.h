@@ -42,10 +42,10 @@ class CW_DLL cwSpatial : public cwRef
 public:
 	//virtual CWBOOL build(cwScene*) = 0;
 	
-	virtual CWVOID intersection(const cwFrustum&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) = 0;
-	virtual CWVOID intersection(const cwAABB&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) = 0;
-	virtual CWVOID intersection(const cwCircle&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) = 0;
-	virtual CWVOID intersection(const cwRay&, cwVector<cwRenderNode*>&, eSceneObjectType, CWBOOL) = 0;
+	virtual CWVOID intersection(const cwFrustum&, cwVector<cwRenderNode*>&, CWBOOL) = 0;
+	virtual CWVOID intersection(const cwAABB&, cwVector<cwRenderNode*>&, CWBOOL) = 0;
+	virtual CWVOID intersection(const cwCircle&, cwVector<cwRenderNode*>&, CWBOOL) = 0;
+	virtual CWVOID intersection(const cwRay&, cwVector<cwRenderNode*>&, CWBOOL) = 0;
 
 	virtual CWBOOL insert(cwRenderNode*) = 0;
 	virtual CWBOOL remove(cwRenderNode*) = 0;

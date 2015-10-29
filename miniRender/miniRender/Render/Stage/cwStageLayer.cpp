@@ -85,12 +85,12 @@ CWVOID cwStageLayer::reset()
 	m_nMapPipeline.clear();
 }
 
-CWVOID cwStageLayer::begin(cwVector<cwRenderNode*>* vecEntities)
+CWVOID cwStageLayer::begin(std::vector<cwRenderNode*>* vecEntities)
 {
 	reset();
 
 	if (vecEntities)
-		addEntities(*vecEntities);
+		addEntities(vecEntities);
 
 	for (auto pPU : m_nVecPU) {
 		pPU->begin();
@@ -116,12 +116,12 @@ CWVOID cwStageLayer::end()
 	cwRepertory::getInstance().getDevice()->setRenderState(m_eOldRenderState);
 }
 
-CWVOID cwStageLayer::addEntities(cwVector<cwRenderNode*>& vecEntities)
+CWVOID cwStageLayer::addEntities(std::vector<cwRenderNode*>* vecEntities)
 {
-	for (auto pEntity : vecEntities) {
-		cwRenderPipeline* pPiepline = getPipeline(pEntity);
+	for (auto it = vecEntities->begin(); it != vecEntities->end(); ++it) {
+		cwRenderPipeline* pPiepline = getPipeline(*it);
 		if (pPiepline)
-			pPiepline->addEntity(pEntity, this);
+			pPiepline->addEntity(*it, this);
 	}
 }
 

@@ -59,6 +59,11 @@ CWBOOL CubeMapDemoScene::init()
 	return CWTRUE;
 }
 
+CWVOID CubeMapDemoScene::update(CWFLOAT dt)
+{
+	dt = 0.03f;
+}
+
 CWVOID CubeMapDemoScene::buildSphereMaterial()
 {
 	cwRepertory& repertory = cwRepertory::getInstance();
@@ -85,10 +90,14 @@ CWVOID CubeMapDemoScene::buildSphereMaterial()
 	m_pMatSphere->setDiffuse(cwVector4D(0.2f, 0.3f, 0.4f, 1.0f));
 	m_pMatSphere->setSpecular(cwVector4D(0.9f, 0.9f, 0.9f, 16.0f));
 	m_pMatSphere->setReflect(cwVector4D(0.4f, 0.4f, 0.4f, 1.0f));
+
+	cwMaterialUnit* pMatUnit = cwMaterialUnitReflect::create("Textures/snowcube1024.dds");
+	m_pMatSphere->addMaterialUnit(pMatUnit);
 	
 	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getDefShader(eDefShaderLighting);
 	m_pEffectShpere = cwEffect::create();
 	m_pEffectShpere->setShader(pShader);
+	m_pEffectShpere->setTech("LightTechReflect");
 	CW_SAFE_RETAIN(m_pEffectShpere);
 }
 

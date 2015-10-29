@@ -40,7 +40,7 @@ cwScene* cwScene::create()
 cwScene::cwScene():
 m_pSkyDome(nullptr)
 {
-	m_eType = eSceneObjectScene;
+	m_eRenderType = eRenderTypeScene;
 }
 
 cwScene::~cwScene()
