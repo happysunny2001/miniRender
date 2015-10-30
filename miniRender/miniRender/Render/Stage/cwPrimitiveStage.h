@@ -25,12 +25,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-class cwPrimitiveStage : public cwStage
+class CW_DLL cwPrimitiveStage : public cwStage
 {
 public:
 	static cwPrimitiveStage* create();
 
-	~cwPrimitiveStage();
+	virtual ~cwPrimitiveStage();
 
 	virtual CWVOID reset() override;
 	virtual CWVOID begin() override;

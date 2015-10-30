@@ -51,22 +51,7 @@ CWHANDLE cwRenderTexture::getWritablehandle() const
 	return NULL;
 }
 
-void cwRenderTexture::beginResize()
-{
-
-}
-
-CWVOID cwRenderTexture::binding()
-{
-
-}
-
-CWVOID cwRenderTexture::beginDraw(CWBOOL bClearColor, CWBOOL bClearDepth, CWBOOL bClearStencil)
-{
-
-}
-
-CWVOID cwRenderTexture::endDraw()
+CWVOID cwRenderTexture::beginResize()
 {
 
 }

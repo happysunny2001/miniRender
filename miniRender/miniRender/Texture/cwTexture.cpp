@@ -41,4 +41,19 @@ CWHANDLE cwTexture::getWritablehandle() const
 	return NULL;
 }
 
+CWVOID cwTexture::binding()
+{
+
+}
+
+CWVOID cwTexture::beginDraw(CWBOOL bClearColor, CWBOOL bClearDepth, CWBOOL bClearStencil)
+{
+
+}
+
+CWVOID cwTexture::endDraw()
+{
+
+}
+
 NS_MINIR_END

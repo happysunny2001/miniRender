@@ -639,6 +639,15 @@
     <ClInclude Include="Material\MaterialUnit\cwMaterialUnit.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Texture\cwCubeTexture.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11CubeTexture.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Stage\cwReflectionStage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -1062,6 +1071,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Material\MaterialUnit\cwMaterialUnit.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\cwCubeTexture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11CubeTexture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Stage\cwReflectionStage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -77,7 +77,7 @@ cwStage* cwStageParser::createStage(tinyxml2::XMLElement* pStageData)
 		}
 	}
 
-	return cwStage::create();
+	return nullptr;
 }
 
 cwStage* cwStageParser::parse(tinyxml2::XMLElement* pStageData)

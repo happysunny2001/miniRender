@@ -41,18 +41,6 @@ cwD3D11Texture* cwD3D11Texture::create(const string& strFileName)
 	return nullptr;
 }
 
-cwD3D11Texture* cwD3D11Texture::createCube(const CWSTRING& strFileName)
-{
-	cwD3D11Texture* pTexture = new cwD3D11Texture();
-	if (pTexture && pTexture->initCube(strFileName)) {
-		pTexture->autorelease();
-		return pTexture;
-	}
-
-	CW_SAFE_DELETE(pTexture);
-	return nullptr;
-}
-
 cwD3D11Texture::cwD3D11Texture() :
 m_pShaderResource(nullptr)
 {
@@ -80,45 +68,9 @@ CWBOOL cwD3D11Texture::init(const CWSTRING& strFileName)
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC resourceDesc;
 	resourceDesc.Format = textureDesc.Format;
-
-	if (textureDesc.MiscFlags == 0) {
-		resourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		resourceDesc.Texture2D.MostDetailedMip = 0;
-		resourceDesc.Texture2D.MipLevels = -1;
-	}
-	else if (textureDesc.MiscFlags == D3D11_RESOURCE_MISC_TEXTURECUBE) {
-		resourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
-		resourceDesc.TextureCube.MostDetailedMip = 0;
-		resourceDesc.TextureCube.MipLevels = -1;
-	}
-
-	pD3D11Device->getD3D11Device()->CreateShaderResourceView(pTexture2D, &resourceDesc, &m_pShaderResource);
-	CW_RELEASE_COM(pTexture2D);
-
-	m_nStrName = strFileName;
-
-	return CWTRUE;
-}
-
-CWBOOL cwD3D11Texture::initCube(const CWSTRING& strFileName)
-{
-	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
-	CWWSTRING wstrName = cwStringConvert::convertToWideChar(strFileName);
-
-	ID3D11Texture2D* pTexture2D = NULL;
-	CW_HR(D3DX11CreateTextureFromFile(pD3D11Device->getD3D11Device(), wstrName.c_str(), NULL, NULL, (ID3D11Resource**)&pTexture2D, NULL));
-
-	D3D11_TEXTURE2D_DESC textureDesc;
-	pTexture2D->GetDesc(&textureDesc);
-
-	m_fWidth = static_cast<CWFLOAT>(textureDesc.Width);
-	m_fHeight = static_cast<CWFLOAT>(textureDesc.Height);
-
-	D3D11_SHADER_RESOURCE_VIEW_DESC resourceDesc;
-	resourceDesc.Format = textureDesc.Format;
-	resourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
-	resourceDesc.TextureCube.MostDetailedMip = 0;
-	resourceDesc.TextureCube.MipLevels = -1;
+	resourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	resourceDesc.Texture2D.MostDetailedMip = 0;
+	resourceDesc.Texture2D.MipLevels = -1;
 
 	pD3D11Device->getD3D11Device()->CreateShaderResourceView(pTexture2D, &resourceDesc, &m_pShaderResource);
 	CW_RELEASE_COM(pTexture2D);

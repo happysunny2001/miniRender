@@ -17,33 +17,44 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_SPRITE_STAGE_H__
-#define __CW_SPRITE_STAGE_H__
+#ifndef __CW_D3D11_CUBE_TEXTURE_H__
+#define __CW_D3D11_CUBE_TEXTURE_H__
 
-#include "Base/cwMacros.h"
-#include "cwStage.h"
+#ifdef _CW_D3D11_
+
+#include "Base/cwUtils.h"
+#include "Base/cwBasicType.h"
+#include "Texture/cwTexture.h"
+#include "Texture/cwCubeTexture.h"
+#include "Platform/D3D/D3D11/cwD3D11Utils.h"
 
 NS_MINIR_BEGIN
 
-class CW_DLL cwSpriteStage : public cwStage
+
+class cwD3D11CubeTexture : public cwCubeTexture
 {
 public:
-	static cwSpriteStage* create();
+	static cwD3D11CubeTexture* create(const CWSTRING& strTexture);
+	static cwD3D11CubeTexture* create(CWUINT iSize);
 
-	virtual ~cwSpriteStage();
+	cwD3D11CubeTexture();
+	virtual ~cwD3D11CubeTexture();
 
-	virtual CWVOID reset() override;
-	virtual CWVOID begin() override;
-	virtual CWVOID render() override;
-	virtual CWVOID end() override;
+	virtual CWBOOL init(const CWSTRING& strTexture);
+	virtual CWBOOL init(CWUINT iSize);
+
+	virtual CWHANDLE getHandle() const override;
 
 protected:
-	cwSpriteStage();
-
-protected:
+	ID3D11ShaderResourceView* m_pShaderResource;
+	ID3D11RenderTargetView* m_pRenderTargetView[6];
+	ID3D11DepthStencilView* m_pDepthStencilView;
 
 };
 
 NS_MINIR_END
 
 #endif
+
+#endif
+

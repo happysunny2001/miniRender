@@ -17,20 +17,27 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_SPRITE_STAGE_H__
-#define __CW_SPRITE_STAGE_H__
+#ifndef __CW_REFLECTION_STAGE_H_
+#define __CW_REFLECTION_STAGE_H_
 
 #include "Base/cwMacros.h"
 #include "cwStage.h"
 
+#include <vector>
+
 NS_MINIR_BEGIN
 
-class CW_DLL cwSpriteStage : public cwStage
+class cwCubeTexture;
+class cwRenderTexture;
+class cwViewPort;
+class cwCamera;
+
+class CW_DLL cwReflectionStage : public cwStage
 {
 public:
-	static cwSpriteStage* create();
+	static cwReflectionStage* create();
 
-	virtual ~cwSpriteStage();
+	virtual ~cwReflectionStage();
 
 	virtual CWVOID reset() override;
 	virtual CWVOID begin() override;
@@ -38,9 +45,14 @@ public:
 	virtual CWVOID end() override;
 
 protected:
-	cwSpriteStage();
+	cwReflectionStage();
 
 protected:
+	cwCubeTexture* m_pCubeTexture;
+	cwViewPort* m_pViewport;
+	cwCamera* m_nCameras[6];
+
+	std::vector<cwStage*> m_nVecStage;
 
 };
 

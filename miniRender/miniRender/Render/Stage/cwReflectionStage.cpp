@@ -17,33 +17,42 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_SPRITE_STAGE_H__
-#define __CW_SPRITE_STAGE_H__
-
-#include "Base/cwMacros.h"
-#include "cwStage.h"
+#include "cwReflectionStage.h"
+#include "Texture/cwCubeTexture.h"
+#include "Texture/cwRenderTexture.h"
+#include "ViewPort/cwViewPort.h"
+#include "Camera/cwCamera.h"
 
 NS_MINIR_BEGIN
 
-class CW_DLL cwSpriteStage : public cwStage
+cwReflectionStage* cwReflectionStage::create()
 {
-public:
-	static cwSpriteStage* create();
+	cwReflectionStage* pStage = new cwReflectionStage();
+	if (pStage) {
+		pStage->autorelease();
+		return pStage;
+	}
 
-	virtual ~cwSpriteStage();
+	return nullptr;
+}
 
-	virtual CWVOID reset() override;
-	virtual CWVOID begin() override;
-	virtual CWVOID render() override;
-	virtual CWVOID end() override;
+cwReflectionStage::cwReflectionStage():
+m_pCubeTexture(nullptr),
+m_pViewport(nullptr)
+{
+	memset(m_nCameras, 0, sizeof(cwCamera*)* 6);
+}
 
-protected:
-	cwSpriteStage();
+cwReflectionStage::~cwReflectionStage()
+{
+	CW_SAFE_RELEASE_NULL(m_pCubeTexture);
+	CW_SAFE_RELEASE_NULL(m_pViewport);
 
-protected:
-
-};
+	for (CWUINT i = 0; i < 6; ++i) {
+		if (m_nCameras[i]) {
+			CW_SAFE_RELEASE_NULL(m_nCameras[i]);
+		}
+	}
+}
 
 NS_MINIR_END
-
-#endif

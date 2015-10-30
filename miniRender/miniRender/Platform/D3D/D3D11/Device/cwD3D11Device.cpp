@@ -49,6 +49,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/D3D/D3D11/Texture/cwD3D11RenderTexture.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11RenderTextureWritable.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11TextureArray.h"
+#include "Platform/D3D/D3D11/Texture/cwD3D11CubeTexture.h"
 #include "Platform/D3D/D3D11/Blend/cwD3D11Blend.h"
 #include "Platform/D3D/D3D11/Shader/cwD3D11Shader.h"
 #include "Platform/D3D/D3D11/ViewPort/cwD3D11ViewPort.h"
@@ -539,7 +540,12 @@ cwTexture* cwD3D11Device::createTexture(const CWSTRING& strFileName)
 
 cwTexture* cwD3D11Device::createCubeTexture(const CWSTRING& strFileName)
 {
-	return cwD3D11Texture::create(strFileName);
+	return cwD3D11CubeTexture::create(strFileName);
+}
+
+cwTexture* cwD3D11Device::createCubeTexture(CWUINT iSize)
+{
+	return cwD3D11CubeTexture::create(iSize);
 }
 
 cwRenderTexture* cwD3D11Device::createRenderTexture(float fWidth, float fHeight, eRenderTextureType eType)

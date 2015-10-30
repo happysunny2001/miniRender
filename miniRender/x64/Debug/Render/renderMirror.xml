@@ -4,11 +4,11 @@
 	<Camera Name="Default" />
 	<StageList>
 
-		<Stage Name="S1" Type="normal" Enable="True">
+		<Stage Name="S1" Type="Normal" Enable="True">
 			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" />
 		</Stage>
 
-		<Stage Name="S2" Type="normal" Enable="true" Generator="Mirror">
+		<Stage Name="S2" Type="Normal" Enable="true" Generator="Mirror">
 			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" IsClearColor="False" IsClearDepth="False" IsClearStencil="False" />
 
 			<Layer Name="Layer1" EntityType="Mirror" Transparent="No"> 

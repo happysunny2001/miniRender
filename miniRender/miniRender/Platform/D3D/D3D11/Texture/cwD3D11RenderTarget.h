@@ -36,10 +36,10 @@ public:
 	cwD3D11RenderTarget();
 	virtual ~cwD3D11RenderTarget();
 
-	virtual bool init(CWFLOAT fWidth, CWFLOAT fHeight) override;
+	virtual CWBOOL init(CWFLOAT fWidth, CWFLOAT fHeight) override;
 
-	virtual void beginResize() override;
-	virtual bool onResize(bool bForce=false) override;
+	virtual CWVOID beginResize() override;
+	virtual CWBOOL onResize(CWBOOL bForce = CWFALSE) override;
 
 	virtual CWHANDLE getRenderHandle() const override;
 	virtual CWHANDLE getHandle() const override;
@@ -48,6 +48,7 @@ public:
 	virtual CWVOID beginDraw(CWBOOL bClearColor = CWTRUE, CWBOOL bClearDepth = CWTRUE, CWBOOL bClearStencil = CWTRUE) override;
 	virtual CWVOID endDraw() override;
 
+protected:
 	virtual CWVOID buildDepthStencilBuffer(CWUINT iWidth, CWUINT iHeight);
 
 protected:

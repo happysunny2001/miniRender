@@ -33,13 +33,11 @@ class CW_DLL cwD3D11Texture : public cwTexture
 {
 public:
 	static cwD3D11Texture* create(const CWSTRING& strFileName);
-	static cwD3D11Texture* createCube(const CWSTRING& strFileName);
 
 	cwD3D11Texture();
 	virtual ~cwD3D11Texture();
 
 	virtual CWBOOL init(const CWSTRING& strFileName);
-	virtual CWBOOL initCube(const CWSTRING& strFileName);
 	virtual CWHANDLE getHandle() const override;
 
 protected:

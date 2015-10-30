@@ -17,28 +17,19 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_SPRITE_STAGE_H__
-#define __CW_SPRITE_STAGE_H__
+#ifndef __CW_CUBE_TEXTURE_H__
+#define __CW_CUBE_TEXTURE_H__
 
 #include "Base/cwMacros.h"
-#include "cwStage.h"
+#include "cwTexture.h"
 
 NS_MINIR_BEGIN
 
-class CW_DLL cwSpriteStage : public cwStage
+class cwCubeTexture : public cwTexture
 {
 public:
-	static cwSpriteStage* create();
-
-	virtual ~cwSpriteStage();
-
-	virtual CWVOID reset() override;
-	virtual CWVOID begin() override;
-	virtual CWVOID render() override;
-	virtual CWVOID end() override;
-
-protected:
-	cwSpriteStage();
+	cwCubeTexture();
+	virtual ~cwCubeTexture();
 
 protected:
 

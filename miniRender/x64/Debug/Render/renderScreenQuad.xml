@@ -9,7 +9,6 @@
 		</Stage>
 
 		<Stage Name="SPrimitive" Type="Primitive" Enable="True">
-			<RenderTarget Type="texture" Width="1.0" Height="1.0" />
 		</Stage>
 
 		<Stage Name="S2" Type="Normal" Enable="True">

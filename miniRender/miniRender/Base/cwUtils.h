@@ -312,6 +312,16 @@ typedef enum {
 }eDepthWriteMask;
 
 typedef enum {
+	eCubeFaceRight = 0,
+	eCubeFaceLeft,
+	eCubeFaceUp,
+	eCubeFaceDown,
+	eCubeFaceFront,
+	eCubeFaceBack,
+	eCubeFaceMax
+}eCubeTextureFace;
+
+typedef enum {
 	eRenderTextureNone = 0,
 	eRenderTextureTexture,
 	eRenderTextureTarget,
@@ -365,6 +375,7 @@ typedef enum {
 	eRenderTypePrimitiveEntity,
 	eRenderTypeScene,
 	eRenderTypeMirror,
+	eRenderTypeReflection,
 	eRenderTypeNode2D,
 	eRenderTypeSprite,
 

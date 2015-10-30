@@ -39,6 +39,10 @@ public:
 	virtual const CWSTRING& getName() const;
 	inline CWVOID setName(const CWSTRING& name) { m_nStrName = name; }
 
+	virtual CWVOID binding();
+	virtual CWVOID beginDraw(CWBOOL bClearColor = CWTRUE, CWBOOL bClearDepth = CWTRUE, CWBOOL bClearStencil = CWTRUE);
+	virtual CWVOID endDraw();
+
 	inline eRenderTextureType getType() const { return m_eType; }
 
 	inline CWFLOAT getWidth() const { return m_fWidth; }

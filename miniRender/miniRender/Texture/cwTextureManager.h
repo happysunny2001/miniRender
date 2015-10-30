@@ -26,6 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Ref/cwRef.h"
 #include "Repertory/cwRepertory.h"
 #include "cwTexture.h"
+#include "cwCubeTexture.h"
 #include "cwRenderTexture.h"
 
 NS_MINIR_BEGIN

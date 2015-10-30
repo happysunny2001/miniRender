@@ -59,6 +59,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Texture/cwTexture.h"
 #include "Texture/cwTextureManager.h"
 #include "Texture/cwRenderTexture.h"
+#include "Texture/cwCubeTexture.h"
 #include "Effect/cwEffect.h"
 #include "Effect/cwEffectParameter.h"
 #include "Effect/cwEffectFloatParameter.h"

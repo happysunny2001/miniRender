@@ -130,6 +130,7 @@
     <ClInclude Include="Platform\D3D\D3D11\Shader\cwD3D11Shader.h" />
     <ClInclude Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderManager.h" />
     <ClInclude Include="Platform\D3D\D3D11\Stencil\cwD3D11Stencil.h" />
+    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11CubeTexture.h" />
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTarget.h" />
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTexture.h" />
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureWritable.h" />
@@ -148,6 +149,7 @@
     <ClInclude Include="Render\cwRenderer.h" />
     <ClInclude Include="Render\cwRenderPipeline.h" />
     <ClInclude Include="Render\Stage\cwPrimitiveStage.h" />
+    <ClInclude Include="Render\Stage\cwReflectionStage.h" />
     <ClInclude Include="Render\Stage\cwSkyDomeStage.h" />
     <ClInclude Include="Render\Stage\cwSpriteStage.h" />
     <ClInclude Include="Render\Stage\cwStage.h" />
@@ -178,6 +180,7 @@
     <ClInclude Include="Sprite\cwSpriteManager.h" />
     <ClInclude Include="Sprite\cwSprite.h" />
     <ClInclude Include="Stencil\cwStencil.h" />
+    <ClInclude Include="Texture\cwCubeTexture.h" />
     <ClInclude Include="Texture\cwRenderTexture.h" />
     <ClInclude Include="Texture\cwTexture.h" />
     <ClInclude Include="Texture\cwTextureArray.h" />
@@ -272,6 +275,7 @@
     <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11Shader.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderManager.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Stencil\cwD3D11Stencil.cpp" />
+    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11CubeTexture.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTarget.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTexture.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureWritable.cpp" />
@@ -292,6 +296,7 @@
     <ClCompile Include="Render\cwRenderer.cpp" />
     <ClCompile Include="Render\cwRenderPipeline.cpp" />
     <ClCompile Include="Render\Stage\cwPrimitiveStage.cpp" />
+    <ClCompile Include="Render\Stage\cwReflectionStage.cpp" />
     <ClCompile Include="Render\Stage\cwSkyDomeStage.cpp" />
     <ClCompile Include="Render\Stage\cwSpriteStage.cpp" />
     <ClCompile Include="Render\Stage\cwStage.cpp" />
@@ -321,6 +326,7 @@
     <ClCompile Include="Sprite\cwSprite.cpp" />
     <ClCompile Include="Sprite\cwSpriteManager.cpp" />
     <ClCompile Include="Stencil\cwStencil.cpp" />
+    <ClCompile Include="Texture\cwCubeTexture.cpp" />
     <ClCompile Include="Texture\cwRenderTexture.cpp" />
     <ClCompile Include="Texture\cwTexture.cpp" />
     <ClCompile Include="Texture\cwTextureArray.cpp" />

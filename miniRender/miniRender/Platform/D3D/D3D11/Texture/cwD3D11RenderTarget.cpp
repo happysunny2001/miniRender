@@ -54,36 +54,50 @@ cwD3D11RenderTarget::~cwD3D11RenderTarget()
 	CW_RELEASE_COM(m_pDepthStencilView);
 }
 
-bool cwD3D11RenderTarget::init(CWFLOAT fWidth, CWFLOAT fHeight)
+CWBOOL cwD3D11RenderTarget::init(CWFLOAT fWidth, CWFLOAT fHeight)
 {
 	return cwRenderTexture::init(fWidth, fHeight);
 }
 
-void cwD3D11RenderTarget::beginResize()
+CWVOID cwD3D11RenderTarget::beginResize()
 {
 	CW_RELEASE_COM(m_pRenderTarget);
 	CW_RELEASE_COM(m_pDepthStencilBuffer);
 	CW_RELEASE_COM(m_pDepthStencilView);
 }
 
-bool cwD3D11RenderTarget::onResize(bool bForce)
+CWBOOL cwD3D11RenderTarget::onResize(CWBOOL bForce)
 {
+	if (!bForce && m_fWidth > 1.0f) return CWTRUE;
+
 	CW_RELEASE_COM(m_pRenderTarget);
 
 	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
-	if (!pDevice) return false;
+	if (!pDevice) return CWFALSE;
 
 	ID3D11Texture2D* backBuffer = NULL;
 	CW_HR(pDevice->getSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBuffer));
 	CW_HR(pDevice->getD3D11Device()->CreateRenderTargetView(backBuffer, NULL, &m_pRenderTarget));
 	CW_RELEASE_COM(backBuffer);
 
-	CWUINT iWinWidth  = cwRepertory::getInstance().getUInt(gValueWinWidth);
-	CWUINT iWinHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
+	CWUINT texWidth = 0;
+	CWUINT texHeight = 0;
 
-	buildDepthStencilBuffer(iWinWidth, iWinHeight);
+	if (m_fWidth > 1.0f) {
+		texWidth = static_cast<CWUINT>(m_fWidth);
+		texHeight = static_cast<CWUINT>(m_fHeight);
+	}
+	else {
+		CWUINT winWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
+		CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
 
-	return true;
+		texWidth = static_cast<CWUINT>(m_fWidth*winWidth);
+		texHeight = static_cast<CWUINT>(m_fHeight*winHeight);
+	}
+
+	buildDepthStencilBuffer(texWidth, texHeight);
+
+	return CWTRUE;
 }
 
 CWVOID cwD3D11RenderTarget::buildDepthStencilBuffer(CWUINT iWidth, CWUINT iHeight)

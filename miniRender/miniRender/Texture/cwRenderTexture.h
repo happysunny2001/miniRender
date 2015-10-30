@@ -41,10 +41,6 @@ public:
 	virtual CWHANDLE getHandle() const override;
 	virtual CWHANDLE getWritablehandle() const override;
 
-	virtual CWVOID binding();
-	virtual CWVOID beginDraw(CWBOOL bClearColor = CWTRUE, CWBOOL bClearDepth = CWTRUE, CWBOOL bClearStencil = CWTRUE);
-	virtual CWVOID endDraw();
-
 	inline CWVOID setClearColor(const cwVector4D& color) { m_nClearColor = color; }
 	inline const cwVector4D& getClearColor() const { return m_nClearColor; }
 

@@ -28,12 +28,12 @@ NS_MINIR_BEGIN
 
 class cwCamera;
 
-class cwSkyDomeStage : public cwStage
+class CW_DLL cwSkyDomeStage : public cwStage
 {
 public:
 	static cwSkyDomeStage* create();
 
-	~cwSkyDomeStage();
+	virtual ~cwSkyDomeStage();
 
 	virtual CWVOID reset() override;
 	virtual CWVOID begin() override;
