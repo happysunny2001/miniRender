@@ -21,7 +21,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwCubeTexture::cwCubeTexture()
+cwCubeTexture::cwCubeTexture():
+m_eCurrActiveFace(eCubeFaceRight)
 {
 
 }

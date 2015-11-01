@@ -71,6 +71,19 @@ CWBOOL cwCamera::init(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFa
 	return CWTRUE;
 }
 
+CWVOID cwCamera::lookAt(const cwVector3D& pos, const cwVector3D& target, const cwVector3D& up)
+{
+	m_nLook = target - pos;
+	m_nLook.normalize();
+	m_nRight = up.cross(m_nLook);
+	m_nRight.normalize();
+	m_nUp = m_nLook.cross(m_nRight);
+	
+	m_nPos = pos;
+
+	updateViewMatrix();
+}
+
 CWVOID cwCamera::walk(CWFLOAT fDist)
 {
 	m_nPos += m_nLook*fDist;

@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwD3D11CubeTexture.h"
 #include "Base/cwStringConvert.h"
+#include "Base/cwColor.h"
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
 #include "Platform/Windows/cwWinUtils.h"
@@ -139,12 +140,79 @@ CWBOOL cwD3D11CubeTexture::init(CWUINT iSize)
 	pD3D11Device->getD3D11Device()->CreateShaderResourceView(pCubeTex, &resourceDesc, &m_pShaderResource);
 	CW_RELEASE_COM(pCubeTex);
 
+	buildDepthStencilView(iSize);
+
+	m_fWidth = m_fHeight = (CWFLOAT)iSize;
+
 	return CWTRUE;
+}
+
+CWVOID cwD3D11CubeTexture::buildDepthStencilView(CWUINT iSize)
+{
+	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+	if (!pDevice) return;
+
+	D3D11_TEXTURE2D_DESC texDesc;
+	texDesc.Width = iSize;
+	texDesc.Height = iSize;
+	texDesc.MipLevels = 1;
+	texDesc.ArraySize = 1;
+	texDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	texDesc.SampleDesc.Count = 1;
+	texDesc.SampleDesc.Quality = 0;
+	texDesc.Usage = D3D11_USAGE_DEFAULT;
+	texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	texDesc.CPUAccessFlags = 0;
+	texDesc.MiscFlags = 0;
+
+	ID3D11Texture2D* pDepthTex = NULL;
+	CW_HR(pDevice->getD3D11Device()->CreateTexture2D(&texDesc, NULL, &pDepthTex));
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+	dsvDesc.Format = texDesc.Format;
+	dsvDesc.Flags = 0;
+	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.Texture2D.MipSlice = 0;
+	CW_HR(pDevice->getD3D11Device()->CreateDepthStencilView(pDepthTex, &dsvDesc, &m_pDepthStencilView));
+	CW_RELEASE_COM(pDepthTex);
 }
 
 CWHANDLE cwD3D11CubeTexture::getHandle() const
 {
 	return (CWHANDLE)m_pShaderResource;
+}
+
+CWHANDLE cwD3D11CubeTexture::getCubeFaceHandle(eCubeTextureFace eFace) const
+{
+	return (CWHANDLE)(m_pRenderTargetView[eFace]);
+}
+
+CWVOID cwD3D11CubeTexture::binding()
+{
+	ID3D11RenderTargetView* arrTargetView[1] = { m_pRenderTargetView[m_eCurrActiveFace] };
+
+	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+	pDevice->getD3D11DeviceContext()->OMSetRenderTargets(1, arrTargetView, m_pDepthStencilView);
+}
+
+CWVOID cwD3D11CubeTexture::beginDraw(CWBOOL bClearColor, CWBOOL bClearDepth, CWBOOL bClearStencil)
+{
+	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+	if (bClearColor)
+		pDevice->getD3D11DeviceContext()->ClearRenderTargetView(m_pRenderTargetView[m_eCurrActiveFace], (const CWFLOAT*)&cwColor::black);
+
+	CWUINT nBit = 0;
+	if (bClearDepth)
+		nBit |= D3D11_CLEAR_DEPTH;
+	if (bClearStencil)
+		nBit |= D3D11_CLEAR_STENCIL;
+
+	pDevice->getD3D11DeviceContext()->ClearDepthStencilView(m_pDepthStencilView, nBit, 1.0f, 0);
+}
+
+CWVOID cwD3D11CubeTexture::endDraw()
+{
+
 }
 
 NS_MINIR_END

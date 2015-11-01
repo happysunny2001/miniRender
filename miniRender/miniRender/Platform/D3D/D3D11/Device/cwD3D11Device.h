@@ -71,7 +71,7 @@ public:
 
 	virtual cwTexture* createTexture(const CWSTRING& strFileName) override;
 	virtual cwTexture* createCubeTexture(const CWSTRING& strFileName) override;
-	virtual cwTexture* createCubeTexture(CWUINT iSize) override;
+	virtual cwCubeTexture* createCubeTexture(CWUINT iSize) override;
 	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) override;
 	virtual cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles) override;
 

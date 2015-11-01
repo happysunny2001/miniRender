@@ -62,7 +62,7 @@ eRenderState cwDevice::getRenderState()
 	return m_eRenderState;
 }
 
-void cwDevice::setRenderTarget(cwRenderTexture* pRenderTexture)
+void cwDevice::setRenderTarget(cwTexture* pRenderTexture)
 {
 	if (m_pCurrRenderTarget == pRenderTexture) return;
 	if (pRenderTexture == nullptr) {

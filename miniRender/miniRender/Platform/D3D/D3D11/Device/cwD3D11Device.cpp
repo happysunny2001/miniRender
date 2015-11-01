@@ -543,7 +543,7 @@ cwTexture* cwD3D11Device::createCubeTexture(const CWSTRING& strFileName)
 	return cwD3D11CubeTexture::create(strFileName);
 }
 
-cwTexture* cwD3D11Device::createCubeTexture(CWUINT iSize)
+cwCubeTexture* cwD3D11Device::createCubeTexture(CWUINT iSize)
 {
 	return cwD3D11CubeTexture::create(iSize);
 }

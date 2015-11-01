@@ -41,6 +41,7 @@ class cwRenderTexture;
 class cwViewPort;
 class cwTextureArray;
 class cwBatchEntity;
+class cwCubeTexture;
 
 class CW_DLL cwDevice
 {
@@ -83,7 +84,7 @@ public:
 
 	virtual cwTexture* createTexture(const CWSTRING& strFileName) = 0;
 	virtual cwTexture* createCubeTexture(const CWSTRING& strFileName) = 0;
-	virtual cwTexture* createCubeTexture(CWUINT iSize) = 0;
+	virtual cwCubeTexture* createCubeTexture(CWUINT iSize) = 0;
 	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) = 0;
 	virtual cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles) = 0;
 
@@ -97,7 +98,7 @@ public:
 	//set stencil state, nullptr for restore stencil state
 	virtual CWVOID setStencil(const cwStencil* pStencil) = 0;
 	virtual CWVOID setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) = 0;
-	virtual CWVOID setRenderTarget(cwRenderTexture* pRenderTexture);
+	virtual CWVOID setRenderTarget(cwTexture* pRenderTexture);
 
 	virtual CWVOID clearShaderResource() = 0;
 
@@ -108,6 +109,7 @@ public:
 
 	inline CWBOOL getEnableMsaa4X() const { return m_bEnableMsaa4x; }
 	inline cwStencil* getStencil() const { return m_pStencil; }
+	inline cwViewPort* getViewPort() const { return m_pCurrViewPort; }
 
 protected:
 	cwDevice();
@@ -124,8 +126,8 @@ protected:
 	cwStencil* m_pDisableZBuffer; //for disable z-buffer
 	CWBOOL m_bEnableMsaa4x;
 
-	cwRenderTexture* m_pRenderTargetBkBuffer;
-	cwRenderTexture* m_pCurrRenderTarget;
+	cwTexture* m_pRenderTargetBkBuffer;
+	cwTexture* m_pCurrRenderTarget;
 	CWBOOL m_bRefreshRenderTarget;
 
 	cwViewPort* m_pDefaultViewPort;

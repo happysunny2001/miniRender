@@ -39,6 +39,7 @@ public:
 	virtual CWBOOL init();
 	virtual CWBOOL init(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ);
 
+	virtual CWVOID lookAt(const cwVector3D& pos, const cwVector3D& target, const cwVector3D& up);
 	virtual CWVOID updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ);
 	virtual CWVOID updateProjMatrixFov(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ);
 	virtual CWVOID updateProjMatrix(CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fNearZ, CWFLOAT fFarZ);

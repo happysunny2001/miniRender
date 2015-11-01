@@ -44,6 +44,14 @@ public:
 	virtual CWBOOL init(CWUINT iSize);
 
 	virtual CWHANDLE getHandle() const override;
+	virtual CWHANDLE getCubeFaceHandle(eCubeTextureFace) const override;
+
+	virtual CWVOID binding() override;
+	virtual CWVOID beginDraw(CWBOOL bClearColor = CWTRUE, CWBOOL bClearDepth = CWTRUE, CWBOOL bClearStencil = CWTRUE) override;
+	virtual CWVOID endDraw() override;
+
+protected:
+	CWVOID buildDepthStencilView(CWUINT iSize);
 
 protected:
 	ID3D11ShaderResourceView* m_pShaderResource;

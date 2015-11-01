@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #define __CW_CUBE_TEXTURE_H__
 
 #include "Base/cwMacros.h"
+#include "Base/cwUtils.h"
 #include "cwTexture.h"
 
 NS_MINIR_BEGIN
@@ -31,7 +32,13 @@ public:
 	cwCubeTexture();
 	virtual ~cwCubeTexture();
 
+	virtual CWHANDLE getCubeFaceHandle(eCubeTextureFace) const = 0;
+
+	inline eCubeTextureFace getActiveCubeFace() const { return m_eCurrActiveFace; }
+	inline CWVOID setActiveCubeFace(eCubeTextureFace eFace) { m_eCurrActiveFace = eFace; }
+
 protected:
+	eCubeTextureFace m_eCurrActiveFace;
 
 };
 

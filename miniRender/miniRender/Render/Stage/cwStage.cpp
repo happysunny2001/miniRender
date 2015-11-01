@@ -65,7 +65,7 @@ cwStage::~cwStage()
 	clearStageGenerator();
 }
 
-CWVOID cwStage::setRenderTexture(cwRenderTexture* pRenderTexture)
+CWVOID cwStage::setRenderTexture(cwTexture* pRenderTexture)
 {
 	if (pRenderTexture == m_pRenderTarget) return;
 

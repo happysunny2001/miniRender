@@ -44,8 +44,13 @@ public:
 	virtual CWVOID render() override;
 	virtual CWVOID end() override;
 
+	CWVOID updateCamera(const cwVector3D& pos);
+	CWVOID setSize(CWUINT iSize);
+
 protected:
 	cwReflectionStage();
+
+	CWVOID buildCameras();
 
 protected:
 	cwCubeTexture* m_pCubeTexture;
@@ -53,6 +58,9 @@ protected:
 	cwCamera* m_nCameras[6];
 
 	std::vector<cwStage*> m_nVecStage;
+
+	cwViewPort* m_pPrevViewPort;
+	std::vector<cwCamera*> m_nVecStageCameras;
 
 };
 
