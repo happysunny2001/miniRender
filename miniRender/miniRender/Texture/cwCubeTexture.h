@@ -26,7 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-class cwCubeTexture : public cwTexture
+class CW_DLL cwCubeTexture : public cwTexture
 {
 public:
 	cwCubeTexture();

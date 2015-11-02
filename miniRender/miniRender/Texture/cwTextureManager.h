@@ -39,9 +39,10 @@ public:
 	cwTexture* getTexture(const CWSTRING& strName);
 	cwTexture* getCubeTexture(const CWSTRING& strName);
 	cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles);
-	CWVOID removeTexture(const CWSTRING& strName);
-
+	cwTexture* createCubeTexture(CWUINT iSize);
 	cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader);
+
+	CWVOID removeTexture(const CWSTRING& strName);
 	CWVOID removeRenderTexture(cwRenderTexture* pTex);
 
 	CWVOID beginResize();

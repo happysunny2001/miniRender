@@ -97,6 +97,19 @@ CWVOID cwStageLayer::begin(std::vector<cwRenderNode*>* vecEntities)
 	}
 }
 
+CWVOID cwStageLayer::begin(cwRenderNode* pNode)
+{
+	reset();
+
+	if (pNode) {
+		addEntities(pNode);
+	}
+
+	for (auto pPU : m_nVecPU) {
+		pPU->begin();
+	}
+}
+
 CWVOID cwStageLayer::render()
 {
 	m_eOldRenderState = cwRepertory::getInstance().getDevice()->getRenderState();
@@ -123,6 +136,13 @@ CWVOID cwStageLayer::addEntities(std::vector<cwRenderNode*>* vecEntities)
 		if (pPiepline)
 			pPiepline->addEntity(*it, this);
 	}
+}
+
+CWVOID cwStageLayer::addEntities(cwRenderNode* pNode)
+{
+	cwRenderPipeline* pPiepline = getPipeline(pNode);
+	if (pPiepline)
+		pPiepline->addEntity(pNode, this);
 }
 
 cwRenderPipeline* cwStageLayer::getPipeline(cwRenderNode* pEntity)

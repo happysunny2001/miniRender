@@ -25,7 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-class cwTextureArray : public cwTexture
+class CW_DLL cwTextureArray : public cwTexture
 {
 public:
 	virtual CWBOOL init(const std::vector<CWSTRING>& vecFiles);

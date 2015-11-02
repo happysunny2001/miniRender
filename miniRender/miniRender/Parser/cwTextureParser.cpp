@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Texture/cwTextureManager.h"
 #include "Texture/cwRenderTexture.h"
+#include "Texture/cwCubeTexture.h"
 #include "Render/cwRenderer.h"
 #include "Render/Stage/cwStage.h"
 #include "Engine/cwEngine.h"
@@ -73,6 +74,9 @@ cwTexture* cwTextureParser::parse(tinyxml2::XMLElement* pTextureData)
 	}
 	else if (strlen(pcType) == 6 && strncmp(pcType, "Create", 6) == 0) {
 		pTexture = parseTextureCreate(pTextureData);
+	}
+	else if (strlen(pcType) == 4 && strncmp(pcType, "Cube", 4) == 0) {
+		pTexture = parseTextureCube(pTextureData);
 	}
 
 	return pTexture;
@@ -164,6 +168,15 @@ cwTexture* cwTextureParser::parseTextureCreate(tinyxml2::XMLElement* pTextureDat
 	}
 
 	return nullptr;
+}
+
+cwTexture* cwTextureParser::parseTextureCube(tinyxml2::XMLElement* pTextureData)
+{
+	if (!pTextureData) return nullptr;
+
+	CWFLOAT fWidth = pTextureData->FloatAttribute("Width");
+
+	return cwRepertory::getInstance().getTextureManager()->createCubeTexture((CWUINT)fWidth);
 }
 
 NS_MINIR_END

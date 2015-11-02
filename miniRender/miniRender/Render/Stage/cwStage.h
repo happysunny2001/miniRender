@@ -87,7 +87,7 @@ public:
 	CWVOID clearStageEntity();
 
 	CWVOID setName(const CWSTRING& strName) { m_strName = strName; }
-	CWVOID setType(eStageType eType) { m_eType = eType; }
+	//CWVOID setType(eStageType eType) { m_eType = eType; }
 	CWVOID setEnable(CWBOOL bEnable) { m_bEnable = bEnable; }
 	CWVOID setRenderTexture(cwTexture* pRenderTexture);
 	CWVOID setRefreshRenderTarget(CWBOOL bRefresh);

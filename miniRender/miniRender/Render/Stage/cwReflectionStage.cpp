@@ -26,6 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "Engine/cwEngine.h"
 #include "Entity/cwRenderNode.h"
+#include "cwStageLayer.h"
 
 NS_MINIR_BEGIN
 
@@ -45,12 +46,13 @@ m_pCubeTexture(nullptr),
 m_pViewport(nullptr),
 m_pPrevViewPort(nullptr)
 {
+	m_eType = eStageTypeReflection;
 	buildCameras();
 }
 
 cwReflectionStage::~cwReflectionStage()
 {
-	CW_SAFE_RELEASE_NULL(m_pCubeTexture);
+	//CW_SAFE_RELEASE_NULL(m_pCubeTexture);
 	CW_SAFE_RELEASE_NULL(m_pViewport);
 
 	for (CWUINT i = 0; i < 6; ++i) {
@@ -95,29 +97,41 @@ CWVOID cwReflectionStage::updateCamera(const cwVector3D& pos)
 	}
 }
 
-CWVOID cwReflectionStage::setSize(CWUINT iSize)
-{
-	CW_SAFE_RELEASE_NULL(m_pCubeTexture);
-	CW_SAFE_RELEASE_NULL(m_pViewport);
-
-	m_pCubeTexture = cwRepertory::getInstance().getDevice()->createCubeTexture(iSize);
-	CW_SAFE_RETAIN(m_pCubeTexture);
-
-	m_pViewport = cwRepertory::getInstance().getDevice()->createViewPort(0.0f, 0.0f, (CWFLOAT)iSize, (CWFLOAT)iSize);
-	CW_SAFE_RETAIN(m_pViewport);
-}
+//CWVOID cwReflectionStage::setSize(CWUINT iSize)
+//{
+//	//CW_SAFE_RELEASE_NULL(m_pCubeTexture);
+//	CW_SAFE_RELEASE_NULL(m_pViewport);
+//
+//	//m_pCubeTexture = cwRepertory::getInstance().getDevice()->createCubeTexture(iSize);
+//	//CW_SAFE_RETAIN(m_pCubeTexture);
+//
+//	m_pViewport = cwRepertory::getInstance().getDevice()->createViewPort(0.0f, 0.0f, (CWFLOAT)iSize, (CWFLOAT)iSize);
+//	CW_SAFE_RETAIN(m_pViewport);
+//}
 
 CWVOID cwReflectionStage::reset()
 {
-	m_pCubeTexture->setActiveCubeFace(eCubeFaceRight);
+	if (!m_pCubeTexture) {
+		if (m_nMapStageTextures.size() > 0)
+			m_pCubeTexture = static_cast<cwCubeTexture*>(m_nMapStageTextures.begin()->second);
+	}
+
+	if (!m_pViewport && m_pCubeTexture) {
+		m_pViewport = cwRepertory::getInstance().getDevice()->createViewPort(0.0f, 0.0f, m_pCubeTexture->getWidth(), m_pCubeTexture->getWidth());
+		CW_SAFE_RETAIN(m_pViewport);
+	}
+
+	if (m_pCubeTexture)
+		m_pCubeTexture->setActiveCubeFace(eCubeFaceRight);
 }
 
 CWVOID cwReflectionStage::begin()
 {
 	reset();
 
+	if (!m_pCubeTexture) return;
+
 	m_pPrevViewPort = cwRepertory::getInstance().getDevice()->getViewPort();
-	cwRepertory::getInstance().getDevice()->setViewPort(m_pViewport);
 
 	if (!m_nVecStage.empty()) {
 		m_pRenderTarget = m_nVecStage.back()->getRenderTexture();
@@ -131,10 +145,13 @@ CWVOID cwReflectionStage::begin()
 
 CWVOID cwReflectionStage::render()
 {
+	if (!m_pCubeTexture) return;
+
 	cwRepertory::getInstance().getEngine()->getVisibleNodes(m_pCamera, eRenderTypeReflection, m_nVecRenderNodes);
 	if (m_nVecRenderNodes.empty()) return;
 
 	for (auto pNode : m_nVecRenderNodes) {
+		cwRepertory::getInstance().getDevice()->setViewPort(m_pViewport);
 		updateCamera(pNode->getPosition());
 
 		for (CWUINT i = 0; i < eCubeFaceMax; ++i) {
@@ -149,12 +166,22 @@ CWVOID cwReflectionStage::render()
 			}
 		}
 
+		cwRepertory::getInstance().getDevice()->setViewPort(m_pPrevViewPort);
+		cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTarget);
+		cwRepertory::getInstance().getDevice()->beginDraw(m_bClearColor, m_bClearDepth, m_bClearStencil);
 
+		for (auto pLayer : m_nVecLayer) {
+			pLayer->begin(pNode);
+			pLayer->render();
+			pLayer->end();
+		}
 	}
 }
 
 CWVOID cwReflectionStage::end()
 {
+	if (!m_pCubeTexture) return;
+
 	cwRepertory::getInstance().getDevice()->setViewPort(m_pPrevViewPort);
 	m_pPrevViewPort = nullptr;
 
@@ -167,6 +194,13 @@ CWVOID cwReflectionStage::end()
 		}
 
 		m_nVecStageCameras.clear();
+	}
+}
+
+CWVOID cwReflectionStage::addStage(cwStage* pStage)
+{
+	if (pStage) {
+		m_nVecStage.push_back(pStage);
 	}
 }
 

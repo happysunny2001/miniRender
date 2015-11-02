@@ -72,6 +72,11 @@ cwTexture* cwTextureManager::getCubeTexture(const CWSTRING& strName)
 	return nullptr;
 }
 
+cwTexture* cwTextureManager::createCubeTexture(CWUINT iSize)
+{
+	return cwRepertory::getInstance().getDevice()->createCubeTexture(iSize);
+}
+
 void cwTextureManager::removeTexture(const string& strName)
 {
 	m_mapTexture.erase(strName);

@@ -53,6 +53,7 @@ public:
 
 	CWVOID reset();
 	CWVOID begin(std::vector<cwRenderNode*>* vecEntities);
+	CWVOID begin(cwRenderNode* pNode);
 	CWVOID render();
 	CWVOID end();
 
@@ -72,6 +73,7 @@ protected:
 	cwRenderPipeline* getUnusePipeline(cwShader* pShader);
 
 	CWVOID addEntities(std::vector<cwRenderNode*>* vecEntities);
+	CWVOID addEntities(cwRenderNode* pNode);
 
 protected:
 	CWSTRING m_nStrName;

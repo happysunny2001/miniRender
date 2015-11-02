@@ -36,7 +36,7 @@ cwSpriteStage* cwSpriteStage::create()
 
 cwSpriteStage::cwSpriteStage()
 {
-
+	m_eType = eStageTypeSprite;
 }
 
 cwSpriteStage::~cwSpriteStage()

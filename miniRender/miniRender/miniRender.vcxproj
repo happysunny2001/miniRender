@@ -51,6 +51,7 @@
     <ClInclude Include="Entity\cwEntity.h" />
     <ClInclude Include="Entity\cwMirror.h" />
     <ClInclude Include="Entity\cwPrimitiveEntity.h" />
+    <ClInclude Include="Entity\cwReflectionEntity.h" />
     <ClInclude Include="Entity\cwRenderNode.h" />
     <ClInclude Include="Entity\cwScene.h" />
     <ClInclude Include="Entity\cwSkyDome.h" />
@@ -213,6 +214,7 @@
     <ClCompile Include="Entity\cwEntity.cpp" />
     <ClCompile Include="Entity\cwMirror.cpp" />
     <ClCompile Include="Entity\cwPrimitiveEntity.cpp" />
+    <ClCompile Include="Entity\cwReflectionEntity.cpp" />
     <ClCompile Include="Entity\cwRenderNode.cpp" />
     <ClCompile Include="Entity\cwScene.cpp" />
     <ClCompile Include="Entity\cwSkyDome.cpp" />

@@ -64,7 +64,10 @@ typedef enum {
 
 typedef enum {
 	eStageTypeNormal = 1,
-	eStageTypeSpecific,
+	eStageTypeSprite,
+	eStageTypeSkyDome,
+	eStageTypeReflection,
+	eStageTypePrimitive,
 }eStageType;
 
 typedef enum {

@@ -17,52 +17,37 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwPrimitiveStage.h"
-#include "Repertory/cwRepertory.h"
-#include "Engine/cwEngine.h"
-#include "Render/cwRenderer.h"
+#include "cwReflectionEntity.h"
 
 NS_MINIR_BEGIN
 
-cwPrimitiveStage* cwPrimitiveStage::create()
+cwReflectionEntity* cwReflectionEntity::create()
 {
-	cwPrimitiveStage* pStage = new cwPrimitiveStage();
-	if (pStage) {
-		pStage->autorelease();
-		return pStage;
+	cwReflectionEntity* pEntity = new cwReflectionEntity();
+	if (pEntity && pEntity->init()) {
+		pEntity->autorelease();
+		return pEntity;
 	}
 
+	CW_SAFE_DELETE(pEntity);
 	return nullptr;
 }
 
-cwPrimitiveStage::cwPrimitiveStage()
+cwReflectionEntity::cwReflectionEntity()
 {
-	m_eType = eStageTypePrimitive;
+	m_eRenderType = eRenderTypeReflection;
 }
 
-cwPrimitiveStage::~cwPrimitiveStage()
-{
-
-}
-
-CWVOID cwPrimitiveStage::reset()
+cwReflectionEntity::~cwReflectionEntity()
 {
 
 }
 
-CWVOID cwPrimitiveStage::begin()
+CWBOOL cwReflectionEntity::init()
 {
-	reset();
-}
+	if (cwEntity::init()) return CWFALSE;
 
-CWVOID cwPrimitiveStage::render()
-{
-	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitiveEntity();
-}
-
-CWVOID cwPrimitiveStage::end()
-{
-
+	return CWTRUE;
 }
 
 NS_MINIR_END

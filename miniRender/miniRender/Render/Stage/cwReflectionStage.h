@@ -45,7 +45,8 @@ public:
 	virtual CWVOID end() override;
 
 	CWVOID updateCamera(const cwVector3D& pos);
-	CWVOID setSize(CWUINT iSize);
+	//CWVOID setSize(CWUINT iSize);
+	CWVOID addStage(cwStage* pStage);
 
 protected:
 	cwReflectionStage();

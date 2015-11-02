@@ -41,7 +41,7 @@ cwSkyDomeStage* cwSkyDomeStage::create()
 cwSkyDomeStage::cwSkyDomeStage():
 m_pCamera(nullptr)
 {
-
+	m_eType = eStageTypeSkyDome;
 }
 
 cwSkyDomeStage::~cwSkyDomeStage()

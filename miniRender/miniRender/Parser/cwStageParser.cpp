@@ -35,6 +35,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Texture/cwTextureManager.h"
 #include "Engine/cwEngine.h"
 #include "Render/Generator/cwRenderGenerator.h"
+#include "Render/Stage/cwReflectionStage.h"
 
 NS_MINIR_BEGIN
 
@@ -74,6 +75,9 @@ cwStage* cwStageParser::createStage(tinyxml2::XMLElement* pStageData)
 		}
 		else if (strncmp(pcType, "SkyDome", 7) == 0) {
 			return cwSkyDomeStage::create();
+		}
+		else if (strncmp(pcType, "Reflection", 10) == 0) {
+			return cwReflectionStage::create();
 		}
 	}
 
@@ -121,16 +125,16 @@ CWVOID cwStageParser::parseAttribute(cwStage* pStage, tinyxml2::XMLElement* pSta
 		pStage->setName(pcName);
 	}
 
-	const CWCHAR* pcType = pStageData->Attribute("Type");
-	if (pcType) {
-		CWSTRING strType = pcType;
-		if (strncmp(pcType, "normal", 6) == 0) {
-			pStage->setType(eStageTypeNormal);
-		}
-		else if (strncmp(pcType, "specific", 8) == 0) {
-			pStage->setType(eStageTypeSpecific);
-		}
-	}
+	//const CWCHAR* pcType = pStageData->Attribute("Type");
+	//if (pcType) {
+	//	CWSTRING strType = pcType;
+	//	if (strncmp(pcType, "normal", 6) == 0) {
+	//		pStage->setType(eStageTypeNormal);
+	//	}
+	//	else if (strncmp(pcType, "specific", 8) == 0) {
+	//		pStage->setType(eStageTypeSpecific);
+	//	}
+	//}
 
 	const char* pcEnable = pStageData->Attribute("Enable");
 	pStage->setEnable(cwRepertory::getInstance().getParserManager()->getBool(pcEnable));
@@ -204,7 +208,7 @@ CWVOID cwStageParser::parseLayer(cwStage* pStage, tinyxml2::XMLElement* pLayerDa
 	cwStageLayer* pStageLayer = pStageLayerParser->parse(pLayerData);
 	if (pStageLayer) {
 		pStage->addStageLayer(pStageLayer);
-		m_nMapStageLayer[pStageLayer] = pLayerData;
+		//m_nMapStageLayer[pStageLayer] = pLayerData;
 	}
 }
 
@@ -246,7 +250,11 @@ CWVOID cwStageParser::deferParse(cwStage* pStage, tinyxml2::XMLElement* pStageEl
 	else
 		pStage->setCamera(cwRepertory::getInstance().getEngine()->getCamera(pStage->getCameraName()));
 
-	m_nMapStageLayer.clear();
+	if (pStage->getType() == eStageTypeReflection) {
+		parseReflectionStage(static_cast<cwReflectionStage*>(pStage), pStageElement);
+	}
+
+	//m_nMapStageLayer.clear();
 }
 
 CWVOID cwStageParser::parseEntityList(cwStage* pStage, tinyxml2::XMLElement* pStageElement)
@@ -286,11 +294,32 @@ CWVOID cwStageParser::parseTextureList(cwStage* pStage, tinyxml2::XMLElement* pS
 		if (pcName && strlen(pcName) > 0) {
 			cwTexture* pTexture = pTextureParser->parse(pTextureElement);
 			if (pTexture) {
+				pTexture->setName(pcName);
 				pStage->addStageTexture(pcName, pTexture);
 			}
 		}
 
 		pTextureElement = pTextureElement->NextSiblingElement("Texture");
+	}
+}
+
+CWVOID cwStageParser::parseReflectionStage(cwReflectionStage* pStage, tinyxml2::XMLElement* pStageElement)
+{
+	if (!pStageElement || !pStage) return;
+
+	tinyxml2::XMLElement* pStageListElement = pStageElement->FirstChildElement("StageList");
+	if (!pStageListElement) return;
+
+	tinyxml2::XMLElement* pStageDataElement = pStageListElement->FirstChildElement("Stage");
+	while (pStageDataElement) {
+		const char* pcName = pStageDataElement->Attribute("Name");
+
+		cwStage* pOtherStage = cwRepertory::getInstance().getEngine()->getRenderer()->getStage(pcName);
+		if (pOtherStage) {
+			pStage->addStage(pOtherStage);
+		}
+
+		pStageDataElement = pStageDataElement->NextSiblingElement("Stage");
 	}
 }
 

@@ -38,6 +38,18 @@ cwMaterialUnitReflect* cwMaterialUnitReflect::create(const CWSTRING& strTexture,
 	return nullptr;
 }
 
+cwMaterialUnitReflect* cwMaterialUnitReflect::create()
+{
+	cwMaterialUnitReflect* pMUReflect = new cwMaterialUnitReflect();
+	if (pMUReflect && pMUReflect->init(0.5f)) {
+		pMUReflect->autorelease();
+		return pMUReflect;
+	}
+
+	CW_SAFE_DELETE(pMUReflect);
+	return nullptr;
+}
+
 cwMaterialUnitReflect::cwMaterialUnitReflect():
 m_pReflectTexture(nullptr),
 m_fReflectFactor(0.5f)
@@ -57,6 +69,15 @@ CWBOOL cwMaterialUnitReflect::init(const CWSTRING& strTexture, CWFLOAT fFactor)
 	m_pReflectTexture = cwRepertory::getInstance().getTextureManager()->getCubeTexture(strTexture);
 	if (!m_pReflectTexture) return CWFALSE;
 	CW_SAFE_RETAIN(m_pReflectTexture);
+
+	m_fReflectFactor = fFactor;
+
+	return CWTRUE;
+}
+
+CWBOOL cwMaterialUnitReflect::init(CWFLOAT fFactor)
+{
+	if (!cwMaterialUnit::init()) return CWFALSE;
 
 	m_fReflectFactor = fFactor;
 

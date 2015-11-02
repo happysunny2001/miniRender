@@ -44,6 +44,7 @@ protected:
 	cwTexture* parseTextureStage(tinyxml2::XMLElement* pTextureData);
 	cwTexture* parseTextureStageRenderTarget(tinyxml2::XMLElement* pTextureData);
 	cwTexture* parseTextureCreate(tinyxml2::XMLElement* pTextureData);
+	cwTexture* parseTextureCube(tinyxml2::XMLElement* pTextureData);
 
 protected:
 

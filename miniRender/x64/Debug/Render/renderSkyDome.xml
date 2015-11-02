@@ -12,9 +12,14 @@
 		</Stage>
 
 		<Stage Name="SReflection" Type="Reflection" Enable="True">
+			<RenderTarget Type="backbuffer" IsClearColor="False" IsClearDepth="False" IsClearStencil="False"/>
+
+			<TextureList>
+				<Texture Name="SReflectionTex" Type="Cube" Width="256"/>
+			</TextureList>
+
 			<StageList>
-				<Stage Type="Reference" Name="S1" Enable="True">
-				</Stage>
+				<Stage Name="S1"/>
 			</StageList>
 		</Stage>
 

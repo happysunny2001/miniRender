@@ -29,7 +29,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-class cwRenderTexture : public cwTexture
+class CW_DLL cwRenderTexture : public cwTexture
 {
 public:
 	virtual CWBOOL init(CWFLOAT fWidth, CWFLOAT fHeight);

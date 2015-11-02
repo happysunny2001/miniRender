@@ -648,6 +648,9 @@
     <ClInclude Include="Render\Stage\cwReflectionStage.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Entity\cwReflectionEntity.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -1080,6 +1083,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Render\Stage\cwReflectionStage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\cwReflectionEntity.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

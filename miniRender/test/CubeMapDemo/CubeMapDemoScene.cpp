@@ -91,7 +91,8 @@ CWVOID CubeMapDemoScene::buildSphereMaterial()
 	m_pMatSphere->setSpecular(cwVector4D(0.9f, 0.9f, 0.9f, 16.0f));
 	m_pMatSphere->setReflect(cwVector4D(0.4f, 0.4f, 0.4f, 1.0f));
 
-	cwMaterialUnit* pMatUnit = cwMaterialUnitReflect::create("Textures/snowcube1024.dds");
+	cwMaterialUnitReflect* pMatUnit = cwMaterialUnitReflect::create("Textures/snowcube1024.dds");
+	pMatUnit->setReflectionFactor(0.2f);
 	m_pMatSphere->addMaterialUnit(pMatUnit);
 	
 	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getDefShader(eDefShaderLighting);
