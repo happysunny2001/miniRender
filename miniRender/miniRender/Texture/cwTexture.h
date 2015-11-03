@@ -42,6 +42,7 @@ public:
 	virtual CWVOID binding();
 	virtual CWVOID beginDraw(CWBOOL bClearColor = CWTRUE, CWBOOL bClearDepth = CWTRUE, CWBOOL bClearStencil = CWTRUE);
 	virtual CWVOID endDraw();
+	virtual CWVOID generateMips();
 
 	inline eRenderTextureType getType() const { return m_eType; }
 

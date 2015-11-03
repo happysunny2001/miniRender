@@ -50,6 +50,8 @@ public:
 	virtual CWVOID beginDraw(CWBOOL bClearColor = CWTRUE, CWBOOL bClearDepth = CWTRUE, CWBOOL bClearStencil = CWTRUE) override;
 	virtual CWVOID endDraw() override;
 
+	virtual CWVOID generateMips() override;
+
 protected:
 	CWVOID buildDepthStencilView(CWUINT iSize);
 

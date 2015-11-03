@@ -25,6 +25,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
+class cwTexture;
+class cwMaterialUnitReflect;
+
 class cwReflectionEntity : public cwEntity
 {
 public:
@@ -35,7 +38,15 @@ public:
 
 	virtual CWBOOL init() override;
 
+	CWVOID setDynamicRelfectionTexture(cwTexture* pTexture);
+	CWVOID setDynamicRelfectionFactor(CWFLOAT f);
+
 protected:
+	virtual CWVOID buildMaterial() override;
+	virtual CWVOID buildEffect();
+
+protected:
+	cwMaterialUnitReflect* m_pMatUnitDynReflection;
 
 };
 

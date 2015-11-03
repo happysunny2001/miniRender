@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Texture/cwTextureManager.h"
 #include "Repertory/cwRepertory.h"
 #include "Shader/cwShader.h"
+#include "Shader/cwShaderConstant.h"
 #include "effect/cwEffect.h"
 
 NS_MINIR_BEGIN
@@ -41,7 +42,7 @@ cwMaterialUnitReflect* cwMaterialUnitReflect::create(const CWSTRING& strTexture,
 cwMaterialUnitReflect* cwMaterialUnitReflect::create()
 {
 	cwMaterialUnitReflect* pMUReflect = new cwMaterialUnitReflect();
-	if (pMUReflect && pMUReflect->init(0.5f)) {
+	if (pMUReflect && pMUReflect->init()) {
 		pMUReflect->autorelease();
 		return pMUReflect;
 	}
@@ -52,7 +53,9 @@ cwMaterialUnitReflect* cwMaterialUnitReflect::create()
 
 cwMaterialUnitReflect::cwMaterialUnitReflect():
 m_pReflectTexture(nullptr),
-m_fReflectFactor(0.5f)
+m_fReflectFactor(0.5f),
+m_nStrShaderTextureParam(CW_SHADER_REFLECT_CUBE_MAP),
+m_nStrShaderFactorParam(CW_SHADER_REFLECT_FACTOR)
 {
 
 }
@@ -75,11 +78,11 @@ CWBOOL cwMaterialUnitReflect::init(const CWSTRING& strTexture, CWFLOAT fFactor)
 	return CWTRUE;
 }
 
-CWBOOL cwMaterialUnitReflect::init(CWFLOAT fFactor)
+CWBOOL cwMaterialUnitReflect::init()
 {
 	if (!cwMaterialUnit::init()) return CWFALSE;
 
-	m_fReflectFactor = fFactor;
+	m_fReflectFactor = -1.0f;
 
 	return CWTRUE;
 }
@@ -88,12 +91,21 @@ CWVOID cwMaterialUnitReflect::config(cwEffect* pEffect)
 {
 	cwShader* pShader = pEffect->getShader();
 	if (pShader) {
-		if (m_pReflectTexture) {
-			pShader->setVariableTexture(eShaderParamReflectCubeMap, m_pReflectTexture);
+		if (m_pReflectTexture && !m_nStrShaderTextureParam.empty()) {
+			pShader->setVariableTexture(m_nStrShaderTextureParam, m_pReflectTexture);
 		}
 
-		pShader->setVariableFloat(eShaderParamReflectFactor, m_fReflectFactor);
+		if (m_fReflectFactor > 0.0f && !m_nStrShaderFactorParam.empty())
+			pShader->setVariableFloat(m_nStrShaderFactorParam, m_fReflectFactor);
 	}
+}
+
+CWVOID cwMaterialUnitReflect::setReflectionTexture(cwTexture* pTexture)
+{
+	if (m_pReflectTexture == pTexture) return;
+	CW_SAFE_RETAIN(pTexture);
+	CW_SAFE_RELEASE(m_pReflectTexture);
+	m_pReflectTexture = pTexture;
 }
 
 NS_MINIR_END

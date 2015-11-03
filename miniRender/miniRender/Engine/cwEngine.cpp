@@ -320,6 +320,7 @@ CWVOID cwEngine::getVisibleNodes(cwCamera* pCamera, eRenderType eType, std::vect
 
 		if (pCacheResult) {
 			extractRenderNodes(*pCacheResult, vecNodes, eType);
+			return;
 		}
 
 		cwVector<cwRenderNode*>* pVisibleNode = getEmptyNodeList();

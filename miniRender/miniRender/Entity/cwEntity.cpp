@@ -61,6 +61,8 @@ CWBOOL cwEntity::init()
 {
 	if (!cwRenderNode::init()) return CWFALSE;
 
+	buildMaterial();
+
 	return CWTRUE;
 }
 
@@ -103,6 +105,12 @@ CWVOID cwEntity::render(cwRenderBatch* pRenderBatch)
 CWVOID cwEntity::render()
 {
 
+}
+
+CWVOID cwEntity::buildMaterial()
+{
+	m_pMaterial = cwMaterial::create();
+	CW_SAFE_RETAIN(m_pMaterial);
 }
 
 NS_MINIR_END

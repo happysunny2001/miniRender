@@ -78,32 +78,33 @@ CWVOID cwShaderManager::loadDefaultShader()
 
 CWVOID cwShaderManager::buildShaderParam()
 {
-	m_strShaderParam[eShaderParamWorldViewProj]       = CW_SHADER_MAT_WORLDVIEWPROJ;
-	m_strShaderParam[eShaderParamViewProj]			  = CW_SHADER_MAT_VIEWPROJ;
-	m_strShaderParam[eShaderParamWorld]               = CW_SHADER_MAT_WORLD;
-	m_strShaderParam[eShaderParamWorldInvTrans]       = CW_SHADER_MAT_WORLD_INV_TRANS;
-	m_strShaderParam[eShaderParamMaterial]            = CW_SHADER_MATERIAL;
-	m_strShaderParam[eShaderParamDirectionalLight]    = CW_SHADER_DIRECTIONAL_LIGHT;
-	m_strShaderParam[eShaderParamDirectionalLightCnt] = CW_SHADER_DIRECTIONAL_LIGHT_CNT;
-	m_strShaderParam[eShaderParamPointLight]          = CW_SHADER_POINT_LIGHT;
-	m_strShaderParam[eShaderParamPointLightCnt]       = CW_SHADER_POINT_LIGHT_CNT;
-	m_strShaderParam[eShaderParamSpotLight]           = CW_SHADER_SPOT_LIGHT;
-	m_strShaderParam[eShaderParamSpotLightCnt]        = CW_SHADER_SPOT_LIGHT_CNT;
-	m_strShaderParam[eShaderParamEyePosWorld]         = CW_SHADER_EYE_POSW;
-	m_strShaderParam[eShaderParamTexture0]            = CW_SHADER_TEXTURE0;
-	m_strShaderParam[eShaderParamTexture1]            = CW_SHADER_TEXTURE1;
-	m_strShaderParam[eShaderParamTexture2]            = CW_SHADER_TEXTURE2;
-	m_strShaderParam[eShaderParamTexture3]            = CW_SHADER_TEXTURE3;
-	m_strShaderParam[eShaderParamTexture4]            = CW_SHADER_TEXTURE4;
-	m_strShaderParam[eShaderParamTexture5]            = CW_SHADER_TEXTURE5;
-	m_strShaderParam[eShaderParamTexture6]            = CW_SHADER_TEXTURE6;
-	m_strShaderParam[eShaderParamTexture7]            = CW_SHADER_TEXTURE7;
-	m_strShaderParam[eShaderParamFogStart]            = CW_SHADER_FOG_START;
-	m_strShaderParam[eShaderParamFogRange]            = CW_SHADER_FOG_RANGE;
-	m_strShaderParam[eShaderParamFogColor]            = CW_SHADER_FOG_COLOR;
-	m_strShaderParam[eShaderParamSkyCubeMap]          = CW_SHADER_SKY_CUBE_MAP;
-	m_strShaderParam[eShaderParamReflectCubeMap]      = CW_SHADER_REFLECT_CUBE_MAP;
-	m_strShaderParam[eShaderParamReflectFactor]       = CW_SHADER_REFLECT_FACTOR;
+	m_strShaderParam[eShaderParamWorldViewProj]         = CW_SHADER_MAT_WORLDVIEWPROJ;
+	m_strShaderParam[eShaderParamViewProj]			    = CW_SHADER_MAT_VIEWPROJ;
+	m_strShaderParam[eShaderParamWorld]                 = CW_SHADER_MAT_WORLD;
+	m_strShaderParam[eShaderParamWorldInvTrans]         = CW_SHADER_MAT_WORLD_INV_TRANS;
+	m_strShaderParam[eShaderParamMaterial]              = CW_SHADER_MATERIAL;
+	m_strShaderParam[eShaderParamDirectionalLight]      = CW_SHADER_DIRECTIONAL_LIGHT;
+	m_strShaderParam[eShaderParamDirectionalLightCnt]   = CW_SHADER_DIRECTIONAL_LIGHT_CNT;
+	m_strShaderParam[eShaderParamPointLight]            = CW_SHADER_POINT_LIGHT;
+	m_strShaderParam[eShaderParamPointLightCnt]         = CW_SHADER_POINT_LIGHT_CNT;
+	m_strShaderParam[eShaderParamSpotLight]             = CW_SHADER_SPOT_LIGHT;
+	m_strShaderParam[eShaderParamSpotLightCnt]          = CW_SHADER_SPOT_LIGHT_CNT;
+	m_strShaderParam[eShaderParamEyePosWorld]           = CW_SHADER_EYE_POSW;
+	m_strShaderParam[eShaderParamTexture0]              = CW_SHADER_TEXTURE0;
+	m_strShaderParam[eShaderParamTexture1]              = CW_SHADER_TEXTURE1;
+	m_strShaderParam[eShaderParamTexture2]              = CW_SHADER_TEXTURE2;
+	m_strShaderParam[eShaderParamTexture3]              = CW_SHADER_TEXTURE3;
+	m_strShaderParam[eShaderParamTexture4]              = CW_SHADER_TEXTURE4;
+	m_strShaderParam[eShaderParamTexture5]              = CW_SHADER_TEXTURE5;
+	m_strShaderParam[eShaderParamTexture6]              = CW_SHADER_TEXTURE6;
+	m_strShaderParam[eShaderParamTexture7]              = CW_SHADER_TEXTURE7;
+	m_strShaderParam[eShaderParamFogStart]              = CW_SHADER_FOG_START;
+	m_strShaderParam[eShaderParamFogRange]              = CW_SHADER_FOG_RANGE;
+	m_strShaderParam[eShaderParamFogColor]              = CW_SHADER_FOG_COLOR;
+	m_strShaderParam[eShaderParamSkyCubeMap]            = CW_SHADER_SKY_CUBE_MAP;
+	m_strShaderParam[eShaderParamReflectCubeMap]        = CW_SHADER_REFLECT_CUBE_MAP;
+	m_strShaderParam[eShaderParamReflectFactor]         = CW_SHADER_REFLECT_FACTOR;
+	m_strShaderParam[eShaderParamDynamicReflectCubeMap] = CW_SHADER_DYNAMIC_REFLECT_CUBE_MAP;
 }
 
 const CWSTRING& cwShaderManager::getShaderParamString(eShaderParamIndex eParam) const

@@ -58,6 +58,9 @@ public:
 	virtual CWVOID render(cwRenderBatch* pRenderBatch) override;
 
 protected:
+	virtual CWVOID buildMaterial();
+
+protected:
 	cwMaterial* m_pMaterial;
 	cwRenderObject* m_pRenderObj;
 

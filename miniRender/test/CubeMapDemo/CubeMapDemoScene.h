@@ -41,6 +41,7 @@ protected:
 	CWVOID buildLight();
 
 protected:
+	cwRenderNode* m_pNodeZero;
 	cwEntity* m_pEntitySphere;
 	cwRenderObject* m_pRenderObjSphere;
 	cwMaterial* m_pMatSphere;

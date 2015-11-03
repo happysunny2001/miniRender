@@ -37,15 +37,25 @@ public:
 	virtual ~cwMaterialUnitReflect();
 
 	virtual CWBOOL init(const CWSTRING& strTexture, CWFLOAT fFactor);
-	virtual CWBOOL init(CWFLOAT fFactor);
+	virtual CWBOOL init();
 
 	virtual CWVOID config(cwEffect* pEffect) override;
 
+	CWVOID setReflectionTexture(cwTexture* pTexture);
 	CWVOID setReflectionFactor(CWFLOAT f) { m_fReflectFactor = f; }
+
+	inline const CWSTRING& getTextureParamName() const { return m_nStrShaderTextureParam; }
+	inline CWVOID setTextureParamName(const CWSTRING& strName) { m_nStrShaderTextureParam = strName; }
+
+	inline const CWSTRING& getFactorParamName() const { return m_nStrShaderFactorParam; }
+	inline CWVOID setFactorParamName(const CWSTRING& strName) { m_nStrShaderFactorParam = strName; }
 
 protected:
 	cwTexture* m_pReflectTexture;
 	CWFLOAT m_fReflectFactor;
+
+	CWSTRING m_nStrShaderTextureParam;
+	CWSTRING m_nStrShaderFactorParam;
 
 };
 

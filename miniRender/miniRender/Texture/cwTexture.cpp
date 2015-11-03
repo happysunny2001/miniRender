@@ -56,4 +56,9 @@ CWVOID cwTexture::endDraw()
 
 }
 
+CWVOID cwTexture::generateMips()
+{
+
+}
+
 NS_MINIR_END

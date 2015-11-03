@@ -368,6 +368,7 @@ typedef enum {
 	eShaderParamSkyCubeMap,
 	eShaderParamReflectCubeMap,
 	eShaderParamReflectFactor,
+	eShaderParamDynamicReflectCubeMap,
 	eShaderParamMax,
 }eShaderParamIndex;
 

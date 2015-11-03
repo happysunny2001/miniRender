@@ -54,6 +54,7 @@ Texture2D gTexture7;
 TextureCube gSkyCubeMap;
 
 TextureCube gReflectCubeMap;
+TextureCube gDynamicReflectCubeMap;
 cbuffer cbReflectFactor
 {
 	float fReflectFactor;

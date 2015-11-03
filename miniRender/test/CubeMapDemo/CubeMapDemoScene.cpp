@@ -61,7 +61,9 @@ CWBOOL CubeMapDemoScene::init()
 
 CWVOID CubeMapDemoScene::update(CWFLOAT dt)
 {
-	dt = 0.03f;
+//	dt = 0.03f;
+
+	m_pNodeZero->rotate(0, cwMathUtil::cwPI*0.2f*dt, 0);
 }
 
 CWVOID CubeMapDemoScene::buildSphereMaterial()
@@ -86,13 +88,13 @@ CWVOID CubeMapDemoScene::buildSphereMaterial()
 	m_pMatSphere = cwMaterial::create();
 	CW_SAFE_RETAIN(m_pMatSphere);
 
-	m_pMatSphere->setAmbient(cwVector4D(0.2f, 0.3f, 0.4f, 1.0f));
-	m_pMatSphere->setDiffuse(cwVector4D(0.2f, 0.3f, 0.4f, 1.0f));
+	m_pMatSphere->setAmbient(cwVector4D(0.5f, 0.5f, 0.5f, 1.0f));
+	m_pMatSphere->setDiffuse(cwVector4D(1.0f, 1.0f, 1.0f, 1.0f));
 	m_pMatSphere->setSpecular(cwVector4D(0.9f, 0.9f, 0.9f, 16.0f));
 	m_pMatSphere->setReflect(cwVector4D(0.4f, 0.4f, 0.4f, 1.0f));
 
 	cwMaterialUnitReflect* pMatUnit = cwMaterialUnitReflect::create("Textures/snowcube1024.dds");
-	pMatUnit->setReflectionFactor(0.2f);
+	pMatUnit->setReflectionFactor(0.5f);
 	m_pMatSphere->addMaterialUnit(pMatUnit);
 	
 	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getDefShader(eDefShaderLighting);
@@ -117,19 +119,33 @@ CWVOID CubeMapDemoScene::buildScene()
 	m_pEntitySphere = buildSphere();
 	CW_SAFE_RETAIN(m_pEntitySphere);
 
-	m_pEntitySphere->setPosition(cwVector3D::ZERO);
-	this->addChild(m_pEntitySphere);
+	m_pNodeZero = cwRenderNode::create();
+	m_pEntitySphere->setPosition(cwVector3D(8.0f, 0.0f, 0.0f));
+	this->addChild(m_pNodeZero);
+	m_pNodeZero->addChild(m_pEntitySphere);
 
 	this->createSkyDome("Textures/snowcube1024.dds");
+
+	cwReflectionEntity* pReflectionEntity = cwReflectionEntity::create();
+	pReflectionEntity->setRenderObject(m_pRenderObjSphere);
+	pReflectionEntity->setPosition(cwVector3D::ZERO);
+	pReflectionEntity->setDynamicRelfectionFactor(1.0f);
+
+	cwMaterial* pMatReflection = pReflectionEntity->getMaterial();
+	pMatReflection->setAmbient(cwVector4D(0.2f, 0.2f, 0.2f, 1.0f));
+	pMatReflection->setDiffuse(cwVector4D(0.6f, 0.6f, 0.6f, 1.0f));
+	pMatReflection->setSpecular(cwVector4D(0.8f, 0.8f, 0.8f, 16.0f));
+	pMatReflection->setReflect(cwVector4D(1.0f, 1.0f, 1.0f, 1.0f));
+	this->addChild(pReflectionEntity);
 }
 
 CWVOID CubeMapDemoScene::buildLight()
 {
 	cwDirectionalLight* pLightDirectional01 = cwDirectionalLight::create(
 		cwVector4D(0.57735f, -0.57735f, 0.57735f, 0),
-		cwVector4D(0.2f, 0.2f, 0.2f, 1.0f),
-		cwVector4D(0.5f, 0.5f, 0.5f, 1.0f),
-		cwVector4D(0.5f, 0.5f, 0.5f, 1.0f));
+		cwVector4D(1.0f, 1.0f, 1.0f, 1.0f),
+		cwVector4D(1.0f, 1.0f, 1.0f, 1.0f),
+		cwVector4D(1.0f, 1.0f, 1.0f, 1.0f));
 	this->addDirectionalLight(pLightDirectional01);
 
 	cwDirectionalLight* pLightDirectional02 = cwDirectionalLight::create(
@@ -139,11 +155,11 @@ CWVOID CubeMapDemoScene::buildLight()
 		cwVector4D(0.25f, 0.25f, 0.25f, 1.0f));
 	this->addDirectionalLight(pLightDirectional02);
 
-	cwDirectionalLight* pLightDirectional03 = cwDirectionalLight::create(
-		cwVector4D(0.0f, -0.707f, -0.707f, 0),
-		cwVector4D(0.0f, 0.0f, 0.0f, 1.0f),
-		cwVector4D(0.2f, 0.2f, 0.2f, 1.0f),
-		cwVector4D(0.0f, 0.0f, 0.0f, 1.0f));
-	this->addDirectionalLight(pLightDirectional03);
+	//cwDirectionalLight* pLightDirectional03 = cwDirectionalLight::create(
+	//	cwVector4D(0.0f, -0.707f, -0.707f, 0),
+	//	cwVector4D(0.0f, 0.0f, 0.0f, 1.0f),
+	//	cwVector4D(0.2f, 0.2f, 0.2f, 1.0f),
+	//	cwVector4D(0.0f, 0.0f, 0.0f, 1.0f));
+	//this->addDirectionalLight(pLightDirectional03);
 }
 

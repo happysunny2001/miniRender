@@ -215,6 +215,14 @@ CWVOID cwD3D11CubeTexture::endDraw()
 
 }
 
+CWVOID cwD3D11CubeTexture::generateMips()
+{
+	if (m_pShaderResource) {
+		cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+		pDevice->getD3D11DeviceContext()->GenerateMips(m_pShaderResource);
+	}
+}
+
 NS_MINIR_END
 
 #endif

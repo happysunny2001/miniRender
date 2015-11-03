@@ -47,6 +47,21 @@ float4 PSReflect(VertexOut pIn) : SV_Target
 	return finalColor;
 }
 
+float4 PSDynamicReflect(VertexOut pIn) : SV_Target
+{
+	pIn.NormalW = normalize(pIn.NormalW);
+	float3 toEyeW = normalize(gEyePosWorld - pIn.PosW);
+
+	float4 litColor = processLight(gMaterial, pIn.PosW, pIn.NormalW, toEyeW);
+	float4 dynamicReflectionColor = processReflection(gMaterial, gDynamicReflectCubeMap, pIn.NormalW, toEyeW);
+
+	float factor = saturate(fReflectFactor);
+	float4 finalColor = dynamicReflectionColor*factor + litColor*(1.0f-factor);
+	finalColor.a = gMaterial.diffuse.a;
+
+	return finalColor;
+}
+
 technique11 LightTech
 {
     pass P0
@@ -64,6 +79,16 @@ technique11 LightTechReflect
         SetVertexShader( CompileShader( vs_5_0, VS() ) );
 	SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PSReflect() ) );
+    }
+}
+
+technique11 LightTechDynamicReflect
+{
+    pass P0
+    {
+        SetVertexShader( CompileShader( vs_5_0, VS() ) );
+	SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_5_0, PSDynamicReflect() ) );
     }
 }
 

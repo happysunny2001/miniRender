@@ -26,6 +26,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "Engine/cwEngine.h"
 #include "Entity/cwRenderNode.h"
+#include "Entity/cwReflectionEntity.h"
+#include "Render/cwRenderer.h"
 #include "cwStageLayer.h"
 
 NS_MINIR_BEGIN
@@ -69,6 +71,8 @@ CWVOID cwReflectionStage::buildCameras()
 	for (CWUINT i = 0; i < 6; ++i) {
 		m_nCameras[i] = cwCamera::create();
 		CW_SAFE_RETAIN(m_nCameras[i]);
+
+		m_nCameras[i]->updateProjMatrixFov(cwMathUtil::cwPI*0.5f, 1.0f, 0.1f, 1000.0f);
 	}
 }
 
@@ -147,6 +151,7 @@ CWVOID cwReflectionStage::render()
 {
 	if (!m_pCubeTexture) return;
 
+	m_nVecRenderNodes.clear();
 	cwRepertory::getInstance().getEngine()->getVisibleNodes(m_pCamera, eRenderTypeReflection, m_nVecRenderNodes);
 	if (m_nVecRenderNodes.empty()) return;
 
@@ -166,9 +171,14 @@ CWVOID cwReflectionStage::render()
 			}
 		}
 
+		cwRepertory::getInstance().getEngine()->getRenderer()->setCurrCamera(m_pCamera);
 		cwRepertory::getInstance().getDevice()->setViewPort(m_pPrevViewPort);
 		cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTarget);
 		cwRepertory::getInstance().getDevice()->beginDraw(m_bClearColor, m_bClearDepth, m_bClearStencil);
+
+		cwReflectionEntity* pReflectionEntity = static_cast<cwReflectionEntity*>(pNode);
+		m_pCubeTexture->generateMips();
+		pReflectionEntity->setDynamicRelfectionTexture(m_pCubeTexture);
 
 		for (auto pLayer : m_nVecLayer) {
 			pLayer->begin(pNode);

@@ -18,6 +18,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwReflectionEntity.h"
+#include "Material/cwMaterial.h"
+#include "Material/MaterialUnit/cwMaterialUnitReflect.h"
+#include "Shader/cwShaderConstant.h"
+#include "Shader/cwShaderManager.h"
+#include "Repertory/cwRepertory.h"
+#include "effect/cwEffect.h"
 
 NS_MINIR_BEGIN
 
@@ -33,7 +39,8 @@ cwReflectionEntity* cwReflectionEntity::create()
 	return nullptr;
 }
 
-cwReflectionEntity::cwReflectionEntity()
+cwReflectionEntity::cwReflectionEntity():
+m_pMatUnitDynReflection(nullptr)
 {
 	m_eRenderType = eRenderTypeReflection;
 }
@@ -45,9 +52,51 @@ cwReflectionEntity::~cwReflectionEntity()
 
 CWBOOL cwReflectionEntity::init()
 {
-	if (cwEntity::init()) return CWFALSE;
+	if (!cwEntity::init()) return CWFALSE;
+
+	buildEffect();
 
 	return CWTRUE;
+}
+
+CWVOID cwReflectionEntity::setDynamicRelfectionTexture(cwTexture* pTexture)
+{
+	if (m_pMatUnitDynReflection) {
+		m_pMatUnitDynReflection->setReflectionTexture(pTexture);
+	}
+}
+
+CWVOID cwReflectionEntity::setDynamicRelfectionFactor(CWFLOAT f)
+{
+	if (m_pMatUnitDynReflection) {
+		m_pMatUnitDynReflection->setReflectionFactor(f);
+	}
+}
+
+CWVOID cwReflectionEntity::buildMaterial()
+{
+	cwEntity::buildMaterial();
+
+	m_pMatUnitDynReflection = cwMaterialUnitReflect::create();
+	if (m_pMatUnitDynReflection) {
+		m_pMatUnitDynReflection->setTextureParamName(CW_SHADER_REFLECT_CUBE_MAP);
+		m_pMatUnitDynReflection->setFactorParamName(CW_SHADER_REFLECT_FACTOR);
+		m_pMatUnitDynReflection->setReflectionFactor(0.5f);
+
+		if (m_pMaterial) {
+			m_pMaterial->addMaterialUnit(m_pMatUnitDynReflection);
+		}
+	}
+}
+
+CWVOID cwReflectionEntity::buildEffect()
+{
+	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getDefShader(eDefShaderLighting);
+	cwEffect* pEffect = cwEffect::create();
+	pEffect->setShader(pShader);
+	pEffect->setTech("LightTechReflect");
+
+	this->setEffect(pEffect);
 }
 
 NS_MINIR_END

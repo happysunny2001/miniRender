@@ -60,12 +60,12 @@ CWVOID cwSkyDomeStage::begin()
 
 	cwRepertory& repertory = cwRepertory::getInstance();
 
-	cwCamera* pCamera = repertory.getEngine()->getRenderer()->getRendererCamera();
+	//cwCamera* pCamera = repertory.getEngine()->getRenderer()->getRendererCamera();
 	cwScene* pScene = repertory.getEngine()->getCurrScene();
-	if (pScene && pCamera) {
+	if (pScene && m_pCamera) {
 		cwSkyDome* pSkyDome = pScene->getSkyDome();
 		if (pSkyDome) {
-			pSkyDome->setPosition(pCamera->getPos());
+			pSkyDome->setPosition(m_pCamera->getPos());
 			pSkyDome->transform();
 			pSkyDome->refreshTransform();
 
@@ -77,8 +77,8 @@ CWVOID cwSkyDomeStage::begin()
 		}
 	}
 
-	m_pCamera = repertory.getEngine()->getRenderer()->getCurrCamera();
-	repertory.getEngine()->getRenderer()->setCurrCamera(pCamera);
+	//m_pCamera = repertory.getEngine()->getRenderer()->getCurrCamera();
+	//repertory.getEngine()->getRenderer()->setCurrCamera(pCamera);
 }
 
 CWVOID cwSkyDomeStage::render()
@@ -88,7 +88,7 @@ CWVOID cwSkyDomeStage::render()
 
 CWVOID cwSkyDomeStage::end()
 {
-	cwRepertory::getInstance().getEngine()->getRenderer()->setCurrCamera(m_pCamera);
+	//cwRepertory::getInstance().getEngine()->getRenderer()->setCurrCamera(m_pCamera);
 }
 
 NS_MINIR_END
