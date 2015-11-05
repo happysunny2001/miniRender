@@ -42,14 +42,8 @@ cbuffer cbMaterial
 	Material gMaterial;             //material of object
 };
 
-Texture2D gTexture0;
-Texture2D gTexture1;
-Texture2D gTexture2;
-Texture2D gTexture3;
-Texture2D gTexture4;
-Texture2D gTexture5;
-Texture2D gTexture6;
-Texture2D gTexture7;
+Texture2D gDiffuseTexture;
+Texture2D gNormalTexture;
 
 TextureCube gSkyCubeMap;
 

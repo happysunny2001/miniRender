@@ -61,8 +61,6 @@ CWBOOL CubeMapDemoScene::init()
 
 CWVOID CubeMapDemoScene::update(CWFLOAT dt)
 {
-//	dt = 0.03f;
-
 	m_pNodeZero->rotate(0, cwMathUtil::cwPI*0.2f*dt, 0);
 }
 
@@ -93,7 +91,7 @@ CWVOID CubeMapDemoScene::buildSphereMaterial()
 	m_pMatSphere->setSpecular(cwVector4D(0.9f, 0.9f, 0.9f, 16.0f));
 	m_pMatSphere->setReflect(cwVector4D(0.4f, 0.4f, 0.4f, 1.0f));
 
-	cwMaterialUnitReflect* pMatUnit = cwMaterialUnitReflect::create("Textures/snowcube1024.dds");
+	cwMaterialUnitDynamicReflect* pMatUnit = cwMaterialUnitDynamicReflect::create("Textures/snowcube1024.dds");
 	pMatUnit->setReflectionFactor(0.5f);
 	m_pMatSphere->addMaterialUnit(pMatUnit);
 	
@@ -124,9 +122,7 @@ CWVOID CubeMapDemoScene::buildScene()
 	this->addChild(m_pNodeZero);
 	m_pNodeZero->addChild(m_pEntitySphere);
 
-	this->createSkyDome("Textures/snowcube1024.dds");
-
-	cwReflectionEntity* pReflectionEntity = cwReflectionEntity::create();
+	cwDynamicReflectionEntity* pReflectionEntity = cwDynamicReflectionEntity::create();
 	pReflectionEntity->setRenderObject(m_pRenderObjSphere);
 	pReflectionEntity->setPosition(cwVector3D::ZERO);
 	pReflectionEntity->setDynamicRelfectionFactor(1.0f);
@@ -137,6 +133,8 @@ CWVOID CubeMapDemoScene::buildScene()
 	pMatReflection->setSpecular(cwVector4D(0.8f, 0.8f, 0.8f, 16.0f));
 	pMatReflection->setReflect(cwVector4D(1.0f, 1.0f, 1.0f, 1.0f));
 	this->addChild(pReflectionEntity);
+
+	this->createSkyDome("Textures/snowcube1024.dds");
 }
 
 CWVOID CubeMapDemoScene::buildLight()

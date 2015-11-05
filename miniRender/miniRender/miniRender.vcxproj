@@ -51,7 +51,7 @@
     <ClInclude Include="Entity\cwEntity.h" />
     <ClInclude Include="Entity\cwMirror.h" />
     <ClInclude Include="Entity\cwPrimitiveEntity.h" />
-    <ClInclude Include="Entity\cwReflectionEntity.h" />
+    <ClInclude Include="Entity\cwDynamicReflectionEntity.h" />
     <ClInclude Include="Entity\cwRenderNode.h" />
     <ClInclude Include="Entity\cwScene.h" />
     <ClInclude Include="Entity\cwSkyDome.h" />
@@ -90,7 +90,8 @@
     <ClInclude Include="Light\cwSpotLight.h" />
     <ClInclude Include="Material\cwMaterial.h" />
     <ClInclude Include="Material\MaterialUnit\cwMaterialUnit.h" />
-    <ClInclude Include="Material\MaterialUnit\cwMaterialUnitReflect.h" />
+    <ClInclude Include="Material\MaterialUnit\cwMaterialUnitDynamicReflect.h" />
+    <ClInclude Include="Material\MaterialUnit\cwMaterialUnitTexture.h" />
     <ClInclude Include="Math\cwAABB.h" />
     <ClInclude Include="Math\cwCircle.h" />
     <ClInclude Include="Math\cwFrustum.h" />
@@ -214,7 +215,7 @@
     <ClCompile Include="Entity\cwEntity.cpp" />
     <ClCompile Include="Entity\cwMirror.cpp" />
     <ClCompile Include="Entity\cwPrimitiveEntity.cpp" />
-    <ClCompile Include="Entity\cwReflectionEntity.cpp" />
+    <ClCompile Include="Entity\cwDynamicReflectionEntity.cpp" />
     <ClCompile Include="Entity\cwRenderNode.cpp" />
     <ClCompile Include="Entity\cwScene.cpp" />
     <ClCompile Include="Entity\cwSkyDome.cpp" />
@@ -239,7 +240,8 @@
     <ClCompile Include="Light\cwSpotLight.cpp" />
     <ClCompile Include="Material\cwMaterial.cpp" />
     <ClCompile Include="Material\MaterialUnit\cwMaterialUnit.cpp" />
-    <ClCompile Include="Material\MaterialUnit\cwMaterialUnitReflect.cpp" />
+    <ClCompile Include="Material\MaterialUnit\cwMaterialUnitDynamicReflect.cpp" />
+    <ClCompile Include="Material\MaterialUnit\cwMaterialUnitTexture.cpp" />
     <ClCompile Include="Math\cwAABB.cpp" />
     <ClCompile Include="Math\cwCircle.cpp" />
     <ClCompile Include="Math\cwFrustum.cpp" />

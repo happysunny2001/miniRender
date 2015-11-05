@@ -17,48 +17,37 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_PARSER_MANAGER_H__
-#define __CW_PARSER_MANAGER_H__
+#ifndef __CW_MATERIAL_UNIT_TEXTURE_H__
+#define __CW_MATERIAL_UNIT_TEXTURE_H__
 
 #include "Base/cwMacros.h"
-#include "Base/cwUtils.h"
-#include "Ref/cwRef.h"
-
-#include <unordered_map>
+#include "cwMaterialUnit.h"
 
 NS_MINIR_BEGIN
 
-class cwParserManager : public cwRef
+class cwTexture;
+
+class cwMaterialUnitTexture : public cwMaterialUnit
 {
 public:
-	static cwParserManager* create();
+	static cwMaterialUnitTexture* create(const CWSTRING& strTexture, const CWSTRING& strParamName);
 
-	cwParserManager();
-	virtual~ cwParserManager();
+	cwMaterialUnitTexture();
+	virtual ~cwMaterialUnitTexture();
 
-	virtual CWBOOL init();
-	inline cwRef* getParser(eParserType eType) { return m_nArrParser[eType]; }
+	virtual CWBOOL init(const CWSTRING& strTexture, const CWSTRING& strParamName);
 
-	CWBOOL getBool(const CWSTRING& strBool) const;
-	eColorWriteEnable getColorEnable(const CWSTRING& strColor) const;
-	eFormat getFormatType(const CWSTRING& strFormat) const;
-	eClassification getClassificationType(const CWSTRING& strClass) const;
+	inline const CWSTRING& getTextureParamName() const { return m_nStrShaderTextureParam; }
+	inline CWVOID setTextureParamName(const CWSTRING& strParamName) { m_nStrShaderTextureParam = strParamName; }
 
-	CWBOOL getBool(const char* strBool) const;
-	eColorWriteEnable getColorEnable(const char* strColor) const;
-	eFormat getFormatType(const char* strFormat) const;
-	eClassification getClassificationType(const char* strClass) const;
+	CWVOID setTexture(cwTexture* pTexture);
+	inline cwTexture* getTexture() const { return m_pTexture; }
+
+	virtual CWVOID config(cwEffect* pEffect) override;
 
 protected:
-	CWVOID initFormat();
-
-protected:
-	cwRef* m_nArrParser[eParserTypeMax];
-
-	std::unordered_map<CWSTRING, CWBOOL> m_nMapBool;
-	std::unordered_map<CWSTRING, eColorWriteEnable> m_nMapColorEnable;
-	std::unordered_map<CWSTRING, eFormat> m_nMapFormat;
-	std::unordered_map<CWSTRING, eClassification> m_nMapClassification;
+	cwTexture* m_pTexture;
+	CWSTRING m_nStrShaderTextureParam;
 
 };
 

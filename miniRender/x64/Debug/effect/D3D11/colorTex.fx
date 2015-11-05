@@ -26,7 +26,7 @@ VertexOut VS(VertexIn vin)
 
 float4 PS(VertexOut pin) : SV_Target
 {
-	return gTexture0.Sample( samAnisotropic, pin.Tex );
+	return gDiffuseTexture.Sample( samAnisotropic, pin.Tex );
 }
 
 technique11 ColorTech

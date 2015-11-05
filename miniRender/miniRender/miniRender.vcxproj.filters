@@ -633,9 +633,6 @@
     <ClInclude Include="Render\Stage\cwSkyDomeStage.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Material\MaterialUnit\cwMaterialUnitReflect.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Material\MaterialUnit\cwMaterialUnit.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -648,7 +645,13 @@
     <ClInclude Include="Render\Stage\cwReflectionStage.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Entity\cwReflectionEntity.h">
+    <ClInclude Include="Material\MaterialUnit\cwMaterialUnitTexture.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\cwDynamicReflectionEntity.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Material\MaterialUnit\cwMaterialUnitDynamicReflect.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1070,9 +1073,6 @@
     <ClCompile Include="Render\Stage\cwSkyDomeStage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Material\MaterialUnit\cwMaterialUnitReflect.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Material\MaterialUnit\cwMaterialUnit.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -1085,7 +1085,13 @@
     <ClCompile Include="Render\Stage\cwReflectionStage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Entity\cwReflectionEntity.cpp">
+    <ClCompile Include="Material\MaterialUnit\cwMaterialUnitTexture.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\cwDynamicReflectionEntity.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Material\MaterialUnit\cwMaterialUnitDynamicReflect.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

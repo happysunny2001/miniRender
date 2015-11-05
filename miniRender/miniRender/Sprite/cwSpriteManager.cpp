@@ -211,7 +211,7 @@ CWVOID cwSpriteManager::renderBatch(cwSprite* pSprite)
 		repertory.getDevice()->setStencil(pSprite->getStencil());
 
 	repertory.getDevice()->setShaderWorldTrans(m_pDefEffect->getShader(), pSprite->getTransformMatrix(), m_pOrthoCamera);
-	m_pDefEffect->getShader()->setVariableTexture(eShaderParamTexture0, pSprite->getTexture());
+	m_pDefEffect->getShader()->setVariableTexture(eShaderParamDiffuseTexture, pSprite->getTexture());
 	repertory.getDevice()->draw(m_pDefEffect->getShader(), m_pDefEffect->getTech(), m_pRenderObjects);
 }
 

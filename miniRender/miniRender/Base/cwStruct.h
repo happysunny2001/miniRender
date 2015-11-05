@@ -52,6 +52,14 @@ typedef struct
 	cwVector2D tex;
 }cwVertexPosNormalTex;
 
+typedef struct
+{
+	cwVector3D pos;
+	cwVector3D normal;
+	cwVector2D tex;
+	cwVector3D tan;
+}cwVertexPosNormalTexTan;
+
 typedef struct  
 {
 	cwVector3D pos;

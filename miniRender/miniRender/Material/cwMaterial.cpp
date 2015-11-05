@@ -190,7 +190,7 @@ CWVOID cwMaterial::configShader(cwShader* pShader)
 {
 	if (pShader) {
 		pShader->setVariableData(eShaderParamMaterial, this->getColorData(), 0, this->getColorDataSize());
-		pShader->setVariableTexture(eShaderParamTexture0, this->getDiffuseTexture());
+		pShader->setVariableTexture(eShaderParamDiffuseTexture, this->getDiffuseTexture());
 	}
 }
 

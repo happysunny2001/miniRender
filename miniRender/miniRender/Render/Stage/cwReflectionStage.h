@@ -35,6 +35,19 @@ class cwCamera;
 class CW_DLL cwReflectionStage : public cwStage
 {
 public:
+	struct sStageRef{
+		cwStage* m_pStage;
+		CWBOOL m_bReplaceRenderTarget;
+
+		cwCamera* m_pSavedCamera;
+		cwTexture* m_pSavedRenderTarget;
+
+		sStageRef() : m_pStage(nullptr), m_bReplaceRenderTarget(CWTRUE), m_pSavedCamera(nullptr), m_pSavedRenderTarget(nullptr) {}
+		sStageRef(cwStage* pStage) : m_pStage(pStage), m_bReplaceRenderTarget(CWTRUE), m_pSavedCamera(nullptr), m_pSavedRenderTarget(nullptr) {}
+		sStageRef(cwStage* pStage, CWBOOL bReplace) : m_pStage(pStage), m_bReplaceRenderTarget(bReplace), m_pSavedCamera(nullptr), m_pSavedRenderTarget(nullptr) {}
+	};
+
+public:
 	static cwReflectionStage* create();
 
 	virtual ~cwReflectionStage();
@@ -45,8 +58,8 @@ public:
 	virtual CWVOID end() override;
 
 	CWVOID updateCamera(const cwVector3D& pos);
-	//CWVOID setSize(CWUINT iSize);
 	CWVOID addStage(cwStage* pStage);
+	CWVOID addStage(cwStage* pStage, CWBOOL bReplaceRenderTarget);
 
 protected:
 	cwReflectionStage();
@@ -58,10 +71,11 @@ protected:
 	cwViewPort* m_pViewport;
 	cwCamera* m_nCameras[6];
 
-	std::vector<cwStage*> m_nVecStage;
+	std::vector<sStageRef> m_nVecStageRef;
 
 	cwViewPort* m_pPrevViewPort;
-	std::vector<cwCamera*> m_nVecStageCameras;
+	//std::vector<cwCamera*> m_nVecStageCameras;
+	//std::vector<cwTexture*> m_nVecStageRenderTexture;
 
 };
 

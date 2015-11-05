@@ -38,8 +38,7 @@ cwSkyDomeStage* cwSkyDomeStage::create()
 	return nullptr;
 }
 
-cwSkyDomeStage::cwSkyDomeStage():
-m_pCamera(nullptr)
+cwSkyDomeStage::cwSkyDomeStage()
 {
 	m_eType = eStageTypeSkyDome;
 }
@@ -56,12 +55,10 @@ CWVOID cwSkyDomeStage::reset()
 
 CWVOID cwSkyDomeStage::begin()
 {
-	reset();
-
-	cwRepertory& repertory = cwRepertory::getInstance();
+	cwStage::begin();
 
 	//cwCamera* pCamera = repertory.getEngine()->getRenderer()->getRendererCamera();
-	cwScene* pScene = repertory.getEngine()->getCurrScene();
+	cwScene* pScene = cwRepertory::getInstance().getEngine()->getCurrScene();
 	if (pScene && m_pCamera) {
 		cwSkyDome* pSkyDome = pScene->getSkyDome();
 		if (pSkyDome) {

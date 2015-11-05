@@ -17,8 +17,8 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_REFLECTION_ENTITY_H__
-#define __CW_REFLECTION_ENTITY_H__
+#ifndef __CW_DYNAMIC_REFLECTION_ENTITY_H__
+#define __CW_DYNAMIC_REFLECTION_ENTITY_H__
 
 #include "Base/cwMacros.h"
 #include "cwEntity.h"
@@ -26,15 +26,15 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 NS_MINIR_BEGIN
 
 class cwTexture;
-class cwMaterialUnitReflect;
+class cwMaterialUnitDynamicReflect;
 
-class cwReflectionEntity : public cwEntity
+class cwDynamicReflectionEntity : public cwEntity
 {
 public:
-	static cwReflectionEntity* create();
+	static cwDynamicReflectionEntity* create();
 
-	cwReflectionEntity();
-	virtual ~cwReflectionEntity();
+	cwDynamicReflectionEntity();
+	virtual ~cwDynamicReflectionEntity();
 
 	virtual CWBOOL init() override;
 
@@ -46,7 +46,7 @@ protected:
 	virtual CWVOID buildEffect();
 
 protected:
-	cwMaterialUnitReflect* m_pMatUnitDynReflection;
+	cwMaterialUnitDynamicReflect* m_pMatUnitDynReflection;
 
 };
 

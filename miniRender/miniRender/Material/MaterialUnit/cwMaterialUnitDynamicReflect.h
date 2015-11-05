@@ -22,39 +22,41 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "cwMaterialUnit.h"
+#include "cwMaterialUnitTexture.h"
 
 NS_MINIR_BEGIN
 
 class cwTexture;
 
-class cwMaterialUnitReflect : public cwMaterialUnit
+class cwMaterialUnitDynamicReflect : public cwMaterialUnitTexture
 {
 public:
-	static cwMaterialUnitReflect* create(const CWSTRING& strTexture, CWFLOAT fFactor=0.5f);
-	static cwMaterialUnitReflect* create();
+	static cwMaterialUnitDynamicReflect* create(const CWSTRING& strTexture, CWFLOAT fFactor = 0.5f);
+	static cwMaterialUnitDynamicReflect* create();
 
-	cwMaterialUnitReflect();
-	virtual ~cwMaterialUnitReflect();
+	cwMaterialUnitDynamicReflect();
+	virtual ~cwMaterialUnitDynamicReflect();
 
 	virtual CWBOOL init(const CWSTRING& strTexture, CWFLOAT fFactor);
 	virtual CWBOOL init();
 
 	virtual CWVOID config(cwEffect* pEffect) override;
 
-	CWVOID setReflectionTexture(cwTexture* pTexture);
-	CWVOID setReflectionFactor(CWFLOAT f) { m_fReflectFactor = f; }
+	//CWVOID setReflectionTexture(cwTexture* pTexture);
+	inline CWVOID setReflectionFactor(CWFLOAT f) { m_fReflectFactor = f; }
+	inline CWFLOAT getReflectionFactor() const { return m_fReflectFactor; }
 
-	inline const CWSTRING& getTextureParamName() const { return m_nStrShaderTextureParam; }
-	inline CWVOID setTextureParamName(const CWSTRING& strName) { m_nStrShaderTextureParam = strName; }
+	//inline const CWSTRING& getTextureParamName() const { return m_nStrShaderTextureParam; }
+	//inline CWVOID setTextureParamName(const CWSTRING& strName) { m_nStrShaderTextureParam = strName; }
 
 	inline const CWSTRING& getFactorParamName() const { return m_nStrShaderFactorParam; }
 	inline CWVOID setFactorParamName(const CWSTRING& strName) { m_nStrShaderFactorParam = strName; }
 
 protected:
-	cwTexture* m_pReflectTexture;
+	//cwTexture* m_pReflectTexture;
 	CWFLOAT m_fReflectFactor;
 
-	CWSTRING m_nStrShaderTextureParam;
+	//CWSTRING m_nStrShaderTextureParam;
 	CWSTRING m_nStrShaderFactorParam;
 
 };

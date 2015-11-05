@@ -20,6 +20,13 @@
 		<Element Name="TEXCOORD" Index="0" Format="R32g32Float" Slot="0" Offset="24" Classification="Vertex" InstanceRate="0"/>
 	</Layout>
 
+	<Layout Name="PosNormalTexTan" Shader="effect/D3D11/normalMap.fx">
+		<Element Name="POSITION" Index="0" Format="R32g32b32Float" Slot="0" Offset="0" Classification="Vertex" InstanceRate="0"/>
+		<Element Name="NORMAL" Index="0" Format="R32g32b32Float" Slot="0" Offset="12" Classification="Vertex" InstanceRate="0"/>
+		<Element Name="TEXCOORD" Index="0" Format="R32g32Float" Slot="0" Offset="24" Classification="Vertex" InstanceRate="0"/>
+		<Element Name="TANGENT" Index="0" Format="R32g32b32Float" Slot="0" Offset="32" Classification="Vertex" InstanceRate="0"/>
+	</Layout>
+
 	<Layout Name="PosTex" Shader="effect/D3D11/colorTex.fx">
 		<Element Name="POSITION" Index="0" Format="R32g32b32Float" Slot="0" Offset="0" Classification="Vertex" InstanceRate="0"/>
 		<Element Name="TEXCOORD" Index="0" Format="R32g32Float" Slot="0" Offset="12" Classification="Vertex" InstanceRate="0"/>

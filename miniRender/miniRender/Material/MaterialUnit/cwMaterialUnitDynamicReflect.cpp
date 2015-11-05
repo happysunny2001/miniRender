@@ -17,7 +17,7 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwMaterialUnitReflect.h"
+#include "cwMaterialUnitDynamicReflect.h"
 #include "Texture/cwTexture.h"
 #include "Texture/cwTextureManager.h"
 #include "Repertory/cwRepertory.h"
@@ -27,9 +27,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwMaterialUnitReflect* cwMaterialUnitReflect::create(const CWSTRING& strTexture, CWFLOAT fFactor)
+cwMaterialUnitDynamicReflect* cwMaterialUnitDynamicReflect::create(const CWSTRING& strTexture, CWFLOAT fFactor)
 {
-	cwMaterialUnitReflect* pMUReflect = new cwMaterialUnitReflect();
+	cwMaterialUnitDynamicReflect* pMUReflect = new cwMaterialUnitDynamicReflect();
 	if (pMUReflect && pMUReflect->init(strTexture, fFactor)) {
 		pMUReflect->autorelease();
 		return pMUReflect;
@@ -39,9 +39,9 @@ cwMaterialUnitReflect* cwMaterialUnitReflect::create(const CWSTRING& strTexture,
 	return nullptr;
 }
 
-cwMaterialUnitReflect* cwMaterialUnitReflect::create()
+cwMaterialUnitDynamicReflect* cwMaterialUnitDynamicReflect::create()
 {
-	cwMaterialUnitReflect* pMUReflect = new cwMaterialUnitReflect();
+	cwMaterialUnitDynamicReflect* pMUReflect = new cwMaterialUnitDynamicReflect();
 	if (pMUReflect && pMUReflect->init()) {
 		pMUReflect->autorelease();
 		return pMUReflect;
@@ -51,48 +51,50 @@ cwMaterialUnitReflect* cwMaterialUnitReflect::create()
 	return nullptr;
 }
 
-cwMaterialUnitReflect::cwMaterialUnitReflect():
-m_pReflectTexture(nullptr),
+cwMaterialUnitDynamicReflect::cwMaterialUnitDynamicReflect() :
+//m_pReflectTexture(nullptr),
 m_fReflectFactor(0.5f),
-m_nStrShaderTextureParam(CW_SHADER_REFLECT_CUBE_MAP),
+//m_nStrShaderTextureParam(CW_SHADER_REFLECT_CUBE_MAP),
 m_nStrShaderFactorParam(CW_SHADER_REFLECT_FACTOR)
 {
 
 }
 
-cwMaterialUnitReflect::~cwMaterialUnitReflect()
+cwMaterialUnitDynamicReflect::~cwMaterialUnitDynamicReflect()
 {
-	CW_SAFE_RELEASE_NULL(m_pReflectTexture);
+	//CW_SAFE_RELEASE_NULL(m_pReflectTexture);
 }
 
-CWBOOL cwMaterialUnitReflect::init(const CWSTRING& strTexture, CWFLOAT fFactor)
+CWBOOL cwMaterialUnitDynamicReflect::init(const CWSTRING& strTexture, CWFLOAT fFactor)
 {
 	if (!cwMaterialUnit::init()) return CWFALSE;
 
-	m_pReflectTexture = cwRepertory::getInstance().getTextureManager()->getCubeTexture(strTexture);
-	if (!m_pReflectTexture) return CWFALSE;
-	CW_SAFE_RETAIN(m_pReflectTexture);
+	m_pTexture = cwRepertory::getInstance().getTextureManager()->getCubeTexture(strTexture);
+	if (!m_pTexture) return CWFALSE;
+	CW_SAFE_RETAIN(m_pTexture);
 
 	m_fReflectFactor = fFactor;
+	m_nStrShaderTextureParam = CW_SHADER_REFLECT_CUBE_MAP;
 
 	return CWTRUE;
 }
 
-CWBOOL cwMaterialUnitReflect::init()
+CWBOOL cwMaterialUnitDynamicReflect::init()
 {
 	if (!cwMaterialUnit::init()) return CWFALSE;
 
 	m_fReflectFactor = -1.0f;
+	m_nStrShaderTextureParam = CW_SHADER_REFLECT_CUBE_MAP;
 
 	return CWTRUE;
 }
 
-CWVOID cwMaterialUnitReflect::config(cwEffect* pEffect)
+CWVOID cwMaterialUnitDynamicReflect::config(cwEffect* pEffect)
 {
 	cwShader* pShader = pEffect->getShader();
 	if (pShader) {
-		if (m_pReflectTexture && !m_nStrShaderTextureParam.empty()) {
-			pShader->setVariableTexture(m_nStrShaderTextureParam, m_pReflectTexture);
+		if (m_pTexture && !m_nStrShaderTextureParam.empty()) {
+			pShader->setVariableTexture(m_nStrShaderTextureParam, m_pTexture);
 		}
 
 		if (m_fReflectFactor > 0.0f && !m_nStrShaderFactorParam.empty())
@@ -100,12 +102,12 @@ CWVOID cwMaterialUnitReflect::config(cwEffect* pEffect)
 	}
 }
 
-CWVOID cwMaterialUnitReflect::setReflectionTexture(cwTexture* pTexture)
-{
-	if (m_pReflectTexture == pTexture) return;
-	CW_SAFE_RETAIN(pTexture);
-	CW_SAFE_RELEASE(m_pReflectTexture);
-	m_pReflectTexture = pTexture;
-}
+//CWVOID cwMaterialUnitDynamicReflect::setReflectionTexture(cwTexture* pTexture)
+//{
+//	if (m_pReflectTexture == pTexture) return;
+//	CW_SAFE_RETAIN(pTexture);
+//	CW_SAFE_RELEASE(m_pReflectTexture);
+//	m_pReflectTexture = pTexture;
+//}
 
 NS_MINIR_END

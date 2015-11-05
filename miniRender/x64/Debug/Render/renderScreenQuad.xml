@@ -13,7 +13,7 @@
 
 		<Stage Name="S2" Type="Normal" Enable="True">
 			<Camera Name="Homo" />
-			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" />
+			<RenderTarget Type="backbuffer"/>
 			<Layer EntityType="Stage"/>
 
 			<TextureList>

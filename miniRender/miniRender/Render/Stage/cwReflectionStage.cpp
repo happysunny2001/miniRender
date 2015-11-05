@@ -26,7 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "Engine/cwEngine.h"
 #include "Entity/cwRenderNode.h"
-#include "Entity/cwReflectionEntity.h"
+#include "Entity/cwDynamicReflectionEntity.h"
 #include "Render/cwRenderer.h"
 #include "cwStageLayer.h"
 
@@ -54,7 +54,6 @@ m_pPrevViewPort(nullptr)
 
 cwReflectionStage::~cwReflectionStage()
 {
-	//CW_SAFE_RELEASE_NULL(m_pCubeTexture);
 	CW_SAFE_RELEASE_NULL(m_pViewport);
 
 	for (CWUINT i = 0; i < 6; ++i) {
@@ -101,18 +100,6 @@ CWVOID cwReflectionStage::updateCamera(const cwVector3D& pos)
 	}
 }
 
-//CWVOID cwReflectionStage::setSize(CWUINT iSize)
-//{
-//	//CW_SAFE_RELEASE_NULL(m_pCubeTexture);
-//	CW_SAFE_RELEASE_NULL(m_pViewport);
-//
-//	//m_pCubeTexture = cwRepertory::getInstance().getDevice()->createCubeTexture(iSize);
-//	//CW_SAFE_RETAIN(m_pCubeTexture);
-//
-//	m_pViewport = cwRepertory::getInstance().getDevice()->createViewPort(0.0f, 0.0f, (CWFLOAT)iSize, (CWFLOAT)iSize);
-//	CW_SAFE_RETAIN(m_pViewport);
-//}
-
 CWVOID cwReflectionStage::reset()
 {
 	if (!m_pCubeTexture) {
@@ -137,12 +124,13 @@ CWVOID cwReflectionStage::begin()
 
 	m_pPrevViewPort = cwRepertory::getInstance().getDevice()->getViewPort();
 
-	if (!m_nVecStage.empty()) {
-		m_pRenderTarget = m_nVecStage.back()->getRenderTexture();
-		m_nVecStage.back()->setRenderTexture(m_pCubeTexture);
+	if (!m_nVecStageRef.empty()) {
+		for (auto it = m_nVecStageRef.begin(); it != m_nVecStageRef.end(); ++it) {
+			it->m_pSavedCamera = it->m_pStage->getCamera();
+			it->m_pSavedRenderTarget = it->m_pStage->getRenderTexture();
 
-		for (auto pStage : m_nVecStage) {
-			m_nVecStageCameras.push_back(pStage->getCamera());
+			if (it->m_bReplaceRenderTarget)
+				it->m_pStage->setRenderTexture(m_pCubeTexture);
 		}
 	}
 }
@@ -152,7 +140,7 @@ CWVOID cwReflectionStage::render()
 	if (!m_pCubeTexture) return;
 
 	m_nVecRenderNodes.clear();
-	cwRepertory::getInstance().getEngine()->getVisibleNodes(m_pCamera, eRenderTypeReflection, m_nVecRenderNodes);
+	cwRepertory::getInstance().getEngine()->getVisibleNodes(m_pCamera, eRenderTypeDynamicReflection, m_nVecRenderNodes);
 	if (m_nVecRenderNodes.empty()) return;
 
 	for (auto pNode : m_nVecRenderNodes) {
@@ -162,9 +150,10 @@ CWVOID cwReflectionStage::render()
 		for (CWUINT i = 0; i < eCubeFaceMax; ++i) {
 			m_pCubeTexture->setActiveCubeFace((eCubeTextureFace)i);
 
-			for (auto pStage : m_nVecStage) {
-				pStage->setCamera(m_nCameras[i]);
+			for (auto it = m_nVecStageRef.begin(); it != m_nVecStageRef.end(); ++it) {
+				cwStage* pStage = it->m_pStage;
 
+				pStage->setCamera(m_nCameras[i]);
 				pStage->begin();
 				pStage->render();
 				pStage->end();
@@ -176,7 +165,7 @@ CWVOID cwReflectionStage::render()
 		cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTarget);
 		cwRepertory::getInstance().getDevice()->beginDraw(m_bClearColor, m_bClearDepth, m_bClearStencil);
 
-		cwReflectionEntity* pReflectionEntity = static_cast<cwReflectionEntity*>(pNode);
+		cwDynamicReflectionEntity* pReflectionEntity = static_cast<cwDynamicReflectionEntity*>(pNode);
 		m_pCubeTexture->generateMips();
 		pReflectionEntity->setDynamicRelfectionTexture(m_pCubeTexture);
 
@@ -195,22 +184,25 @@ CWVOID cwReflectionStage::end()
 	cwRepertory::getInstance().getDevice()->setViewPort(m_pPrevViewPort);
 	m_pPrevViewPort = nullptr;
 
-	if (!m_nVecStage.empty()) {
-		m_nVecStage.back()->setRenderTexture(m_pRenderTarget);
-		m_pRenderTarget = nullptr;
-
-		for (CWUINT i = 0; i < (CWUINT)m_nVecStage.size(); ++i) {
-			m_nVecStage[i]->setCamera(m_nVecStageCameras[i]);
+	if (!m_nVecStageRef.empty()) {
+		for (auto it = m_nVecStageRef.begin(); it != m_nVecStageRef.end(); ++it) {
+			it->m_pStage->setCamera(it->m_pSavedCamera);
+			it->m_pStage->setRenderTexture(it->m_pSavedRenderTarget);
 		}
-
-		m_nVecStageCameras.clear();
 	}
 }
 
 CWVOID cwReflectionStage::addStage(cwStage* pStage)
 {
 	if (pStage) {
-		m_nVecStage.push_back(pStage);
+		m_nVecStageRef.push_back(sStageRef(pStage));
+	}
+}
+
+CWVOID cwReflectionStage::addStage(cwStage* pStage, CWBOOL bReplaceRenderTarget)
+{
+	if (pStage) {
+		m_nVecStageRef.push_back(sStageRef(pStage, bReplaceRenderTarget));
 	}
 }
 

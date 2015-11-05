@@ -107,33 +107,77 @@ CWBOOL cwParserManager::init()
 	return CWTRUE;
 }
 
-CWBOOL cwParserManager::getBool(const CWSTRING& strBool)
+CWBOOL cwParserManager::getBool(const CWSTRING& strBool) const
 {
-	if (m_nMapBool.find(strBool) != m_nMapBool.end())
-		return m_nMapBool[strBool];
+	auto it = m_nMapBool.find(strBool);
+	if (it != m_nMapBool.end())
+		return it->second;
 
 	return CWFALSE;
 }
 
-eColorWriteEnable cwParserManager::getColorEnable(const CWSTRING& strColor)
+CWBOOL cwParserManager::getBool(const char* strBool) const
 {
-	if (m_nMapColorEnable.find(strColor) != m_nMapColorEnable.end())
-		return m_nMapColorEnable[strColor];
+	if (strBool) {
+		auto it = m_nMapBool.find(strBool);
+		if (it != m_nMapBool.end())
+			return it->second;
+	}
+
+	return CWFALSE;
+}
+
+eColorWriteEnable cwParserManager::getColorEnable(const CWSTRING& strColor) const
+{
+	auto it = m_nMapColorEnable.find(strColor);
+	if (it != m_nMapColorEnable.end())
+		return it->second;
+	return eColorWriteEnableNone;
+}
+
+eColorWriteEnable cwParserManager::getColorEnable(const char* strColor) const
+{
+	if (strColor) {
+		auto it = m_nMapColorEnable.find(strColor);
+		if (it != m_nMapColorEnable.end())
+			return it->second;
+	}
+
 	return eColorWriteEnableNone;
 }
 
 eFormat cwParserManager::getFormatType(const CWSTRING& strFormat) const
 {
 	auto it = m_nMapFormat.find(strFormat);
-	if (it == m_nMapFormat.end()) return eFormatUnknown;
-	return it->second;
+	if (it != m_nMapFormat.end()) return it->second;
+	return eFormatUnknown;
+}
+
+eFormat cwParserManager::getFormatType(const char* strFormat) const
+{
+	if (strFormat) {
+		auto it = m_nMapFormat.find(strFormat);
+		if (it != m_nMapFormat.end()) return it->second;
+	}
+
+	return eFormatUnknown;
 }
 
 eClassification cwParserManager::getClassificationType(const CWSTRING& strClass) const
 {
 	auto it = m_nMapClassification.find(strClass);
-	if (it == m_nMapClassification.end()) return eClassificationPerVertex;
-	return it->second;
+	if (it != m_nMapClassification.end()) return it->second;
+	return eClassificationPerVertex;
+}
+
+eClassification cwParserManager::getClassificationType(const char* strClass) const
+{
+	if (strClass) {
+		auto it = m_nMapClassification.find(strClass);
+		if (it != m_nMapClassification.end()) return it->second;
+	}
+
+	return eClassificationPerVertex;
 }
 
 CWVOID cwParserManager::initFormat()

@@ -307,19 +307,22 @@ CWVOID cwStageParser::parseReflectionStage(cwReflectionStage* pStage, tinyxml2::
 {
 	if (!pStageElement || !pStage) return;
 
+	cwParserManager* pParserManager = cwRepertory::getInstance().getParserManager();
+
 	tinyxml2::XMLElement* pStageListElement = pStageElement->FirstChildElement("StageList");
 	if (!pStageListElement) return;
 
-	tinyxml2::XMLElement* pStageDataElement = pStageListElement->FirstChildElement("Stage");
+	tinyxml2::XMLElement* pStageDataElement = pStageListElement->FirstChildElement("StageReference");
 	while (pStageDataElement) {
 		const char* pcName = pStageDataElement->Attribute("Name");
+		const char* pcReplaceRT = pStageDataElement->Attribute("ReplaceRenderTarget");
 
 		cwStage* pOtherStage = cwRepertory::getInstance().getEngine()->getRenderer()->getStage(pcName);
 		if (pOtherStage) {
-			pStage->addStage(pOtherStage);
+			pStage->addStage(pOtherStage, pParserManager->getBool(pcReplaceRT));
 		}
 
-		pStageDataElement = pStageDataElement->NextSiblingElement("Stage");
+		pStageDataElement = pStageDataElement->NextSiblingElement("StageReference");
 	}
 }
 

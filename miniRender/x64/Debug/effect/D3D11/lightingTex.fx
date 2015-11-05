@@ -30,7 +30,7 @@ VertexOut VS(VertexIn vIn)
 float4 PS(VertexOut pIn, uniform bool gAlphaClip, uniform bool gFogEnable) : SV_Target
 {
 	//float4 texColor = gDiffuseTexture.Sample( samAnisotropic, pIn.Tex );
-	float4 texColor = gTexture0.Sample( samAnisotropic, pIn.Tex );
+	float4 texColor = gDiffuseTexture.Sample( samAnisotropic, pIn.Tex );
 	if(gAlphaClip) {
 		clip(texColor.a - 0.05f);
 	}

@@ -29,7 +29,7 @@ VertexOut VS(VertexIn vin)
 
 float4 PS(VertexOut pin) : SV_Target
 {
-	float4 texColor = gTexture0.Sample( samAnisotropic, pin.Tex );
+	float4 texColor = gDiffuseTexture.Sample( samAnisotropic, pin.Tex );
 	return texColor*pin.Color;
 }
 

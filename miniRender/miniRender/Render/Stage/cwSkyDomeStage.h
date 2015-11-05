@@ -45,7 +45,6 @@ protected:
 
 protected:
 	cwRenderBatch m_nRenderBatch;
-	cwCamera* m_pCamera;
 
 };
 
