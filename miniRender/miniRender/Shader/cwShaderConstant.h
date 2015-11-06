@@ -58,6 +58,7 @@ typedef enum {
 	eDefShaderTex,
 	eDefShaderPosTexColor,
 	eDefShaderSkyDome,
+	eDefShaderNormalMap,
 	eDefShaderMax
 }eDefShaderID;
 

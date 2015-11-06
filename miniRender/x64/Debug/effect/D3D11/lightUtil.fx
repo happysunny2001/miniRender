@@ -146,43 +146,41 @@ void processSpotLight(Material mat, SpotLight light, float3 pos, float3 normal, 
 	specular *= att;
 }
 
-float4 processLight(Material mat, float3 pos, float3 normal, float3 toEye)
+void processLight(Material mat, float3 pos, float3 normal, float3 toEye, out float4 ambient, out float4 diffuse, out float4 specular)
 {
-	//light result
-	float4 ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	float4 diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	float4 spec    = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	ambient  = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	diffuse  = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	float4 A, D, S;
 	int i;
-
+	
+	[unroll]
 	for(i = 0; i < gDirectionalLightCount; ++i) {
 		ProcessDirectionalLight(mat, gDirectionalLight[i], normal, toEye, A, D, S);
 
-		ambient += A;
-		diffuse += D;
-		spec    += S;
+		ambient  += A;
+		diffuse  += D;
+		specular += S;
 	}
-
+	
+	[unroll]
 	for(i = 0; i < gPointLightCount; ++i) {
 		ProcessPointLight(mat, gPointLight[i], pos, normal, toEye, A, D, S);
 
-		ambient += A;
-		diffuse += D;
-		spec    += S;
+		ambient  += A;
+		diffuse  += D;
+		specular += S;
 	}
-
+	
+	[unroll]
 	for(i = 0; i < gSpotLightCount; ++i) {
 		processSpotLight(mat, gSpotLight[i], pos, normal, toEye, A, D, S);
 
-		ambient += A;
-		diffuse += D;
-		spec    += S;
+		ambient  += A;
+		diffuse  += D;
+		specular += S;
 	}
-
-	float4 litColor = ambient + diffuse + spec;
-	litColor.a = mat.diffuse.a;
-	return litColor;
 }
 
 float4 processReflection(Material mat, TextureCube cubemap, float3 normal, float3 toEye)
@@ -191,4 +189,21 @@ float4 processReflection(Material mat, TextureCube cubemap, float3 normal, float
 	float3 reflectionDir = reflect(incidentDir, normal);
 	float4 reflectionColor = cubemap.Sample(samAnisotropic, reflectionDir);
 	return mat.reflect*reflectionColor;
+}
+
+//transform normal map sample to wprld space
+float3 processNormalMapToWorld(float3 normalMapVector, float3 normalW, float3 tangentW)
+{
+	// Uncompress each component from [0,1] to [-1,1].
+	float3 normalT = 2.0f*normalMapVector - 1.0f;
+
+	float3 N = normalW;
+	float3 T = normalize(tangentW - dot(tangentW, N)*N);
+	float3 B = cross(N, T);
+
+	float3x3 TBN = float3x3(T, B, N);
+
+	// Transform from tangent space to world space.
+	float3 bumpedNormalW = mul(normalT, TBN);
+	return bumpedNormalW;
 }

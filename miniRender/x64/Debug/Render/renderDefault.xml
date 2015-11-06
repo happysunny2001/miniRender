@@ -5,7 +5,7 @@
 	<StageList>
 
 		<Stage Name="S1" Type="Normal" Enable="True">
-			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" />
+			<RenderTarget Type="backbuffer"/>
 		</Stage>
 
 		<Stage Name="SSprite" Type="Sprite" Enable="True">

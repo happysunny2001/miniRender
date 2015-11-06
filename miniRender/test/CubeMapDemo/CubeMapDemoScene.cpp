@@ -153,11 +153,11 @@ CWVOID CubeMapDemoScene::buildLight()
 		cwVector4D(0.25f, 0.25f, 0.25f, 1.0f));
 	this->addDirectionalLight(pLightDirectional02);
 
-	//cwDirectionalLight* pLightDirectional03 = cwDirectionalLight::create(
-	//	cwVector4D(0.0f, -0.707f, -0.707f, 0),
-	//	cwVector4D(0.0f, 0.0f, 0.0f, 1.0f),
-	//	cwVector4D(0.2f, 0.2f, 0.2f, 1.0f),
-	//	cwVector4D(0.0f, 0.0f, 0.0f, 1.0f));
-	//this->addDirectionalLight(pLightDirectional03);
+	cwDirectionalLight* pLightDirectional03 = cwDirectionalLight::create(
+		cwVector4D(0.0f, -0.707f, -0.707f, 0),
+		cwVector4D(0.0f, 0.0f, 0.0f, 1.0f),
+		cwVector4D(0.2f, 0.2f, 0.2f, 1.0f),
+		cwVector4D(0.0f, 0.0f, 0.0f, 1.0f));
+	this->addDirectionalLight(pLightDirectional03);
 }
 

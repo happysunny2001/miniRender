@@ -89,10 +89,10 @@ bool cwMaterial::init(
 	const cwVector4D& specular,
 	const cwVector4D& reflect)
 {
-	this->m_nMatData.m_nAmbient = ambient;
-	this->m_nMatData.m_nDiffuse = diffuse;
+	this->m_nMatData.m_nAmbient  = ambient;
+	this->m_nMatData.m_nDiffuse  = diffuse;
 	this->m_nMatData.m_nSpecular = specular;
-	this->m_nMatData.m_nReflect = reflect;
+	this->m_nMatData.m_nReflect  = reflect;
 	return true;
 }
 
@@ -182,7 +182,9 @@ void cwMaterial::configEffect(cwEffect* pEffect)
 			configShader(pShader);
 		}
 
-		configUnits(pEffect);
+		if (!m_nVecMatUnits.empty()) {
+			configUnits(pEffect);
+		}
 	}
 }
 
@@ -196,10 +198,8 @@ CWVOID cwMaterial::configShader(cwShader* pShader)
 
 CWVOID cwMaterial::configUnits(cwEffect* pEffect)
 {
-	if (!m_nVecMatUnits.empty()) {
-		for (auto pUnit : m_nVecMatUnits) {
-			pUnit->config(pEffect);
-		}
+	for (auto pUnit : m_nVecMatUnits) {
+		pUnit->config(pEffect);
 	}
 }
 

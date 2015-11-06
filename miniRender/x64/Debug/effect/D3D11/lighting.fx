@@ -28,8 +28,14 @@ float4 PS(VertexOut pIn) : SV_Target
 {
 	pIn.NormalW = normalize(pIn.NormalW);
 	float3 toEyeW = normalize(gEyePosWorld - pIn.PosW);
+	
+	float4 ambient, diffuse, spec;
 
-	return processLight(gMaterial, pIn.PosW, pIn.NormalW, toEyeW);
+	processLight(gMaterial, pIn.PosW, pIn.NormalW, toEyeW, ambient, diffuse, spec);
+	float4 litColor = ambient + diffuse + spec;
+	litColor.a = gMaterial.diffuse.a;
+
+	return litColor;
 }
 
 float4 PSReflect(VertexOut pIn) : SV_Target
@@ -37,7 +43,12 @@ float4 PSReflect(VertexOut pIn) : SV_Target
 	pIn.NormalW = normalize(pIn.NormalW);
 	float3 toEyeW = normalize(gEyePosWorld - pIn.PosW);
 
-	float4 litColor = processLight(gMaterial, pIn.PosW, pIn.NormalW, toEyeW);
+	float4 ambient, diffuse, spec;
+
+	processLight(gMaterial, pIn.PosW, pIn.NormalW, toEyeW, ambient, diffuse, spec);
+	float4 litColor = ambient + diffuse + spec;
+	litColor.a = gMaterial.diffuse.a;
+
 	float4 reflectionColor = processReflection(gMaterial, gReflectCubeMap, pIn.NormalW, toEyeW);
 
 	float factor = saturate(fReflectFactor);
@@ -51,8 +62,13 @@ float4 PSDynamicReflect(VertexOut pIn) : SV_Target
 {
 	pIn.NormalW = normalize(pIn.NormalW);
 	float3 toEyeW = normalize(gEyePosWorld - pIn.PosW);
+	
+	float4 ambient, diffuse, spec;
 
-	float4 litColor = processLight(gMaterial, pIn.PosW, pIn.NormalW, toEyeW);
+	processLight(gMaterial, pIn.PosW, pIn.NormalW, toEyeW, ambient, diffuse, spec);
+	float4 litColor = ambient + diffuse + spec;
+	litColor.a = gMaterial.diffuse.a;
+
 	float4 dynamicReflectionColor = processReflection(gMaterial, gDynamicReflectCubeMap, pIn.NormalW, toEyeW);
 
 	float factor = saturate(fReflectFactor);
