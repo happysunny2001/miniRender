@@ -31,7 +31,7 @@ NS_MINIR_BEGIN
 cwDevice::cwDevice() :
 m_fvClearColor(cwColor::black),
 m_eRenderState(eRenderStateSolid),
-m_bEnableMsaa4x(false),
+m_bEnableMsaa4x(CWTRUE),
 m_pBlendState(nullptr),
 m_pRenderTargetBkBuffer(nullptr),
 m_pCurrRenderTarget(nullptr),

@@ -137,6 +137,7 @@ CWVOID TessellationDemoScene::buildEntityTriangle()
 	cwMaterial* pMaterial = cwMaterial::create();
 
 	cwEntity* pTriangle = cwEntity::create();
+	pTriangle->setTag(100);
 	pTriangle->setEffect(pEffect);
 	pTriangle->setMaterial(pMaterial);
 	pTriangle->setRenderObject(pRenderObj);
@@ -170,6 +171,7 @@ CWVOID TessellationDemoScene::buildEntityQuad()
 	cwMaterial* pMaterial = cwMaterial::create();
 
 	cwEntity* pQuad = cwEntity::create();
+	pQuad->setTag(101);
 	pQuad->setEffect(pEffect);
 	pQuad->setMaterial(pMaterial);
 	pQuad->setRenderObject(pRenderObj);
@@ -218,6 +220,7 @@ CWVOID TessellationDemoScene::buildEntityBezier()
 	cwMaterial* pMaterial = cwMaterial::create();
 
 	cwEntity* pBezier = cwEntity::create();
+	pBezier->setTag(102);
 	pBezier->setEffect(pEffect);
 	pBezier->setMaterial(pMaterial);
 	pBezier->setRenderObject(pRenderObj);

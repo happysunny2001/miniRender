@@ -83,7 +83,9 @@ technique11 LightTech
     pass P0
     {
         SetVertexShader( CompileShader( vs_5_0, VS() ) );
-	SetGeometryShader( NULL );
+        SetHullShader( NULL );
+        SetDomainShader( NULL );
+		SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PS() ) );
     }
 }
@@ -93,7 +95,9 @@ technique11 LightTechReflect
     pass P0
     {
         SetVertexShader( CompileShader( vs_5_0, VS() ) );
-	SetGeometryShader( NULL );
+        SetHullShader( NULL );
+        SetDomainShader( NULL );
+		SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PSReflect() ) );
     }
 }
@@ -103,7 +107,9 @@ technique11 LightTechDynamicReflect
     pass P0
     {
         SetVertexShader( CompileShader( vs_5_0, VS() ) );
-	SetGeometryShader( NULL );
+        SetHullShader( NULL );
+        SetDomainShader( NULL );
+		SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PSDynamicReflect() ) );
     }
 }

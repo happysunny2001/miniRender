@@ -41,10 +41,14 @@ protected:
 	CWVOID buildLight();
 
 	cwEntity* createNormalMapCylinder();
+	cwEntity* createNormalMapSphere();
 
 protected:
 	minir::cwRenderObject* m_pRenderCylinder;
+	minir::cwRenderObject* m_pRenderSphere;
+
 	minir::cwEffect* m_pNormalMapEffect;
+	minir::cwEffect* m_pDisplacementEffect;
 
 };
 

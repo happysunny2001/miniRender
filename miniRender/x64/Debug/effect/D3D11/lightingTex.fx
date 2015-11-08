@@ -98,7 +98,9 @@ technique11 LightTechAlphaClip
     pass P0
     {
         SetVertexShader( CompileShader( vs_5_0, VS() ) );
-	SetGeometryShader( NULL );
+        SetHullShader( NULL );
+        SetDomainShader( NULL );
+		SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PS(true, false) ) );
     }
 }
@@ -108,7 +110,9 @@ technique11 LightTechFog
     pass P0
     {
         SetVertexShader( CompileShader( vs_5_0, VS() ) );
-	SetGeometryShader( NULL );
+        SetHullShader( NULL );
+        SetDomainShader( NULL );
+		SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PS(false, true) ) );
     }
 }
@@ -118,7 +122,9 @@ technique11 LightTechAlphaClipFog
     pass P0
     {
         SetVertexShader( CompileShader( vs_5_0, VS() ) );
-	SetGeometryShader( NULL );
+        SetHullShader( NULL );
+        SetDomainShader( NULL );
+		SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PS(true, true) ) );
     }
 }

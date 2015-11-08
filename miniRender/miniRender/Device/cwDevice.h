@@ -108,6 +108,7 @@ public:
 	virtual CWVOID drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo) = 0;
 
 	inline CWBOOL getEnableMsaa4X() const { return m_bEnableMsaa4x; }
+	inline CWVOID setEnableMsaa4X(bool b) { m_bEnableMsaa4x = b; }
 	inline cwStencil* getStencil() const { return m_pStencil; }
 	inline cwViewPort* getViewPort() const { return m_pCurrViewPort; }
 

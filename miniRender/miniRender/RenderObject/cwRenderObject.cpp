@@ -79,7 +79,7 @@ CWBOOL cwRenderObject::buildIndexBuffer(CWVOID* pIndexData, CWUINT uIndexCnt)
 		return CWTRUE;
 	}
 
-	return CWFALSE;
+	return CWTRUE;
 }
 
 CWBOOL cwRenderObject::rebuild(

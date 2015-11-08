@@ -227,5 +227,5 @@ CWVOID FrustumDemoScene::buildCamera()
 	m_pCamera->yaw(-0.5f*cwMathUtil::cwPI);
 	m_pCamera->walk(-20);
 
-	m_pCamera->updateProjMatrix(0.25f*cwMathUtil::cwPI, 800.0f / 600.0f, 10.0f, 50.0f);
+	m_pCamera->updateProjMatrixFov(0.25f*cwMathUtil::cwPI, 800.0f / 600.0f, 10.0f, 50.0f);
 }

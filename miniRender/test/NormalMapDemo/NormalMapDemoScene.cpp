@@ -33,7 +33,9 @@ NormalMapDemoScene* NormalMapDemoScene::create()
 
 NormalMapDemoScene::NormalMapDemoScene():
 m_pRenderCylinder(nullptr),
-m_pNormalMapEffect(nullptr)
+m_pNormalMapEffect(nullptr),
+m_pDisplacementEffect(nullptr),
+m_pRenderSphere(nullptr)
 {
 
 }
@@ -42,6 +44,8 @@ NormalMapDemoScene::~NormalMapDemoScene()
 {
 	CW_SAFE_RELEASE_NULL(m_pRenderCylinder);
 	CW_SAFE_RELEASE_NULL(m_pNormalMapEffect);
+	CW_SAFE_RELEASE_NULL(m_pDisplacementEffect);
+	CW_SAFE_RELEASE_NULL(m_pRenderSphere);
 }
 
 CWBOOL NormalMapDemoScene::init()
@@ -67,6 +71,12 @@ CWVOID NormalMapDemoScene::buildScene()
 	cwEntity* pCylinder = createNormalMapCylinder();
 	pCylinder->setPosition(cwVector3D(-6.0f, 0, 0));
 	this->addChild(pCylinder);
+
+	cwEntity* pSphere = createNormalMapSphere();
+	pSphere->setPosition(cwVector3D(20.0f, 0, 0));
+	this->addChild(pSphere);
+
+	this->createSkyDome("Textures/sunsetcube1024.dds");
 }
 
 CWVOID NormalMapDemoScene::buildRenderObject()
@@ -85,10 +95,29 @@ CWVOID NormalMapDemoScene::buildRenderObject()
 	}
 
 	m_pRenderCylinder = cwStaticRenderObject::create(
-		ePrimitiveTypeTriangleList,
+		ePrimitiveTypePatchList3,
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTexTan), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosNormalTexTan");
 	CW_SAFE_RETAIN(m_pRenderCylinder);
+
+	mesh.nVertex.clear();
+	mesh.nIndex.clear();
+
+	repertory.getGeoGenerator()->generateSphere(10.0f, 50, 50, mesh);
+	vecVertex.resize(mesh.nVertex.size());
+
+	for (CWUINT i = 0; i < mesh.nVertex.size(); ++i) {
+		vecVertex[i].pos = mesh.nVertex[i].pos;
+		vecVertex[i].normal = mesh.nVertex[i].normal;
+		vecVertex[i].tex = mesh.nVertex[i].tex;
+		vecVertex[i].tan = mesh.nVertex[i].tangentU;
+	}
+
+	m_pRenderSphere = cwStaticRenderObject::create(
+		ePrimitiveTypeTriangleList,
+		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTexTan), static_cast<CWUINT>(mesh.nVertex.size()),
+		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosNormalTexTan");
+	CW_SAFE_RETAIN(m_pRenderSphere);
 }
 
 CWVOID NormalMapDemoScene::buildEffect()
@@ -98,13 +127,29 @@ CWVOID NormalMapDemoScene::buildEffect()
 	m_pNormalMapEffect->setShader(pShader);
 	m_pNormalMapEffect->setTech("NormalTech");
 	CW_SAFE_RETAIN(m_pNormalMapEffect);
+
+	cwShader* pShaderDisplacement = cwRepertory::getInstance().getShaderManager()->loadShader("effect/D3D11/displacementMap.fx");
+	m_pDisplacementEffect = cwEffect::create();
+	m_pDisplacementEffect->setShader(pShaderDisplacement);
+	m_pDisplacementEffect->setTech("TechDisplacement");
+	CW_SAFE_RETAIN(m_pDisplacementEffect);
+
+	CWSTRING strParams[] = {"gHeightScale", "gMaxTessDistance", "gMinTessDistance", "gMaxTessFactor", "gMinTessFactor"};
+	CWFLOAT fParamValues[] = {0.5f, 1.0f, 50.0f, 10.0f, 1.0f};
+
+	for (CWUINT i = 0; i < 5; ++i) {
+		cwEffectFloatParameter* pParam = cwEffectFloatParameter::create();
+		pParam->setParameterName(strParams[i]);
+		pParam->m_fValue = fParamValues[i];
+		m_pDisplacementEffect->addParameter(pParam);
+	}
 }
 
 cwEntity* NormalMapDemoScene::createNormalMapCylinder()
 {
 	cwEntity* pEntity = cwEntity::create();
 	pEntity->setRenderObject(m_pRenderCylinder);
-	pEntity->setEffect(m_pNormalMapEffect);
+	pEntity->setEffect(m_pDisplacementEffect);
 
 	cwMaterialUnitTexture* pMUTexture = cwMaterialUnitTexture::create("Textures/bricks_nmap.dds", "gNormalTexture");
 	pEntity->getMaterial()->addMaterialUnit(pMUTexture);
@@ -115,11 +160,26 @@ cwEntity* NormalMapDemoScene::createNormalMapCylinder()
 	return pEntity;
 }
 
+cwEntity* NormalMapDemoScene::createNormalMapSphere()
+{
+	cwEntity* pEntity = cwEntity::create();
+	pEntity->setRenderObject(m_pRenderSphere);
+	pEntity->setEffect(m_pNormalMapEffect);
+
+	cwMaterialUnitTexture* pMUTexture = cwMaterialUnitTexture::create("Textures/stone01_NRM.png", "gNormalTexture");
+	pEntity->getMaterial()->addMaterialUnit(pMUTexture);
+	pEntity->getMaterial()->setDiffuseTexture("Textures/stone01.png");
+	pEntity->getMaterial()->setSpecular(cwVector4D(1.0f, 1.0f, 1.0f, 32.0f));
+	pEntity->getMaterial()->setReflect(cwVector4D(0.0f, 0.0f, 0.0f, 1.0f));
+
+	return pEntity;
+}
+
 CWVOID NormalMapDemoScene::buildLight()
 {
 	cwDirectionalLight* pLightDirectional01 = cwDirectionalLight::create(
 		cwVector4D(0.707f, 0.0f, 0.707f, 0),
-		cwVector4D(0.2f, 0.2f, 0.2f, 1.0f),
+		cwVector4D(0.3f, 0.3f, 0.3f, 1.0f),
 		cwVector4D(0.7f, 0.7f, 0.6f, 1.0f),
 		cwVector4D(0.8f, 0.8f, 0.7f, 1.0f));
 	this->addDirectionalLight(pLightDirectional01);
@@ -127,7 +187,7 @@ CWVOID NormalMapDemoScene::buildLight()
 	cwDirectionalLight* pLightDirectional02 = cwDirectionalLight::create(
 		cwVector4D(0.0f, -0.707f, 0.707f, 0),
 		cwVector4D(0.0f, 0.0f, 0.0f, 1.0f),
-		cwVector4D(0.4f, 0.4f, 0.4f, 1.0f),
+		cwVector4D(0.5f, 0.5f, 0.5f, 1.0f),
 		cwVector4D(0.2f, 0.2f, 0.2f, 1.0f));
 	this->addDirectionalLight(pLightDirectional02);
 

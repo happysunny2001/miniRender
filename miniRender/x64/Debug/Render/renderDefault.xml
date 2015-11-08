@@ -6,6 +6,18 @@
 
 		<Stage Name="S1" Type="Normal" Enable="True">
 			<RenderTarget Type="backbuffer"/>
+<!--			<Layer Name="L1" EntityType="Entity" Transparent="No">
+				<PU>
+					<RenderState Type="BuildIn" Name="Wire"/>
+				</PU>
+			</Layer>-->
+		</Stage>
+
+		<Stage Name="SPrimitive" Type="Primitive" Enable="True">
+		</Stage>
+
+		<Stage Name="SSky" Type="SkyDome" Enable="True">
+			<RenderTarget Type="backbuffer" IsClearColor="False" IsClearDepth="False" IsClearStencil="False"/>
 		</Stage>
 
 		<Stage Name="SSprite" Type="Sprite" Enable="True">

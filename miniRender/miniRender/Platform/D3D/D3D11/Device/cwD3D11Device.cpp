@@ -354,7 +354,8 @@ void cwD3D11Device::setInputLayout(cwLayouts* pInputLayout)
 
 void cwD3D11Device::setPrimitiveTopology(ePrimitiveType topology)
 {
-	m_pD3D11DeviceContext->IASetPrimitiveTopology(cwD3D11Device::getPrimitiveType(topology));
+	D3D11_PRIMITIVE_TOPOLOGY t = cwD3D11Device::getPrimitiveType(topology);
+	m_pD3D11DeviceContext->IASetPrimitiveTopology(t);
 }
 
 void cwD3D11Device::setRenderState(eRenderState e)
