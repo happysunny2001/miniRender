@@ -35,7 +35,10 @@ NormalMapDemoScene::NormalMapDemoScene():
 m_pRenderCylinder(nullptr),
 m_pNormalMapEffect(nullptr),
 m_pDisplacementEffect(nullptr),
-m_pRenderSphere(nullptr)
+m_pRenderSphere(nullptr),
+m_pRenderPlane(nullptr),
+m_pDisplacementEffectWave(nullptr),
+m_pEntityWave(nullptr)
 {
 
 }
@@ -46,6 +49,8 @@ NormalMapDemoScene::~NormalMapDemoScene()
 	CW_SAFE_RELEASE_NULL(m_pNormalMapEffect);
 	CW_SAFE_RELEASE_NULL(m_pDisplacementEffect);
 	CW_SAFE_RELEASE_NULL(m_pRenderSphere);
+	CW_SAFE_RELEASE_NULL(m_pRenderPlane);
+	CW_SAFE_RELEASE_NULL(m_pDisplacementEffectWave);
 }
 
 CWBOOL NormalMapDemoScene::init()
@@ -60,6 +65,10 @@ CWBOOL NormalMapDemoScene::init()
 
 CWVOID NormalMapDemoScene::update(CWFLOAT dt)
 {
+	if (m_pEntityWave) {
+		m_pEntityWave->getMaterial()->moveDiffuseTexture(0.2*dt, 0);
+	}
+
 	dt = 0.03f;
 }
 
@@ -75,6 +84,10 @@ CWVOID NormalMapDemoScene::buildScene()
 	cwEntity* pSphere = createNormalMapSphere();
 	pSphere->setPosition(cwVector3D(20.0f, 0, 0));
 	this->addChild(pSphere);
+
+	m_pEntityWave = createWavePlane();
+	m_pEntityWave->setPosition(cwVector3D(0, -10, 0));
+	this->addChild(m_pEntityWave);
 
 	this->createSkyDome("Textures/sunsetcube1024.dds");
 }
@@ -103,7 +116,7 @@ CWVOID NormalMapDemoScene::buildRenderObject()
 	mesh.nVertex.clear();
 	mesh.nIndex.clear();
 
-	repertory.getGeoGenerator()->generateSphere(10.0f, 50, 50, mesh);
+	repertory.getGeoGenerator()->generateSphere(10.0f, 10, 10, mesh);
 	vecVertex.resize(mesh.nVertex.size());
 
 	for (CWUINT i = 0; i < mesh.nVertex.size(); ++i) {
@@ -118,6 +131,25 @@ CWVOID NormalMapDemoScene::buildRenderObject()
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTexTan), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosNormalTexTan");
 	CW_SAFE_RETAIN(m_pRenderSphere);
+
+	mesh.nVertex.clear();
+	mesh.nIndex.clear();
+
+	repertory.getGeoGenerator()->generateGrid(200, 200, 200, 200, mesh);
+	vecVertex.resize(mesh.nVertex.size());
+
+	for (CWUINT i = 0; i < mesh.nVertex.size(); ++i) {
+		vecVertex[i].pos = mesh.nVertex[i].pos;
+		vecVertex[i].normal = mesh.nVertex[i].normal;
+		vecVertex[i].tex = mesh.nVertex[i].tex*10.0f;
+		vecVertex[i].tan = mesh.nVertex[i].tangentU;
+	}
+
+	m_pRenderPlane = cwStaticRenderObject::create(
+		ePrimitiveTypePatchList3,
+		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTexTan), static_cast<CWUINT>(mesh.nVertex.size()),
+		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosNormalTexTan");
+	CW_SAFE_RETAIN(m_pRenderPlane);
 }
 
 CWVOID NormalMapDemoScene::buildEffect()
@@ -134,6 +166,11 @@ CWVOID NormalMapDemoScene::buildEffect()
 	m_pDisplacementEffect->setTech("TechDisplacement");
 	CW_SAFE_RETAIN(m_pDisplacementEffect);
 
+	m_pDisplacementEffectWave = cwEffect::create();
+	m_pDisplacementEffectWave->setShader(pShaderDisplacement);
+	m_pDisplacementEffectWave->setTech("TechDisplacementWave");
+	CW_SAFE_RETAIN(m_pDisplacementEffectWave);
+
 	CWSTRING strParams[] = {"gHeightScale", "gMaxTessDistance", "gMinTessDistance", "gMaxTessFactor", "gMinTessFactor"};
 	CWFLOAT fParamValues[] = {0.5f, 1.0f, 50.0f, 10.0f, 1.0f};
 
@@ -141,7 +178,18 @@ CWVOID NormalMapDemoScene::buildEffect()
 		cwEffectFloatParameter* pParam = cwEffectFloatParameter::create();
 		pParam->setParameterName(strParams[i]);
 		pParam->m_fValue = fParamValues[i];
+
 		m_pDisplacementEffect->addParameter(pParam);
+	}
+
+	CWFLOAT fParamValuesWave[] = { 1.0f, 1.0f, 50.0f, 10.0f, 1.0f };
+
+	for (CWUINT i = 0; i < 5; ++i) {
+		cwEffectFloatParameter* pParam = cwEffectFloatParameter::create();
+		pParam->setParameterName(strParams[i]);
+		pParam->m_fValue = fParamValuesWave[i];
+
+		m_pDisplacementEffectWave->addParameter(pParam);
 	}
 }
 
@@ -169,6 +217,21 @@ cwEntity* NormalMapDemoScene::createNormalMapSphere()
 	cwMaterialUnitTexture* pMUTexture = cwMaterialUnitTexture::create("Textures/stone01_NRM.png", "gNormalTexture");
 	pEntity->getMaterial()->addMaterialUnit(pMUTexture);
 	pEntity->getMaterial()->setDiffuseTexture("Textures/stone01.png");
+	pEntity->getMaterial()->setSpecular(cwVector4D(1.0f, 1.0f, 1.0f, 32.0f));
+	pEntity->getMaterial()->setReflect(cwVector4D(0.0f, 0.0f, 0.0f, 1.0f));
+
+	return pEntity;
+}
+
+cwEntity* NormalMapDemoScene::createWavePlane()
+{
+	cwEntity* pEntity = cwEntity::create();
+	pEntity->setRenderObject(m_pRenderPlane);
+	pEntity->setEffect(m_pDisplacementEffectWave);
+
+	cwMaterialUnitTexture* pMUTexture = cwMaterialUnitTexture::create("Textures/waves0.dds", "gNormalTexture");
+	pEntity->getMaterial()->addMaterialUnit(pMUTexture);
+	pEntity->getMaterial()->setDiffuse(cwVector4D(0.8f, 0.8f, 1.0f, 1.0f));
 	pEntity->getMaterial()->setSpecular(cwVector4D(1.0f, 1.0f, 1.0f, 32.0f));
 	pEntity->getMaterial()->setReflect(cwVector4D(0.0f, 0.0f, 0.0f, 1.0f));
 

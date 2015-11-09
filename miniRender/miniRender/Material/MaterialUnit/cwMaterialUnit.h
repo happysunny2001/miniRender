@@ -39,10 +39,14 @@ public:
 	inline CWVOID setParentMaterial(cwMaterial* pMaterial) { m_pParentMaterial = pMaterial; }
 	inline cwMaterial* getParentMaterial() const { return m_pParentMaterial; }
 
+	inline const CWSTRING& getShaderParam() const { return m_nStrShaderParam; }
+	inline CWVOID setShaderParam(const CWSTRING& strName) { m_nStrShaderParam = strName; }
+
 	virtual CWVOID config(cwEffect* pEffect) = 0;
 
 protected:
 	cwMaterial* m_pParentMaterial;
+	CWSTRING m_nStrShaderParam;
 
 };
 

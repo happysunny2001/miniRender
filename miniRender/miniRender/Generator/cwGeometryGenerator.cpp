@@ -595,4 +595,60 @@ cwVector3D cwGeometryGenerator::getTerrainNormal(CWFLOAT x, CWFLOAT z)
 	return n;
 }
 
+CWVOID cwGeometryGenerator::cwMeshData::buildTangent()
+{
+	if (nVertex.empty()) return;
+	CWUINT iTriCnt = (CWUINT)nIndex.size() / 3;
+	if (iTriCnt == 0) return;
+
+	cwVector3D* tan1 = new cwVector3D[nVertex.size()*2];
+	cwVector3D* tan2 = &(tan1[nVertex.size()]);
+
+	memset(tan1, 0, sizeof(cwVector3D)*nVertex.size() * 2);
+
+	for (CWUINT t = 0; t < iTriCnt; ++t) {
+		CWUINT i0 = nIndex[t * 3 + 0];
+		CWUINT i1 = nIndex[t * 3 + 1];
+		CWUINT i2 = nIndex[t * 3 + 2];
+
+		cwVertex& p0 = nVertex[i0];
+		cwVertex& p1 = nVertex[i1];
+		cwVertex& p2 = nVertex[i2];
+
+		CWFLOAT q1x = p1.pos.x - p0.pos.x;
+		CWFLOAT q1y = p1.pos.y - p0.pos.y;
+		CWFLOAT q1z = p1.pos.z - p0.pos.z;
+		CWFLOAT q2x = p2.pos.x - p0.pos.x;
+		CWFLOAT q2y = p2.pos.y - p0.pos.y;
+		CWFLOAT q2z = p2.pos.z - p0.pos.z;
+
+		CWFLOAT s1 = p1.tex.x - p0.tex.x;
+		CWFLOAT t1 = p1.tex.y - p0.tex.y;
+		CWFLOAT s2 = p2.tex.x - p0.tex.x;
+		CWFLOAT t2 = p2.tex.y - p0.tex.y;
+
+		CWFLOAT stInv = 1.0f / (s1*t2 - s2*t1);
+		cwVector3D T((t2*q1x - t1*q2x)*stInv, (t2*q1y - t1*q2y)*stInv, (t2*q1z - t1*q2z)*stInv);
+		cwVector3D B((s1*q2x - s2*q1x)*stInv, (s1*q2y - s2*q1y)*stInv, (s1*q2z - s2*q1z)*stInv);
+
+		tan1[i0] += T;
+		tan1[i1] += T;
+		tan1[i2] += T;
+
+		tan2[i0] += B;
+		tan2[i1] += B;
+		tan2[i2] += B;
+	}
+
+	for (CWUINT i = 0; i < nVertex.size(); ++i) {
+		const cwVector3D& T = tan1[i];
+		const cwVector3D& N = nVertex[i].normal;
+
+		nVertex[i].tangentU = T - N*T.dot(N);
+		nVertex[i].tangentU.normalize();
+	}
+	
+	CW_SAFE_DELETE(tan1);
+}
+
 NS_MINIR_END

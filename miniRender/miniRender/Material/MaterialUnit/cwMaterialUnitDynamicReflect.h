@@ -42,21 +42,14 @@ public:
 
 	virtual CWVOID config(cwEffect* pEffect) override;
 
-	//CWVOID setReflectionTexture(cwTexture* pTexture);
 	inline CWVOID setReflectionFactor(CWFLOAT f) { m_fReflectFactor = f; }
 	inline CWFLOAT getReflectionFactor() const { return m_fReflectFactor; }
-
-	//inline const CWSTRING& getTextureParamName() const { return m_nStrShaderTextureParam; }
-	//inline CWVOID setTextureParamName(const CWSTRING& strName) { m_nStrShaderTextureParam = strName; }
 
 	inline const CWSTRING& getFactorParamName() const { return m_nStrShaderFactorParam; }
 	inline CWVOID setFactorParamName(const CWSTRING& strName) { m_nStrShaderFactorParam = strName; }
 
 protected:
-	//cwTexture* m_pReflectTexture;
 	CWFLOAT m_fReflectFactor;
-
-	//CWSTRING m_nStrShaderTextureParam;
 	CWSTRING m_nStrShaderFactorParam;
 
 };

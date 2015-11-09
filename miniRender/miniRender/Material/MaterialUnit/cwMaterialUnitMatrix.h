@@ -17,40 +17,28 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "NormalMapDemo.h"
-#include "NormalMapDemoScene.h"
+#ifndef __CW_MATERIAL_UNIT_MATRIX_H__
+#define __CW_MATERIAL_UNIT_MATRIX_H__
 
-NormalMapDemo::NormalMapDemo()
+#include "Base/cwMacros.h"
+#include "Math/cwMath.h"
+#include "cwMaterialUnit.h"
+
+NS_MINIR_BEGIN
+
+class cwMaterialUnitMatrix : public cwMaterialUnit
 {
+public:
+	static cwMaterialUnitMatrix* create();
 
-}
+	cwMaterialUnitMatrix();
+	virtual ~cwMaterialUnitMatrix();
 
-NormalMapDemo::~NormalMapDemo()
-{
-}
+protected:
+	cwMatrix4X4 m_nMat;
 
-void NormalMapDemo::gameBegin()
-{
-	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0.0f, 10.0f, -40.0f);
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->pitch(cwMathUtil::cwPI*0.1f);
-	cwRepertory::getInstance().getEngine()->setFrameEnable(CWTRUE);
+};
 
-	NormalMapDemoScene* pScene = NormalMapDemoScene::create();
-	cwRepertory::getInstance().getEngine()->setScene(pScene);
-}
+NS_MINIR_END
 
-void NormalMapDemo::gameEnd()
-{
-
-}
-
-void NormalMapDemo::gameBeginBackGround()
-{
-
-}
-
-void NormalMapDemo::gameEndBackGround()
-{
-
-}
+#endif

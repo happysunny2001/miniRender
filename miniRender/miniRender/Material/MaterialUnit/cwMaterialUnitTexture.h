@@ -37,8 +37,8 @@ public:
 
 	virtual CWBOOL init(const CWSTRING& strTexture, const CWSTRING& strParamName);
 
-	inline const CWSTRING& getTextureParamName() const { return m_nStrShaderTextureParam; }
-	inline CWVOID setTextureParamName(const CWSTRING& strParamName) { m_nStrShaderTextureParam = strParamName; }
+	//inline const CWSTRING& getTextureParamName() const { return m_nStrShaderTextureParam; }
+	//inline CWVOID setTextureParamName(const CWSTRING& strParamName) { m_nStrShaderTextureParam = strParamName; }
 
 	CWVOID setTexture(cwTexture* pTexture);
 	inline cwTexture* getTexture() const { return m_pTexture; }
@@ -47,7 +47,6 @@ public:
 
 protected:
 	cwTexture* m_pTexture;
-	CWSTRING m_nStrShaderTextureParam;
 
 };
 

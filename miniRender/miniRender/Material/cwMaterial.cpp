@@ -140,29 +140,27 @@ void cwMaterial::setDiffuseTextureTrans(const cwMatrix4X4& trans)
 
 void cwMaterial::moveDiffuseTexture(CWFLOAT x, CWFLOAT y)
 {
-	m_nDiffTextureTrans.x = x;
-	m_nDiffTextureTrans.y = y;
+	m_nDiffTextureTrans.x += x;
+	m_nDiffTextureTrans.y += y;
 	updateDiffuseTexture();
 }
 
 void cwMaterial::moveDiffuseTexture(const cwVector2D& dir)
 {
-	m_nDiffTextureTrans.x = dir.x;
-	m_nDiffTextureTrans.y = dir.y;
+	m_nDiffTextureTrans += dir;
 	updateDiffuseTexture();
 }
 
 void cwMaterial::scaleDiffuseTexture(CWFLOAT x, CWFLOAT y)
 {
-	m_nDiffTextureScale.x = x;
-	m_nDiffTextureScale.y = y;
+	m_nDiffTextureScale.x += x;
+	m_nDiffTextureScale.y += y;
 	updateDiffuseTexture();
 }
 
 void cwMaterial::scaleDiffuseTexture(const cwVector2D& scale)
 {
-	m_nDiffTextureScale.x = scale.x;
-	m_nDiffTextureScale.y = scale.y;
+	m_nDiffTextureScale += scale;
 	updateDiffuseTexture();
 }
 
@@ -193,6 +191,7 @@ CWVOID cwMaterial::configShader(cwShader* pShader)
 	if (pShader) {
 		pShader->setVariableData(eShaderParamMaterial, this->getColorData(), 0, this->getColorDataSize());
 		pShader->setVariableTexture(eShaderParamDiffuseTexture, this->getDiffuseTexture());
+		pShader->setVariableMatrix("gDiffTexTransform", &(m_nDiffuseTrans.m11));
 	}
 }
 

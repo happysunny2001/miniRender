@@ -79,7 +79,7 @@ CWVOID cwDynamicReflectionEntity::buildMaterial()
 
 	m_pMatUnitDynReflection = cwMaterialUnitDynamicReflect::create();
 	if (m_pMatUnitDynReflection) {
-		m_pMatUnitDynReflection->setTextureParamName(CW_SHADER_REFLECT_CUBE_MAP);
+		m_pMatUnitDynReflection->setShaderParam(CW_SHADER_REFLECT_CUBE_MAP);
 		m_pMatUnitDynReflection->setFactorParamName(CW_SHADER_REFLECT_FACTOR);
 		m_pMatUnitDynReflection->setReflectionFactor(0.5f);
 

@@ -42,13 +42,18 @@ protected:
 
 	cwEntity* createNormalMapCylinder();
 	cwEntity* createNormalMapSphere();
+	cwEntity* createWavePlane();
 
 protected:
 	minir::cwRenderObject* m_pRenderCylinder;
 	minir::cwRenderObject* m_pRenderSphere;
+	minir::cwRenderObject* m_pRenderPlane;
 
 	minir::cwEffect* m_pNormalMapEffect;
 	minir::cwEffect* m_pDisplacementEffect;
+	minir::cwEffect* m_pDisplacementEffectWave;
+
+	cwEntity* m_pEntityWave;
 
 };
 

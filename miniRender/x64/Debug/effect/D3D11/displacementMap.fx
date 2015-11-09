@@ -46,6 +46,23 @@ VertexOutPNTT VS(VertexInPNTT vIn)
 	return vOut;
 }
 
+VertexOutPNTT VSWave(VertexInPNTT vIn)
+{
+	VertexOutPNTT vOut;
+
+	vOut.PosW     = mul(float4(vIn.PosL, 1.0f), gMatWorld).xyz;
+	vOut.NormalW  = mul(vIn.NormalL, (float3x3)gMatWorldInvTranspose).xyz;
+	vOut.TangentW = mul(vIn.TangentL, (float3x3)gMatWorld).xyz;
+	vOut.Tex      = mul(float4(vIn.Tex, 0.0f, 1.0f), gDiffTexTransform).xy;
+
+	//gMinTessDistance is large than gMaxTessDistance
+	float dist = distance(vOut.PosW, gEyePosWorld);
+	float tess = saturate((gMinTessDistance-dist)/(gMinTessDistance-gMaxTessDistance));
+	vOut.TessFactor = gMinTessFactor + tess*(gMaxTessFactor-gMinTessFactor);
+
+	return vOut;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////Constant Hull Shader//////////////////////////////////////////////////////////////////
@@ -164,6 +181,30 @@ float4 PS(DomainOut pIn, uniform bool gAlphaClip, uniform bool gFogEnable) : SV_
 	return litColor;
 }
 
+float4 PSWave(DomainOut pIn, uniform bool gAlphaClip, uniform bool gFogEnable) : SV_Target
+{
+	pIn.NormalW   = normalize(pIn.NormalW);
+	float3 toEyeW = gEyePosWorld - pIn.PosW;
+	float toEyeDistance = length(toEyeW);
+	toEyeW /= toEyeDistance;
+
+	float3 normalMapSampleT = gNormalTexture.Sample(samLinear, pIn.Tex).rgb;
+	float3 bumpedNormalW = processNormalMapToWorld(normalMapSampleT, pIn.NormalW, pIn.TangentW);
+	
+	float4 ambient, diffuse, spec;
+	processLight(gMaterial, pIn.PosW, bumpedNormalW, toEyeW, ambient, diffuse, spec);
+	float4 litColor = (ambient + diffuse) + spec;
+
+	if(gFogEnable) {
+		float s = saturate((toEyeDistance-gFogStart)/gFogRange);
+		litColor = lerp(litColor, gFogColor, s);
+	}
+
+	litColor.a = gMaterial.diffuse.a;
+
+	return litColor;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 technique11 TechDisplacement
@@ -173,7 +214,19 @@ technique11 TechDisplacement
         SetVertexShader( CompileShader( vs_5_0, VS() ) );
         SetHullShader( CompileShader( hs_5_0, HS() ) );
         SetDomainShader( CompileShader( ds_5_0, DS() ) );
-		SetGeometryShader( NULL );
+	SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PS(true, false) ) );
+    }
+}
+
+technique11 TechDisplacementWave
+{
+    pass P0
+    {
+        SetVertexShader( CompileShader( vs_5_0, VSWave() ) );
+        SetHullShader( CompileShader( hs_5_0, HS() ) );
+        SetDomainShader( CompileShader( ds_5_0, DS() ) );
+	SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_5_0, PSWave(true, false) ) );
     }
 }

@@ -55,6 +55,8 @@ public:
 	struct cwMeshData {
 		vector<cwVertex> nVertex;
 		vector<CWUINT> nIndex;
+
+		CWVOID buildTangent();
 	};
 
 	CWVOID generateGrid(CWFLOAT width, CWFLOAT height, CWUINT m, CWUINT n, cwMeshData& mesh);

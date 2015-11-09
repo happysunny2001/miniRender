@@ -654,6 +654,9 @@
     <ClInclude Include="Material\MaterialUnit\cwMaterialUnitDynamicReflect.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Material\MaterialUnit\cwMaterialUnitMatrix.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -1092,6 +1095,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Material\MaterialUnit\cwMaterialUnitDynamicReflect.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Material\MaterialUnit\cwMaterialUnitMatrix.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

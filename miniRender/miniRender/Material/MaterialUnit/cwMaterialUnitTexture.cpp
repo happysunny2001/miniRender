@@ -58,7 +58,7 @@ CWBOOL cwMaterialUnitTexture::init(const CWSTRING& strTexture, const CWSTRING& s
 	if (!m_pTexture) return CWFALSE;
 	CW_SAFE_RETAIN(m_pTexture);
 
-	m_nStrShaderTextureParam = strParamName;
+	m_nStrShaderParam = strParamName;
 
 	return CWTRUE;
 }
@@ -74,8 +74,8 @@ CWVOID cwMaterialUnitTexture::setTexture(cwTexture* pTexture)
 CWVOID cwMaterialUnitTexture::config(cwEffect* pEffect)
 {
 	cwShader* pShader = pEffect->getShader();
-	if (pShader && m_pTexture && !m_nStrShaderTextureParam.empty()) {
-		pShader->setVariableTexture(m_nStrShaderTextureParam, m_pTexture);
+	if (pShader && m_pTexture && !m_nStrShaderParam.empty()) {
+		pShader->setVariableTexture(m_nStrShaderParam, m_pTexture);
 	}
 }
 

@@ -52,9 +52,7 @@ cwMaterialUnitDynamicReflect* cwMaterialUnitDynamicReflect::create()
 }
 
 cwMaterialUnitDynamicReflect::cwMaterialUnitDynamicReflect() :
-//m_pReflectTexture(nullptr),
 m_fReflectFactor(0.5f),
-//m_nStrShaderTextureParam(CW_SHADER_REFLECT_CUBE_MAP),
 m_nStrShaderFactorParam(CW_SHADER_REFLECT_FACTOR)
 {
 
@@ -62,7 +60,7 @@ m_nStrShaderFactorParam(CW_SHADER_REFLECT_FACTOR)
 
 cwMaterialUnitDynamicReflect::~cwMaterialUnitDynamicReflect()
 {
-	//CW_SAFE_RELEASE_NULL(m_pReflectTexture);
+
 }
 
 CWBOOL cwMaterialUnitDynamicReflect::init(const CWSTRING& strTexture, CWFLOAT fFactor)
@@ -74,7 +72,7 @@ CWBOOL cwMaterialUnitDynamicReflect::init(const CWSTRING& strTexture, CWFLOAT fF
 	CW_SAFE_RETAIN(m_pTexture);
 
 	m_fReflectFactor = fFactor;
-	m_nStrShaderTextureParam = CW_SHADER_REFLECT_CUBE_MAP;
+	m_nStrShaderParam = CW_SHADER_REFLECT_CUBE_MAP;
 
 	return CWTRUE;
 }
@@ -84,7 +82,7 @@ CWBOOL cwMaterialUnitDynamicReflect::init()
 	if (!cwMaterialUnit::init()) return CWFALSE;
 
 	m_fReflectFactor = -1.0f;
-	m_nStrShaderTextureParam = CW_SHADER_REFLECT_CUBE_MAP;
+	m_nStrShaderParam = CW_SHADER_REFLECT_CUBE_MAP;
 
 	return CWTRUE;
 }
@@ -93,21 +91,13 @@ CWVOID cwMaterialUnitDynamicReflect::config(cwEffect* pEffect)
 {
 	cwShader* pShader = pEffect->getShader();
 	if (pShader) {
-		if (m_pTexture && !m_nStrShaderTextureParam.empty()) {
-			pShader->setVariableTexture(m_nStrShaderTextureParam, m_pTexture);
+		if (m_pTexture && !m_nStrShaderParam.empty()) {
+			pShader->setVariableTexture(m_nStrShaderParam, m_pTexture);
 		}
 
 		if (m_fReflectFactor > 0.0f && !m_nStrShaderFactorParam.empty())
 			pShader->setVariableFloat(m_nStrShaderFactorParam, m_fReflectFactor);
 	}
 }
-
-//CWVOID cwMaterialUnitDynamicReflect::setReflectionTexture(cwTexture* pTexture)
-//{
-//	if (m_pReflectTexture == pTexture) return;
-//	CW_SAFE_RETAIN(pTexture);
-//	CW_SAFE_RELEASE(m_pReflectTexture);
-//	m_pReflectTexture = pTexture;
-//}
 
 NS_MINIR_END

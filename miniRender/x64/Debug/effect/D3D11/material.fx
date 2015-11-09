@@ -42,6 +42,8 @@ cbuffer cbMaterial
 	Material gMaterial;             //material of object
 };
 
+float4x4 gDiffTexTransform;
+
 Texture2D gDiffuseTexture;
 Texture2D gNormalTexture;
 
