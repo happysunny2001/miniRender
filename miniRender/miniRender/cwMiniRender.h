@@ -46,6 +46,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Material/MaterialUnit/cwMaterialUnit.h"
 #include "Material/MaterialUnit/cwMaterialUnitTexture.h"
 #include "Material/MaterialUnit/cwMaterialUnitDynamicReflect.h"
+#include "Material/MaterialUnit/cwMaterialUnitMatrix.h"
 #include "Light/cwLight.h"
 #include "Light/cwDirectionalLight.h"
 #include "Light/cwPointLight.h"

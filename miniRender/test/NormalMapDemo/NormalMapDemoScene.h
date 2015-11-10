@@ -51,7 +51,10 @@ protected:
 
 	minir::cwEffect* m_pNormalMapEffect;
 	minir::cwEffect* m_pDisplacementEffect;
-	minir::cwEffect* m_pDisplacementEffectWave;
+	minir::cwEffect* m_pWaveEffect;
+
+	cwMaterialUnitMatrix* m_pMatUnitMatrix[4];
+	cwVector2D m_nMatMoveDir[4];
 
 	cwEntity* m_pEntityWave;
 

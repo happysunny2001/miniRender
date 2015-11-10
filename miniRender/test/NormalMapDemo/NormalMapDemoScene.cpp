@@ -37,7 +37,7 @@ m_pNormalMapEffect(nullptr),
 m_pDisplacementEffect(nullptr),
 m_pRenderSphere(nullptr),
 m_pRenderPlane(nullptr),
-m_pDisplacementEffectWave(nullptr),
+m_pWaveEffect(nullptr),
 m_pEntityWave(nullptr)
 {
 
@@ -50,7 +50,7 @@ NormalMapDemoScene::~NormalMapDemoScene()
 	CW_SAFE_RELEASE_NULL(m_pDisplacementEffect);
 	CW_SAFE_RELEASE_NULL(m_pRenderSphere);
 	CW_SAFE_RELEASE_NULL(m_pRenderPlane);
-	CW_SAFE_RELEASE_NULL(m_pDisplacementEffectWave);
+	CW_SAFE_RELEASE_NULL(m_pWaveEffect);
 }
 
 CWBOOL NormalMapDemoScene::init()
@@ -65,8 +65,8 @@ CWBOOL NormalMapDemoScene::init()
 
 CWVOID NormalMapDemoScene::update(CWFLOAT dt)
 {
-	if (m_pEntityWave) {
-		m_pEntityWave->getMaterial()->moveDiffuseTexture(0.2*dt, 0);
+	for (CWUINT i = 0; i < 4; ++i) {
+		m_pMatUnitMatrix[i]->move(m_nMatMoveDir[i]*dt);
 	}
 
 	dt = 0.03f;
@@ -89,7 +89,7 @@ CWVOID NormalMapDemoScene::buildScene()
 	m_pEntityWave->setPosition(cwVector3D(0, -10, 0));
 	this->addChild(m_pEntityWave);
 
-	this->createSkyDome("Textures/sunsetcube1024.dds");
+	this->createSkyDome("Textures/snowcube1024.dds");
 }
 
 CWVOID NormalMapDemoScene::buildRenderObject()
@@ -166,10 +166,12 @@ CWVOID NormalMapDemoScene::buildEffect()
 	m_pDisplacementEffect->setTech("TechDisplacement");
 	CW_SAFE_RETAIN(m_pDisplacementEffect);
 
-	m_pDisplacementEffectWave = cwEffect::create();
-	m_pDisplacementEffectWave->setShader(pShaderDisplacement);
-	m_pDisplacementEffectWave->setTech("TechDisplacementWave");
-	CW_SAFE_RETAIN(m_pDisplacementEffectWave);
+	cwShader* pShaderWave = cwRepertory::getInstance().getShaderManager()->loadShader("effect/D3D11/wave.fx");
+
+	m_pWaveEffect = cwEffect::create();
+	m_pWaveEffect->setShader(pShaderWave);
+	m_pWaveEffect->setTech("TechWave");
+	CW_SAFE_RETAIN(m_pWaveEffect);
 
 	CWSTRING strParams[] = {"gHeightScale", "gMaxTessDistance", "gMinTessDistance", "gMaxTessFactor", "gMinTessFactor"};
 	CWFLOAT fParamValues[] = {0.5f, 1.0f, 50.0f, 10.0f, 1.0f};
@@ -182,14 +184,15 @@ CWVOID NormalMapDemoScene::buildEffect()
 		m_pDisplacementEffect->addParameter(pParam);
 	}
 
-	CWFLOAT fParamValuesWave[] = { 1.0f, 1.0f, 50.0f, 10.0f, 1.0f };
+	CWSTRING strParamsWave[] = { "gHeightScale0", "gHeightScale1", "gMaxTessDistance", "gMinTessDistance", "gMaxTessFactor", "gMinTessFactor" };
+	CWFLOAT fParamValuesWave[] = { 1.0f, 2.0f, 1.0f, 50.0f, 10.0f, 1.0f };
 
-	for (CWUINT i = 0; i < 5; ++i) {
+	for (CWUINT i = 0; i < 6; ++i) {
 		cwEffectFloatParameter* pParam = cwEffectFloatParameter::create();
-		pParam->setParameterName(strParams[i]);
+		pParam->setParameterName(strParamsWave[i]);
 		pParam->m_fValue = fParamValuesWave[i];
 
-		m_pDisplacementEffectWave->addParameter(pParam);
+		m_pWaveEffect->addParameter(pParam);
 	}
 }
 
@@ -227,13 +230,34 @@ cwEntity* NormalMapDemoScene::createWavePlane()
 {
 	cwEntity* pEntity = cwEntity::create();
 	pEntity->setRenderObject(m_pRenderPlane);
-	pEntity->setEffect(m_pDisplacementEffectWave);
+	pEntity->setEffect(m_pWaveEffect);
 
-	cwMaterialUnitTexture* pMUTexture = cwMaterialUnitTexture::create("Textures/waves0.dds", "gNormalTexture");
-	pEntity->getMaterial()->addMaterialUnit(pMUTexture);
-	pEntity->getMaterial()->setDiffuse(cwVector4D(0.8f, 0.8f, 1.0f, 1.0f));
-	pEntity->getMaterial()->setSpecular(cwVector4D(1.0f, 1.0f, 1.0f, 32.0f));
-	pEntity->getMaterial()->setReflect(cwVector4D(0.0f, 0.0f, 0.0f, 1.0f));
+	cwMaterialUnitTexture* pMUTexture0 = cwMaterialUnitTexture::create("Textures/waves0.dds", "gWaveTexture0");
+	pEntity->getMaterial()->addMaterialUnit(pMUTexture0);
+
+	cwMaterialUnitTexture* pMUTexture1 = cwMaterialUnitTexture::create("Textures/waves1.dds", "gWaveTexture1");
+	pEntity->getMaterial()->addMaterialUnit(pMUTexture1);
+
+	cwMaterialUnitTexture* pMUSky = cwMaterialUnitTexture::createCube("Textures/snowcube1024.dds", CW_SHADER_SKY_CUBE_MAP);
+	pEntity->getMaterial()->addMaterialUnit(pMUSky);
+
+	pEntity->getMaterial()->setAmbient(cwVector4D(0.1f, 0.1f, 0.3f, 1.0f));
+	pEntity->getMaterial()->setDiffuse(cwVector4D(0.4f, 0.4f, 0.7f, 1.0f));
+	pEntity->getMaterial()->setSpecular(cwVector4D(0.8f, 0.8f, 0.8f, 128.0f));
+	pEntity->getMaterial()->setReflect(cwVector4D(0.4f, 0.4f, 0.4f, 1.0f));
+
+	CWSTRING strShaderParam[4] = {"gWavevDispTexTransform0", "gWavevDispTexTransform1", "gWavevNormalTexTransform0", "gWavevNormalTexTransform1"};
+
+	for (CWUINT i = 0; i < 4; ++i) {
+		m_pMatUnitMatrix[i] = cwMaterialUnitMatrix::create();
+		m_pMatUnitMatrix[i]->setShaderParam(strShaderParam[i]);
+		pEntity->getMaterial()->addMaterialUnit(m_pMatUnitMatrix[i]);
+	}
+
+	m_nMatMoveDir[0].set(0.01f, 0.03f);
+	m_nMatMoveDir[1].set(0.01f, 0.03f);
+	m_nMatMoveDir[2].set(0.01f, 0.2f);
+	m_nMatMoveDir[3].set(-0.02f, 0.05f);
 
 	return pEntity;
 }

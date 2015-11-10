@@ -39,6 +39,18 @@ cwMaterialUnitTexture* cwMaterialUnitTexture::create(const CWSTRING& strTexture,
 	return nullptr;
 }
 
+cwMaterialUnitTexture* cwMaterialUnitTexture::createCube(const CWSTRING& strTexture, const CWSTRING& strParamName)
+{
+	cwMaterialUnitTexture* pMUTexture = new cwMaterialUnitTexture();
+	if (pMUTexture && pMUTexture->initCube(strTexture, strParamName)) {
+		pMUTexture->autorelease();
+		return pMUTexture;
+	}
+
+	CW_SAFE_DELETE(pMUTexture);
+	return nullptr;
+}
+
 cwMaterialUnitTexture::cwMaterialUnitTexture():
 m_pTexture(nullptr)
 {
@@ -55,6 +67,19 @@ CWBOOL cwMaterialUnitTexture::init(const CWSTRING& strTexture, const CWSTRING& s
 	if (!cwMaterialUnit::init()) return CWFALSE;
 
 	m_pTexture = cwRepertory::getInstance().getTextureManager()->getTexture(strTexture);
+	if (!m_pTexture) return CWFALSE;
+	CW_SAFE_RETAIN(m_pTexture);
+
+	m_nStrShaderParam = strParamName;
+
+	return CWTRUE;
+}
+
+CWBOOL cwMaterialUnitTexture::initCube(const CWSTRING& strTexture, const CWSTRING& strParamName)
+{
+	if (!cwMaterialUnit::init()) return CWFALSE;
+
+	m_pTexture = cwRepertory::getInstance().getTextureManager()->getCubeTexture(strTexture);
 	if (!m_pTexture) return CWFALSE;
 	CW_SAFE_RETAIN(m_pTexture);
 

@@ -31,14 +31,13 @@ class cwMaterialUnitTexture : public cwMaterialUnit
 {
 public:
 	static cwMaterialUnitTexture* create(const CWSTRING& strTexture, const CWSTRING& strParamName);
+	static cwMaterialUnitTexture* createCube(const CWSTRING& strTexture, const CWSTRING& strParamName);
 
 	cwMaterialUnitTexture();
 	virtual ~cwMaterialUnitTexture();
 
 	virtual CWBOOL init(const CWSTRING& strTexture, const CWSTRING& strParamName);
-
-	//inline const CWSTRING& getTextureParamName() const { return m_nStrShaderTextureParam; }
-	//inline CWVOID setTextureParamName(const CWSTRING& strParamName) { m_nStrShaderTextureParam = strParamName; }
+	virtual CWBOOL initCube(const CWSTRING& strTexture, const CWSTRING& strParamName);
 
 	CWVOID setTexture(cwTexture* pTexture);
 	inline cwTexture* getTexture() const { return m_pTexture; }

@@ -34,8 +34,21 @@ public:
 	cwMaterialUnitMatrix();
 	virtual ~cwMaterialUnitMatrix();
 
+	virtual CWBOOL init() override;
+	virtual CWVOID config(cwEffect* pEffect) override;
+
+	CWVOID move(CWFLOAT x, CWFLOAT y);
+	CWVOID move(const cwVector2D& pos);
+	CWVOID scale(CWFLOAT x, CWFLOAT y);
+	CWVOID scale(const cwVector2D& scale);
+
+protected:
+	CWVOID updateMatrix();
+
 protected:
 	cwMatrix4X4 m_nMat;
+	cwVector2D m_nDiffTextureTrans;
+	cwVector2D m_nDiffTextureScale;
 
 };
 
