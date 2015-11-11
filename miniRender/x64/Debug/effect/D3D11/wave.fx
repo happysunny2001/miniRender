@@ -185,7 +185,7 @@ float4 PS(DomainOut pIn, uniform bool gAlphaClip, uniform bool gFogEnable) : SV_
 	}
 	
 	float4 skyColor = gSkyCubeMap.Sample(samAnisotropic, pIn.PosW-float3(0.0f, -100.0f, 0.0f));
-	float4 finalColor = skyColor*0.9f + litColor*0.1f;
+	float4 finalColor = skyColor*0.5f + litColor*0.5f;
 
 	finalColor.a = gMaterial.diffuse.a;
 

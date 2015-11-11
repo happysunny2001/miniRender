@@ -122,12 +122,12 @@ CWVOID NormalMapDemoScene::buildRenderObject()
 	for (CWUINT i = 0; i < mesh.nVertex.size(); ++i) {
 		vecVertex[i].pos = mesh.nVertex[i].pos;
 		vecVertex[i].normal = mesh.nVertex[i].normal;
-		vecVertex[i].tex = mesh.nVertex[i].tex;
+		vecVertex[i].tex = mesh.nVertex[i].tex*1.0f;
 		vecVertex[i].tan = mesh.nVertex[i].tangentU;
 	}
 
 	m_pRenderSphere = cwStaticRenderObject::create(
-		ePrimitiveTypeTriangleList,
+		ePrimitiveTypePatchList3,
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTexTan), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosNormalTexTan");
 	CW_SAFE_RETAIN(m_pRenderSphere);
@@ -135,7 +135,7 @@ CWVOID NormalMapDemoScene::buildRenderObject()
 	mesh.nVertex.clear();
 	mesh.nIndex.clear();
 
-	repertory.getGeoGenerator()->generateGrid(200, 200, 200, 200, mesh);
+	repertory.getGeoGenerator()->generateGrid(200, 200, 50, 50, mesh);
 	vecVertex.resize(mesh.nVertex.size());
 
 	for (CWUINT i = 0; i < mesh.nVertex.size(); ++i) {
@@ -185,7 +185,7 @@ CWVOID NormalMapDemoScene::buildEffect()
 	}
 
 	CWSTRING strParamsWave[] = { "gHeightScale0", "gHeightScale1", "gMaxTessDistance", "gMinTessDistance", "gMaxTessFactor", "gMinTessFactor" };
-	CWFLOAT fParamValuesWave[] = { 1.0f, 2.0f, 1.0f, 50.0f, 10.0f, 1.0f };
+	CWFLOAT fParamValuesWave[] = { 0.4f, 1.2f, 1.0f, 50.0f, 10.0f, 1.0f };
 
 	for (CWUINT i = 0; i < 6; ++i) {
 		cwEffectFloatParameter* pParam = cwEffectFloatParameter::create();
@@ -215,12 +215,13 @@ cwEntity* NormalMapDemoScene::createNormalMapSphere()
 {
 	cwEntity* pEntity = cwEntity::create();
 	pEntity->setRenderObject(m_pRenderSphere);
-	pEntity->setEffect(m_pNormalMapEffect);
+	pEntity->setEffect(m_pDisplacementEffect);
 
-	cwMaterialUnitTexture* pMUTexture = cwMaterialUnitTexture::create("Textures/stone01_NRM.png", "gNormalTexture");
+	cwMaterialUnitTexture* pMUTexture = cwMaterialUnitTexture::create("Textures/stone01_NRM.dds", "gNormalTexture");
 	pEntity->getMaterial()->addMaterialUnit(pMUTexture);
 	pEntity->getMaterial()->setDiffuseTexture("Textures/stone01.png");
-	pEntity->getMaterial()->setSpecular(cwVector4D(1.0f, 1.0f, 1.0f, 32.0f));
+	pEntity->getMaterial()->setDiffuse(cwVector4D(0.8f, 0.8f, 0.8f, 1.0f));
+	pEntity->getMaterial()->setSpecular(cwVector4D(0.1f, 0.1f, 0.1f, 16.0f));
 	pEntity->getMaterial()->setReflect(cwVector4D(0.0f, 0.0f, 0.0f, 1.0f));
 
 	return pEntity;
