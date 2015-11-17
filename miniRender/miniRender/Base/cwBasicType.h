@@ -34,6 +34,7 @@ typedef float            CWFLOAT;
 typedef unsigned __int32 CWUINT;
 typedef __int32          CWINT;
 typedef __int16          CWSHORT;
+typedef CWSHORT          CWHALF;
 typedef unsigned __int16 CWUSHORT;
 typedef bool             CWBOOL;
 typedef char             CWCHAR;

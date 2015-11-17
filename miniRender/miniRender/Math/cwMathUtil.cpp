@@ -56,5 +56,40 @@ CWFLOAT cwMathUtil::angleDegree(CWFLOAT angle)
 	return angle* cwMathUtil::cwPiInv * 180.0f;
 }
 
+//shameless copy from directx's XMConvertFloatToHalf
+//only for directx
+CWHALF cwMathUtil::convertFloatToHalf(CWFLOAT f)
+{
+	CWUINT Result;
+
+	CWUINT IValue = ((CWUINT *)(&f))[0];
+	CWUINT Sign = (IValue & 0x80000000U) >> 16U;
+	IValue = IValue & 0x7FFFFFFFU;      // Hack off the sign
+
+	if (IValue > 0x47FFEFFFU)
+	{
+		// The number is too large to be represented as a half.  Saturate to infinity.
+		Result = 0x7FFFU;
+	}
+	else
+	{
+		if (IValue < 0x38800000U)
+		{
+			// The number is too small to be represented as a normalized half.
+			// Convert it to a denormalized value.
+			CWUINT Shift = 113U - (IValue >> 23U);
+			IValue = (0x800000U | (IValue & 0x7FFFFFU)) >> Shift;
+		}
+		else
+		{
+			// Rebias the exponent to represent the value as a normalized half.
+			IValue += 0xC8000000U;
+		}
+
+		Result = ((IValue + 0x0FFFU + ((IValue >> 13U) & 1U)) >> 13U) & 0x7FFFU;
+	}
+	return (CWHALF)(Result | Sign);
+}
+
 NS_MINIR_END
 

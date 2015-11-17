@@ -47,6 +47,8 @@ public:
 	static CWFLOAT angleFrom(CWFLOAT x, CWFLOAT y);
 	static CWFLOAT angleRadian(CWFLOAT angle);
 	static CWFLOAT angleDegree(CWFLOAT angle);
+	//convert 32 bit float to 16 bit short
+	static CWHALF convertFloatToHalf(CWFLOAT f);
 };
 
 NS_MINIR_END
