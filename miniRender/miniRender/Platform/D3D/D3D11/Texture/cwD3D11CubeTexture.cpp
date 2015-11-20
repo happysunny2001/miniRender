@@ -96,8 +96,6 @@ CWBOOL cwD3D11CubeTexture::init(const CWSTRING& strTexture)
 	pD3D11Device->getD3D11Device()->CreateShaderResourceView(pTexture2D, &resourceDesc, &m_pShaderResource);
 	CW_RELEASE_COM(pTexture2D);
 
-	m_nStrName = strTexture;
-
 	return CWTRUE;
 }
 

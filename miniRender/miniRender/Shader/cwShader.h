@@ -67,7 +67,11 @@ public:
 
 	virtual CWVOID apply(CWUINT techIndex, CWUINT passIndex) = 0;
 
+	inline CWVOID setName(const CWSTRING& strName) { m_nStrName = strName; }
+	inline const CWSTRING& getName() const { return m_nStrName; }
+
 protected:
+	CWSTRING m_nStrName;
 
 };
 

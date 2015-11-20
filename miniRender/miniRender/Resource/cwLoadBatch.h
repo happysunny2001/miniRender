@@ -17,36 +17,60 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwAutoReleasePool.h"
+#ifndef __CW_LOAD_BATCH_H__
+#define __CW_LOAD_BATCH_H__
+
+#include "Base/cwMacros.h"
+#include "Base/cwBasicType.h"
+#include "Ref/cwRef.h"
+
+#include <functional>
+#include <vector>
 
 NS_MINIR_BEGIN
 
-cwAutoReleasePool::cwAutoReleasePool()
+typedef enum {
+	eResourceTypeNone = 0,
+	eResourceTypeTexture2D = 1,
+	eResourceTypeTextureCube,
+	eResourceTypeShader,
+}eResourceType;
+
+class cwResourceInfo
 {
+public:
+	eResourceType m_eType;
+	CWSTRING m_nStrName;
 
-}
+};
 
-cwAutoReleasePool::~cwAutoReleasePool()
+class cwLoadBatch : public cwRef
 {
-	clear();
-}
+public:
+	typedef std::function<void(cwLoadBatch*)> LoadCallbackFunc;
 
-void cwAutoReleasePool::addAutoReleaseRef(cwRef* pRef)
-{
-	if (!pRef) return;
+public:
+	static cwLoadBatch* create();
 
-	std::unique_lock<std::mutex> lg(m_nVecMutex);
-	m_vecRefObject.push_back(pRef);
-}
+	cwLoadBatch();
+	virtual ~cwLoadBatch();
 
-void cwAutoReleasePool::clear()
-{
-	std::unique_lock<std::mutex> lg(m_nVecMutex);
-	for (auto it = m_vecRefObject.begin(); it != m_vecRefObject.end(); ++it) {
-		(*it)->release();
-	}
+	CWVOID addResource(cwResourceInfo& resInfo);
+	CWVOID addTexture2D(const CWSTRING& strName);
+	CWVOID addTextureCube(const CWSTRING& strName);
+	CWVOID addShader(const CWSTRING& strName);
 
-	m_vecRefObject.clear();
-}
+	std::vector<cwResourceInfo>::iterator begin() { return m_nVecResource.begin(); }
+	std::vector<cwResourceInfo>::iterator end() { return m_nVecResource.end(); }
+
+protected:
+	std::vector<cwResourceInfo> m_nVecResource;
+
+public:
+	LoadCallbackFunc onLoadOver;
+
+};
 
 NS_MINIR_END
+
+#endif

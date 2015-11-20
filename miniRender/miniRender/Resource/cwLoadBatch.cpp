@@ -17,36 +17,59 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwAutoReleasePool.h"
+#include "cwLoadBatch.h"
 
 NS_MINIR_BEGIN
 
-cwAutoReleasePool::cwAutoReleasePool()
+cwLoadBatch* cwLoadBatch::create()
 {
-
-}
-
-cwAutoReleasePool::~cwAutoReleasePool()
-{
-	clear();
-}
-
-void cwAutoReleasePool::addAutoReleaseRef(cwRef* pRef)
-{
-	if (!pRef) return;
-
-	std::unique_lock<std::mutex> lg(m_nVecMutex);
-	m_vecRefObject.push_back(pRef);
-}
-
-void cwAutoReleasePool::clear()
-{
-	std::unique_lock<std::mutex> lg(m_nVecMutex);
-	for (auto it = m_vecRefObject.begin(); it != m_vecRefObject.end(); ++it) {
-		(*it)->release();
+	cwLoadBatch* pBatch = new cwLoadBatch();
+	if (pBatch) {
+		pBatch->autorelease();
+		return pBatch;
 	}
 
-	m_vecRefObject.clear();
+	return nullptr;
+}
+
+cwLoadBatch::cwLoadBatch():
+onLoadOver(nullptr)
+{
+
+}
+
+cwLoadBatch::~cwLoadBatch()
+{
+	onLoadOver = nullptr;
+}
+
+CWVOID cwLoadBatch::addResource(cwResourceInfo& resInfo)
+{
+	m_nVecResource.push_back(resInfo);
+}
+
+CWVOID cwLoadBatch::addTexture2D(const CWSTRING& strName)
+{
+	cwResourceInfo resInfo;
+	resInfo.m_eType = eResourceTypeTexture2D;
+	resInfo.m_nStrName = strName;
+	m_nVecResource.push_back(resInfo);
+}
+
+CWVOID cwLoadBatch::addTextureCube(const CWSTRING& strName)
+{
+	cwResourceInfo resInfo;
+	resInfo.m_eType = eResourceTypeTextureCube;
+	resInfo.m_nStrName = strName;
+	m_nVecResource.push_back(resInfo);
+}
+
+CWVOID cwLoadBatch::addShader(const CWSTRING& strName)
+{
+	cwResourceInfo resInfo;
+	resInfo.m_eType = eResourceTypeShader;
+	resInfo.m_nStrName = strName;
+	m_nVecResource.push_back(resInfo);
 }
 
 NS_MINIR_END

@@ -657,6 +657,15 @@
     <ClInclude Include="Material\MaterialUnit\cwMaterialUnitMatrix.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\cwResourceLoader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\cwLoadBatch.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\cwLoadResult.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -1098,6 +1107,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Material\MaterialUnit\cwMaterialUnitMatrix.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\cwResourceLoader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\cwLoadBatch.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\cwLoadResult.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

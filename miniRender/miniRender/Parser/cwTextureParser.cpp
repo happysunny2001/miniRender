@@ -107,7 +107,7 @@ cwTexture* cwTextureParser::parseTextureFromFiles(tinyxml2::XMLElement* pTexture
 		std::vector<CWSTRING> vecPath;
 		cwStringConvert::split(strLocation, ";", vecPath);
 
-		cwTexture* pTexture = cwRepertory::getInstance().getTextureManager()->createTextureArray(vecPath);
+		cwTexture* pTexture = cwRepertory::getInstance().getTextureManager()->getTextureArray(vecPath);
 		return pTexture;
 	}
 

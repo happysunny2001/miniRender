@@ -40,14 +40,36 @@ cwTextureManager::~cwTextureManager()
 	m_vecRenderTexture.clear();
 }
 
+cwTexture* cwTextureManager::createTexture(const CWSTRING& strName)
+{
+	CWSTRING strFullPath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strName);
+	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createTexture(strFullPath);
+	if (pTex) {
+		pTex->setName(strName);
+		return pTex;
+	}
+
+	return nullptr;
+}
+
+cwTexture* cwTextureManager::createCubeTexture(const CWSTRING& strName)
+{
+	CWSTRING strFullPath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strName);
+	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createCubeTexture(strFullPath);
+	if (pTex) {
+		pTex->setName(strName);
+		return pTex;
+	}
+
+	return nullptr;
+}
+
 cwTexture* cwTextureManager::getTexture(const string& strName)
 {
 	auto itFind = m_mapTexture.find(strName);
 	if (itFind != m_mapTexture.end()) return itFind->second;
 
-	CWSTRING strFullPath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strName);
-
-	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createTexture(strFullPath);
+	cwTexture* pTex = createTexture(strName);
 	if (pTex) {
 		m_mapTexture.insert(strName, pTex);
 		return pTex;
@@ -61,11 +83,25 @@ cwTexture* cwTextureManager::getCubeTexture(const CWSTRING& strName)
 	auto itFind = m_mapTexture.find(strName);
 	if (itFind != m_mapTexture.end()) return itFind->second;
 
-	CWSTRING strFullPath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strName);
-
-	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createCubeTexture(strFullPath);
+	cwTexture* pTex = createCubeTexture(strName);
 	if (pTex) {
 		m_mapTexture.insert(strName, pTex);
+		return pTex;
+	}
+
+	return nullptr;
+}
+
+cwTexture* cwTextureManager::getTextureArray(const std::vector<CWSTRING>& vecFiles)
+{
+	if (vecFiles.empty()) return nullptr;
+
+	auto itFind = m_mapTexture.find(vecFiles[0]);
+	if (itFind != m_mapTexture.end()) return itFind->second;
+
+	cwTexture* pTex = createTextureArray(vecFiles);
+	if (pTex) {
+		m_mapTexture.insert(vecFiles[0], pTex);
 		return pTex;
 	}
 
@@ -86,9 +122,6 @@ cwTexture* cwTextureManager::createTextureArray(const std::vector<CWSTRING>& vec
 {
 	if (vecFiles.empty()) return nullptr;
 
-	auto itFind = m_mapTexture.find(vecFiles[0]);
-	if (itFind != m_mapTexture.end()) return itFind->second;
-
 	std::vector<CWSTRING> vecFullPath(vecFiles.size());
 	auto pFileSystem = cwRepertory::getInstance().getFileSystem();
 
@@ -99,7 +132,6 @@ cwTexture* cwTextureManager::createTextureArray(const std::vector<CWSTRING>& vec
 	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createTextureArray(vecFullPath);
 	if (pTex) {
 		pTex->setName(vecFiles[0]);
-		m_mapTexture.insert(vecFiles[0], pTex);
 		return pTex;
 	}
 

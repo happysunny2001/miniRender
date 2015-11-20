@@ -17,36 +17,64 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwAutoReleasePool.h"
+#ifndef __CW_RESOURCE_LOADER_H__
+#define __CW_RESOURCE_LOADER_H__
+
+#include "Base/cwMacros.h"
+#include "Ref/cwRef.h"
+#include "Repertory/cwRepertory.h"
+
+#include <mutex>
+#include <condition_variable>
+#include <queue>
+#include <functional>
+#include <queue>
+#include <functional>
 
 NS_MINIR_BEGIN
 
-cwAutoReleasePool::cwAutoReleasePool()
+class cwLoadBatch;
+class cwLoadResult;
+class cwResourceInfo;
+
+class cwResourceLoader : public cwRef
 {
+public:
+	virtual ~cwResourceLoader();
 
-}
+	CWVOID loadAsync(cwLoadBatch* pBatch);
+	CWBOOL loadSync(cwLoadBatch* pBatch);
 
-cwAutoReleasePool::~cwAutoReleasePool()
-{
-	clear();
-}
+	CWBOOL update(float dt);
 
-void cwAutoReleasePool::addAutoReleaseRef(cwRef* pRef)
-{
-	if (!pRef) return;
+private:
+	static cwResourceLoader* create();
 
-	std::unique_lock<std::mutex> lg(m_nVecMutex);
-	m_vecRefObject.push_back(pRef);
-}
+	cwResourceLoader();
+	CWBOOL init();
 
-void cwAutoReleasePool::clear()
-{
-	std::unique_lock<std::mutex> lg(m_nVecMutex);
-	for (auto it = m_vecRefObject.begin(); it != m_vecRefObject.end(); ++it) {
-		(*it)->release();
-	}
+	CWBOOL batchEmpty();
 
-	m_vecRefObject.clear();
-}
+	CWVOID popBatch();
+	cwLoadBatch* firstBatch();
+
+	cwLoadResult* load(cwLoadBatch* pBatch);
+	CWVOID loadTexture2D(cwResourceInfo& resInfo, cwLoadResult* pResult);
+
+	friend class cwRepertory;
+	friend CWVOID loadingProcessThread(cwResourceLoader*);
+
+protected:
+	std::queue<cwLoadBatch*> m_nQueueBatch;
+	std::queue<cwLoadResult*> m_nQueueResult;
+
+	std::mutex m_nMutex;
+	std::mutex m_nMutexResult;
+	std::condition_variable m_nCondNotEmpty;
+
+};
 
 NS_MINIR_END
+
+#endif
+

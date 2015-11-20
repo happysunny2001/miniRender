@@ -17,36 +17,42 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwAutoReleasePool.h"
+#ifndef __CW_LOAD_RESULT_H__
+#define __CW_LOAD_RESULT_H__
+
+#include "Base/cwMacros.h"
+#include "Base/cwBasicType.h"
+#include "Base/cwVector.h"
+#include "Ref/cwRef.h"
+#include "Texture/cwTexture.h"
+#include "Shader/cwShader.h"
 
 NS_MINIR_BEGIN
 
-cwAutoReleasePool::cwAutoReleasePool()
+class cwLoadBatch;
+
+class cwLoadResult : public cwRef
 {
+public:
+	static cwLoadResult* create();
 
-}
+	cwLoadResult();
+	virtual ~cwLoadResult();
 
-cwAutoReleasePool::~cwAutoReleasePool()
-{
-	clear();
-}
+	CWVOID add(cwTexture* pTex);
+	CWVOID add(cwShader* pShader);
 
-void cwAutoReleasePool::addAutoReleaseRef(cwRef* pRef)
-{
-	if (!pRef) return;
+	CWVOID setLoadBatch(cwLoadBatch* pBatch);
 
-	std::unique_lock<std::mutex> lg(m_nVecMutex);
-	m_vecRefObject.push_back(pRef);
-}
+	CWVOID distribute();
 
-void cwAutoReleasePool::clear()
-{
-	std::unique_lock<std::mutex> lg(m_nVecMutex);
-	for (auto it = m_vecRefObject.begin(); it != m_vecRefObject.end(); ++it) {
-		(*it)->release();
-	}
+protected:
+	cwVector<cwTexture*> m_nVecTexture;
+	cwVector<cwShader*> m_nVecShader;
+	cwLoadBatch* m_pLoadBatch;
 
-	m_vecRefObject.clear();
-}
+};
 
 NS_MINIR_END
+
+#endif

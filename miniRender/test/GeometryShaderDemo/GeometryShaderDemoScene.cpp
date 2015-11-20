@@ -157,7 +157,7 @@ CWVOID GeometryShaderDemoScene::buildBillboard()
 	vecTexFiles.push_back("Textures/tree1.dds");
 	vecTexFiles.push_back("Textures/tree2.dds");
 	vecTexFiles.push_back("Textures/tree3.dds");
-	cwTexture* pTreeTexture = cwRepertory::getInstance().getTextureManager()->createTextureArray(vecTexFiles);
+	cwTexture* pTreeTexture = cwRepertory::getInstance().getTextureManager()->getTextureArray(vecTexFiles);
 
 	vector<cwVertexPosTex> vecVertex(4);
 

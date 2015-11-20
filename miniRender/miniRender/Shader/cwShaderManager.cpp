@@ -42,6 +42,7 @@ cwShader* cwShaderManager::loadShader(const CWSTRING& strFile)
 	CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strFile);
 	cwShader* pShader = cwRepertory::getInstance().getDevice()->createShader(strFilePath);
 	if (pShader) {
+		pShader->setName(strFile);
 		m_nMapShader.insert(strFile, pShader);
 		return pShader;
 	}

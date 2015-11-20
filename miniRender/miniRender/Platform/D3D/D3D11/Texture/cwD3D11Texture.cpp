@@ -75,8 +75,6 @@ CWBOOL cwD3D11Texture::init(const CWSTRING& strFileName)
 	pD3D11Device->getD3D11Device()->CreateShaderResourceView(pTexture2D, &resourceDesc, &m_pShaderResource);
 	CW_RELEASE_COM(pTexture2D);
 
-	m_nStrName = strFileName;
-
 	return CWTRUE;
 }
 

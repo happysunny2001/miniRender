@@ -17,36 +17,50 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwAutoReleasePool.h"
+#include "cwLoadResult.h"
+#include "cwLoadBatch.h"
 
 NS_MINIR_BEGIN
 
-cwAutoReleasePool::cwAutoReleasePool()
+cwLoadResult* cwLoadResult::create()
 {
-
-}
-
-cwAutoReleasePool::~cwAutoReleasePool()
-{
-	clear();
-}
-
-void cwAutoReleasePool::addAutoReleaseRef(cwRef* pRef)
-{
-	if (!pRef) return;
-
-	std::unique_lock<std::mutex> lg(m_nVecMutex);
-	m_vecRefObject.push_back(pRef);
-}
-
-void cwAutoReleasePool::clear()
-{
-	std::unique_lock<std::mutex> lg(m_nVecMutex);
-	for (auto it = m_vecRefObject.begin(); it != m_vecRefObject.end(); ++it) {
-		(*it)->release();
+	cwLoadResult* pResult = new cwLoadResult();
+	if (pResult) {
+		return pResult;
 	}
 
-	m_vecRefObject.clear();
+	return nullptr;
+}
+
+cwLoadResult::cwLoadResult():
+m_pLoadBatch(nullptr)
+{
+
+}
+
+cwLoadResult::~cwLoadResult()
+{
+	m_pLoadBatch = nullptr;
+}
+
+CWVOID cwLoadResult::add(cwTexture* pTex)
+{
+	m_nVecTexture.pushBack(pTex);
+}
+
+CWVOID cwLoadResult::add(cwShader* pShader)
+{
+	m_nVecShader.pushBack(pShader);
+}
+
+CWVOID cwLoadResult::setLoadBatch(cwLoadBatch* pBatch)
+{
+	m_pLoadBatch = pBatch;
+}
+
+CWVOID cwLoadResult::distribute()
+{
+
 }
 
 NS_MINIR_END

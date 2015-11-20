@@ -168,6 +168,9 @@
     <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerStencil.h" />
     <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerWorldTrans.h" />
     <ClInclude Include="Repertory\cwRepertory.h" />
+    <ClInclude Include="Resource\cwLoadBatch.h" />
+    <ClInclude Include="Resource\cwLoadResult.h" />
+    <ClInclude Include="Resource\cwResourceLoader.h" />
     <ClInclude Include="Scheduler\cwScheduleInterface.h" />
     <ClInclude Include="Scheduler\cwSchedulerManager.h" />
     <ClInclude Include="Shader\cwShader.h" />
@@ -318,6 +321,9 @@
     <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerStencil.cpp" />
     <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerWorldTrans.cpp" />
     <ClCompile Include="Repertory\cwRepertory.cpp" />
+    <ClCompile Include="Resource\cwLoadBatch.cpp" />
+    <ClCompile Include="Resource\cwLoadResult.cpp" />
+    <ClCompile Include="Resource\cwResourceLoader.cpp" />
     <ClCompile Include="Scheduler\cwScheduleInterface.cpp" />
     <ClCompile Include="Scheduler\cwSchedulerManager.cpp" />
     <ClCompile Include="Shader\cwShader.cpp" />

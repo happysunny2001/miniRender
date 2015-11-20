@@ -57,7 +57,7 @@ cwD3D11Shader::~cwD3D11Shader()
 	CW_RELEASE_COM(m_pEffect);
 }
 
-bool cwD3D11Shader::init(const std::string& strShaderFile)
+CWBOOL cwD3D11Shader::init(const std::string& strShaderFile)
 {
 	TCHAR szPath[MAX_PATH];
 	GetModuleFileName(NULL, szPath, MAX_PATH);
@@ -87,12 +87,12 @@ bool cwD3D11Shader::init(const std::string& strShaderFile)
 	if (compiledMsg != NULL) {
 		MessageBoxA(NULL, (char*)compiledMsg->GetBufferPointer(), "Error", MB_OK);
 		CW_RELEASE_COM(compiledMsg);
-		return false;
+		return CWFALSE;
 	}
 
 	if (FAILED(hr)) {
 		DXTrace(__FILE__, __LINE__, hr, L"D3DX11CompileFromFile", true);
-		return false;
+		return CWFALSE;
 	}
 
 	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
@@ -106,17 +106,17 @@ bool cwD3D11Shader::init(const std::string& strShaderFile)
 
 	CW_RELEASE_COM(compiledShader);
 
-	if (!saveTech()) return false;
-	if (!saveVariable()) return false;
+	if (!saveTech()) return CWFALSE;
+	if (!saveVariable()) return CWFALSE;
 
 	for (auto itTech = m_vecTech.begin(); itTech != m_vecTech.end(); ++itTech){
-		if (!savePass((*itTech))) return false;
+		if (!savePass((*itTech))) return CWFALSE;
 	}
 
-	return true;
+	return CWTRUE;
 }
 
-bool cwD3D11Shader::saveTech()
+CWBOOL cwD3D11Shader::saveTech()
 {
 	D3DX11_EFFECT_DESC effDesc;
 	CW_HR(m_pEffect->GetDesc(&effDesc));
@@ -124,7 +124,7 @@ bool cwD3D11Shader::saveTech()
 	for (CWUINT index = 0; index < effDesc.Techniques; ++index) {
 		ID3DX11EffectTechnique* pTech = m_pEffect->GetTechniqueByIndex(index);
 		if (!pTech) {
-			return false;
+			return CWFALSE;
 		}
 		D3DX11_TECHNIQUE_DESC techDesc;
 		CW_HR(pTech->GetDesc(&techDesc));
@@ -133,12 +133,12 @@ bool cwD3D11Shader::saveTech()
 		m_mapTech[techDesc.Name] = pTech;
 	}
 
-	return true;
+	return CWTRUE;
 }
 
-bool cwD3D11Shader::savePass(ID3DX11EffectTechnique* pTech)
+CWBOOL cwD3D11Shader::savePass(ID3DX11EffectTechnique* pTech)
 {
-	if (!pTech) return false;
+	if (!pTech) return CWFALSE;
 
 	D3DX11_TECHNIQUE_DESC techDesc;
 	CW_HR(pTech->GetDesc(&techDesc));
@@ -148,7 +148,7 @@ bool cwD3D11Shader::savePass(ID3DX11EffectTechnique* pTech)
 
 	for (CWUINT index = 0; index < techDesc.Passes; ++index) {
 		ID3DX11EffectPass* pPass = pTech->GetPassByIndex(index);
-		if (!pPass) return false;
+		if (!pPass) return CWFALSE;
 
 		D3DX11_PASS_DESC passDesc;
 		CW_HR(pPass->GetDesc(&passDesc));
@@ -160,10 +160,10 @@ bool cwD3D11Shader::savePass(ID3DX11EffectTechnique* pTech)
 	m_mapIndexPass[pTech] = vecPass;
 	m_mapNamePass[pTech] = mapPass;
 
-	return true;
+	return CWTRUE;
 }
 
-bool cwD3D11Shader::saveVariable()
+CWBOOL cwD3D11Shader::saveVariable()
 {
 	D3DX11_EFFECT_DESC effDesc;
 	CW_HR(m_pEffect->GetDesc(&effDesc));
@@ -187,16 +187,16 @@ bool cwD3D11Shader::saveVariable()
 		}
 	}
 
-	return true;
+	return CWTRUE;
 }
 
-bool cwD3D11Shader::hasVariable(const string& strVariable)
+CWBOOL cwD3D11Shader::hasVariable(const string& strVariable)
 {
-	if (m_mapVariable.find(strVariable) != m_mapVariable.end()) return true;
-	return false;
+	if (m_mapVariable.find(strVariable) != m_mapVariable.end()) return CWTRUE;
+	return CWFALSE;
 }
 
-void cwD3D11Shader::setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize)
+CWVOID cwD3D11Shader::setVariableData(const string& strVariable, CWVOID* pData, CWUINT offset, CWUINT iSize)
 {
 	auto itVariable = m_mapVariable.find(strVariable);
 	if (itVariable != m_mapVariable.end()) {
@@ -205,7 +205,7 @@ void cwD3D11Shader::setVariableData(const string& strVariable, void* pData, CWUI
 	}
 }
 
-void cwD3D11Shader::setVariableData(const string& strVariable, CWUINT index, void* pData, CWUINT offset, CWUINT iSize)
+CWVOID cwD3D11Shader::setVariableData(const string& strVariable, CWUINT index, CWVOID* pData, CWUINT offset, CWUINT iSize)
 {
 	auto itVariable = m_mapVariable.find(strVariable);
 	if (itVariable != m_mapVariable.end()) {
@@ -217,7 +217,7 @@ void cwD3D11Shader::setVariableData(const string& strVariable, CWUINT index, voi
 	}
 }
 
-void cwD3D11Shader::setVariableMatrix(const string& strVariable, CWFLOAT* pData)
+CWVOID cwD3D11Shader::setVariableMatrix(const string& strVariable, CWFLOAT* pData)
 {
 	auto itVariable = m_mapVariable.find(strVariable);
 	if (itVariable != m_mapVariable.end()) {
@@ -226,7 +226,7 @@ void cwD3D11Shader::setVariableMatrix(const string& strVariable, CWFLOAT* pData)
 	}
 }
 
-void cwD3D11Shader::setVariableInt(const string& strVariable, CWINT value)
+CWVOID cwD3D11Shader::setVariableInt(const string& strVariable, CWINT value)
 {
 	auto itVariable = m_mapVariable.find(strVariable);
 	if (itVariable != m_mapVariable.end()) {
@@ -235,7 +235,7 @@ void cwD3D11Shader::setVariableInt(const string& strVariable, CWINT value)
 	}
 }
 
-void cwD3D11Shader::setVariableFloat(const string& strVariable, CWFLOAT value)
+CWVOID cwD3D11Shader::setVariableFloat(const string& strVariable, CWFLOAT value)
 {
 	auto itVariable = m_mapVariable.find(strVariable);
 	if (itVariable != m_mapVariable.end()) {
@@ -244,7 +244,7 @@ void cwD3D11Shader::setVariableFloat(const string& strVariable, CWFLOAT value)
 	}
 }
 
-void cwD3D11Shader::setVariableFloatArray(const string& strVariable, CWFLOAT* pData, CWUINT count)
+CWVOID cwD3D11Shader::setVariableFloatArray(const string& strVariable, CWFLOAT* pData, CWUINT count)
 {
 	auto itVariable = m_mapVariable.find(strVariable);
 	if (itVariable != m_mapVariable.end()) {
@@ -253,7 +253,7 @@ void cwD3D11Shader::setVariableFloatArray(const string& strVariable, CWFLOAT* pD
 	}
 }
 
-void cwD3D11Shader::setVariableTexture(const string& strVariable, cwTexture* pTexture)
+CWVOID cwD3D11Shader::setVariableTexture(const string& strVariable, cwTexture* pTexture)
 {
 	if (!pTexture) return;
 	auto itVariable = m_mapVariable.find(strVariable);
