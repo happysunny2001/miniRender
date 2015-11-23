@@ -42,6 +42,17 @@ cwD3D11CubeTexture* cwD3D11CubeTexture::create(const CWSTRING& strTexture)
 	return nullptr;
 }
 
+cwD3D11CubeTexture* cwD3D11CubeTexture::createThreadSafe(const CWSTRING& strTexture)
+{
+	cwD3D11CubeTexture* pTexture = new cwD3D11CubeTexture();
+	if (pTexture && pTexture->init(strTexture)) {
+		return pTexture;
+	}
+
+	CW_SAFE_RELEASE_NULL(pTexture);
+	return nullptr;
+}
+
 cwD3D11CubeTexture* cwD3D11CubeTexture::create(CWUINT iSize)
 {
 	cwD3D11CubeTexture* pTexture = new cwD3D11CubeTexture();

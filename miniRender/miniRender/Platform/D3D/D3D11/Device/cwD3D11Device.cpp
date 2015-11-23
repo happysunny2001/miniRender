@@ -378,6 +378,11 @@ cwShader* cwD3D11Device::createShader(const string& strFileName)
 	return cwD3D11Shader::create(strFileName);
 }
 
+cwShader* cwD3D11Device::createShaderThreadSafe(const string& strFileName)
+{
+	return cwD3D11Shader::createThreadSafe(strFileName);
+}
+
 cwBuffer* cwD3D11Device::createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt)
 {
 	cwD3D11Buffer* pVertexBuffer = cwD3D11Buffer::create(pData, uStride*uCnt, eBufferUsageImmutable, eBufferBindVertex, eAccessFlagNone, 0, uStride);
@@ -539,9 +544,19 @@ cwTexture* cwD3D11Device::createTexture(const CWSTRING& strFileName)
 	return cwD3D11Texture::create(strFileName);
 }
 
+cwTexture* cwD3D11Device::createTextureThreadSafe(const CWSTRING& strFileName)
+{
+	return cwD3D11Texture::createThreadSafe(strFileName);
+}
+
 cwTexture* cwD3D11Device::createCubeTexture(const CWSTRING& strFileName)
 {
 	return cwD3D11CubeTexture::create(strFileName);
+}
+
+cwTexture* cwD3D11Device::createCubeTextureThreadSafe(const CWSTRING& strFileName)
+{
+	return cwD3D11CubeTexture::createThreadSafe(strFileName);
 }
 
 cwCubeTexture* cwD3D11Device::createCubeTexture(CWUINT iSize)

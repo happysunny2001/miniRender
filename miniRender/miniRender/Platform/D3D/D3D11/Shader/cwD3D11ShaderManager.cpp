@@ -59,13 +59,13 @@ CWVOID cwD3D11ShaderManager::loadDefaultShader()
 	//init d3d11 shader first
 	auto fileSystem = cwRepertory::getInstance().getFileSystem();
 
-	this->loadShader("effect/D3D11/color.fx");
-	this->loadShader("effect/D3D11/lighting.fx");
-	this->loadShader("effect/D3D11/lightingTex.fx");
-	this->loadShader("effect/D3D11/colorTex.fx");
-	this->loadShader("effect/D3D11/posColorTex.fx");
-	this->loadShader("effect/D3D11/skyDome.fx");
-	this->loadShader("effect/D3D11/normalMap.fx");
+	this->getShader("effect/D3D11/color.fx");
+	this->getShader("effect/D3D11/lighting.fx");
+	this->getShader("effect/D3D11/lightingTex.fx");
+	this->getShader("effect/D3D11/colorTex.fx");
+	this->getShader("effect/D3D11/posColorTex.fx");
+	this->getShader("effect/D3D11/skyDome.fx");
+	this->getShader("effect/D3D11/normalMap.fx");
 
 	m_nMapDefShader.insert(eDefShaderColor, getShader("effect/D3D11/color.fx"));
 	m_nMapDefShader.insert(eDefShaderLighting, getShader("effect/D3D11/lighting.fx"));

@@ -70,7 +70,8 @@ public:
 	virtual CWVOID setPrimitiveTopology(ePrimitiveType topology) = 0;
 	virtual CWVOID setClearColor(const cwVector4D& fvColor) = 0;
 
-	virtual cwShader* createShader(const string& strName) = 0;
+	virtual cwShader* createShader(const string& strFileName) = 0;
+	virtual cwShader* createShaderThreadSafe(const string& strFileName) = 0;
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) = 0;
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, eBufferUsage usage, eAccessFlag cpuFlag) = 0;
 	virtual cwBuffer* createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) = 0;
@@ -83,7 +84,9 @@ public:
 	virtual cwStencil* createStencil(const cwStencilData& stencliData) = 0;
 
 	virtual cwTexture* createTexture(const CWSTRING& strFileName) = 0;
+	virtual cwTexture* createTextureThreadSafe(const CWSTRING& strFileName) = 0;
 	virtual cwTexture* createCubeTexture(const CWSTRING& strFileName) = 0;
+	virtual cwTexture* createCubeTextureThreadSafe(const CWSTRING& strFileName) = 0;
 	virtual cwCubeTexture* createCubeTexture(CWUINT iSize) = 0;
 	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) = 0;
 	virtual cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles) = 0;

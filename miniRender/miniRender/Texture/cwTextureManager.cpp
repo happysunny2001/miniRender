@@ -52,6 +52,18 @@ cwTexture* cwTextureManager::createTexture(const CWSTRING& strName)
 	return nullptr;
 }
 
+cwTexture* cwTextureManager::createTextureThreadSafe(const CWSTRING& strName)
+{
+	CWSTRING strFullPath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strName);
+	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createTextureThreadSafe(strFullPath);
+	if (pTex) {
+		pTex->setName(strName);
+		return pTex;
+	}
+
+	return nullptr;
+}
+
 cwTexture* cwTextureManager::createCubeTexture(const CWSTRING& strName)
 {
 	CWSTRING strFullPath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strName);
@@ -62,6 +74,53 @@ cwTexture* cwTextureManager::createCubeTexture(const CWSTRING& strName)
 	}
 
 	return nullptr;
+}
+
+cwTexture* cwTextureManager::createCubeTextureThreadSafe(const CWSTRING& strName)
+{
+	CWSTRING strFullPath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strName);
+	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createCubeTextureThreadSafe(strFullPath);
+	if (pTex) {
+		pTex->setName(strName);
+		return pTex;
+	}
+
+	return nullptr;
+}
+
+cwTexture* cwTextureManager::createCubeTexture(CWUINT iSize)
+{
+	return cwRepertory::getInstance().getDevice()->createCubeTexture(iSize);
+}
+
+cwTexture* cwTextureManager::createTextureArray(const std::vector<CWSTRING>& vecFiles)
+{
+	if (vecFiles.empty()) return nullptr;
+
+	std::vector<CWSTRING> vecFullPath(vecFiles.size());
+	auto pFileSystem = cwRepertory::getInstance().getFileSystem();
+
+	for (CWUINT i = 0; i < vecFiles.size(); ++i) {
+		vecFullPath[i] = pFileSystem->getFullFilePath(vecFiles[i]);
+	}
+
+	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createTextureArray(vecFullPath);
+	if (pTex) {
+		pTex->setName(vecFiles[0]);
+		return pTex;
+	}
+
+	return nullptr;
+}
+
+cwRenderTexture* cwTextureManager::createRenderTexture(float fWidth, float fHeight, eRenderTextureType eType)
+{
+	cwRenderTexture* pRenderTex = cwRepertory::getInstance().getDevice()->createRenderTexture(fWidth, fHeight, eType);
+	if (pRenderTex) {
+		m_vecRenderTexture.pushBack(pRenderTex);
+	}
+
+	return pRenderTex;
 }
 
 cwTexture* cwTextureManager::getTexture(const string& strName)
@@ -108,44 +167,22 @@ cwTexture* cwTextureManager::getTextureArray(const std::vector<CWSTRING>& vecFil
 	return nullptr;
 }
 
-cwTexture* cwTextureManager::createCubeTexture(CWUINT iSize)
+CWBOOL cwTextureManager::isExist(const CWSTRING& strName)
 {
-	return cwRepertory::getInstance().getDevice()->createCubeTexture(iSize);
+	if (m_mapTexture.find(strName) == m_mapTexture.end()) return CWFALSE;
+	return CWTRUE;
+}
+
+CWVOID cwTextureManager::appendTexture(cwTexture* pTex)
+{
+	if (pTex) {
+		m_mapTexture.insert(pTex->getName(), pTex);
+	}
 }
 
 void cwTextureManager::removeTexture(const string& strName)
 {
 	m_mapTexture.erase(strName);
-}
-
-cwTexture* cwTextureManager::createTextureArray(const std::vector<CWSTRING>& vecFiles)
-{
-	if (vecFiles.empty()) return nullptr;
-
-	std::vector<CWSTRING> vecFullPath(vecFiles.size());
-	auto pFileSystem = cwRepertory::getInstance().getFileSystem();
-
-	for (CWUINT i = 0; i < vecFiles.size(); ++i) {
-		vecFullPath[i] = pFileSystem->getFullFilePath(vecFiles[i]);
-	}
-
-	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createTextureArray(vecFullPath);
-	if (pTex) {
-		pTex->setName(vecFiles[0]);
-		return pTex;
-	}
-
-	return nullptr;
-}
-
-cwRenderTexture* cwTextureManager::createRenderTexture(float fWidth, float fHeight, eRenderTextureType eType)
-{
-	cwRenderTexture* pRenderTex = cwRepertory::getInstance().getDevice()->createRenderTexture(fWidth, fHeight, eType);
-	if (pRenderTex) {
-		m_vecRenderTexture.pushBack(pRenderTex);
-	}
-
-	return pRenderTex;
 }
 
 void cwTextureManager::removeRenderTexture(cwRenderTexture* pTex)

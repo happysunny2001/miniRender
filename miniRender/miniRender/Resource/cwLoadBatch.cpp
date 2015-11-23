@@ -18,6 +18,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwLoadBatch.h"
+#include "Repertory/cwRepertory.h"
+#include "Texture/cwTextureManager.h"
+#include "Shader/cwShaderManager.h"
 
 NS_MINIR_BEGIN
 
@@ -45,6 +48,7 @@ cwLoadBatch::~cwLoadBatch()
 
 CWVOID cwLoadBatch::addResource(cwResourceInfo& resInfo)
 {
+	if (checkResourceExist(resInfo)) return;
 	m_nVecResource.push_back(resInfo);
 }
 
@@ -53,7 +57,7 @@ CWVOID cwLoadBatch::addTexture2D(const CWSTRING& strName)
 	cwResourceInfo resInfo;
 	resInfo.m_eType = eResourceTypeTexture2D;
 	resInfo.m_nStrName = strName;
-	m_nVecResource.push_back(resInfo);
+	addResource(resInfo);
 }
 
 CWVOID cwLoadBatch::addTextureCube(const CWSTRING& strName)
@@ -61,7 +65,7 @@ CWVOID cwLoadBatch::addTextureCube(const CWSTRING& strName)
 	cwResourceInfo resInfo;
 	resInfo.m_eType = eResourceTypeTextureCube;
 	resInfo.m_nStrName = strName;
-	m_nVecResource.push_back(resInfo);
+	addResource(resInfo);
 }
 
 CWVOID cwLoadBatch::addShader(const CWSTRING& strName)
@@ -69,7 +73,23 @@ CWVOID cwLoadBatch::addShader(const CWSTRING& strName)
 	cwResourceInfo resInfo;
 	resInfo.m_eType = eResourceTypeShader;
 	resInfo.m_nStrName = strName;
-	m_nVecResource.push_back(resInfo);
+	addResource(resInfo);
+}
+
+CWBOOL cwLoadBatch::checkResourceExist(cwResourceInfo& resInfo)
+{
+	switch (resInfo.m_eType)
+	{
+	case eResourceTypeTexture2D:
+	case eResourceTypeTextureCube:
+		return cwRepertory::getInstance().getTextureManager()->isExist(resInfo.m_nStrName);
+	case eResourceTypeShader:
+		return cwRepertory::getInstance().getShaderManager()->isExist(resInfo.m_nStrName);
+	default:
+		break;
+	}
+
+	return CWFALSE;
 }
 
 NS_MINIR_END

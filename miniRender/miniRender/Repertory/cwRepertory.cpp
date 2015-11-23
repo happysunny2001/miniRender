@@ -31,6 +31,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Scheduler/cwSchedulerManager.h"
 #include "Parser/cwParserManager.h"
 #include "Math/cwMath.h"
+#include "Resource/cwResourceLoader.h"
 
 #ifdef _CW_D3D11_
 #include "Platform/D3D/D3D11/Repertory/cwD3D11Repertory.h"
@@ -56,7 +57,8 @@ m_pEngine(nullptr),
 m_pGeoGenerator(nullptr),
 m_pEventManager(nullptr),
 m_pSchedulerManager(nullptr),
-m_pParserManager(nullptr)
+m_pParserManager(nullptr),
+m_pResourceLoader(nullptr)
 {
 	m_pAutoReleasePool = new cwAutoReleasePool();
 }
@@ -86,6 +88,9 @@ void cwRepertory::initAll()
 	addValue(gValueNearZ, cwValueMap(1.0f));
 	addValue(gValueFarZ, cwValueMap(1000.0f));
 	addValue(gValueFov, cwValueMap(0.25f*cwMathUtil::cwPI));
+
+	m_pResourceLoader = cwResourceLoader::create();
+	CW_SAFE_RETAIN(m_pResourceLoader);
 
 	m_pParserManager = cwParserManager::create();
 	CW_SAFE_RETAIN(m_pParserManager);

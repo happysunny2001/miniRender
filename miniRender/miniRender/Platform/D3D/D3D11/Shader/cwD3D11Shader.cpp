@@ -47,6 +47,17 @@ cwD3D11Shader* cwD3D11Shader::create(const std::string& strShaderFile)
 	return nullptr;
 }
 
+cwD3D11Shader* cwD3D11Shader::createThreadSafe(const CWSTRING& strShaderFile)
+{
+	cwD3D11Shader* pShader = new cwD3D11Shader();
+	if (pShader && pShader->init(strShaderFile)) {
+		return pShader;
+	}
+
+	CW_SAFE_DELETE(pShader);
+	return nullptr;
+}
+
 cwD3D11Shader::cwD3D11Shader()
 {
 

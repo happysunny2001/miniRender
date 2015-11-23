@@ -19,6 +19,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwLoadResult.h"
 #include "cwLoadBatch.h"
+#include "Repertory/cwRepertory.h"
+#include "Texture/cwTextureManager.h"
+#include "Shader/cwShaderManager.h"
 
 NS_MINIR_BEGIN
 
@@ -40,27 +43,78 @@ m_pLoadBatch(nullptr)
 
 cwLoadResult::~cwLoadResult()
 {
-	m_pLoadBatch = nullptr;
-}
-
-CWVOID cwLoadResult::add(cwTexture* pTex)
-{
-	m_nVecTexture.pushBack(pTex);
-}
-
-CWVOID cwLoadResult::add(cwShader* pShader)
-{
-	m_nVecShader.pushBack(pShader);
+	CW_SAFE_RELEASE_NULL(m_pLoadBatch);
 }
 
 CWVOID cwLoadResult::setLoadBatch(cwLoadBatch* pBatch)
 {
+	if (m_pLoadBatch == pBatch) return;
+	CW_SAFE_RETAIN(pBatch);
+	CW_SAFE_RELEASE_NULL(m_pLoadBatch);
 	m_pLoadBatch = pBatch;
 }
 
 CWVOID cwLoadResult::distribute()
 {
+	cwRepertory& repertory = cwRepertory::getInstance();
+	cwTextureManager* pTexManager = repertory.getTextureManager();
 
+	for (auto pTex : m_nVecTexture) {
+		pTexManager->appendTexture(pTex);
+		CW_SAFE_RELEASE(pTex);
+	}
+
+	cwShaderManager* pShaderManager = repertory.getShaderManager();
+	for (auto pShader : m_nVecShader) {
+		pShaderManager->appendShader(pShader);
+		CW_SAFE_RELEASE(pShader);
+	}
+}
+
+CWVOID cwLoadResult::load()
+{
+	if (!m_pLoadBatch) return;
+
+	for (auto it = m_pLoadBatch->begin(); it != m_pLoadBatch->end(); ++it) {
+		switch (it->m_eType)
+		{
+		case eResourceTypeTexture2D:
+			loadTexture2D(*it);
+			break;
+		case eResourceTypeTextureCube:
+			loadTextureCubeMap(*it);
+			break;
+		case eResourceTypeShader:
+			loadTextureShader(*it);
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+CWVOID cwLoadResult::loadTexture2D(const cwResourceInfo& resInfo)
+{
+	cwTexture* pTex = cwRepertory::getInstance().getTextureManager()->createTextureThreadSafe(resInfo.m_nStrName);
+	if (pTex) {
+		m_nVecTexture.push_back(pTex);
+	}
+}
+
+CWVOID cwLoadResult::loadTextureCubeMap(const cwResourceInfo& resInfo)
+{
+	cwTexture* pTex = cwRepertory::getInstance().getTextureManager()->createCubeTextureThreadSafe(resInfo.m_nStrName);
+	if (pTex) {
+		m_nVecTexture.push_back(pTex);
+	}
+}
+
+CWVOID cwLoadResult::loadTextureShader(const cwResourceInfo& resInfo)
+{
+	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->createShaderThreadSafe(resInfo.m_nStrName);
+	if (pShader) {
+		m_nVecShader.push_back(pShader);
+	}
 }
 
 NS_MINIR_END

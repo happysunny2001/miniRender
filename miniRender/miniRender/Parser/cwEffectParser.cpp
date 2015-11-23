@@ -135,7 +135,7 @@ CWVOID cwEffectParser::parseShader(cwEffect* pEffect, tinyxml2::XMLElement* pEff
 		}
 	}
 	else if (strncmp(pcShaderType, "specific", 8) == 0) {
-		cwShader* pShader = cwRepertory::getInstance().getShaderManager()->loadShader(pcShader);
+		cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getShader(pcShader);
 
 		if (pShader) {
 			pEffect->setShader(pShader);

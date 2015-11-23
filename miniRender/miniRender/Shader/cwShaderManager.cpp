@@ -34,16 +34,24 @@ cwShaderManager::~cwShaderManager()
 
 }
 
-cwShader* cwShaderManager::loadShader(const CWSTRING& strFile)
+cwShader* cwShaderManager::createShader(const CWSTRING& strFile)
 {
-	auto itFind = m_nMapShader.find(strFile);
-	if (itFind != m_nMapShader.end()) return itFind->second;
-
 	CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strFile);
 	cwShader* pShader = cwRepertory::getInstance().getDevice()->createShader(strFilePath);
 	if (pShader) {
 		pShader->setName(strFile);
-		m_nMapShader.insert(strFile, pShader);
+		return pShader;
+	}
+
+	return nullptr;
+}
+
+cwShader* cwShaderManager::createShaderThreadSafe(const CWSTRING& strFile)
+{
+	CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strFile);
+	cwShader* pShader = cwRepertory::getInstance().getDevice()->createShaderThreadSafe(strFilePath);
+	if (pShader) {
+		pShader->setName(strFile);
 		return pShader;
 	}
 
@@ -56,7 +64,13 @@ cwShader* cwShaderManager::getShader(const CWSTRING& strFile)
 	if (itFind != m_nMapShader.end()) {
 		return itFind->second;
 	}
-	return loadShader(strFile);
+
+	cwShader* pShader = createShader(strFile);
+	if (pShader) {
+		m_nMapShader.insert(strFile, pShader);
+	}
+
+	return pShader;
 }
 
 cwShader* cwShaderManager::getDefShader(eDefShaderID eShaderID)
@@ -64,6 +78,19 @@ cwShader* cwShaderManager::getDefShader(eDefShaderID eShaderID)
 	auto itFind = m_nMapDefShader.find(eShaderID);
 	if (itFind != m_nMapDefShader.end()) return itFind->second;
 	return nullptr;
+}
+
+CWBOOL cwShaderManager::isExist(const CWSTRING& strFile)
+{
+	if (m_nMapShader.find(strFile) == m_nMapShader.end()) return CWFALSE;
+	return CWTRUE;
+}
+
+CWVOID cwShaderManager::appendShader(cwShader* pShader)
+{
+	if (pShader) {
+		m_nMapShader.insert(pShader->getName(), pShader);
+	}
 }
 
 CWBOOL cwShaderManager::init()

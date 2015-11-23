@@ -41,6 +41,17 @@ cwD3D11Texture* cwD3D11Texture::create(const string& strFileName)
 	return nullptr;
 }
 
+cwD3D11Texture* cwD3D11Texture::createThreadSafe(const CWSTRING& strFileName)
+{
+	cwD3D11Texture* pTexture = new cwD3D11Texture();
+	if (pTexture && pTexture->init(strFileName)) {
+		return pTexture;
+	}
+
+	CW_SAFE_DELETE(pTexture);
+	return nullptr;
+}
+
 cwD3D11Texture::cwD3D11Texture() :
 m_pShaderResource(nullptr)
 {

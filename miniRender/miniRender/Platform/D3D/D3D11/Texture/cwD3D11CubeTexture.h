@@ -35,6 +35,7 @@ class cwD3D11CubeTexture : public cwCubeTexture
 {
 public:
 	static cwD3D11CubeTexture* create(const CWSTRING& strTexture);
+	static cwD3D11CubeTexture* createThreadSafe(const CWSTRING& strTexture);
 	static cwD3D11CubeTexture* create(CWUINT iSize);
 
 	cwD3D11CubeTexture();

@@ -70,7 +70,7 @@ CWVOID cwResourceLoader::popBatch()
 	if (m_nQueueBatch.empty()) return;
 
 	cwLoadBatch* pFirst = m_nQueueBatch.front();
-	pFirst->release();
+	CW_SAFE_RELEASE(pFirst);
 	m_nQueueBatch.pop();
 }
 
@@ -83,7 +83,7 @@ CWVOID cwResourceLoader::loadAsync(cwLoadBatch* pBatch)
 {
 	std::unique_lock<std::mutex> lock(m_nMutex);
 	m_nQueueBatch.push(pBatch);
-	pBatch->retain();
+	CW_SAFE_RETAIN(pBatch);
 	m_nCondNotEmpty.notify_all();
 }
 
@@ -102,17 +102,9 @@ cwLoadResult* cwResourceLoader::load(cwLoadBatch* pBatch)
 {
 	cwLoadResult* pResult = cwLoadResult::create();
 	pResult->setLoadBatch(pBatch);
-
-	for (auto it = pBatch->begin(); it != pBatch->end(); ++it) {
-		this->loadTexture2D(*it, pResult);
-	}
+	pResult->load();
 
 	return pResult;
-}
-
-CWVOID cwResourceLoader::loadTexture2D(cwResourceInfo& resInfo, cwLoadResult* pResult)
-{
-
 }
 
 CWBOOL cwResourceLoader::update(float dt)
@@ -149,6 +141,7 @@ CWVOID loadingProcessThread(cwResourceLoader* pLoader)
 		}
 
 		cwLoadBatch* pCurrBatch = pLoader->firstBatch();
+		pCurrBatch->retain();
 		pLoader->popBatch();
 
 		lock.unlock();

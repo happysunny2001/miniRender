@@ -58,6 +58,7 @@ public:
 	virtual CWVOID setRenderState(eRenderState e);
 
 	virtual cwShader* createShader(const string& strFileName) override;
+	virtual cwShader* createShaderThreadSafe(const string& strFileName) override;
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) override;
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, eBufferUsage usage, eAccessFlag cpuFlag) override;
 	virtual cwBuffer* createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) override;
@@ -70,7 +71,9 @@ public:
 	virtual cwStencil* createStencil(const cwStencilData& stencliData) override;
 
 	virtual cwTexture* createTexture(const CWSTRING& strFileName) override;
+	virtual cwTexture* createTextureThreadSafe(const CWSTRING& strFileName) override;
 	virtual cwTexture* createCubeTexture(const CWSTRING& strFileName) override;
+	virtual cwTexture* createCubeTextureThreadSafe(const CWSTRING& strFileName) override;
 	virtual cwCubeTexture* createCubeTexture(CWUINT iSize) override;
 	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) override;
 	virtual cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles) override;

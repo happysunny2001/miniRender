@@ -35,6 +35,7 @@ class CW_DLL cwD3D11Shader : public cwShader
 {
 public:
 	static cwD3D11Shader* create(const CWSTRING& strShaderFile);
+	static cwD3D11Shader* createThreadSafe(const CWSTRING& strShaderFile);
 
 	cwD3D11Shader();
 	virtual ~cwD3D11Shader();

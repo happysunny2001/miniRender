@@ -64,6 +64,9 @@ public:
 	std::vector<cwResourceInfo>::iterator end() { return m_nVecResource.end(); }
 
 protected:
+	CWBOOL checkResourceExist(cwResourceInfo& resInfo);
+
+protected:
 	std::vector<cwResourceInfo> m_nVecResource;
 
 public:

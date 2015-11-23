@@ -42,9 +42,16 @@ public:
 	cwTexture* createCubeTexture(CWUINT iSize);
 	cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader);
 
+	cwTexture* createTextureThreadSafe(const CWSTRING& strName);
+	cwTexture* createCubeTextureThreadSafe(const CWSTRING& strName);
+
 	cwTexture* getTexture(const CWSTRING& strName);
 	cwTexture* getCubeTexture(const CWSTRING& strName);
 	cwTexture* getTextureArray(const std::vector<CWSTRING>& vecFiles);
+
+	CWVOID appendTexture(cwTexture* pTex);
+
+	CWBOOL isExist(const CWSTRING& strName);
 
 	CWVOID removeTexture(const CWSTRING& strName);
 	CWVOID removeRenderTexture(cwRenderTexture* pTex);

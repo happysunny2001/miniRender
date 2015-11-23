@@ -37,9 +37,15 @@ public:
 	virtual CWBOOL init();
 
 	virtual CWVOID loadDefaultShader();
-	cwShader* loadShader(const CWSTRING& strFile);
+
+	cwShader* createShader(const CWSTRING& strFile);
+	cwShader* createShaderThreadSafe(const CWSTRING& strFile);
+
 	cwShader* getShader(const CWSTRING& strFile);
 	cwShader* getDefShader(eDefShaderID eShaderID);
+
+	CWBOOL isExist(const CWSTRING& strFile);
+	CWVOID appendShader(cwShader* pShader);
 
 	const CWSTRING& getShaderParamString(eShaderParamIndex eParam) const;
 

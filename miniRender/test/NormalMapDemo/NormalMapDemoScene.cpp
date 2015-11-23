@@ -160,13 +160,13 @@ CWVOID NormalMapDemoScene::buildEffect()
 	m_pNormalMapEffect->setTech("NormalTech");
 	CW_SAFE_RETAIN(m_pNormalMapEffect);
 
-	cwShader* pShaderDisplacement = cwRepertory::getInstance().getShaderManager()->loadShader("effect/D3D11/displacementMap.fx");
+	cwShader* pShaderDisplacement = cwRepertory::getInstance().getShaderManager()->getShader("effect/D3D11/displacementMap.fx");
 	m_pDisplacementEffect = cwEffect::create();
 	m_pDisplacementEffect->setShader(pShaderDisplacement);
 	m_pDisplacementEffect->setTech("TechDisplacement");
 	CW_SAFE_RETAIN(m_pDisplacementEffect);
 
-	cwShader* pShaderWave = cwRepertory::getInstance().getShaderManager()->loadShader("effect/D3D11/wave.fx");
+	cwShader* pShaderWave = cwRepertory::getInstance().getShaderManager()->getShader("effect/D3D11/wave.fx");
 
 	m_pWaveEffect = cwEffect::create();
 	m_pWaveEffect->setShader(pShaderWave);

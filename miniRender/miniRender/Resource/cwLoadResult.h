@@ -26,6 +26,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Ref/cwRef.h"
 #include "Texture/cwTexture.h"
 #include "Shader/cwShader.h"
+#include "cwLoadBatch.h"
+
+#include <vector>
 
 NS_MINIR_BEGIN
 
@@ -39,16 +42,19 @@ public:
 	cwLoadResult();
 	virtual ~cwLoadResult();
 
-	CWVOID add(cwTexture* pTex);
-	CWVOID add(cwShader* pShader);
-
 	CWVOID setLoadBatch(cwLoadBatch* pBatch);
 
+	CWVOID load();
 	CWVOID distribute();
 
 protected:
-	cwVector<cwTexture*> m_nVecTexture;
-	cwVector<cwShader*> m_nVecShader;
+	CWVOID loadTexture2D(const cwResourceInfo& resInfo);
+	CWVOID loadTextureCubeMap(const cwResourceInfo& resInfo);
+	CWVOID loadTextureShader(const cwResourceInfo& resInfo);
+
+protected:
+	std::vector<cwTexture*> m_nVecTexture;
+	std::vector<cwShader*> m_nVecShader;
 	cwLoadBatch* m_pLoadBatch;
 
 };

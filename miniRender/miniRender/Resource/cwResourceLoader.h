@@ -59,7 +59,6 @@ private:
 	cwLoadBatch* firstBatch();
 
 	cwLoadResult* load(cwLoadBatch* pBatch);
-	CWVOID loadTexture2D(cwResourceInfo& resInfo, cwLoadResult* pResult);
 
 	friend class cwRepertory;
 	friend CWVOID loadingProcessThread(cwResourceLoader*);

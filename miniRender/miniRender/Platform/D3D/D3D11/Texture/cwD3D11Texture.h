@@ -33,6 +33,7 @@ class CW_DLL cwD3D11Texture : public cwTexture
 {
 public:
 	static cwD3D11Texture* create(const CWSTRING& strFileName);
+	static cwD3D11Texture* createThreadSafe(const CWSTRING& strFileName);
 
 	cwD3D11Texture();
 	virtual ~cwD3D11Texture();
