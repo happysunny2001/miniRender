@@ -92,4 +92,11 @@ CWBOOL cwLoadBatch::checkResourceExist(cwResourceInfo& resInfo)
 	return CWFALSE;
 }
 
+CWVOID cwLoadBatch::onOverCallback()
+{
+	if (onLoadOver) {
+		onLoadOver(this);
+	}
+}
+
 NS_MINIR_END

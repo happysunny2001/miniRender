@@ -41,6 +41,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Sprite/cwSpriteManager.h"
 #include "Sprite/cwLabel.h"
 #include "Event/cwTouchEvent.h"
+#include "Resource/cwResourceLoader.h"
 
 #include <sstream>
 
@@ -151,6 +152,7 @@ CWVOID cwEngine::mainLoop(CWFLOAT dt)
 
 	repertory.getEventManager()->dispatchEvent();
 	repertory.getSchedulerManager()->update(dt);
+	repertory.getResourceLoader()->update(dt);
 
 	if (m_pSpatial) {
 		m_pSpatial->update();

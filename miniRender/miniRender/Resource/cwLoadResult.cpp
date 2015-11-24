@@ -69,6 +69,10 @@ CWVOID cwLoadResult::distribute()
 		pShaderManager->appendShader(pShader);
 		CW_SAFE_RELEASE(pShader);
 	}
+
+	if (m_pLoadBatch) {
+		m_pLoadBatch->onOverCallback();
+	}
 }
 
 CWVOID cwLoadResult::load()

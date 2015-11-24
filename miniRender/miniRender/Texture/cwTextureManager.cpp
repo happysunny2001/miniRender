@@ -185,10 +185,18 @@ void cwTextureManager::removeTexture(const string& strName)
 	m_mapTexture.erase(strName);
 }
 
+CWVOID cwTextureManager::removeTexture(cwTexture* pTex)
+{
+	if (pTex) {
+		m_mapTexture.erase(pTex->getName());
+	}
+}
+
 void cwTextureManager::removeRenderTexture(cwRenderTexture* pTex)
 {
-	if (!pTex) return;
-	m_vecRenderTexture.erase(pTex);
+	if (pTex) {
+		m_vecRenderTexture.erase(pTex);
+	}
 }
 
 void cwTextureManager::beginResize()

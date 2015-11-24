@@ -39,6 +39,8 @@ protected:
 	CWVOID buildEffect();
 	CWVOID buildScene();
 	CWVOID buildLight();
+	CWVOID loadResAsync();
+	CWVOID loadOver(cwLoadBatch* pBatch);
 
 	cwEntity* createNormalMapCylinder();
 	cwEntity* createNormalMapSphere();

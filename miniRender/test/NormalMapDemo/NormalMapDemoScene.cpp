@@ -40,7 +40,7 @@ m_pRenderPlane(nullptr),
 m_pWaveEffect(nullptr),
 m_pEntityWave(nullptr)
 {
-
+	memset(m_pMatUnitMatrix, 0, sizeof(cwMaterialUnitMatrix*)* 4);
 }
 
 NormalMapDemoScene::~NormalMapDemoScene()
@@ -57,8 +57,7 @@ CWBOOL NormalMapDemoScene::init()
 {
 	if (!cwBaseScene::init()) return CWFALSE;
 
-	buildScene();
-	buildLight();
+	loadResAsync();
 
 	return CWTRUE;
 }
@@ -66,7 +65,8 @@ CWBOOL NormalMapDemoScene::init()
 CWVOID NormalMapDemoScene::update(CWFLOAT dt)
 {
 	for (CWUINT i = 0; i < 4; ++i) {
-		m_pMatUnitMatrix[i]->move(m_nMatMoveDir[i]*dt);
+		if (m_pMatUnitMatrix[i])
+			m_pMatUnitMatrix[i]->move(m_nMatMoveDir[i]*dt);
 	}
 
 	dt = 0.03f;
@@ -285,4 +285,27 @@ CWVOID NormalMapDemoScene::buildLight()
 		cwVector4D(0.2f, 0.2f, 0.2f, 1.0f),
 		cwVector4D(0.2f, 0.2f, 0.2f, 1.0f));
 	this->addDirectionalLight(pLightDirectional03);
+}
+
+CWVOID NormalMapDemoScene::loadResAsync()
+{
+	cwLoadBatch* pBatch = cwLoadBatch::create();
+	pBatch->addTexture2D("Textures/bricks_nmap.dds");
+	pBatch->addTexture2D("Textures/stone01_NRM.dds");
+	pBatch->addTexture2D("Textures/waves0.dds");
+	pBatch->addTexture2D("Textures/waves1.dds");
+	pBatch->addTextureCube("Textures/snowcube1024.dds");
+
+	pBatch->addShader("effect/D3D11/displacementMap.fx");
+	pBatch->addShader("effect/D3D11/wave.fx");
+
+	pBatch->onLoadOver = CW_CALLBACK_1(NormalMapDemoScene::loadOver, this);
+
+	cwRepertory::getInstance().getResourceLoader()->loadAsync(pBatch);
+}
+
+CWVOID NormalMapDemoScene::loadOver(cwLoadBatch* pBatch)
+{
+	buildScene();
+	buildLight();
 }

@@ -54,6 +54,7 @@ public:
 	CWBOOL isExist(const CWSTRING& strName);
 
 	CWVOID removeTexture(const CWSTRING& strName);
+	CWVOID removeTexture(cwTexture* pTex);
 	CWVOID removeRenderTexture(cwRenderTexture* pTex);
 
 	CWVOID beginResize();

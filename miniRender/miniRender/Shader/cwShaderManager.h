@@ -46,6 +46,7 @@ public:
 
 	CWBOOL isExist(const CWSTRING& strFile);
 	CWVOID appendShader(cwShader* pShader);
+	CWVOID removeShader(cwShader* pShader);
 
 	const CWSTRING& getShaderParamString(eShaderParamIndex eParam) const;
 

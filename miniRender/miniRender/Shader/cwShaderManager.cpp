@@ -93,6 +93,13 @@ CWVOID cwShaderManager::appendShader(cwShader* pShader)
 	}
 }
 
+CWVOID cwShaderManager::removeShader(cwShader* pShader)
+{
+	if (pShader) {
+		m_nMapShader.erase(pShader->getName());
+	}
+}
+
 CWBOOL cwShaderManager::init()
 {
 	buildShaderParam();

@@ -88,6 +88,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Sprite/cwSprite.h"
 #include "Sprite/cwLabel.h"
 #include "Utils/cwBaseScene.h"
+#include "Resource/cwLoadBatch.h"
+#include "Resource/cwResourceLoader.h"
 
 #if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
 #include "Platform/Windows/cwWinApplication.h"

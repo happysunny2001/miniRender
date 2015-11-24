@@ -47,7 +47,7 @@ public:
 class cwLoadBatch : public cwRef
 {
 public:
-	typedef std::function<void(cwLoadBatch*)> LoadCallbackFunc;
+	typedef std::function<CWVOID(cwLoadBatch*)> LoadCallbackFunc;
 
 public:
 	static cwLoadBatch* create();
@@ -62,6 +62,8 @@ public:
 
 	std::vector<cwResourceInfo>::iterator begin() { return m_nVecResource.begin(); }
 	std::vector<cwResourceInfo>::iterator end() { return m_nVecResource.end(); }
+
+	CWVOID onOverCallback();
 
 protected:
 	CWBOOL checkResourceExist(cwResourceInfo& resInfo);
