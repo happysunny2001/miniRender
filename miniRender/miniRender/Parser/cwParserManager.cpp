@@ -28,6 +28,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwTextureParser.h"
 #include "cwEffectParser.h"
 #include "cwRenderStateParser.h"
+#include "cwResourceConfParser.h"
 
 NS_MINIR_BEGIN
 
@@ -103,6 +104,9 @@ CWBOOL cwParserManager::init()
 
 	m_nArrParser[eParserRenderState] = cwRenderStateParser::create();
 	CW_SAFE_RETAIN(m_nArrParser[eParserRenderState]);
+
+	m_nArrParser[eParserResourceConf] = cwResourceConfParser::create();
+	CW_SAFE_RETAIN(m_nArrParser[eParserResourceConf]);
 
 	return CWTRUE;
 }

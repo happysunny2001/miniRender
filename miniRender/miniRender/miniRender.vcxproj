@@ -113,6 +113,7 @@
     <ClInclude Include="Parser\cwPUStageLayerParser.h" />
     <ClInclude Include="Parser\cwRendererParser.h" />
     <ClInclude Include="Parser\cwRenderStateParser.h" />
+    <ClInclude Include="Parser\cwResourceConfParser.h" />
     <ClInclude Include="Parser\cwStageLayerParser.h" />
     <ClInclude Include="Parser\cwStageParser.h" />
     <ClInclude Include="Parser\cwStencilParser.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="Repertory\cwRepertory.h" />
     <ClInclude Include="Resource\cwLoadBatch.h" />
     <ClInclude Include="Resource\cwLoadResult.h" />
+    <ClInclude Include="Resource\cwRemoveBatch.h" />
     <ClInclude Include="Resource\cwResourceLoader.h" />
     <ClInclude Include="Scheduler\cwScheduleInterface.h" />
     <ClInclude Include="Scheduler\cwSchedulerManager.h" />
@@ -266,6 +268,7 @@
     <ClCompile Include="Parser\cwPUStageLayerParser.cpp" />
     <ClCompile Include="Parser\cwRendererParser.cpp" />
     <ClCompile Include="Parser\cwRenderStateParser.cpp" />
+    <ClCompile Include="Parser\cwResourceConfParser.cpp" />
     <ClCompile Include="Parser\cwStageLayerParser.cpp" />
     <ClCompile Include="Parser\cwStageParser.cpp" />
     <ClCompile Include="Parser\cwStencilParser.cpp" />
@@ -323,6 +326,7 @@
     <ClCompile Include="Repertory\cwRepertory.cpp" />
     <ClCompile Include="Resource\cwLoadBatch.cpp" />
     <ClCompile Include="Resource\cwLoadResult.cpp" />
+    <ClCompile Include="Resource\cwRemoveBatch.cpp" />
     <ClCompile Include="Resource\cwResourceLoader.cpp" />
     <ClCompile Include="Scheduler\cwScheduleInterface.cpp" />
     <ClCompile Include="Scheduler\cwSchedulerManager.cpp" />

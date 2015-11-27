@@ -37,6 +37,8 @@ public:
 	const CWSTRING& getWokringPath() const { return m_strWorkingPath; }
 	CWSTRING getFullFilePath(const CWSTRING& strFileName) const;
 
+	CWBOOL isFileExist(const CWSTRING& strFilePath);
+
 protected:
 	static cwFileSystem* create();
 	cwFileSystem() {}

@@ -17,74 +17,32 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_RESOURCE_LOADER_H__
-#define __CW_RESOURCE_LOADER_H__
+#ifndef __CW_RESOURCE_CONF_PARSER_H__
+#define __CW_RESOURCE_CONF_PARSER_H__
 
 #include "Base/cwMacros.h"
+#include "Base/cwBasicType.h"
 #include "Ref/cwRef.h"
-#include "Repertory/cwRepertory.h"
+#include "tinyxml2.h"
 
-#include <mutex>
-#include <condition_variable>
-#include <queue>
-#include <functional>
+#include <unordered_map>
 #include <vector>
-#include <functional>
 
 NS_MINIR_BEGIN
 
-class cwLoadBatch;
-class cwLoadResult;
-class cwResourceInfo;
-class cwRemoveBatch;
-
-class cwResourceLoader : public cwRef
+class cwResourceConfParser : public cwRef
 {
 public:
-	virtual ~cwResourceLoader();
+	static cwResourceConfParser* create();
 
-	CWVOID loadAsync(cwLoadBatch* pBatch);
-	CWBOOL loadSync(cwLoadBatch* pBatch);
+	cwResourceConfParser();
 
-	CWVOID remove(cwRemoveBatch* pBatch);
-
-	CWBOOL update(float dt);
-
-private:
-	static cwResourceLoader* create();
-
-	cwResourceLoader();
-	CWBOOL init();
-	CWVOID loadConfigure();
-
-	CWBOOL batchEmpty();
-
-	CWVOID popBatch();
-	cwLoadBatch* firstBatch();
-
-	cwLoadResult* load(cwLoadBatch* pBatch);
-
-	CWVOID remove(cwResourceInfo& resInfo);
-
-	friend class cwRepertory;
-	friend CWVOID loadingProcessThread(cwResourceLoader*);
+	std::unordered_map<CWSTRING, std::vector<CWSTRING>> parse(const CWSTRING& strFileName);
 
 protected:
-	std::unordered_map<CWSTRING, std::vector<CWSTRING>> m_nMapResLocation;
-
-	std::queue<cwLoadBatch*> m_nQueueBatch;
-	std::queue<cwLoadResult*> m_nQueueResult;
-
-	std::vector<CWSTRING> m_nVecTexturePath;
-	std::vector<CWSTRING> m_nVecShaderPath;
-
-	std::mutex m_nMutex;
-	std::mutex m_nMutexResult;
-	std::condition_variable m_nCondNotEmpty;
 
 };
 
 NS_MINIR_END
 
 #endif
-

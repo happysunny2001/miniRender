@@ -26,18 +26,33 @@ NS_MINIR_BEGIN
 
 CWVOID cwStringConvert::ltrim(CWSTRING& str)
 {
-	str.erase(0, str.find_first_not_of(' '));
+	ltrim(str, ' ');
+}
+
+CWVOID cwStringConvert::ltrim(CWSTRING& str, CWCHAR c)
+{
+	str.erase(0, str.find_first_not_of(c));
 }
 
 CWVOID cwStringConvert::rtrim(CWSTRING& str)
 {
-	str.erase(str.find_last_not_of(' ')+1);
+	rtrim(str, ' ');
+}
+
+CWVOID cwStringConvert::rtrim(CWSTRING& str, CWCHAR c)
+{
+	str.erase(str.find_last_not_of(c) + 1);
 }
 
 CWVOID cwStringConvert::trim(CWSTRING& str)
 {
-	str.erase(0, str.find_first_not_of(' '));
-	str.erase(str.find_last_not_of(' ') + 1);
+	trim(str, ' ');
+}
+
+CWVOID cwStringConvert::trim(CWSTRING& str, CWCHAR c)
+{
+	str.erase(0, str.find_first_not_of(c));
+	str.erase(str.find_last_not_of(c) + 1);
 }
 
 CWVOID cwStringConvert::split(CWSTRING& str, const CWSTRING& strSep, std::vector<CWSTRING>& vecRet)

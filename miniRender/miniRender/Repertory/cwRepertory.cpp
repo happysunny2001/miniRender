@@ -89,17 +89,17 @@ void cwRepertory::initAll()
 	addValue(gValueFarZ, cwValueMap(1000.0f));
 	addValue(gValueFov, cwValueMap(0.25f*cwMathUtil::cwPI));
 
-	m_pResourceLoader = cwResourceLoader::create();
-	CW_SAFE_RETAIN(m_pResourceLoader);
-
 	m_pParserManager = cwParserManager::create();
 	CW_SAFE_RETAIN(m_pParserManager);
 
-	m_pEventManager = cwEventManager::create();
-	CW_SAFE_RETAIN(m_pEventManager);
-
 	m_pFileSystem = cwFileSystem::create();
 	CW_SAFE_RETAIN(m_pFileSystem);
+
+	m_pResourceLoader = cwResourceLoader::create();
+	CW_SAFE_RETAIN(m_pResourceLoader);
+
+	m_pEventManager = cwEventManager::create();
+	CW_SAFE_RETAIN(m_pEventManager);
 
 	m_pGeoGenerator = cwGeometryGenerator::create();
 	CW_SAFE_RETAIN(m_pGeoGenerator);

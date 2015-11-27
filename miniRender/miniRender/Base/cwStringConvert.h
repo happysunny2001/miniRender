@@ -33,11 +33,18 @@ public:
 	static CWWSTRING convertToWideChar(const CWSTRING& str);
 	static CWWSTRING createFPSString(const CWWSTRING& title, CWUINT iFPS);
 	static CWSTRING convertToMultiByte(const CWWSTRING& str);
+
 	static CWVOID ltrim(CWSTRING& str);
 	static CWVOID rtrim(CWSTRING& str);
 	static CWVOID trim(CWSTRING& str);
+
+	static CWVOID ltrim(CWSTRING& str, CWCHAR c);
+	static CWVOID rtrim(CWSTRING& str, CWCHAR c);
+	static CWVOID trim(CWSTRING& str, CWCHAR c);
+
 	static CWVOID split(CWSTRING& str, const CWSTRING& strSep, std::vector<CWSTRING>& vecRet);
 	static CWSTRING replace(CWSTRING& strOrigin, const CWSTRING& strFind, const CWSTRING& strReplace);
+
 	static CWBYTE parseHexStringByte(const CWSTRING& strHex);
 
 protected:

@@ -82,6 +82,8 @@ cwShader* cwShaderManager::getDefShader(eDefShaderID eShaderID)
 
 CWBOOL cwShaderManager::isExist(const CWSTRING& strFile)
 {
+	std::unique_lock<std::mutex> lock(m_nMutex);
+
 	if (m_nMapShader.find(strFile) == m_nMapShader.end()) return CWFALSE;
 	return CWTRUE;
 }
@@ -98,6 +100,11 @@ CWVOID cwShaderManager::removeShader(cwShader* pShader)
 	if (pShader) {
 		m_nMapShader.erase(pShader->getName());
 	}
+}
+
+CWVOID cwShaderManager::removeShader(const CWSTRING& strName)
+{
+	m_nMapShader.erase(strName);
 }
 
 CWBOOL cwShaderManager::init()

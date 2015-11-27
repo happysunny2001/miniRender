@@ -17,33 +17,50 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwFileSystem.h"
-#include "cwPlatform.h"
-
-#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
-#include "Windows/cwWinFileSystem.h"
-#endif
+#include "cwRemoveBatch.h"
 
 NS_MINIR_BEGIN
 
-cwFileSystem* cwFileSystem::create()
+cwRemoveBatch* cwRemoveBatch::create()
 {
-#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
-	return cwWinFileSystem::create();
-#endif
+	cwRemoveBatch* pBatch = new cwRemoveBatch();
+	if (pBatch) {
+		pBatch->autorelease();
+		return pBatch;
+	}
+
 	return nullptr;
 }
 
-CWSTRING cwFileSystem::getFullFilePath(const CWSTRING& strFileName) const
+cwRemoveBatch::cwRemoveBatch()
 {
-	return m_strWorkingPath + "/" + strFileName;
+
 }
 
-CWBOOL cwFileSystem::isFileExist(const CWSTRING& strFilePath)
+cwRemoveBatch::~cwRemoveBatch()
 {
 
-	return CWTRUE;
+}
+
+CWVOID cwRemoveBatch::addResource(cwResourceInfo& resInfo)
+{
+	m_nVecResource.push_back(resInfo);
+}
+
+CWVOID cwRemoveBatch::addTexture2D(const CWSTRING& strName)
+{
+	cwResourceInfo resInfo;
+	resInfo.m_eType = eResourceTypeTexture2D;
+	resInfo.m_nStrName = strName;
+	addResource(resInfo);
+}
+
+CWVOID cwRemoveBatch::addShader(const CWSTRING& strName)
+{
+	cwResourceInfo resInfo;
+	resInfo.m_eType = eResourceTypeShader;
+	resInfo.m_nStrName = strName;
+	addResource(resInfo);
 }
 
 NS_MINIR_END
-

@@ -20,6 +20,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwResourceLoader.h"
 #include "cwLoadBatch.h"
 #include "cwLoadResult.h"
+#include "cwRemoveBatch.h"
+#include "Repertory/cwRepertory.h"
+#include "Shader/cwShaderManager.h"
+#include "Texture/cwTextureManager.h"
+#include "Parser/cwParserManager.h"
+#include "Parser/cwResourceConfParser.h"
+#include "Platform/cwFileSystem.h"
 
 #include <thread>
 #include <atomic>
@@ -54,10 +61,19 @@ cwResourceLoader::~cwResourceLoader()
 
 CWBOOL cwResourceLoader::init()
 {
+	loadConfigure();
+
 	std::thread t(loadingProcessThread, this);
 	t.detach();
 
 	return CWTRUE;
+}
+
+CWVOID cwResourceLoader::loadConfigure()
+{
+	cwResourceConfParser* pParser = static_cast<cwResourceConfParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserResourceConf));
+	CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath("Configure/resource.xml");
+	m_nMapResLocation = pParser->parse(strFilePath);
 }
 
 CWBOOL cwResourceLoader::batchEmpty()
@@ -81,19 +97,23 @@ cwLoadBatch* cwResourceLoader::firstBatch()
 
 CWVOID cwResourceLoader::loadAsync(cwLoadBatch* pBatch)
 {
-	std::unique_lock<std::mutex> lock(m_nMutex);
-	m_nQueueBatch.push(pBatch);
-	CW_SAFE_RETAIN(pBatch);
-	m_nCondNotEmpty.notify_all();
+	if (pBatch) {
+		std::unique_lock<std::mutex> lock(m_nMutex);
+		m_nQueueBatch.push(pBatch);
+		CW_SAFE_RETAIN(pBatch);
+		m_nCondNotEmpty.notify_one();
+	}
 }
 
 CWBOOL cwResourceLoader::loadSync(cwLoadBatch* pBatch)
 {
-	cwLoadResult* pResult = load(pBatch);
-	if (!pResult) return CWFALSE;
+	if (pBatch) {
+		cwLoadResult* pResult = load(pBatch);
+		if (!pResult) return CWFALSE;
 
-	pResult->distribute();
-	pResult->release();
+		pResult->distribute();
+		pResult->release();
+	}
 
 	return true;
 }
@@ -105,6 +125,28 @@ cwLoadResult* cwResourceLoader::load(cwLoadBatch* pBatch)
 	pResult->load();
 
 	return pResult;
+}
+
+CWVOID cwResourceLoader::remove(cwRemoveBatch* pBatch)
+{
+	if (pBatch) {
+		for (auto it = pBatch->begin(); it != pBatch->end(); ++it) {
+			remove(*it);
+		}
+	}
+}
+
+CWVOID cwResourceLoader::remove(cwResourceInfo& resInfo)
+{
+	switch (resInfo.m_eType) {
+	case eResourceTypeShader:
+		cwRepertory::getInstance().getShaderManager()->removeShader(resInfo.m_nStrName);
+		break;
+	case eResourceTypeTexture2D:
+	case eResourceTypeTextureCube:
+		cwRepertory::getInstance().getTextureManager()->removeTexture(resInfo.m_nStrName);
+		break;
+	}
 }
 
 CWBOOL cwResourceLoader::update(float dt)
@@ -141,12 +183,13 @@ CWVOID loadingProcessThread(cwResourceLoader* pLoader)
 		}
 
 		cwLoadBatch* pCurrBatch = pLoader->firstBatch();
-		pCurrBatch->retain();
+		CW_SAFE_RETAIN(pCurrBatch);
 		pLoader->popBatch();
 
 		lock.unlock();
 
 		cwLoadResult* pResult = pLoader->load(pCurrBatch);
+		CW_SAFE_RELEASE_NULL(pCurrBatch);
 		if (pResult) {
 			std::unique_lock<std::mutex> lockResult(pLoader->m_nMutexResult);
 

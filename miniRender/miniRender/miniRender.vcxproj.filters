@@ -666,6 +666,12 @@
     <ClInclude Include="Resource\cwLoadResult.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\cwRemoveBatch.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser\cwResourceConfParser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -1116,6 +1122,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Resource\cwLoadResult.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\cwRemoveBatch.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser\cwResourceConfParser.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

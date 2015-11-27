@@ -27,6 +27,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "cwShader.h"
 
+#include <mutex>
+
 NS_MINIR_BEGIN
 
 class CW_DLL cwShaderManager : public cwRef
@@ -46,7 +48,9 @@ public:
 
 	CWBOOL isExist(const CWSTRING& strFile);
 	CWVOID appendShader(cwShader* pShader);
+
 	CWVOID removeShader(cwShader* pShader);
+	CWVOID removeShader(const CWSTRING& strName);
 
 	const CWSTRING& getShaderParamString(eShaderParamIndex eParam) const;
 
@@ -60,6 +64,8 @@ protected:
 	cwMap<eDefShaderID, cwShader*> m_nMapDefShader;
 
 	CWSTRING m_strShaderParam[eShaderParamMax];
+
+	std::mutex m_nMutex;
 
 };
 

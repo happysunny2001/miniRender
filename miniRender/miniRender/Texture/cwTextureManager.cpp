@@ -169,6 +169,8 @@ cwTexture* cwTextureManager::getTextureArray(const std::vector<CWSTRING>& vecFil
 
 CWBOOL cwTextureManager::isExist(const CWSTRING& strName)
 {
+	std::unique_lock<std::mutex> lock(m_nMutex);
+
 	if (m_mapTexture.find(strName) == m_mapTexture.end()) return CWFALSE;
 	return CWTRUE;
 }

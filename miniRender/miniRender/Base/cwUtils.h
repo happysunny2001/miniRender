@@ -390,6 +390,7 @@ typedef enum {
 	eParserTexture,
 	eParserEffect,
 	eParserRenderState,
+	eParserResourceConf,
 	eParserTypeMax
 }eParserType;
 

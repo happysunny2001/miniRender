@@ -29,6 +29,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwCubeTexture.h"
 #include "cwRenderTexture.h"
 
+#include <mutex>
+
 NS_MINIR_BEGIN
 
 class CW_DLL cwTextureManager : public cwRef
@@ -69,6 +71,8 @@ protected:
 private:
 	cwMap<CWSTRING, cwTexture*> m_mapTexture;
 	cwVector<cwRenderTexture*> m_vecRenderTexture;
+
+	std::mutex m_nMutex;
 
 };
 

@@ -17,33 +17,35 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwFileSystem.h"
-#include "cwPlatform.h"
+#ifndef __CW_REMOVE_BATCH_H__
+#define __CW_REMOVE_BATCH_H__
 
-#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
-#include "Windows/cwWinFileSystem.h"
-#endif
+#include "Base/cwMacros.h"
+#include "Ref/cwRef.h"
+#include "cwLoadBatch.h"
 
 NS_MINIR_BEGIN
 
-cwFileSystem* cwFileSystem::create()
+class cwRemoveBatch : public cwRef
 {
-#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
-	return cwWinFileSystem::create();
-#endif
-	return nullptr;
-}
+public:
+	static cwRemoveBatch* create();
 
-CWSTRING cwFileSystem::getFullFilePath(const CWSTRING& strFileName) const
-{
-	return m_strWorkingPath + "/" + strFileName;
-}
+	cwRemoveBatch();
+	virtual ~cwRemoveBatch();
 
-CWBOOL cwFileSystem::isFileExist(const CWSTRING& strFilePath)
-{
+	CWVOID addResource(cwResourceInfo& resInfo);
+	CWVOID addTexture2D(const CWSTRING& strName);
+	CWVOID addShader(const CWSTRING& strName);
 
-	return CWTRUE;
-}
+	std::vector<cwResourceInfo>::iterator begin() { return m_nVecResource.begin(); }
+	std::vector<cwResourceInfo>::iterator end() { return m_nVecResource.end(); }
+
+protected:
+	std::vector<cwResourceInfo> m_nVecResource;
+
+};
 
 NS_MINIR_END
 
+#endif

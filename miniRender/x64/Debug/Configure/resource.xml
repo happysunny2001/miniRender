@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Resource>
+
+	<Texture>
+		Textures/
+	</Texture>
+
+	<Shader>
+		effect/D3D11/
+	</Shader>
+
+</Resource>
