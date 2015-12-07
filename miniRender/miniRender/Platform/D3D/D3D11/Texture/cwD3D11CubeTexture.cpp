@@ -65,6 +65,29 @@ cwD3D11CubeTexture* cwD3D11CubeTexture::create(CWUINT iSize)
 	return nullptr;
 }
 
+cwD3D11CubeTexture* cwD3D11CubeTexture::create(CWVOID* pData, CWUINT64 uSize)
+{
+	cwD3D11CubeTexture* pTexture = new cwD3D11CubeTexture();
+	if (pTexture && pTexture->init(pData, uSize)) {
+		pTexture->autorelease();
+		return pTexture;
+	}
+
+	CW_SAFE_RELEASE_NULL(pTexture);
+	return nullptr;
+}
+
+cwD3D11CubeTexture* cwD3D11CubeTexture::createThreadSafe(CWVOID* pData, CWUINT64 uSize)
+{
+	cwD3D11CubeTexture* pTexture = new cwD3D11CubeTexture();
+	if (pTexture && pTexture->init(pData, uSize)) {
+		return pTexture;
+	}
+
+	CW_SAFE_RELEASE_NULL(pTexture);
+	return nullptr;
+}
+
 cwD3D11CubeTexture::cwD3D11CubeTexture():
 m_pShaderResource(NULL),
 m_pDepthStencilView(NULL)
@@ -91,6 +114,32 @@ CWBOOL cwD3D11CubeTexture::init(const CWSTRING& strTexture)
 
 	ID3D11Texture2D* pTexture2D = NULL;
 	CW_HR(D3DX11CreateTextureFromFile(pD3D11Device->getD3D11Device(), wstrName.c_str(), NULL, NULL, (ID3D11Resource**)&pTexture2D, NULL));
+
+	D3D11_TEXTURE2D_DESC textureDesc;
+	pTexture2D->GetDesc(&textureDesc);
+
+	m_fWidth = static_cast<CWFLOAT>(textureDesc.Width);
+	m_fHeight = static_cast<CWFLOAT>(textureDesc.Height);
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC resourceDesc;
+	resourceDesc.Format = textureDesc.Format;
+	resourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+	resourceDesc.TextureCube.MostDetailedMip = 0;
+	resourceDesc.TextureCube.MipLevels = -1;
+
+	pD3D11Device->getD3D11Device()->CreateShaderResourceView(pTexture2D, &resourceDesc, &m_pShaderResource);
+	CW_RELEASE_COM(pTexture2D);
+
+	return CWTRUE;
+}
+
+CWBOOL cwD3D11CubeTexture::init(CWVOID* pData, CWUINT64 uSize)
+{
+	if (!pData) return CWFALSE;
+	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+
+	ID3D11Texture2D* pTexture2D = NULL;
+	CW_HR(D3DX11CreateTextureFromMemory(pD3D11Device->getD3D11Device(), pData, uSize, NULL, NULL, (ID3D11Resource**)&pTexture2D, NULL));
 
 	D3D11_TEXTURE2D_DESC textureDesc;
 	pTexture2D->GetDesc(&textureDesc);

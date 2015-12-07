@@ -89,7 +89,7 @@ CWVOID NormalMapDemoScene::buildScene()
 	m_pEntityWave->setPosition(cwVector3D(0, -10, 0));
 	this->addChild(m_pEntityWave);
 
-	this->createSkyDome("Textures/snowcube1024.dds");
+	this->createSkyDome("snowcube1024.dds");
 }
 
 CWVOID NormalMapDemoScene::buildRenderObject()
@@ -160,13 +160,13 @@ CWVOID NormalMapDemoScene::buildEffect()
 	m_pNormalMapEffect->setTech("NormalTech");
 	CW_SAFE_RETAIN(m_pNormalMapEffect);
 
-	cwShader* pShaderDisplacement = cwRepertory::getInstance().getShaderManager()->getShader("effect/D3D11/displacementMap.fx");
+	cwShader* pShaderDisplacement = cwRepertory::getInstance().getShaderManager()->getShader("displacementMap.fx");
 	m_pDisplacementEffect = cwEffect::create();
 	m_pDisplacementEffect->setShader(pShaderDisplacement);
 	m_pDisplacementEffect->setTech("TechDisplacement");
 	CW_SAFE_RETAIN(m_pDisplacementEffect);
 
-	cwShader* pShaderWave = cwRepertory::getInstance().getShaderManager()->getShader("effect/D3D11/wave.fx");
+	cwShader* pShaderWave = cwRepertory::getInstance().getShaderManager()->getShader("wave.fx");
 
 	m_pWaveEffect = cwEffect::create();
 	m_pWaveEffect->setShader(pShaderWave);
@@ -202,9 +202,9 @@ cwEntity* NormalMapDemoScene::createNormalMapCylinder()
 	pEntity->setRenderObject(m_pRenderCylinder);
 	pEntity->setEffect(m_pDisplacementEffect);
 
-	cwMaterialUnitTexture* pMUTexture = cwMaterialUnitTexture::create("Textures/bricks_nmap.dds", "gNormalTexture");
+	cwMaterialUnitTexture* pMUTexture = cwMaterialUnitTexture::create("bricks_nmap.dds", "gNormalTexture");
 	pEntity->getMaterial()->addMaterialUnit(pMUTexture);
-	pEntity->getMaterial()->setDiffuseTexture("Textures/bricks.dds");
+	pEntity->getMaterial()->setDiffuseTexture("bricks.dds");
 	pEntity->getMaterial()->setSpecular(cwVector4D(1.0f, 1.0f, 1.0f, 32.0f));
 	pEntity->getMaterial()->setReflect(cwVector4D(0.0f, 0.0f, 0.0f, 1.0f));
 
@@ -217,9 +217,9 @@ cwEntity* NormalMapDemoScene::createNormalMapSphere()
 	pEntity->setRenderObject(m_pRenderSphere);
 	pEntity->setEffect(m_pDisplacementEffect);
 
-	cwMaterialUnitTexture* pMUTexture = cwMaterialUnitTexture::create("Textures/stone01_NRM.dds", "gNormalTexture");
+	cwMaterialUnitTexture* pMUTexture = cwMaterialUnitTexture::create("stone01_NRM.dds", "gNormalTexture");
 	pEntity->getMaterial()->addMaterialUnit(pMUTexture);
-	pEntity->getMaterial()->setDiffuseTexture("Textures/stone01.png");
+	pEntity->getMaterial()->setDiffuseTexture("stone01.png");
 	pEntity->getMaterial()->setDiffuse(cwVector4D(0.8f, 0.8f, 0.8f, 1.0f));
 	pEntity->getMaterial()->setSpecular(cwVector4D(0.1f, 0.1f, 0.1f, 16.0f));
 	pEntity->getMaterial()->setReflect(cwVector4D(0.0f, 0.0f, 0.0f, 1.0f));
@@ -233,13 +233,13 @@ cwEntity* NormalMapDemoScene::createWavePlane()
 	pEntity->setRenderObject(m_pRenderPlane);
 	pEntity->setEffect(m_pWaveEffect);
 
-	cwMaterialUnitTexture* pMUTexture0 = cwMaterialUnitTexture::create("Textures/waves0.dds", "gWaveTexture0");
+	cwMaterialUnitTexture* pMUTexture0 = cwMaterialUnitTexture::create("waves0.dds", "gWaveTexture0");
 	pEntity->getMaterial()->addMaterialUnit(pMUTexture0);
 
-	cwMaterialUnitTexture* pMUTexture1 = cwMaterialUnitTexture::create("Textures/waves1.dds", "gWaveTexture1");
+	cwMaterialUnitTexture* pMUTexture1 = cwMaterialUnitTexture::create("waves1.dds", "gWaveTexture1");
 	pEntity->getMaterial()->addMaterialUnit(pMUTexture1);
 
-	cwMaterialUnitTexture* pMUSky = cwMaterialUnitTexture::createCube("Textures/snowcube1024.dds", CW_SHADER_SKY_CUBE_MAP);
+	cwMaterialUnitTexture* pMUSky = cwMaterialUnitTexture::createCube("snowcube1024.dds", CW_SHADER_SKY_CUBE_MAP);
 	pEntity->getMaterial()->addMaterialUnit(pMUSky);
 
 	pEntity->getMaterial()->setAmbient(cwVector4D(0.1f, 0.1f, 0.3f, 1.0f));
@@ -290,14 +290,16 @@ CWVOID NormalMapDemoScene::buildLight()
 CWVOID NormalMapDemoScene::loadResAsync()
 {
 	cwLoadBatch* pBatch = cwLoadBatch::create();
-	pBatch->addTexture2D("Textures/bricks_nmap.dds");
-	pBatch->addTexture2D("Textures/stone01_NRM.dds");
-	pBatch->addTexture2D("Textures/waves0.dds");
-	pBatch->addTexture2D("Textures/waves1.dds");
-	pBatch->addTextureCube("Textures/snowcube1024.dds");
+	pBatch->addTexture2D("bricks_nmap.dds");
+	pBatch->addTexture2D("stone01_NRM.dds");
+	pBatch->addTexture2D("waves0.dds");
+	pBatch->addTexture2D("waves1.dds");
+	pBatch->addTexture2D("bricks.dds");
+	pBatch->addTexture2D("stone01.png");
+	pBatch->addTextureCube("snowcube1024.dds");
 
-	pBatch->addShader("effect/D3D11/displacementMap.fx");
-	pBatch->addShader("effect/D3D11/wave.fx");
+	pBatch->addShader("displacementMap.fx");
+	pBatch->addShader("wave.fx");
 
 	pBatch->onLoadOver = CW_CALLBACK_1(NormalMapDemoScene::loadOver, this);
 

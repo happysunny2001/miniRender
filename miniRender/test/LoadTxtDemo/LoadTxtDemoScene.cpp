@@ -55,11 +55,6 @@ CWBOOL LoadTxtDemoScene::init()
 	pTouchListener->onTouchMoving = CW_CALLBACK_1(LoadTxtDemoScene::onTouchMoving, this);
 	this->addEventListener(pTouchListener);
 
-	//cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
-	//pKeyListener->onKeyDown = CW_CALLBACK_1(LoadTxtDemoScene::onKeyDown, this);
-	//pKeyListener->onKeyUp = CW_CALLBACK_1(LoadTxtDemoScene::onKeyUp, this);
-	//this->addEventListener(pKeyListener);
-
 	this->schedulerUpdate();
 
 	m_bTouchDown = false;
@@ -123,7 +118,7 @@ CWVOID LoadTxtDemoScene::buildBatchEntity()
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormal), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "BatchPosNormal");
 
-	cwShader* pShader = repertory.getShaderManager()->getShader("effect/D3D11/batchTest.fx");
+	cwShader* pShader = repertory.getShaderManager()->getShader("batchTest.fx");
 	cwEffect* pEffect = cwEffect::create();
 	pEffect->setShader(pShader);
 

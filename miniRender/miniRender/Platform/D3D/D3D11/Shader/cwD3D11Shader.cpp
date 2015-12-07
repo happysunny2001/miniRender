@@ -28,12 +28,15 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/Windows/cwWinUtils.h"
 #include "Platform/D3D/D3D11/cwD3D11Utils.h"
 #include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
+#include "cwD3D11ShaderInclude.h"
 
 #include <iostream>
 
 #ifdef _CW_D3D11_
 
 NS_MINIR_BEGIN
+
+static cwD3D11ShaderInclude shaderInclude;
 
 cwD3D11Shader* cwD3D11Shader::create(const std::string& strShaderFile)
 {
@@ -51,6 +54,29 @@ cwD3D11Shader* cwD3D11Shader::createThreadSafe(const CWSTRING& strShaderFile)
 {
 	cwD3D11Shader* pShader = new cwD3D11Shader();
 	if (pShader && pShader->init(strShaderFile)) {
+		return pShader;
+	}
+
+	CW_SAFE_DELETE(pShader);
+	return nullptr;
+}
+
+cwD3D11Shader* cwD3D11Shader::create(const CWCHAR* pcSourceData, CWUINT64 uSize)
+{
+	cwD3D11Shader* pShader = new cwD3D11Shader();
+	if (pShader && pShader->init(pcSourceData, uSize)) {
+		pShader->autorelease();
+		return pShader;
+	}
+
+	CW_SAFE_DELETE(pShader);
+	return nullptr;
+}
+
+cwD3D11Shader* cwD3D11Shader::createThreadSafe(const CWCHAR* pcSourceData, CWUINT64 uSize)
+{
+	cwD3D11Shader* pShader = new cwD3D11Shader();
+	if (pShader && pShader->init(pcSourceData, uSize)) {
 		return pShader;
 	}
 
@@ -93,6 +119,66 @@ CWBOOL cwD3D11Shader::init(const std::string& strShaderFile)
 		NULL,
 		&compiledShader,
 		&compiledMsg,
+		NULL);
+
+	if (compiledMsg != NULL) {
+		MessageBoxA(NULL, (char*)compiledMsg->GetBufferPointer(), "Error", MB_OK);
+		CW_RELEASE_COM(compiledMsg);
+		return CWFALSE;
+	}
+
+	if (FAILED(hr)) {
+		DXTrace(__FILE__, __LINE__, hr, L"D3DX11CompileFromFile", true);
+		return CWFALSE;
+	}
+
+	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+
+	CW_HR(D3DX11CreateEffectFromMemory(
+		compiledShader->GetBufferPointer(),
+		compiledShader->GetBufferSize(),
+		0,
+		pD3D11Device->getD3D11Device(),
+		&m_pEffect));
+
+	CW_RELEASE_COM(compiledShader);
+
+	if (!saveTech()) return CWFALSE;
+	if (!saveVariable()) return CWFALSE;
+
+	for (auto itTech = m_vecTech.begin(); itTech != m_vecTech.end(); ++itTech){
+		if (!savePass((*itTech))) return CWFALSE;
+	}
+
+	return CWTRUE;
+}
+
+CWBOOL cwD3D11Shader::init(const CWCHAR* pcSourceData, CWUINT64 uSize)
+{
+	if (!pcSourceData) return CWFALSE;
+
+	UINT compileFlag = 0;
+#if defined(CW_DEBUG)
+	compileFlag |= D3D10_SHADER_DEBUG;
+	compileFlag |= D3D10_SHADER_SKIP_OPTIMIZATION;
+#endif
+
+	ID3D10Blob* compiledShader = NULL;
+	ID3D10Blob* compiledMsg = NULL;
+
+	HRESULT hr = D3DX11CompileFromMemory(
+		pcSourceData, 
+		uSize, 
+		NULL, 
+		NULL, 
+		&shaderInclude,
+		NULL, 
+		CW_SHADER_VERSION, 
+		compileFlag, 
+		0, 
+		NULL,
+		&compiledShader, 
+		&compiledMsg, 
 		NULL);
 
 	if (compiledMsg != NULL) {

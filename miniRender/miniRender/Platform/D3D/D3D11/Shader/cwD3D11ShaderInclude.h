@@ -17,37 +17,23 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_D3D11TEXTURE_H__
-#define __CW_D3D11TEXTURE_H__
+#ifndef __CW_D3D11_SHADER_INCLUDE_H__
+#define __CW_D3D11_SHADER_INCLUDE_H__
 
 #ifdef _CW_D3D11_
 
-#include "Base/cwUtils.h"
-#include "Base/cwBasicType.h"
-#include "Texture/cwTexture.h"
-#include "Platform/D3D/D3D11/cwD3D11Utils.h"
+#include "Base/cwMacros.h"
+#include <d3d11.h>
+#include <D3D10shader.h>
+//#include "Platform/D3D/D3D11/cwD3D11Utils.h"
 
 NS_MINIR_BEGIN
 
-class CW_DLL cwD3D11Texture : public cwTexture
+class cwD3D11ShaderInclude : public ID3D10Include
 {
 public:
-	static cwD3D11Texture* create(const CWSTRING& strFileName);
-	static cwD3D11Texture* createThreadSafe(const CWSTRING& strFileName);
-
-	static cwD3D11Texture* create(CWVOID* pData, CWUINT64 uSize);
-	static cwD3D11Texture* createThreadSafe(CWVOID* pData, CWUINT64 uSize);
-
-	cwD3D11Texture();
-	virtual ~cwD3D11Texture();
-
-	virtual CWBOOL init(const CWSTRING& strFileName);
-	virtual CWBOOL init(CWVOID* pData, CWUINT64 uSize);
-	virtual CWHANDLE getHandle() const override;
-
-protected:
-	ID3D11ShaderResourceView* m_pShaderResource;
-
+	HRESULT __stdcall Open(D3D10_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes);
+	HRESULT __stdcall Close(LPCVOID pData);
 };
 
 NS_MINIR_END

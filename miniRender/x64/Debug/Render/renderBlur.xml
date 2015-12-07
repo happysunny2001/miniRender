@@ -27,7 +27,7 @@
 			<Layer Name="Layer1" EntityType="Stage" Transparent="No">
 				<PU>
 					<Effect Name="Effect1" Type="GP">
-						<Shader Type="specific" Name="effect/D3D11/blur.fx" Tech="HorzBlur" />
+						<Shader Type="specific" Name="blur.fx" Tech="HorzBlur" />
 						<GP GroupX="4" GroupY="600" GroupZ="1" />
 						<Param Name="gInput" Type="Texture">
 							<Data>S2/S1RenderTarget</Data>
@@ -42,7 +42,7 @@
 			<Layer Name="Layer2" EntityType="Stage" Transparent="No">
 				<PU>
 					<Effect Name="Effect1" Type="GP">
-						<Shader Type="specific" Name="effect/D3D11/blur.fx" Tech="VertBlur" />
+						<Shader Type="specific" Name="blur.fx" Tech="VertBlur" />
 						<GP GroupX="800" GroupY="3" GroupZ="1" />
 						<Param Name="gInput" Type="Texture">
 							<Data>S2/S2Texture</Data>

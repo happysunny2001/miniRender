@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
 #include "Platform/cwFileSystem.h"
+#include "Resource/cwResourceLoader.h"
 
 NS_MINIR_BEGIN
 
@@ -42,10 +43,22 @@ cwTextureManager::~cwTextureManager()
 
 cwTexture* cwTextureManager::createTexture(const CWSTRING& strName)
 {
-	CWSTRING strFullPath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strName);
-	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createTexture(strFullPath);
+	cwTexture* pTex = nullptr;
+	cwData* pData = cwRepertory::getInstance().getResourceLoader()->getTextureData(strName);
+	if (pData) {
+		pTex = createTexture(strName, pData->m_pData, pData->m_uSize);
+		delete pData;
+	}
+
+	return pTex;
+}
+
+cwTexture* cwTextureManager::createTexture(const CWSTRING& strName, CWVOID* pData, CWUINT64 uSize)
+{
+	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createTexture(pData, uSize);
 	if (pTex) {
 		pTex->setName(strName);
+		m_mapTexture.insert(strName, pTex);
 		return pTex;
 	}
 
@@ -54,10 +67,22 @@ cwTexture* cwTextureManager::createTexture(const CWSTRING& strName)
 
 cwTexture* cwTextureManager::createTextureThreadSafe(const CWSTRING& strName)
 {
-	CWSTRING strFullPath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strName);
-	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createTextureThreadSafe(strFullPath);
+	cwTexture* pTex = nullptr;
+	cwData* pData = cwRepertory::getInstance().getResourceLoader()->getTextureData(strName);
+	if (pData) {
+		pTex = createTextureThreadSafe(strName, pData->m_pData, pData->m_uSize);
+		delete pData;
+	}
+
+	return pTex;
+}
+
+cwTexture* cwTextureManager::createTextureThreadSafe(const CWSTRING& strName, CWVOID* pData, CWUINT64 uSize)
+{
+	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createTextureThreadSafe(pData, uSize);
 	if (pTex) {
 		pTex->setName(strName);
+		m_mapTexture.insert(strName, pTex);
 		return pTex;
 	}
 
@@ -66,10 +91,23 @@ cwTexture* cwTextureManager::createTextureThreadSafe(const CWSTRING& strName)
 
 cwTexture* cwTextureManager::createCubeTexture(const CWSTRING& strName)
 {
-	CWSTRING strFullPath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strName);
-	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createCubeTexture(strFullPath);
+	cwTexture* pTex = nullptr;
+	cwData* pData = cwRepertory::getInstance().getResourceLoader()->getTextureData(strName);
+	if (pData) {
+		pTex = createCubeTexture(strName, pData->m_pData, pData->m_uSize);
+
+		delete pData;
+	}
+
+	return pTex;
+}
+
+cwTexture* cwTextureManager::createCubeTexture(const CWSTRING& strName, CWVOID* pData, CWUINT64 uSize)
+{
+	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createCubeTexture(pData, uSize);
 	if (pTex) {
 		pTex->setName(strName);
+		m_mapTexture.insert(strName, pTex);
 		return pTex;
 	}
 
@@ -78,10 +116,23 @@ cwTexture* cwTextureManager::createCubeTexture(const CWSTRING& strName)
 
 cwTexture* cwTextureManager::createCubeTextureThreadSafe(const CWSTRING& strName)
 {
-	CWSTRING strFullPath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strName);
-	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createCubeTextureThreadSafe(strFullPath);
+	cwTexture* pTex = nullptr;
+	cwData* pData = cwRepertory::getInstance().getResourceLoader()->getTextureData(strName);
+	if (pData) {
+		pTex = createCubeTextureThreadSafe(strName, pData->m_pData, pData->m_uSize);
+
+		delete pData;
+	}
+
+	return pTex;
+}
+
+cwTexture* cwTextureManager::createCubeTextureThreadSafe(const CWSTRING& strName, CWVOID* pData, CWUINT64 uSize)
+{
+	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createCubeTextureThreadSafe(pData, uSize);
 	if (pTex) {
 		pTex->setName(strName);
+		m_mapTexture.insert(strName, pTex);
 		return pTex;
 	}
 

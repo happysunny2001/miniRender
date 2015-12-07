@@ -51,11 +51,6 @@ CWBOOL TessellationDemoScene::init()
 	pTouchListener->onTouchMoving = CW_CALLBACK_1(TessellationDemoScene::onTouchMoving, this);
 	this->addEventListener(pTouchListener);
 
-	//cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
-	//pKeyListener->onKeyDown = CW_CALLBACK_1(TessellationDemoScene::onKeyDown, this);
-	//pKeyListener->onKeyUp = CW_CALLBACK_1(TessellationDemoScene::onKeyUp, this);
-	//this->addEventListener(pKeyListener);
-
 	this->schedulerUpdate();
 
 	m_bTouchDown = CWFALSE;
@@ -129,7 +124,7 @@ CWVOID TessellationDemoScene::buildEntityTriangle()
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosColor");
 
-	cwShader* pShader = repertory.getShaderManager()->loadShader("effect/D3D11/tessellation.fx");
+	cwShader* pShader = repertory.getShaderManager()->getShader("tessellation.fx");
 	cwEffect* pEffect = cwEffect::create();
 	pEffect->setShader(pShader);
 	pEffect->setTech("TessTriangle");
@@ -163,7 +158,7 @@ CWVOID TessellationDemoScene::buildEntityQuad()
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosColor), static_cast<CWUINT>(mesh.nVertex.size()),
 		NULL, 0, "PosColor");
 
-	cwShader* pShader = repertory.getShaderManager()->loadShader("effect/D3D11/tessellation.fx");
+	cwShader* pShader = repertory.getShaderManager()->getShader("tessellation.fx");
 	cwEffect* pEffect = cwEffect::create();
 	pEffect->setShader(pShader);
 	pEffect->setTech("TessQuad");
@@ -212,7 +207,7 @@ CWVOID TessellationDemoScene::buildEntityBezier()
 		NULL, 0, "PosColor");
 
 	cwRepertory& repertory = cwRepertory::getInstance();
-	cwShader* pShader = repertory.getShaderManager()->loadShader("effect/D3D11/tessellation.fx");
+	cwShader* pShader = repertory.getShaderManager()->getShader("tessellation.fx");
 	cwEffect* pEffect = cwEffect::create();
 	pEffect->setShader(pShader);
 	pEffect->setTech("TessBezier");

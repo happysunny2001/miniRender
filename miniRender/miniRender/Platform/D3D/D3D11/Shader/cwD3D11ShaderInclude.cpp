@@ -17,41 +17,55 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_D3D11TEXTURE_H__
-#define __CW_D3D11TEXTURE_H__
-
 #ifdef _CW_D3D11_
 
-#include "Base/cwUtils.h"
-#include "Base/cwBasicType.h"
-#include "Texture/cwTexture.h"
-#include "Platform/D3D/D3D11/cwD3D11Utils.h"
+#include "cwD3D11ShaderInclude.h"
+#include "Resource/cwResourceLoader.h"
+#include "Platform/cwFileSystem.h"
+#include "Repertory/cwRepertory.h"
 
 NS_MINIR_BEGIN
 
-class CW_DLL cwD3D11Texture : public cwTexture
+HRESULT __stdcall cwD3D11ShaderInclude::Open(
+			D3D10_INCLUDE_TYPE IncludeType, 
+			LPCSTR pFileName, 
+			LPCVOID pParentData, 
+			LPCVOID *ppData, 
+			UINT *pBytes)
 {
-public:
-	static cwD3D11Texture* create(const CWSTRING& strFileName);
-	static cwD3D11Texture* createThreadSafe(const CWSTRING& strFileName);
+	cwRepertory& repertory = cwRepertory::getInstance();
 
-	static cwD3D11Texture* create(CWVOID* pData, CWUINT64 uSize);
-	static cwD3D11Texture* createThreadSafe(CWVOID* pData, CWUINT64 uSize);
+	CWSTRING strFullFilePath = repertory.getResourceLoader()->getShaderFullPath(pFileName);
+	cwData* pData = repertory.getFileSystem()->getFileData(strFullFilePath);
+	if (pData && pData->m_pData && pData->m_uSize > 0) {
+		CWBYTE* pCopyData = new CWBYTE[pData->m_uSize];
+		if (pCopyData) {
+			memcpy(pCopyData, pData->m_pData, sizeof(CWBYTE)*pData->m_uSize);
+			*ppData = (LPCVOID)pCopyData;
+			*pBytes = pData->m_uSize;
+		}
+		else {
+			ppData = NULL;
+			*pBytes = 0;
+		}
 
-	cwD3D11Texture();
-	virtual ~cwD3D11Texture();
+		delete pData;
+	}
+	else {
+		ppData = NULL;
+		*pBytes = 0;
+	}
 
-	virtual CWBOOL init(const CWSTRING& strFileName);
-	virtual CWBOOL init(CWVOID* pData, CWUINT64 uSize);
-	virtual CWHANDLE getHandle() const override;
+	return S_OK;
+}
 
-protected:
-	ID3D11ShaderResourceView* m_pShaderResource;
-
-};
+HRESULT __stdcall cwD3D11ShaderInclude::Close(LPCVOID pData)
+{
+	CWBYTE* pByteData = (CWBYTE*)pData;
+	delete[] pByteData;
+	return S_OK;
+}
 
 NS_MINIR_END
-
-#endif
 
 #endif

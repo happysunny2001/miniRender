@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwMacros.h"
 #include "Ref/cwRef.h"
 #include "Repertory/cwRepertory.h"
+#include "Platform/cwFileSystem.h"
 
 #include <mutex>
 #include <condition_variable>
@@ -50,6 +51,14 @@ public:
 
 	CWBOOL update(float dt);
 
+	CWSTRING getFullPath(const CWSTRING& strFileName);
+	CWSTRING getTextureFullPath(const CWSTRING& strFileName);
+	CWSTRING getShaderFullPath(const CWSTRING& strFileName);
+
+	cwData* getShaderData(const CWSTRING& strFileName);
+	cwData* getTextureData(const CWSTRING& strFileName);
+	cwData* getFileData(const CWSTRING& strFileName);
+
 private:
 	static cwResourceLoader* create();
 
@@ -74,9 +83,6 @@ protected:
 
 	std::queue<cwLoadBatch*> m_nQueueBatch;
 	std::queue<cwLoadResult*> m_nQueueResult;
-
-	std::vector<CWSTRING> m_nVecTexturePath;
-	std::vector<CWSTRING> m_nVecShaderPath;
 
 	std::mutex m_nMutex;
 	std::mutex m_nMutexResult;

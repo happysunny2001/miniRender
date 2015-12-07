@@ -72,6 +72,9 @@ public:
 
 	virtual cwShader* createShader(const string& strFileName) = 0;
 	virtual cwShader* createShaderThreadSafe(const string& strFileName) = 0;
+	virtual cwShader* createShader(const CWCHAR* pcSourceData, CWUINT64 uSize) = 0;
+	virtual cwShader* createShaderThreadSafe(const CWCHAR* pcSourceData, CWUINT64 uSize) = 0;
+
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) = 0;
 	virtual cwBuffer* createVertexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, eBufferUsage usage, eAccessFlag cpuFlag) = 0;
 	virtual cwBuffer* createIndexBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) = 0;
@@ -85,9 +88,15 @@ public:
 
 	virtual cwTexture* createTexture(const CWSTRING& strFileName) = 0;
 	virtual cwTexture* createTextureThreadSafe(const CWSTRING& strFileName) = 0;
+	virtual cwTexture* createTexture(CWVOID* pData, CWUINT64 uSize) = 0;
+	virtual cwTexture* createTextureThreadSafe(CWVOID* pData, CWUINT64 uSize) = 0;
+
 	virtual cwTexture* createCubeTexture(const CWSTRING& strFileName) = 0;
 	virtual cwTexture* createCubeTextureThreadSafe(const CWSTRING& strFileName) = 0;
 	virtual cwCubeTexture* createCubeTexture(CWUINT iSize) = 0;
+	virtual cwTexture* createCubeTexture(CWVOID* pData, CWUINT64 uSize) = 0;
+	virtual cwTexture* createCubeTextureThreadSafe(CWVOID* pData, CWUINT64 uSize) = 0;
+
 	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) = 0;
 	virtual cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles) = 0;
 

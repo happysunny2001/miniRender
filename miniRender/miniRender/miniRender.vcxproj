@@ -132,6 +132,7 @@
     <ClInclude Include="Platform\D3D\D3D11\Layouts\cwInputElementDescManager.h" />
     <ClInclude Include="Platform\D3D\D3D11\Repertory\cwD3D11Repertory.h" />
     <ClInclude Include="Platform\D3D\D3D11\Shader\cwD3D11Shader.h" />
+    <ClInclude Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderInclude.h" />
     <ClInclude Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderManager.h" />
     <ClInclude Include="Platform\D3D\D3D11\Stencil\cwD3D11Stencil.h" />
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11CubeTexture.h" />
@@ -285,6 +286,7 @@
     <ClCompile Include="Platform\D3D\D3D11\Layouts\cwInputElementDescManager.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Repertory\cwD3D11Repertory.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11Shader.cpp" />
+    <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderInclude.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderManager.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Stencil\cwD3D11Stencil.cpp" />
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11CubeTexture.cpp" />

@@ -38,10 +38,14 @@ public:
 	static cwD3D11CubeTexture* createThreadSafe(const CWSTRING& strTexture);
 	static cwD3D11CubeTexture* create(CWUINT iSize);
 
+	static cwD3D11CubeTexture* create(CWVOID* pData, CWUINT64 uSize);
+	static cwD3D11CubeTexture* createThreadSafe(CWVOID* pData, CWUINT64 uSize);
+
 	cwD3D11CubeTexture();
 	virtual ~cwD3D11CubeTexture();
 
 	virtual CWBOOL init(const CWSTRING& strTexture);
+	virtual CWBOOL init(CWVOID* pData, CWUINT64 uSize);
 	virtual CWBOOL init(CWUINT iSize);
 
 	virtual CWHANDLE getHandle() const override;

@@ -50,7 +50,7 @@ public:
 protected:
 	CWVOID loadTexture2D(const cwResourceInfo& resInfo);
 	CWVOID loadTextureCubeMap(const cwResourceInfo& resInfo);
-	CWVOID loadTextureShader(const cwResourceInfo& resInfo);
+	CWVOID loadShader(const cwResourceInfo& resInfo);
 
 protected:
 	std::vector<cwTexture*> m_nVecTexture;

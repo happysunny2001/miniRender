@@ -37,10 +37,14 @@ public:
 	static cwD3D11Shader* create(const CWSTRING& strShaderFile);
 	static cwD3D11Shader* createThreadSafe(const CWSTRING& strShaderFile);
 
+	static cwD3D11Shader* create(const CWCHAR* pcSourceData, CWUINT64 uSize);
+	static cwD3D11Shader* createThreadSafe(const CWCHAR* pcSourceData, CWUINT64 uSize);
+
 	cwD3D11Shader();
 	virtual ~cwD3D11Shader();
 
 	virtual CWBOOL init(const CWSTRING& strShaderFile) override;
+	virtual CWBOOL init(const CWCHAR* pcSourceData, CWUINT64 uSize) override;
 
 	virtual CWBOOL hasVariable(const string& strVariable) override;
 	virtual CWVOID setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize) override;

@@ -9,4 +9,8 @@
 		effect/D3D11/
 	</Shader>
 
+	<Configure>
+		Configure/D3D11/
+	</Configure>
+
 </Resource>

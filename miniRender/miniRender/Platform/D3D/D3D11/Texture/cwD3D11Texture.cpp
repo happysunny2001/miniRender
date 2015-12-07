@@ -52,6 +52,29 @@ cwD3D11Texture* cwD3D11Texture::createThreadSafe(const CWSTRING& strFileName)
 	return nullptr;
 }
 
+cwD3D11Texture* cwD3D11Texture::create(CWVOID* pData, CWUINT64 uSize)
+{
+	cwD3D11Texture* pTexture = new cwD3D11Texture();
+	if (pTexture && pTexture->init(pData, uSize)) {
+		pTexture->autorelease();
+		return pTexture;
+	}
+
+	CW_SAFE_DELETE(pTexture);
+	return nullptr;
+}
+
+cwD3D11Texture* cwD3D11Texture::createThreadSafe(CWVOID* pData, CWUINT64 uSize)
+{
+	cwD3D11Texture* pTexture = new cwD3D11Texture();
+	if (pTexture && pTexture->init(pData, uSize)) {
+		return pTexture;
+	}
+
+	CW_SAFE_DELETE(pTexture);
+	return nullptr;
+}
+
 cwD3D11Texture::cwD3D11Texture() :
 m_pShaderResource(nullptr)
 {
@@ -70,6 +93,33 @@ CWBOOL cwD3D11Texture::init(const CWSTRING& strFileName)
 
 	ID3D11Texture2D* pTexture2D = NULL;
 	CW_HR(D3DX11CreateTextureFromFile(pD3D11Device->getD3D11Device(), wstrName.c_str(), NULL, NULL, (ID3D11Resource**)&pTexture2D, NULL));
+
+	D3D11_TEXTURE2D_DESC textureDesc;
+	pTexture2D->GetDesc(&textureDesc);
+
+	m_fWidth = static_cast<CWFLOAT>(textureDesc.Width);
+	m_fHeight = static_cast<CWFLOAT>(textureDesc.Height);
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC resourceDesc;
+	resourceDesc.Format = textureDesc.Format;
+	resourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	resourceDesc.Texture2D.MostDetailedMip = 0;
+	resourceDesc.Texture2D.MipLevels = -1;
+
+	pD3D11Device->getD3D11Device()->CreateShaderResourceView(pTexture2D, &resourceDesc, &m_pShaderResource);
+	CW_RELEASE_COM(pTexture2D);
+
+	return CWTRUE;
+}
+
+CWBOOL cwD3D11Texture::init(CWVOID* pData, CWUINT64 uSize)
+{
+	if (!pData) return CWFALSE;
+
+	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+
+	ID3D11Texture2D* pTexture2D = NULL;
+	CW_HR(D3DX11CreateTextureFromMemory(pD3D11Device->getD3D11Device(), pData, uSize, NULL, NULL, (ID3D11Resource**)&pTexture2D, NULL));
 
 	D3D11_TEXTURE2D_DESC textureDesc;
 	pTexture2D->GetDesc(&textureDesc);

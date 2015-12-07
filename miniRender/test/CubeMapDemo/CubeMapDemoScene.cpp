@@ -91,7 +91,7 @@ CWVOID CubeMapDemoScene::buildSphereMaterial()
 	m_pMatSphere->setSpecular(cwVector4D(0.9f, 0.9f, 0.9f, 16.0f));
 	m_pMatSphere->setReflect(cwVector4D(0.4f, 0.4f, 0.4f, 1.0f));
 
-	cwMaterialUnitDynamicReflect* pMatUnit = cwMaterialUnitDynamicReflect::create("Textures/snowcube1024.dds");
+	cwMaterialUnitDynamicReflect* pMatUnit = cwMaterialUnitDynamicReflect::create("snowcube1024.dds");
 	pMatUnit->setReflectionFactor(0.5f);
 	m_pMatSphere->addMaterialUnit(pMatUnit);
 	
@@ -134,7 +134,7 @@ CWVOID CubeMapDemoScene::buildScene()
 	pMatReflection->setReflect(cwVector4D(1.0f, 1.0f, 1.0f, 1.0f));
 	this->addChild(pReflectionEntity);
 
-	this->createSkyDome("Textures/snowcube1024.dds");
+	this->createSkyDome("snowcube1024.dds");
 }
 
 CWVOID CubeMapDemoScene::buildLight()

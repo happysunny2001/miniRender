@@ -54,11 +54,6 @@ bool LightTerrainDemoScene::init()
 	pTouchListener->onTouchMoving = CW_CALLBACK_1(LightTerrainDemoScene::onTouchMoving, this);
 	this->addEventListener(pTouchListener);
 
-	//cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
-	//pKeyListener->onKeyDown = CW_CALLBACK_1(LightTerrainDemoScene::onKeyDown, this);
-	//pKeyListener->onKeyUp = CW_CALLBACK_1(LightTerrainDemoScene::onKeyUp, this);
-	//this->addEventListener(pKeyListener);
-
 	this->schedulerUpdate();
 
 	m_bTouchDown = false;
@@ -133,7 +128,7 @@ CWVOID LightTerrainDemoScene::buildEntity()
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTex), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosNormalTex");
 
-	cwTexture* pTexTerrain = cwRepertory::getInstance().getTextureManager()->getTexture("Textures/grass.dds");
+	cwTexture* pTexTerrain = cwRepertory::getInstance().getTextureManager()->getTexture("grass.dds");
 	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderLightingTex);
 	cwEffect* pEffect = cwEffect::create();
 	pEffect->setShader(pShader);

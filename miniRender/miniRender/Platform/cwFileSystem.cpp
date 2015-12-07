@@ -20,11 +20,29 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwFileSystem.h"
 #include "cwPlatform.h"
 
+#include <stdio.h>
+
 #if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
 #include "Windows/cwWinFileSystem.h"
+
+#include <io.h>
+#include <stdlib.h>
 #endif
 
 NS_MINIR_BEGIN
+
+cwData::cwData():
+m_pData(nullptr),
+m_uSize(0)
+{
+
+}
+
+cwData::~cwData()
+{
+	CW_SAFE_DELETE_ARRAY(m_pData);
+	m_uSize = 0;
+}
 
 cwFileSystem* cwFileSystem::create()
 {
@@ -41,8 +59,46 @@ CWSTRING cwFileSystem::getFullFilePath(const CWSTRING& strFileName) const
 
 CWBOOL cwFileSystem::isFileExist(const CWSTRING& strFilePath)
 {
+#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
+	if (_access(strFilePath.c_str(), 0) == 0) return CWTRUE;
+#endif
+	return CWFALSE;
+}
 
-	return CWTRUE;
+cwData* cwFileSystem::getFileData(const CWSTRING& strFilePath)
+{
+	FILE* fp = NULL;
+
+#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
+	fopen_s(&fp, strFilePath.c_str(), "rb");
+#endif
+
+	if (!fp) {
+		return nullptr;
+	}
+
+	cwData* pData = new cwData;
+	if (!pData) {
+		fclose(fp);
+		return nullptr;
+	}
+
+	fseek(fp, 0, SEEK_END);
+	auto len = ftell(fp);
+	pData->m_pData = new CWBYTE[len];
+	if (!pData->m_pData) {
+		delete pData;
+		fclose(fp);
+		return nullptr;
+	}
+
+	fseek(fp, 0, SEEK_SET);
+	fread(pData->m_pData, 1, len, fp);
+	pData->m_uSize = len;
+
+	fclose(fp);
+
+	return pData;
 }
 
 NS_MINIR_END

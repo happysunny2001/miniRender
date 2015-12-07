@@ -174,6 +174,99 @@ CWBOOL cwResourceLoader::update(float dt)
 	return true;
 }
 
+CWSTRING cwResourceLoader::getFullPath(const CWSTRING& strFileName)
+{
+	cwFileSystem* fs = cwRepertory::getInstance().getFileSystem();
+	const CWSTRING& strWorkingPath = fs->getWokringPath();
+	//std::vector<CWSTRING>& vecTexturePath = m_nMapResLocation["Texture"];
+
+	//for (auto it = vecTexturePath.begin(); it != vecTexturePath.end(); ++it) {
+	//	CWSTRING strFullPath = strWorkingPath + "/" + *it + strFileName;
+	//	if (fs->isFileExist(strFullPath)) {
+	//		return strFullPath;
+	//	}
+	//}
+
+	//std::vector<CWSTRING>& vecShaderPath = m_nMapResLocation["Shader"];
+
+	//for (auto it = vecShaderPath.begin(); it != vecShaderPath.end(); ++it) {
+	//	CWSTRING strFullPath = strWorkingPath + "/" + *it + strFileName;
+	//	if (fs->isFileExist(strFullPath)) {
+	//		return strFullPath;
+	//	}
+	//}
+
+	for (auto it = m_nMapResLocation.begin(); it != m_nMapResLocation.end(); ++it) {
+		for (auto itPath = it->second.begin(); itPath != it->second.end(); ++itPath) {
+			CWSTRING strFullPath = strWorkingPath + "/" + *itPath + strFileName;
+			if (fs->isFileExist(strFullPath)) {
+				return strFullPath;
+			}
+		}
+	}
+
+	return "";
+}
+
+CWSTRING cwResourceLoader::getTextureFullPath(const CWSTRING& strFileName)
+{
+	cwFileSystem* fs = cwRepertory::getInstance().getFileSystem();
+	const CWSTRING& strWorkingPath = fs->getWokringPath();
+	std::vector<CWSTRING>& vecTexturePath = m_nMapResLocation["Texture"];
+
+	for (auto it = vecTexturePath.begin(); it != vecTexturePath.end(); ++it) {
+		CWSTRING strFullPath = strWorkingPath + "/" + *it + strFileName;
+		if (fs->isFileExist(strFullPath)) {
+			return strFullPath;
+		}
+	}
+
+	return "";
+}
+
+CWSTRING cwResourceLoader::getShaderFullPath(const CWSTRING& strFileName)
+{
+	cwFileSystem* fs = cwRepertory::getInstance().getFileSystem();
+	const CWSTRING& strWorkingPath = fs->getWokringPath();
+	std::vector<CWSTRING>& vecShaderPath = m_nMapResLocation["Shader"];
+
+	for (auto it = vecShaderPath.begin(); it != vecShaderPath.end(); ++it) {
+		CWSTRING strFullPath = strWorkingPath + "/" + *it + strFileName;
+		if (fs->isFileExist(strFullPath)) {
+			return strFullPath;
+		}
+	}
+
+	return "";
+}
+
+cwData* cwResourceLoader::getShaderData(const CWSTRING& strFileName)
+{
+	if (strFileName.empty()) return nullptr;
+	CWSTRING strFullPath = getShaderFullPath(strFileName);
+	if (strFileName.empty()) return nullptr;
+
+	return cwRepertory::getInstance().getFileSystem()->getFileData(strFullPath);
+}
+
+cwData* cwResourceLoader::getTextureData(const CWSTRING& strFileName)
+{
+	if (strFileName.empty()) return nullptr;
+	CWSTRING strFullPath = getTextureFullPath(strFileName);
+	if (strFileName.empty()) return nullptr;
+
+	return cwRepertory::getInstance().getFileSystem()->getFileData(strFullPath);
+}
+
+cwData* cwResourceLoader::getFileData(const CWSTRING& strFileName)
+{
+	if (strFileName.empty()) return nullptr;
+	CWSTRING strFullPath = getFullPath(strFileName);
+	if (strFileName.empty()) return nullptr;
+
+	return cwRepertory::getInstance().getFileSystem()->getFileData(strFullPath);
+}
+
 CWVOID loadingProcessThread(cwResourceLoader* pLoader)
 {
 	while (true) {

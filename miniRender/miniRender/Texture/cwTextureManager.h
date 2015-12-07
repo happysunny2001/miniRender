@@ -39,13 +39,17 @@ public:
 	virtual ~cwTextureManager();
 
 	cwTexture* createTexture(const CWSTRING& strName);
+	cwTexture* createTexture(const CWSTRING& strName, CWVOID* pData, CWUINT64 uSize);
 	cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles);
 	cwTexture* createCubeTexture(const CWSTRING& strName);
+	cwTexture* createCubeTexture(const CWSTRING& strName, CWVOID* pData, CWUINT64 uSize);
 	cwTexture* createCubeTexture(CWUINT iSize);
 	cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader);
 
 	cwTexture* createTextureThreadSafe(const CWSTRING& strName);
+	cwTexture* createTextureThreadSafe(const CWSTRING& strName, CWVOID* pData, CWUINT64 uSize);
 	cwTexture* createCubeTextureThreadSafe(const CWSTRING& strName);
+	cwTexture* createCubeTextureThreadSafe(const CWSTRING& strName, CWVOID* pData, CWUINT64 uSize);
 
 	cwTexture* getTexture(const CWSTRING& strName);
 	cwTexture* getCubeTexture(const CWSTRING& strName);

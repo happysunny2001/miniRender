@@ -27,6 +27,18 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
+class cwData
+{
+public:
+	cwData();
+	~cwData();
+
+public:
+	CWBYTE* m_pData;
+	CWUINT64 m_uSize;
+
+};
+
 class CW_DLL cwFileSystem : public cwRef
 {
 public:
@@ -36,6 +48,7 @@ public:
 
 	const CWSTRING& getWokringPath() const { return m_strWorkingPath; }
 	CWSTRING getFullFilePath(const CWSTRING& strFileName) const;
+	cwData* getFileData(const CWSTRING& strFilePath);
 
 	CWBOOL isFileExist(const CWSTRING& strFilePath);
 

@@ -71,7 +71,7 @@ CWVOID BlurDemoScene::buildEntity()
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTex), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosNormalTex");
 
-	cwTexture* pTexTerrain = cwRepertory::getInstance().getTextureManager()->getTexture("Textures/grass.dds");
+	cwTexture* pTexTerrain = cwRepertory::getInstance().getTextureManager()->getTexture("grass.dds");
 	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderLightingTex);
 	cwEffect* pEffect = cwEffect::create();
 	pEffect->setShader(pShader);

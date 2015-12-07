@@ -43,6 +43,9 @@ public:
 	cwShader* createShader(const CWSTRING& strFile);
 	cwShader* createShaderThreadSafe(const CWSTRING& strFile);
 
+	cwShader* createShader(const CWSTRING& strFile, const CWCHAR* pcSourceData, CWUINT64 uSize);
+	cwShader* createShaderThreadSafe(const CWSTRING& strFile, const CWCHAR* pcSourceData, CWUINT64 uSize);
+
 	cwShader* getShader(const CWSTRING& strFile);
 	cwShader* getDefShader(eDefShaderID eShaderID);
 

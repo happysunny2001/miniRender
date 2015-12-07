@@ -22,6 +22,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwD3D11ShaderManager.h"
 #include "Repertory/cwRepertory.h"
 #include "Platform/cwFileSystem.h"
+#include "Resource/cwLoadBatch.h"
+#include "Resource/cwResourceLoader.h"
 
 NS_MINIR_BEGIN
 
@@ -57,23 +59,42 @@ CWBOOL cwD3D11ShaderManager::init()
 CWVOID cwD3D11ShaderManager::loadDefaultShader()
 {
 	//init d3d11 shader first
-	auto fileSystem = cwRepertory::getInstance().getFileSystem();
+	//auto fileSystem = cwRepertory::getInstance().getFileSystem();
 
-	this->getShader("effect/D3D11/color.fx");
-	this->getShader("effect/D3D11/lighting.fx");
-	this->getShader("effect/D3D11/lightingTex.fx");
-	this->getShader("effect/D3D11/colorTex.fx");
-	this->getShader("effect/D3D11/posColorTex.fx");
-	this->getShader("effect/D3D11/skyDome.fx");
-	this->getShader("effect/D3D11/normalMap.fx");
+	cwLoadBatch* pBatch = cwLoadBatch::create();
+	pBatch->addShader("color.fx");
+	pBatch->addShader("lighting.fx");
+	pBatch->addShader("lightingTex.fx");
+	pBatch->addShader("colorTex.fx");
+	pBatch->addShader("posColorTex.fx");
+	pBatch->addShader("skyDome.fx");
+	pBatch->addShader("normalMap.fx");
 
-	m_nMapDefShader.insert(eDefShaderColor, getShader("effect/D3D11/color.fx"));
+	cwRepertory::getInstance().getResourceLoader()->loadSync(pBatch);
+
+	m_nMapDefShader.insert(eDefShaderColor, getShader("color.fx"));
+	m_nMapDefShader.insert(eDefShaderLighting, getShader("lighting.fx"));
+	m_nMapDefShader.insert(eDefShaderLightingTex, getShader("lightingTex.fx"));
+	m_nMapDefShader.insert(eDefShaderTex, getShader("colorTex.fx"));
+	m_nMapDefShader.insert(eDefShaderPosTexColor, getShader("posColorTex.fx"));
+	m_nMapDefShader.insert(eDefShaderSkyDome, getShader("skyDome.fx"));
+	m_nMapDefShader.insert(eDefShaderNormalMap, getShader("normalMap.fx"));
+
+	//this->getShader("effect/D3D11/color.fx");
+	//this->getShader("effect/D3D11/lighting.fx");
+	//this->getShader("effect/D3D11/lightingTex.fx");
+	//this->getShader("effect/D3D11/colorTex.fx");
+	//this->getShader("effect/D3D11/posColorTex.fx");
+	//this->getShader("effect/D3D11/skyDome.fx");
+	//this->getShader("effect/D3D11/normalMap.fx");
+
+	/*m_nMapDefShader.insert(eDefShaderColor, getShader("effect/D3D11/color.fx"));
 	m_nMapDefShader.insert(eDefShaderLighting, getShader("effect/D3D11/lighting.fx"));
 	m_nMapDefShader.insert(eDefShaderLightingTex, getShader("effect/D3D11/lightingTex.fx"));
 	m_nMapDefShader.insert(eDefShaderTex, getShader("effect/D3D11/colorTex.fx"));
 	m_nMapDefShader.insert(eDefShaderPosTexColor, getShader("effect/D3D11/posColorTex.fx"));
 	m_nMapDefShader.insert(eDefShaderSkyDome, getShader("effect/D3D11/skyDome.fx"));
-	m_nMapDefShader.insert(eDefShaderNormalMap, getShader("effect/D3D11/normalMap.fx"));
+	m_nMapDefShader.insert(eDefShaderNormalMap, getShader("effect/D3D11/normalMap.fx"));*/
 }
 
 NS_MINIR_END

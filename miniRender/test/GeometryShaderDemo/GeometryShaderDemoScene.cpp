@@ -51,11 +51,6 @@ CWBOOL GeometryShaderDemoScene::init()
 	pTouchListener->onTouchMoving = CW_CALLBACK_1(GeometryShaderDemoScene::onTouchMoving, this);
 	this->addEventListener(pTouchListener);
 
-	//cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
-	//pKeyListener->onKeyDown = CW_CALLBACK_1(GeometryShaderDemoScene::onKeyDown, this);
-	//pKeyListener->onKeyUp = CW_CALLBACK_1(GeometryShaderDemoScene::onKeyUp, this);
-	//this->addEventListener(pKeyListener);
-
 	this->schedulerUpdate();
 
 	m_bTouchDown = false;
@@ -131,7 +126,7 @@ CWVOID GeometryShaderDemoScene::buildTerrain()
 		(CWVOID*)&vecVertex[0], sizeof(cwVertexPosNormalTex), static_cast<CWUINT>(mesh.nVertex.size()),
 		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosNormalTex");
 
-	cwTexture* pTexTerrain = cwRepertory::getInstance().getTextureManager()->getTexture("Textures/grass.dds");
+	cwTexture* pTexTerrain = cwRepertory::getInstance().getTextureManager()->getTexture("grass.dds");
 	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderLightingTex);
 	cwEffect* pEffect = cwEffect::create();
 	pEffect->setShader(pShader);
@@ -151,7 +146,7 @@ CWVOID GeometryShaderDemoScene::buildTerrain()
 
 CWVOID GeometryShaderDemoScene::buildBillboard()
 {
-	cwShader* pBillboardShader = cwRepertory::getInstance().getShaderManager()->loadShader("effect/D3D11/geometryBillboard.fx");
+	cwShader* pBillboardShader = cwRepertory::getInstance().getShaderManager()->getShader("geometryBillboard.fx");
 	std::vector<CWSTRING> vecTexFiles;
 	vecTexFiles.push_back("Textures/tree0.dds");
 	vecTexFiles.push_back("Textures/tree1.dds");

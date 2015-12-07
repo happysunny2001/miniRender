@@ -40,6 +40,7 @@ public:
 	virtual ~cwShader();
 
 	virtual CWBOOL init(const CWSTRING& strShaderFile) = 0;
+	virtual CWBOOL init(const CWCHAR* pcSourceData, CWUINT64 uSize) = 0;
 
 	virtual CWBOOL hasVariable(const CWSTRING& strVariable) = 0;
 	virtual CWVOID setVariableData(const CWSTRING& strVariable, CWVOID* pData, CWUINT offset, CWUINT iSize) = 0;

@@ -22,6 +22,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Texture/cwTextureManager.h"
 #include "Shader/cwShaderManager.h"
+#include "Platform/cwFileSystem.h"
+#include "cwResourceLoader.h"
+
+#include <thread>
 
 NS_MINIR_BEGIN
 
@@ -89,7 +93,7 @@ CWVOID cwLoadResult::load()
 			loadTextureCubeMap(*it);
 			break;
 		case eResourceTypeShader:
-			loadTextureShader(*it);
+			loadShader(*it);
 			break;
 		default:
 			break;
@@ -99,25 +103,52 @@ CWVOID cwLoadResult::load()
 
 CWVOID cwLoadResult::loadTexture2D(const cwResourceInfo& resInfo)
 {
-	cwTexture* pTex = cwRepertory::getInstance().getTextureManager()->createTextureThreadSafe(resInfo.m_nStrName);
-	if (pTex) {
-		m_nVecTexture.push_back(pTex);
+	cwRepertory& repertory = cwRepertory::getInstance();
+
+	cwData* pData = repertory.getResourceLoader()->getTextureData(resInfo.m_nStrName);
+	if (pData) {
+		if (pData->m_pData && pData->m_uSize > 0) {
+			cwTexture* pTex = repertory.getTextureManager()->createTextureThreadSafe(resInfo.m_nStrName, pData->m_pData, pData->m_uSize);
+			if (pTex) {
+				m_nVecTexture.push_back(pTex);
+			}
+		}
+
+		delete pData;
 	}
 }
 
 CWVOID cwLoadResult::loadTextureCubeMap(const cwResourceInfo& resInfo)
 {
-	cwTexture* pTex = cwRepertory::getInstance().getTextureManager()->createCubeTextureThreadSafe(resInfo.m_nStrName);
-	if (pTex) {
-		m_nVecTexture.push_back(pTex);
+	cwRepertory& repertory = cwRepertory::getInstance();
+
+	cwData* pData = repertory.getResourceLoader()->getTextureData(resInfo.m_nStrName);
+	if (pData) {
+		if (pData->m_pData && pData->m_uSize > 0) {
+			cwTexture* pTex = repertory.getTextureManager()->createCubeTextureThreadSafe(resInfo.m_nStrName, pData->m_pData, pData->m_uSize);
+			if (pTex) {
+				m_nVecTexture.push_back(pTex);
+			}
+		}
+
+		delete pData;
 	}
 }
 
-CWVOID cwLoadResult::loadTextureShader(const cwResourceInfo& resInfo)
+CWVOID cwLoadResult::loadShader(const cwResourceInfo& resInfo)
 {
-	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->createShaderThreadSafe(resInfo.m_nStrName);
-	if (pShader) {
-		m_nVecShader.push_back(pShader);
+	cwRepertory& repertory = cwRepertory::getInstance();
+
+	cwData* pData = repertory.getResourceLoader()->getShaderData(resInfo.m_nStrName);
+	if (pData) {
+		if (pData->m_pData && pData->m_uSize > 0) {
+			cwShader* pShader = repertory.getShaderManager()->createShaderThreadSafe(resInfo.m_nStrName, (CWCHAR*)pData->m_pData, pData->m_uSize);
+			if (pShader) {
+				m_nVecShader.push_back(pShader);
+			}
+		}
+
+		delete pData;
 	}
 }
 

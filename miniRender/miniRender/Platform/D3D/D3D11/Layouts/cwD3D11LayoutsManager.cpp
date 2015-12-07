@@ -28,6 +28,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Parser/cwParserManager.h"
 #include "Device/cwDevice.h"
 #include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
+#include "Resource/cwResourceLoader.h"
 
 NS_MINIR_BEGIN
 
@@ -107,12 +108,16 @@ cwInputElementDesc* cwD3D11LayoutsManager::createElementDesc(tinyxml2::XMLElemen
 CWVOID cwD3D11LayoutsManager::loadLayout()
 {
 	auto shaderManager = cwRepertory::getInstance().getShaderManager();
-	CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath("Configure/D3D11/InputLayout.xml");
+	cwData* pData = cwRepertory::getInstance().getResourceLoader()->getFileData("InputLayout.xml");
 
 	tinyxml2::XMLDocument doc;
-	tinyxml2::XMLError err = doc.LoadFile(strFilePath.c_str());
-	if (err != tinyxml2::XML_NO_ERROR) {
-		return;
+	if (pData) {
+		tinyxml2::XMLError err = doc.Parse((const char*)pData->m_pData, pData->m_uSize);
+		if (err != tinyxml2::XML_NO_ERROR) {
+			return;
+		}
+
+		delete pData;
 	}
 
 	tinyxml2::XMLElement* pInputLayoutElement = doc.FirstChildElement("InputLayout");

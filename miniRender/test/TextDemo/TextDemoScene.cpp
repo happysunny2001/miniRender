@@ -84,7 +84,7 @@ CWVOID TextDemoScene::update(CWFLOAT dt)
 
 CWVOID TextDemoScene::buildText()
 {
-	cwText* pText = cwText::create("1234567890", "Textures/font_test.png", '0', 40);
+	cwText* pText = cwText::create("1234567890", "font_test.png", '0', 40);
 	if (pText) {
 		pText->setPosition(cwVector3D::ZERO);
 		this->addChild(pText);
@@ -93,32 +93,32 @@ CWVOID TextDemoScene::buildText()
 
 CWVOID TextDemoScene::buildSprite()
 {
-	m_pSpriteCenter = cwSprite::create("Textures/cc.png");
+	m_pSpriteCenter = cwSprite::create("cc.png");
 	m_pSpriteCenter->setPosition(0, 0);
 	cwRepertory::getInstance().getEngine()->addNode2D(m_pSpriteCenter);
 	m_pSpriteCenter->setTag(100);
 
-	m_pSpriteLeft = cwSprite::create("Textures/cc.png");
+	m_pSpriteLeft = cwSprite::create("cc.png");
 	m_pSpriteLeft->setPosition(-100, 0);
 	m_pSpriteCenter->addChild(m_pSpriteLeft);
 	m_pSpriteLeft->setTag(101);
 
-	m_pSpriteRight = cwSprite::create("Textures/cc.png");
+	m_pSpriteRight = cwSprite::create("cc.png");
 	m_pSpriteRight->setPosition(100, 0);
 	m_pSpriteCenter->addChild(m_pSpriteRight);
 	m_pSpriteRight->setTag(102);
 
-	cwSprite* pSpLeftChild01 = cwSprite::create("Textures/cc.png");
+	cwSprite* pSpLeftChild01 = cwSprite::create("cc.png");
 	pSpLeftChild01->setPosition(-20, 80);
 	m_pSpriteLeft->addChild(pSpLeftChild01);
 	pSpLeftChild01->setTag(103);
 
-	cwSprite* pSpRightChild01 = cwSprite::create("Textures/cc.png");
+	cwSprite* pSpRightChild01 = cwSprite::create("cc.png");
 	pSpRightChild01->setPosition(20, -80);
 	m_pSpriteRight->addChild(pSpRightChild01);
 	pSpRightChild01->setTag(104);
 
-	m_pLabel = cwLabel::create("0", "Textures/frame_text.png", '0', 10);
+	m_pLabel = cwLabel::create("0", "frame_text.png", '0', 10);
 	m_pLabel->setPosition(-100, -100);
 	cwRepertory::getInstance().getEngine()->addNode2D(m_pLabel);
 	m_pLabel->setTag(200);

@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
 #include "Platform/cwFileSystem.h"
+#include "Resource/cwResourceLoader.h"
 
 NS_MINIR_BEGIN
 
@@ -36,22 +37,48 @@ cwShaderManager::~cwShaderManager()
 
 cwShader* cwShaderManager::createShader(const CWSTRING& strFile)
 {
-	CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strFile);
-	cwShader* pShader = cwRepertory::getInstance().getDevice()->createShader(strFilePath);
+	cwShader* pShader = nullptr;
+	cwData* pData = cwRepertory::getInstance().getResourceLoader()->getShaderData(strFile);
+	if (pData) {
+		pShader = createShader(strFile, (const CWCHAR*)pData->m_pData, pData->m_uSize);
+
+		delete pData;
+	}
+
+	return pShader;
+}
+
+cwShader* cwShaderManager::createShaderThreadSafe(const CWSTRING& strFile)
+{
+	cwShader* pShader = nullptr;
+	cwData* pData = cwRepertory::getInstance().getResourceLoader()->getShaderData(strFile);
+	if (pData) {
+		pShader = createShaderThreadSafe(strFile, (const CWCHAR*)pData->m_pData, pData->m_uSize);
+
+		delete pData;
+	}
+
+	return pShader;
+}
+
+cwShader* cwShaderManager::createShader(const CWSTRING& strFile, const CWCHAR* pcSourceData, CWUINT64 uSize)
+{
+	cwShader* pShader = cwRepertory::getInstance().getDevice()->createShader(pcSourceData, uSize);
 	if (pShader) {
 		pShader->setName(strFile);
+		m_nMapShader.insert(strFile, pShader);
 		return pShader;
 	}
 
 	return nullptr;
 }
 
-cwShader* cwShaderManager::createShaderThreadSafe(const CWSTRING& strFile)
+cwShader* cwShaderManager::createShaderThreadSafe(const CWSTRING& strFile, const CWCHAR* pcSourceData, CWUINT64 uSize)
 {
-	CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strFile);
-	cwShader* pShader = cwRepertory::getInstance().getDevice()->createShaderThreadSafe(strFilePath);
+	cwShader* pShader = cwRepertory::getInstance().getDevice()->createShaderThreadSafe(pcSourceData, uSize);
 	if (pShader) {
 		pShader->setName(strFile);
+		m_nMapShader.insert(strFile, pShader);
 		return pShader;
 	}
 
@@ -65,12 +92,7 @@ cwShader* cwShaderManager::getShader(const CWSTRING& strFile)
 		return itFind->second;
 	}
 
-	cwShader* pShader = createShader(strFile);
-	if (pShader) {
-		m_nMapShader.insert(strFile, pShader);
-	}
-
-	return pShader;
+	return createShader(strFile);
 }
 
 cwShader* cwShaderManager::getDefShader(eDefShaderID eShaderID)

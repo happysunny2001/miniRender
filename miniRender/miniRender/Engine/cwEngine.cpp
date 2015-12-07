@@ -120,7 +120,7 @@ CWVOID cwEngine::buildSpriteManager()
 
 CWVOID cwEngine::buildFrameRateLabel()
 {
-	m_pLabelFrameRate = cwLabel::create("0", "Textures/frame_text.png", '0', 10);
+	m_pLabelFrameRate = cwLabel::create("0", "frame_text.png", '0', 10);
 	CW_SAFE_RETAIN(m_pLabelFrameRate);
 
 	CWINT m_uScreenWidth  = cwRepertory::getInstance().getUInt(gValueWinWidth);

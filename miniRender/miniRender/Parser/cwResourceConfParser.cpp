@@ -52,9 +52,9 @@ std::unordered_map<CWSTRING, std::vector<CWSTRING>> cwResourceConfParser::parse(
 	tinyxml2::XMLElement* pResourceElement = doc.FirstChildElement("Resource");
 	if (!pResourceElement) return mapRet;
 
-	tinyxml2::XMLElement* pTextureElement = pResourceElement->FirstChildElement("Texture");
-	if (pTextureElement) {
-		const char* pcText = pTextureElement->GetText();
+	tinyxml2::XMLElement* pChildElement = pResourceElement->FirstChildElement();
+	while (pChildElement) {
+		const char* pcText = pChildElement->GetText();
 		if (pcText) {
 			std::vector<CWSTRING> vecTexturePath;
 			CWSTRING strPaths = pcText;
@@ -69,30 +69,53 @@ std::unordered_map<CWSTRING, std::vector<CWSTRING>> cwResourceConfParser::parse(
 					vecTexturePathNode.push_back(*it);
 			}
 
-			mapRet.insert(std::make_pair("Texture", vecTexturePathNode));
+			mapRet.insert(std::make_pair(pChildElement->Name(), vecTexturePathNode));
 		}
+
+		pChildElement = pChildElement->NextSiblingElement();
 	}
 
-	tinyxml2::XMLElement* pShaderElement = pResourceElement->FirstChildElement("Shader");
-	if (pShaderElement) {
-		const char* pcText = pShaderElement->GetText();
-		if (pcText) {
-			std::vector<CWSTRING> vecShaderPath;
-			CWSTRING strPaths = pcText;
-			cwStringConvert::split(strPaths, "\n", vecShaderPath);
+	//tinyxml2::XMLElement* pTextureElement = pResourceElement->FirstChildElement("Texture");
+	//if (pTextureElement) {
+	//	const char* pcText = pTextureElement->GetText();
+	//	if (pcText) {
+	//		std::vector<CWSTRING> vecTexturePath;
+	//		CWSTRING strPaths = pcText;
+	//		cwStringConvert::split(strPaths, "\n", vecTexturePath);
 
-			std::vector<CWSTRING> vecShaderPathNode;
-			for (auto it = vecShaderPath.begin(); it != vecShaderPath.end(); ++it) {
-				cwStringConvert::trim(*it, '\t');
-				cwStringConvert::trim(*it, '\r');
+	//		std::vector<CWSTRING> vecTexturePathNode;
+	//		for (auto it = vecTexturePath.begin(); it != vecTexturePath.end(); ++it) {
+	//			cwStringConvert::trim(*it, '\t');
+	//			cwStringConvert::trim(*it, '\r');
 
-				if (!it->empty())
-					vecShaderPathNode.push_back(*it);
-			}
+	//			if (!it->empty())
+	//				vecTexturePathNode.push_back(*it);
+	//		}
 
-			mapRet.insert(std::make_pair("Shader", vecShaderPathNode));
-		}
-	}
+	//		mapRet.insert(std::make_pair("Texture", vecTexturePathNode));
+	//	}
+	//}
+
+	//tinyxml2::XMLElement* pShaderElement = pResourceElement->FirstChildElement("Shader");
+	//if (pShaderElement) {
+	//	const char* pcText = pShaderElement->GetText();
+	//	if (pcText) {
+	//		std::vector<CWSTRING> vecShaderPath;
+	//		CWSTRING strPaths = pcText;
+	//		cwStringConvert::split(strPaths, "\n", vecShaderPath);
+
+	//		std::vector<CWSTRING> vecShaderPathNode;
+	//		for (auto it = vecShaderPath.begin(); it != vecShaderPath.end(); ++it) {
+	//			cwStringConvert::trim(*it, '\t');
+	//			cwStringConvert::trim(*it, '\r');
+
+	//			if (!it->empty())
+	//				vecShaderPathNode.push_back(*it);
+	//		}
+
+	//		mapRet.insert(std::make_pair("Shader", vecShaderPathNode));
+	//	}
+	//}
 
 	return mapRet;
 }
