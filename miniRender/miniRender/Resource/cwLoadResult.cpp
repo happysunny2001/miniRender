@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Texture/cwTextureManager.h"
 #include "Shader/cwShaderManager.h"
 #include "Platform/cwFileSystem.h"
+#include "Device/cwDevice.h"
 #include "cwResourceLoader.h"
 
 #include <thread>
@@ -108,8 +109,9 @@ CWVOID cwLoadResult::loadTexture2D(const cwResourceInfo& resInfo)
 	cwData* pData = repertory.getResourceLoader()->getTextureData(resInfo.m_nStrName);
 	if (pData) {
 		if (pData->m_pData && pData->m_uSize > 0) {
-			cwTexture* pTex = repertory.getTextureManager()->createTextureThreadSafe(resInfo.m_nStrName, pData->m_pData, pData->m_uSize);
+			cwTexture* pTex = repertory.getDevice()->createTextureThreadSafe(pData->m_pData, pData->m_uSize);
 			if (pTex) {
+				pTex->setName(resInfo.m_nStrName);
 				m_nVecTexture.push_back(pTex);
 			}
 		}
@@ -125,8 +127,9 @@ CWVOID cwLoadResult::loadTextureCubeMap(const cwResourceInfo& resInfo)
 	cwData* pData = repertory.getResourceLoader()->getTextureData(resInfo.m_nStrName);
 	if (pData) {
 		if (pData->m_pData && pData->m_uSize > 0) {
-			cwTexture* pTex = repertory.getTextureManager()->createCubeTextureThreadSafe(resInfo.m_nStrName, pData->m_pData, pData->m_uSize);
+			cwTexture* pTex = repertory.getDevice()->createCubeTextureThreadSafe(pData->m_pData, pData->m_uSize);
 			if (pTex) {
+				pTex->setName(resInfo.m_nStrName);
 				m_nVecTexture.push_back(pTex);
 			}
 		}
@@ -142,8 +145,9 @@ CWVOID cwLoadResult::loadShader(const cwResourceInfo& resInfo)
 	cwData* pData = repertory.getResourceLoader()->getShaderData(resInfo.m_nStrName);
 	if (pData) {
 		if (pData->m_pData && pData->m_uSize > 0) {
-			cwShader* pShader = repertory.getShaderManager()->createShaderThreadSafe(resInfo.m_nStrName, (CWCHAR*)pData->m_pData, pData->m_uSize);
+			cwShader* pShader = repertory.getDevice()->createShaderThreadSafe((CWCHAR*)pData->m_pData, pData->m_uSize);
 			if (pShader) {
+				pShader->setName(resInfo.m_nStrName);
 				m_nVecShader.push_back(pShader);
 			}
 		}

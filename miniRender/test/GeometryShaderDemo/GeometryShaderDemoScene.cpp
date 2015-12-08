@@ -148,10 +148,10 @@ CWVOID GeometryShaderDemoScene::buildBillboard()
 {
 	cwShader* pBillboardShader = cwRepertory::getInstance().getShaderManager()->getShader("geometryBillboard.fx");
 	std::vector<CWSTRING> vecTexFiles;
-	vecTexFiles.push_back("Textures/tree0.dds");
-	vecTexFiles.push_back("Textures/tree1.dds");
-	vecTexFiles.push_back("Textures/tree2.dds");
-	vecTexFiles.push_back("Textures/tree3.dds");
+	vecTexFiles.push_back("tree0.dds");
+	vecTexFiles.push_back("tree1.dds");
+	vecTexFiles.push_back("tree2.dds");
+	vecTexFiles.push_back("tree3.dds");
 	cwTexture* pTreeTexture = cwRepertory::getInstance().getTextureManager()->getTextureArray(vecTexFiles);
 
 	vector<cwVertexPosTex> vecVertex(4);

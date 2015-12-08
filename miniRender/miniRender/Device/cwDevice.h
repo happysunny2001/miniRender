@@ -99,6 +99,7 @@ public:
 
 	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) = 0;
 	virtual cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles) = 0;
+	virtual cwTexture* createTextureArrayThreadSafe(const std::vector<CWSTRING>& vecFiles) = 0;
 
 	virtual cwBatchEntity* createBatchEntity() = 0;
 

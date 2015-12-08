@@ -37,52 +37,21 @@ cwShaderManager::~cwShaderManager()
 
 cwShader* cwShaderManager::createShader(const CWSTRING& strFile)
 {
+	cwRepertory& repertory = cwRepertory::getInstance();
 	cwShader* pShader = nullptr;
-	cwData* pData = cwRepertory::getInstance().getResourceLoader()->getShaderData(strFile);
+
+	cwData* pData = repertory.getResourceLoader()->getShaderData(strFile);
 	if (pData) {
-		pShader = createShader(strFile, (const CWCHAR*)pData->m_pData, pData->m_uSize);
+		pShader = repertory.getDevice()->createShader((CWCHAR*)pData->m_pData, pData->m_uSize);
+		if (pShader) {
+			pShader->setName(strFile);
+			appendShader(pShader);
+		}
 
 		delete pData;
 	}
 
 	return pShader;
-}
-
-cwShader* cwShaderManager::createShaderThreadSafe(const CWSTRING& strFile)
-{
-	cwShader* pShader = nullptr;
-	cwData* pData = cwRepertory::getInstance().getResourceLoader()->getShaderData(strFile);
-	if (pData) {
-		pShader = createShaderThreadSafe(strFile, (const CWCHAR*)pData->m_pData, pData->m_uSize);
-
-		delete pData;
-	}
-
-	return pShader;
-}
-
-cwShader* cwShaderManager::createShader(const CWSTRING& strFile, const CWCHAR* pcSourceData, CWUINT64 uSize)
-{
-	cwShader* pShader = cwRepertory::getInstance().getDevice()->createShader(pcSourceData, uSize);
-	if (pShader) {
-		pShader->setName(strFile);
-		m_nMapShader.insert(strFile, pShader);
-		return pShader;
-	}
-
-	return nullptr;
-}
-
-cwShader* cwShaderManager::createShaderThreadSafe(const CWSTRING& strFile, const CWCHAR* pcSourceData, CWUINT64 uSize)
-{
-	cwShader* pShader = cwRepertory::getInstance().getDevice()->createShaderThreadSafe(pcSourceData, uSize);
-	if (pShader) {
-		pShader->setName(strFile);
-		m_nMapShader.insert(strFile, pShader);
-		return pShader;
-	}
-
-	return nullptr;
 }
 
 cwShader* cwShaderManager::getShader(const CWSTRING& strFile)

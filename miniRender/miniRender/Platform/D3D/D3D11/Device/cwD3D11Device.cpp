@@ -614,6 +614,11 @@ cwTexture* cwD3D11Device::createTextureArray(const std::vector<CWSTRING>& vecFil
 	return cwD3D11TextureArray::create(vecFiles);
 }
 
+cwTexture* cwD3D11Device::createTextureArrayThreadSafe(const std::vector<CWSTRING>& vecFiles)
+{
+	return cwD3D11TextureArray::createThreadSafe(vecFiles);
+}
+
 cwBatchEntity* cwD3D11Device::createBatchEntity()
 {
 	return cwD3D11BatchEntity::create();

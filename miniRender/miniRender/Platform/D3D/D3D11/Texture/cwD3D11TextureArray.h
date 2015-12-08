@@ -32,6 +32,7 @@ class cwD3D11TextureArray : public cwTextureArray
 {
 public:
 	static cwD3D11TextureArray* create(const std::vector<CWSTRING>& vecFiles);
+	static cwD3D11TextureArray* createThreadSafe(const std::vector<CWSTRING>& vecFiles);
 
 	cwD3D11TextureArray();
 	virtual ~cwD3D11TextureArray();

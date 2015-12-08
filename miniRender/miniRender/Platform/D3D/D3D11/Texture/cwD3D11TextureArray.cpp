@@ -25,6 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
 #include "Platform/Windows/cwWinUtils.h"
+#include "Resource/cwResourceLoader.h"
 
 NS_MINIR_BEGIN
 
@@ -33,6 +34,17 @@ cwD3D11TextureArray* cwD3D11TextureArray::create(const std::vector<CWSTRING>& ve
 	cwD3D11TextureArray* pTexArray = new cwD3D11TextureArray();
 	if (pTexArray && pTexArray->init(vecFiles)) {
 		pTexArray->autorelease();
+		return pTexArray;
+	}
+
+	CW_SAFE_DELETE(pTexArray);
+	return nullptr;
+}
+
+cwD3D11TextureArray* cwD3D11TextureArray::createThreadSafe(const std::vector<CWSTRING>& vecFiles)
+{
+	cwD3D11TextureArray* pTexArray = new cwD3D11TextureArray();
+	if (pTexArray && pTexArray->init(vecFiles)) {
 		return pTexArray;
 	}
 
@@ -59,6 +71,7 @@ CWBOOL cwD3D11TextureArray::init(const std::vector<CWSTRING>& vecFiles)
 	if (iSize == 0) return false;
 
 	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+	cwResourceLoader* pResLoader = cwRepertory::getInstance().getResourceLoader();
 
 	std::vector<ID3D11Texture2D*> vecD3DTex(iSize);
 	for (CWUINT i = 0; i < iSize; ++i) {
@@ -78,8 +91,20 @@ CWBOOL cwD3D11TextureArray::init(const std::vector<CWSTRING>& vecFiles)
 		imgInfo.MipFilter = D3DX11_FILTER_LINEAR;
 		imgInfo.pSrcInfo = 0;
 
-		CWWSTRING strFile = cwStringConvert::convertToWideChar(m_nVecFiles[i]);
-		CW_HR(D3DX11CreateTextureFromFile(pD3D11Device->getD3D11Device(), strFile.c_str(), &imgInfo, NULL, (ID3D11Resource**)&(vecD3DTex[i]), NULL));
+		cwData* pTextureData = pResLoader->getTextureData(m_nVecFiles[i]);
+		if (pTextureData) {
+			if (pTextureData->m_pData && pTextureData->m_uSize > 0) {
+				CW_HR(D3DX11CreateTextureFromMemory(pD3D11Device->getD3D11Device(), 
+					pTextureData->m_pData, 
+					pTextureData->m_uSize, 
+					&imgInfo, 
+					NULL, 
+					(ID3D11Resource**)&(vecD3DTex[i]), 
+					NULL));
+			}
+
+			delete pTextureData;
+		}
 	}
 
 	D3D11_TEXTURE2D_DESC texDesc;

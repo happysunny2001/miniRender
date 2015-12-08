@@ -51,11 +51,6 @@ CWBOOL StencilDemoScene::init()
 	pTouchListener->onTouchMoving = CW_CALLBACK_1(StencilDemoScene::onTouchMoving, this);
 	this->addEventListener(pTouchListener);
 
-	//cwKeyboardEventListener* pKeyListener = cwKeyboardEventListener::create();
-	//pKeyListener->onKeyDown = CW_CALLBACK_1(StencilDemoScene::onKeyDown, this);
-	//pKeyListener->onKeyUp = CW_CALLBACK_1(StencilDemoScene::onKeyUp, this);
-	//this->addEventListener(pKeyListener);
-
 	this->schedulerUpdate();
 
 	m_bTouchDown = false;
@@ -128,7 +123,7 @@ CWVOID StencilDemoScene::buildGround()
 	pEffect->setShader(pShader);
 
 	cwMaterial* pMaterial = cwMaterial::create();
-	pMaterial->setDiffuseTexture("Textures/checkboard.dds");
+	pMaterial->setDiffuseTexture("checkboard.dds");
 	pMaterial->scaleDiffuseTexture(cwVector2D(5.0f, 5.0f));
 
 	cwEntity* pEntityGround = cwEntity::create();
