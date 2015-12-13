@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Terrain>
+	<Tiles>
+		<Info Horiz="1" Vert="1" CellSpace="2.0" TileWidth="2049" TileHeight="2049" HeightScale="20.0">
+		</Info>
+
+		<TileList>
+			<Tile>
+				<HeightMap>
+					terrain.raw
+				</HeightMap>
+				<Layers>
+					grass.dds
+					darkdirt.dds
+					stone.dds
+					lightdirt.dds
+					snow.dds
+				</Layers>
+				<Blend>
+					blend.dds
+				</Blend>
+			</Tile>
+		</TileList>
+	</Tiles>
+</Terrain>

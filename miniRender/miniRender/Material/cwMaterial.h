@@ -98,6 +98,7 @@ public:
 	virtual CWVOID configEffect(cwEffect* pEffect);
 
 	CWVOID addMaterialUnit(cwMaterialUnit* pMatUnit);
+	CWVOID removeMaterialUnit(cwMaterialUnit* pMatUnit);
 
 protected:
 	virtual CWVOID configShader(cwShader* pShader);

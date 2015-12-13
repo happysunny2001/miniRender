@@ -189,6 +189,7 @@
     <ClInclude Include="Sprite\cwSpriteManager.h" />
     <ClInclude Include="Sprite\cwSprite.h" />
     <ClInclude Include="Stencil\cwStencil.h" />
+    <ClInclude Include="Terrain\cwTerrainTile.h" />
     <ClInclude Include="Texture\cwCubeTexture.h" />
     <ClInclude Include="Texture\cwRenderTexture.h" />
     <ClInclude Include="Texture\cwTexture.h" />
@@ -344,6 +345,7 @@
     <ClCompile Include="Sprite\cwSprite.cpp" />
     <ClCompile Include="Sprite\cwSpriteManager.cpp" />
     <ClCompile Include="Stencil\cwStencil.cpp" />
+    <ClCompile Include="Terrain\cwTerrainTile.cpp" />
     <ClCompile Include="Texture\cwCubeTexture.cpp" />
     <ClCompile Include="Texture\cwRenderTexture.cpp" />
     <ClCompile Include="Texture\cwTexture.cpp" />

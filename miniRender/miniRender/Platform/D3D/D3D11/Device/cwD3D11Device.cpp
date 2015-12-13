@@ -569,6 +569,11 @@ cwTexture* cwD3D11Device::createTextureThreadSafe(CWVOID* pData, CWUINT64 uSize)
 	return cwD3D11Texture::createThreadSafe(pData, uSize);
 }
 
+cwTexture* cwD3D11Device::createTexture(CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format)
+{
+	return cwD3D11Texture::create(pData, iWidth, iHeight, iElementSize, format);
+}
+
 cwTexture* cwD3D11Device::createCubeTexture(const CWSTRING& strFileName)
 {
 	return cwD3D11CubeTexture::create(strFileName);

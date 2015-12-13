@@ -39,6 +39,7 @@ public:
 	virtual ~cwTextureManager();
 
 	cwTexture* createTexture(const CWSTRING& strName);
+	cwTexture* createTexture(const CWSTRING& strName, CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format);
 	cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles);
 	cwTexture* createCubeTexture(const CWSTRING& strName);
 	cwTexture* createCubeTexture(CWUINT iSize);

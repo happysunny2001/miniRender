@@ -75,6 +75,18 @@ cwD3D11Texture* cwD3D11Texture::createThreadSafe(CWVOID* pData, CWUINT64 uSize)
 	return nullptr;
 }
 
+cwD3D11Texture* cwD3D11Texture::create(CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format)
+{
+	cwD3D11Texture* pTexture = new cwD3D11Texture();
+	if (pTexture && pTexture->init(pData, iWidth, iHeight, iElementSize, format)) {
+		pTexture->autorelease();
+		return pTexture;
+	}
+
+	CW_SAFE_DELETE(pTexture);
+	return nullptr;
+}
+
 cwD3D11Texture::cwD3D11Texture() :
 m_pShaderResource(nullptr)
 {
@@ -135,6 +147,48 @@ CWBOOL cwD3D11Texture::init(CWVOID* pData, CWUINT64 uSize)
 
 	pD3D11Device->getD3D11Device()->CreateShaderResourceView(pTexture2D, &resourceDesc, &m_pShaderResource);
 	CW_RELEASE_COM(pTexture2D);
+
+	return CWTRUE;
+}
+
+CWBOOL cwD3D11Texture::init(CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format)
+{
+	if (!pData) return CWFALSE;
+
+	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
+
+	D3D11_TEXTURE2D_DESC texDesc;
+	texDesc.Width = iWidth;
+	texDesc.Height = iHeight;
+	texDesc.MipLevels = 1;
+	texDesc.ArraySize = 1;
+	texDesc.Format = pD3D11Device->getFormatType(format);
+	texDesc.SampleDesc.Count = 1;
+	texDesc.SampleDesc.Quality = 0;
+	texDesc.Usage = D3D11_USAGE_DEFAULT;
+	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	texDesc.CPUAccessFlags = 0;
+	texDesc.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA subData;
+	subData.pSysMem = pData;
+	subData.SysMemPitch = iWidth*iElementSize;
+	subData.SysMemSlicePitch = 0;
+
+	ID3D11Texture2D* pTexture2D = nullptr;
+	CW_HR(pD3D11Device->getD3D11Device()->CreateTexture2D(&texDesc, &subData, &pTexture2D));
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC resourceDesc;
+	resourceDesc.Format = texDesc.Format;
+	resourceDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	resourceDesc.Texture2D.MostDetailedMip = 0;
+	resourceDesc.Texture2D.MipLevels = -1;
+
+	pD3D11Device->getD3D11Device()->CreateShaderResourceView(pTexture2D, &resourceDesc, &m_pShaderResource);
+	CW_RELEASE_COM(pTexture2D);
+
+	m_fWidth = static_cast<CWFLOAT>(iWidth);
+	m_fHeight = static_cast<CWFLOAT>(iHeight);
 
 	return CWTRUE;
 }

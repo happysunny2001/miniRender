@@ -59,6 +59,20 @@ cwTexture* cwTextureManager::createTexture(const CWSTRING& strName)
 	return pTex;
 }
 
+cwTexture* cwTextureManager::createTexture(const CWSTRING& strName, CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format)
+{
+	cwRepertory& repertory = cwRepertory::getInstance();
+	cwTexture* pTex = nullptr;
+
+	pTex = repertory.getDevice()->createTexture(pData, iWidth, iHeight, iElementSize, format);
+	if (pTex) {
+		pTex->setName(strName);
+		appendTexture(pTex);
+	}
+
+	return pTex;
+}
+
 cwTexture* cwTextureManager::createCubeTexture(const CWSTRING& strName)
 {
 	cwRepertory& repertory = cwRepertory::getInstance();

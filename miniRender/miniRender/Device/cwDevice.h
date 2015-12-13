@@ -90,6 +90,7 @@ public:
 	virtual cwTexture* createTextureThreadSafe(const CWSTRING& strFileName) = 0;
 	virtual cwTexture* createTexture(CWVOID* pData, CWUINT64 uSize) = 0;
 	virtual cwTexture* createTextureThreadSafe(CWVOID* pData, CWUINT64 uSize) = 0;
+	virtual cwTexture* createTexture(CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format) = 0;
 
 	virtual cwTexture* createCubeTexture(const CWSTRING& strFileName) = 0;
 	virtual cwTexture* createCubeTextureThreadSafe(const CWSTRING& strFileName) = 0;

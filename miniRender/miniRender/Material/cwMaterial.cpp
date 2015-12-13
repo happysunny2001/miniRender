@@ -208,4 +208,10 @@ CWVOID cwMaterial::addMaterialUnit(cwMaterialUnit* pMatUnit)
 	pMatUnit->setParentMaterial(this);
 }
 
+CWVOID cwMaterial::removeMaterialUnit(cwMaterialUnit* pMatUnit)
+{
+	pMatUnit->setParentMaterial(nullptr);
+	m_nVecMatUnits.erase(pMatUnit);
+}
+
 NS_MINIR_END

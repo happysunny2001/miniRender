@@ -17,44 +17,38 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_D3D11TEXTURE_H__
-#define __CW_D3D11TEXTURE_H__
-
-#ifdef _CW_D3D11_
-
-#include "Base/cwUtils.h"
-#include "Base/cwBasicType.h"
-#include "Texture/cwTexture.h"
-#include "Platform/D3D/D3D11/cwD3D11Utils.h"
+#include "cwTerrainTile.h"
 
 NS_MINIR_BEGIN
 
-class CW_DLL cwD3D11Texture : public cwTexture
+cwTerrainTile* cwTerrainTile::create()
 {
-public:
-	static cwD3D11Texture* create(const CWSTRING& strFileName);
-	static cwD3D11Texture* createThreadSafe(const CWSTRING& strFileName);
+	cwTerrainTile* pTile = new cwTerrainTile();
+	if (pTile && pTile->init()) {
+		pTile->autorelease();
+		return pTile;
+	}
 
-	static cwD3D11Texture* create(CWVOID* pData, CWUINT64 uSize);
-	static cwD3D11Texture* createThreadSafe(CWVOID* pData, CWUINT64 uSize);
+	CW_SAFE_DELETE(pTile);
+	return nullptr;
+}
 
-	static cwD3D11Texture* create(CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format);
+cwTerrainTile::cwTerrainTile() : 
+m_pTerrainTileData(nullptr)
+{
 
-	cwD3D11Texture();
-	virtual ~cwD3D11Texture();
+}
 
-	virtual CWBOOL init(const CWSTRING& strFileName);
-	virtual CWBOOL init(CWVOID* pData, CWUINT64 uSize);
-	virtual CWBOOL init(CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format);
-	virtual CWHANDLE getHandle() const override;
+cwTerrainTile::~cwTerrainTile()
+{
+	m_pTerrainTileData = nullptr;
+}
 
-protected:
-	ID3D11ShaderResourceView* m_pShaderResource;
+CWBOOL cwTerrainTile::init()
+{
+	if (!cwEntity::init()) return CWFALSE;
 
-};
+	return CWTRUE;
+}
 
 NS_MINIR_END
-
-#endif
-
-#endif

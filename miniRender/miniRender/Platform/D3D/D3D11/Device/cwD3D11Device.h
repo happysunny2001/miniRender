@@ -77,6 +77,7 @@ public:
 	virtual cwTexture* createTextureThreadSafe(const CWSTRING& strFileName) override;
 	virtual cwTexture* createTexture(CWVOID* pData, CWUINT64 uSize) override;
 	virtual cwTexture* createTextureThreadSafe(CWVOID* pData, CWUINT64 uSize) override;
+	virtual cwTexture* createTexture(CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format) override;
 
 	virtual cwTexture* createCubeTexture(const CWSTRING& strFileName) override;
 	virtual cwTexture* createCubeTextureThreadSafe(const CWSTRING& strFileName) override;
