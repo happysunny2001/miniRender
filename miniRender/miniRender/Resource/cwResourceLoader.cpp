@@ -178,23 +178,6 @@ CWSTRING cwResourceLoader::getFullPath(const CWSTRING& strFileName)
 {
 	cwFileSystem* fs = cwRepertory::getInstance().getFileSystem();
 	const CWSTRING& strWorkingPath = fs->getWokringPath();
-	//std::vector<CWSTRING>& vecTexturePath = m_nMapResLocation["Texture"];
-
-	//for (auto it = vecTexturePath.begin(); it != vecTexturePath.end(); ++it) {
-	//	CWSTRING strFullPath = strWorkingPath + "/" + *it + strFileName;
-	//	if (fs->isFileExist(strFullPath)) {
-	//		return strFullPath;
-	//	}
-	//}
-
-	//std::vector<CWSTRING>& vecShaderPath = m_nMapResLocation["Shader"];
-
-	//for (auto it = vecShaderPath.begin(); it != vecShaderPath.end(); ++it) {
-	//	CWSTRING strFullPath = strWorkingPath + "/" + *it + strFileName;
-	//	if (fs->isFileExist(strFullPath)) {
-	//		return strFullPath;
-	//	}
-	//}
 
 	for (auto it = m_nMapResLocation.begin(); it != m_nMapResLocation.end(); ++it) {
 		for (auto itPath = it->second.begin(); itPath != it->second.end(); ++itPath) {

@@ -75,48 +75,6 @@ std::unordered_map<CWSTRING, std::vector<CWSTRING>> cwResourceConfParser::parse(
 		pChildElement = pChildElement->NextSiblingElement();
 	}
 
-	//tinyxml2::XMLElement* pTextureElement = pResourceElement->FirstChildElement("Texture");
-	//if (pTextureElement) {
-	//	const char* pcText = pTextureElement->GetText();
-	//	if (pcText) {
-	//		std::vector<CWSTRING> vecTexturePath;
-	//		CWSTRING strPaths = pcText;
-	//		cwStringConvert::split(strPaths, "\n", vecTexturePath);
-
-	//		std::vector<CWSTRING> vecTexturePathNode;
-	//		for (auto it = vecTexturePath.begin(); it != vecTexturePath.end(); ++it) {
-	//			cwStringConvert::trim(*it, '\t');
-	//			cwStringConvert::trim(*it, '\r');
-
-	//			if (!it->empty())
-	//				vecTexturePathNode.push_back(*it);
-	//		}
-
-	//		mapRet.insert(std::make_pair("Texture", vecTexturePathNode));
-	//	}
-	//}
-
-	//tinyxml2::XMLElement* pShaderElement = pResourceElement->FirstChildElement("Shader");
-	//if (pShaderElement) {
-	//	const char* pcText = pShaderElement->GetText();
-	//	if (pcText) {
-	//		std::vector<CWSTRING> vecShaderPath;
-	//		CWSTRING strPaths = pcText;
-	//		cwStringConvert::split(strPaths, "\n", vecShaderPath);
-
-	//		std::vector<CWSTRING> vecShaderPathNode;
-	//		for (auto it = vecShaderPath.begin(); it != vecShaderPath.end(); ++it) {
-	//			cwStringConvert::trim(*it, '\t');
-	//			cwStringConvert::trim(*it, '\r');
-
-	//			if (!it->empty())
-	//				vecShaderPathNode.push_back(*it);
-	//		}
-
-	//		mapRet.insert(std::make_pair("Shader", vecShaderPathNode));
-	//	}
-	//}
-
 	return mapRet;
 }
 

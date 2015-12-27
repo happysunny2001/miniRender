@@ -99,6 +99,7 @@ public:
 
 	CWVOID addMaterialUnit(cwMaterialUnit* pMatUnit);
 	CWVOID removeMaterialUnit(cwMaterialUnit* pMatUnit);
+	CWVOID clearMaterialUnit();
 
 protected:
 	virtual CWVOID configShader(cwShader* pShader);

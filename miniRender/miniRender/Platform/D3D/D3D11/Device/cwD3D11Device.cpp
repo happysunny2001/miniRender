@@ -54,6 +54,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/D3D/D3D11/Shader/cwD3D11Shader.h"
 #include "Platform/D3D/D3D11/ViewPort/cwD3D11ViewPort.h"
 #include "Platform/D3D/D3D11/Entity/cwD3D11BatchEntity.h"
+#include "Terrain/cwTerrain.h"
+#include "Platform/D3D/D3D11/Terrain/cwD3D11Terrain.h"
 
 #include <assert.h>
 #include <xnamath.h>
@@ -627,6 +629,11 @@ cwTexture* cwD3D11Device::createTextureArrayThreadSafe(const std::vector<CWSTRIN
 cwBatchEntity* cwD3D11Device::createBatchEntity()
 {
 	return cwD3D11BatchEntity::create();
+}
+
+cwTerrain* cwD3D11Device::createTerrain(const CWSTRING& strConfFile)
+{
+	return cwD3D11Terrain::create(strConfFile);
 }
 
 void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera)

@@ -31,10 +31,10 @@ class CW_DLL cwMathUtil
 public:
 	static const CWFLOAT cwPI;
 	static const CWFLOAT cwFloatEpsilon;
-	static const CWFLOAT cwFloatMax;
 	static const CWFLOAT cwPIx2;
 	static const CWFLOAT cwAngleInv180;
 	static const CWFLOAT cwPiInv;
+	static const CWFLOAT cwInfinity;
 
 public:
 	static void cwSinCos(CWFLOAT* fSin, CWFLOAT* fCos, CWFLOAT fTheta)

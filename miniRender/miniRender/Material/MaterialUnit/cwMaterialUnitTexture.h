@@ -31,12 +31,14 @@ class cwMaterialUnitTexture : public cwMaterialUnit
 {
 public:
 	static cwMaterialUnitTexture* create(const CWSTRING& strTexture, const CWSTRING& strParamName);
+	static cwMaterialUnitTexture* create(cwTexture* pTexture, const CWSTRING& strParamName);
 	static cwMaterialUnitTexture* createCube(const CWSTRING& strTexture, const CWSTRING& strParamName);
 
 	cwMaterialUnitTexture();
 	virtual ~cwMaterialUnitTexture();
 
 	virtual CWBOOL init(const CWSTRING& strTexture, const CWSTRING& strParamName);
+	virtual CWBOOL init(cwTexture* pTexture, const CWSTRING& strParamName);
 	virtual CWBOOL initCube(const CWSTRING& strTexture, const CWSTRING& strParamName);
 
 	CWVOID setTexture(cwTexture* pTexture);

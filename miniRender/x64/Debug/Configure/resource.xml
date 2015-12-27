@@ -3,6 +3,7 @@
 
 	<Texture>
 		Textures/
+		Textures/Terrain/
 	</Texture>
 
 	<Shader>
@@ -11,6 +12,7 @@
 
 	<Configure>
 		Configure/D3D11/
+		Configure/
 	</Configure>
 
 </Resource>

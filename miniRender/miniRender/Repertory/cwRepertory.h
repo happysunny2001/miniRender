@@ -41,6 +41,7 @@ class cwEventManager;
 class cwSchedulerManager;
 class cwParserManager;
 class cwResourceLoader;
+class cwSpatialFactory;
 
 class CW_DLL cwRepertory
 {
@@ -65,6 +66,7 @@ public:
 	inline cwSchedulerManager* getSchedulerManager() { return m_pSchedulerManager; }
 	inline cwParserManager* getParserManager() { return m_pParserManager; }
 	inline cwResourceLoader* getResourceLoader() { return m_pResourceLoader; }
+	inline cwSpatialFactory* getSpatialFactory() { return m_pSpatialFactory; }
 
 	virtual void refreshWindowTitle(const CWSTRING& strTitle) {}
 
@@ -89,6 +91,7 @@ protected:
 	cwSchedulerManager* m_pSchedulerManager;
 	cwParserManager* m_pParserManager;
 	cwResourceLoader* m_pResourceLoader;
+	cwSpatialFactory* m_pSpatialFactory;
 
 	unordered_map<string, cwValueMap> m_mapData;
 

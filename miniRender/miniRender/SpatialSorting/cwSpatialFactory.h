@@ -23,14 +23,24 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
 #include "cwSpatial.h"
+#include "Octree/cwOctree.h"
 
 NS_MINIR_BEGIN
 
 class CW_DLL cwSpatialFactory
 {
 public:
+	cwSpatialFactory();
+	~cwSpatialFactory();
+
 	//strType: [Octree,Normal,LooseOctree]
-	static cwSpatial* createSpatial(const CWSTRING& strType);
+	cwSpatial* createSpatial(const CWSTRING& strType);
+
+	CWVOID setWorldSize(const cwAABB& aabb);
+	CWVOID setOctreeDepth(CWUINT uDepth);
+
+private:
+	cwOctree::sOctreeInit m_nOctreeInit;
 
 };
 

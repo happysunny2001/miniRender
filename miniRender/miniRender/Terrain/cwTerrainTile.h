@@ -25,10 +25,17 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Ref/cwRef.h"
 #include "Entity/cwEntity.h"
 #include "Math/cwAABB.h"
+#include "Texture/cwTexture.h"
 
 #include <vector>
 
 NS_MINIR_BEGIN
+
+struct sTerrainTexture
+{
+	CWSTRING m_nStrTextureFile;
+	CWSTRING m_nStrParamName;
+};
 
 struct sTerrainTileData
 {
@@ -37,28 +44,55 @@ struct sTerrainTileData
 	CWBOOL m_bLoaded;
 
 	CWFLOAT* m_pHeightMap;
-	CWSTRING m_nStrHeightMap;
+	CWUINT m_iHeightMapWidth;
+	CWUINT m_iHeightMapHeight;
 	cwAABB m_nBoundingBox;
+	cwVector2D m_nBoundY; //x:minY, y:maxY
 
-	std::vector<CWSTRING> m_nVecLayers;
-	std::vector<CWSTRING> m_nVecBlend;
+	sTerrainTexture m_nHeightMap;
+	std::vector<sTerrainTexture> m_nVecLayers;
+	std::vector<sTerrainTexture> m_nVecBlend;
 
-	sTerrainTileData() : m_pHeightMap(nullptr), m_bLoaded(CWFALSE) {}
+	sTerrainTileData() : m_pHeightMap(nullptr), m_bLoaded(CWFALSE), x(0), y(0) {}
+
+	CWBOOL loadHeightMap(CWFLOAT fScale);
+	CWVOID releaseHeightMap();
+	CWUINT heightMapSize() { return m_iHeightMapWidth*m_iHeightMapHeight; }
+
+	CWVOID loadTextures();
+
+private:
+	CWBOOL isValid(CWINT i, CWINT j);
+	CWFLOAT average(CWINT i, CWINT j);
+	CWVOID smooth();
+	
+	CWVOID createBoundY();
 
 };
 
 class cwTerrainTile : public cwEntity
 {
 public:
-	static cwTerrainTile* create();
-
 	cwTerrainTile();
 	virtual ~cwTerrainTile();
 
-	virtual CWBOOL init() override;
+	virtual CWBOOL init(sTerrainTileData* pTerrainTileData);
+	virtual CWVOID loadResource() = 0;
+
+	virtual CWVOID refreshBoundingBox() override;
+
+protected:
+	virtual CWVOID buildHeightMapTexture() = 0;
+	virtual CWVOID buildLayerTexture() = 0;
+	virtual CWVOID buildBlendTexture() = 0;
+	virtual CWVOID releaseResource();
 
 protected:
 	sTerrainTileData* m_pTerrainTileData;
+	cwTexture* m_pTexHeightMap;
+
+	cwVector<cwTexture*> m_nVecLayerTextures;
+	cwVector<cwTexture*> m_nVecBlendTextures;
 
 };
 

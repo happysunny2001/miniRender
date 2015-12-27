@@ -96,6 +96,7 @@ public:
 
 	virtual CWVOID refreshBoundingBox();
 	inline const cwAABB& getBoundingBox() const { return m_nBoundingBox; }
+	inline CWVOID setBoundingBox(const cwAABB& aabb) { m_nBoundingBox = aabb; }
 
 	virtual cwAABB getGroupBoundingBox();
 	inline const cwAABB& getGroupBoundingBox() const { return m_nGroupBoundingBox; }

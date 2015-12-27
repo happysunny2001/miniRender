@@ -582,9 +582,6 @@
     <ClInclude Include="SpatialSorting\cwSpatial.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SpatialSorting\cwOctree.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="SpatialSorting\cwSpatialFactory.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -595,9 +592,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Camera\cwOrthoCamera.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="SpatialSorting\cwLooseOctree.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Sprite\cwSprite.h">
@@ -676,6 +670,27 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Terrain\cwTerrainTile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain\cwTerrain.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser\cwTerrainParser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Terrain\cwD3D11Terrain.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\D3D\D3D11\Terrain\cwD3D11TerrainTile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SpatialSorting\Octree\cwLooseOctree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SpatialSorting\Octree\cwOctree.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Material\MaterialUnit\cwMaterialUnitFloatArray.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1046,9 +1061,6 @@
     <ClCompile Include="SpatialSorting\cwSpatial.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="SpatialSorting\cwOctree.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="SpatialSorting\cwSpatialFactory.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -1059,9 +1071,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Camera\cwOrthoCamera.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="SpatialSorting\cwLooseOctree.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Sprite\cwSprite.cpp">
@@ -1140,6 +1149,27 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Terrain\cwTerrainTile.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain\cwTerrain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser\cwTerrainParser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Terrain\cwD3D11Terrain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\D3D\D3D11\Terrain\cwD3D11TerrainTile.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialSorting\Octree\cwLooseOctree.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialSorting\Octree\cwOctree.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Material\MaterialUnit\cwMaterialUnitFloatArray.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

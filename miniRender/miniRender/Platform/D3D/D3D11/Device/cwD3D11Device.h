@@ -91,6 +91,8 @@ public:
 
 	virtual cwBatchEntity* createBatchEntity() override;
 
+	virtual cwTerrain* createTerrain(const CWSTRING& strConfFile) override;
+
 	virtual CWVOID setVertexBuffer(cwBuffer* pVertexBuffer) override;
 	virtual CWVOID setVertexBuffer(cwBuffer** pBuffers, CWUINT uCnt) override;
 	virtual CWVOID setIndexBuffer(cwBuffer* pIndexBuffer) override;

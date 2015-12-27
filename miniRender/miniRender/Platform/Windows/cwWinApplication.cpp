@@ -100,6 +100,11 @@ CWBOOL cwApplication::buildWindow()
 	return CWTRUE;
 }
 
+CWVOID cwApplication::globalInit()
+{
+
+}
+
 CWVOID cwApplication::init()
 {
 	cwRepertory::getInstance().initAll();

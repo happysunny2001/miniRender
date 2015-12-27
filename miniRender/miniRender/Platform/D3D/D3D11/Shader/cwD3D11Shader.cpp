@@ -346,7 +346,8 @@ CWVOID cwD3D11Shader::setVariableFloatArray(const string& strVariable, CWFLOAT* 
 	auto itVariable = m_mapVariable.find(strVariable);
 	if (itVariable != m_mapVariable.end()) {
 		ID3DX11EffectVariable* pVariable = itVariable->second;
-		CW_HR(pVariable->AsScalar()->SetFloatArray(pData, 0, count));
+		auto v = pVariable->AsScalar();
+		CW_HR(v->SetFloatArray(pData, 0, count));
 	}
 }
 

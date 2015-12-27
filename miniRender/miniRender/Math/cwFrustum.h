@@ -47,6 +47,7 @@ public:
 
 	void refresh(cwCamera* pCamera);
 	inline const cwPlane& getPlane(FrustumPlane plane) const { return m_nPlanes[plane]; }
+	inline const cwPlane* getPlane() const { return m_nPlanes; }
 
 	//intersection with aabb
 	//return value: lower 8 bit means whether outside the plane, 0 is outside the plane

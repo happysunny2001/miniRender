@@ -42,6 +42,7 @@ class cwViewPort;
 class cwTextureArray;
 class cwBatchEntity;
 class cwCubeTexture;
+class cwTerrain;
 
 class CW_DLL cwDevice
 {
@@ -103,6 +104,8 @@ public:
 	virtual cwTexture* createTextureArrayThreadSafe(const std::vector<CWSTRING>& vecFiles) = 0;
 
 	virtual cwBatchEntity* createBatchEntity() = 0;
+
+	virtual cwTerrain* createTerrain(const CWSTRING& strConfFile) = 0;
 
 	virtual CWVOID setVertexBuffer(cwBuffer* pVertexBuffer) = 0;
 	virtual CWVOID setVertexBuffer(cwBuffer** pBuffers, CWUINT uCnt) = 0;

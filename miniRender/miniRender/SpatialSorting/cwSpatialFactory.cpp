@@ -18,22 +18,43 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwSpatialFactory.h"
-#include "cwOctree.h"
-#include "cwLooseOctree.h"
+#include "Octree/cwOctree.h"
+#include "Octree/cwLooseOctree.h"
 #include "cwNormalSorting.h"
 
 NS_MINIR_BEGIN
 
+cwSpatialFactory::cwSpatialFactory()
+{
+	m_nOctreeInit.m_uDepth = cwOctree::m_uDefaultDepth;
+	m_nOctreeInit.m_nMaxSpace = cwOctree::m_nDefaultSize;
+}
+
+cwSpatialFactory::~cwSpatialFactory()
+{
+
+}
+
 cwSpatial* cwSpatialFactory::createSpatial(const CWSTRING& strType)
 {
 	if (strType == "Octree")
-		return cwOctree::create();
+		return cwOctree::create(m_nOctreeInit);
 	else if (strType == "Normal")
 		return cwNormalSorting::create();
 	else if (strType == "LooseOctree")
-		return cwLooseOctree::create();
+		return cwLooseOctree::create(m_nOctreeInit);
 
 	return nullptr;
+}
+
+CWVOID cwSpatialFactory::setWorldSize(const cwAABB& aabb)
+{
+	m_nOctreeInit.m_nMaxSpace = aabb;
+}
+
+CWVOID cwSpatialFactory::setOctreeDepth(CWUINT uDepth)
+{
+	m_nOctreeInit.m_uDepth = uDepth;
 }
 
 NS_MINIR_END

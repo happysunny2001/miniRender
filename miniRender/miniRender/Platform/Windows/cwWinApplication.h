@@ -36,6 +36,7 @@ public:
 	cwApplication();
 	virtual ~cwApplication();
 
+	virtual CWVOID globalInit();
 	virtual CWVOID gameBegin() = 0;
 	virtual CWVOID gameEnd() = 0;
 

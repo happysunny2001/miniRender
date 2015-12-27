@@ -214,4 +214,13 @@ CWVOID cwMaterial::removeMaterialUnit(cwMaterialUnit* pMatUnit)
 	m_nVecMatUnits.erase(pMatUnit);
 }
 
+CWVOID cwMaterial::clearMaterialUnit()
+{
+	for (auto it = m_nVecMatUnits.begin(); it != m_nVecMatUnits.end(); ++it) {
+		(*it)->setParentMaterial(nullptr);
+	}
+
+	m_nVecMatUnits.clear();
+}
+
 NS_MINIR_END

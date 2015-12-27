@@ -89,7 +89,7 @@ CWBOOL cwEngine::init()
 {
 	buildDefaultCamera();
 	
-	m_pSpatial = cwSpatialFactory::createSpatial("LooseOctree");
+	m_pSpatial = cwRepertory::getInstance().getSpatialFactory()->createSpatial("LooseOctree");
 	CW_SAFE_RETAIN(m_pSpatial);
 
 	buildSpriteManager();
@@ -348,7 +348,7 @@ cwRenderNode* cwEngine::getScreenClickNode(cwTouch* pTouch)
 	const cwMatrix4X4& matView = m_pRenderer->getRendererCamera()->getViewMatrix();
 
 	cwRenderNode* pNearestNode = nullptr;
-	CWFLOAT fMinDist = cwMathUtil::cwFloatMax;
+	CWFLOAT fMinDist = cwMathUtil::cwInfinity;
 	for (auto pNode : vecRet) {
 		if (pNode->getRenderType() == eRenderTypeEntity) {
 			cwMatrix4X4 matTrans = pNode->getTransformMatrix()*matView;
