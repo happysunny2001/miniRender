@@ -34,7 +34,8 @@ TerrainDemoScene* TerrainDemoScene::create()
 }
 
 TerrainDemoScene::TerrainDemoScene() : 
-m_pTerrain(nullptr)
+m_pTerrain(nullptr),
+m_nCurrKeyCode(KeyCode::KeyNone)
 {
 
 }
@@ -59,31 +60,35 @@ CWBOOL TerrainDemoScene::init()
 
 CWVOID TerrainDemoScene::update(CWFLOAT dt)
 {
-	cwRepertory& repertory = cwRepertory::getInstance();
+	updateCamera(dt);
+	//cwRepertory& repertory = cwRepertory::getInstance();
 
-	cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getDefaultCamera();
-	const cwVector3D& pos = pCamera->getPos();
+	//cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getDefaultCamera();
+	//const cwVector3D& pos = pCamera->getPos();
 
-	cwTerrainTile* pTile = m_pTerrain->getTerrainTile();
-	int iSect = pCamera->getFrustum().intersection(pTile->getBoundingBox());
-	if (pCamera->getFrustum().isCollide(iSect)) {
-		repertory.getEngine()->getRenderer()->renderPrimitive(pTile->getBoundingBox(), cwColor::blue);
-	}
-	else {
-		repertory.getEngine()->getRenderer()->renderPrimitive(pTile->getBoundingBox(), cwColor::white);
-	}
+	//cwTerrainTile* pTile = m_pTerrain->getTerrainTile();
+	//int iSect = pCamera->getFrustum().intersection(pTile->getBoundingBox());
+	//if (pCamera->getFrustum().isCollide(iSect)) {
+	//	repertory.getEngine()->getRenderer()->renderPrimitive(pTile->getBoundingBox(), cwColor::blue);
+	//}
+	//else {
+	//	repertory.getEngine()->getRenderer()->renderPrimitive(pTile->getBoundingBox(), cwColor::white);
+	//}
 
-	std::stringstream ss;
-	ss << (int)pos.x;
-	m_pLblPosX->setString(ss.str());
+	//CWFLOAT y = m_pTerrain->getHeight(pos);
+	//pCamera->setPos(cwVector3D(pos.x, y + 15.0f, pos.z));
 
-	ss.str("");
-	ss << (int)pos.y;
-	m_pLblPosY->setString(ss.str());
+	//std::stringstream ss;
+	//ss << (int)pos.x;
+	//m_pLblPosX->setString(ss.str());
 
-	ss.str("");
-	ss << (int)pos.z;
-	m_pLblPosZ->setString(ss.str());
+	//ss.str("");
+	//ss << pos.y;
+	//m_pLblPosY->setString(ss.str());
+
+	//ss.str("");
+	//ss << (int)pos.z;
+	//m_pLblPosZ->setString(ss.str());
 }
 
 CWVOID TerrainDemoScene::buildTerrain()
@@ -133,4 +138,30 @@ CWVOID TerrainDemoScene::buildLabel()
 	m_pLblPosZ->setPosition(-100, -160);
 	cwRepertory::getInstance().getEngine()->addNode2D(m_pLblPosZ);
 	m_pLblPosZ->setTag(202);
+}
+
+CWVOID TerrainDemoScene::onKeyDown(cwKeyboard* pKey)
+{
+	m_nCurrKeyCode = pKey->getKeyCode();
+}
+
+CWVOID TerrainDemoScene::updateCamera(CWFLOAT dt)
+{
+	static CWFLOAT fRotSpeed = cwMathUtil::cwPI;
+	static CWFLOAT fMovSpeed = 200.0f;
+
+	if (m_nCurrKeyCode == KeyCode::Left) {
+		cwRepertory::getInstance().getEngine()->getDefaultCamera()->yaw(-fRotSpeed*dt);
+	}
+	else if(m_nCurrKeyCode == KeyCode::Right) {
+		cwRepertory::getInstance().getEngine()->getDefaultCamera()->yaw(fRotSpeed*dt);
+	}
+	else if (m_nCurrKeyCode == KeyCode::Up) {
+		cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getDefaultCamera();
+		cwVector3D endPos = m_pTerrain->getMovedPosition(pCamera->getPos(), pCamera->getLookDir(), fMovSpeed*dt);
+		endPos.y += 5.0f;
+		pCamera->setPos(endPos);
+	}
+
+	m_nCurrKeyCode = KeyCode::KeyNone;
 }

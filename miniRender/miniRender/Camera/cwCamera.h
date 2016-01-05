@@ -57,7 +57,11 @@ public:
 	inline const cwMatrix4X4& getViewMatrix() const { return m_nViewMatrix; }
 	inline const cwMatrix4X4& getProjMatrix() const { return m_nProjMatrix; }
 	inline const cwMatrix4X4& getViewProjMatrix() const { return m_nViewProjMatrix; }
+
 	inline const cwVector3D& getPos() const { return m_nPos; }
+	CWVOID setPos(const cwVector3D& pos);
+
+	inline const cwVector3D& getLookDir() const { return m_nLook; }
 
 	inline const CWSTRING& getName() const { return m_strName; }
 	inline CWVOID setName(const CWSTRING& strName) { m_strName = strName; }

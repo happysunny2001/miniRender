@@ -73,7 +73,7 @@ CWVOID cwD3D11TerrainTile::loadResource()
 
 	m_pMaterial->setAmbient(cwVector4D(1.0f, 1.0f, 1.0f, 1.0f));
 	m_pMaterial->setDiffuse(cwVector4D(1.0f, 1.0f, 1.0f, 1.0f));
-	m_pMaterial->setSpecular(cwVector4D(0, 0, 0, 64.0f));
+	m_pMaterial->setSpecular(cwVector4D(1.0f, 1.0f, 1.0f, 32.0f));
 	m_pMaterial->setReflect(cwVector4D(0, 0, 0, 1.0f));
 }
 

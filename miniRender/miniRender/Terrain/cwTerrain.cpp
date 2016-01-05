@@ -59,4 +59,14 @@ CWBOOL cwTerrain::init(const CWSTRING& strConfFile)
 	return CWTRUE;
 }
 
+CWFLOAT cwTerrain::getHeight(const cwVector3D& pos)
+{
+	return 0;
+}
+
+cwVector3D cwTerrain::getMovedPosition(const cwVector3D& pos, const cwVector3D& dir, CWFLOAT fMoveLen)
+{
+	return cwVector3D::ZERO;
+}
+
 NS_MINIR_END

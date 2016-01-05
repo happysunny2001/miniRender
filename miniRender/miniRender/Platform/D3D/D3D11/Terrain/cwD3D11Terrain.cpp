@@ -89,6 +89,16 @@ cwTerrainTile* cwD3D11Terrain::getTerrainTile()
 	return m_pTerrainTile;
 }
 
+CWFLOAT cwD3D11Terrain::getHeight(const cwVector3D& pos)
+{
+	return m_pTerrainTile->getHeight(pos);
+}
+
+cwVector3D cwD3D11Terrain::getMovedPosition(const cwVector3D& pos, const cwVector3D& dir, CWFLOAT fMoveLen)
+{
+	return m_pTerrainTile->getMovedPosition(pos, dir, fMoveLen);
+}
+
 CWVOID cwD3D11Terrain::buildTerrainVertexBuffer()
 {
 	std::vector<sTerrainVertex> vecTerrainVertex(m_iPatchVertices);

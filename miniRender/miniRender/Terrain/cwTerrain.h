@@ -56,6 +56,10 @@ public:
 	virtual CWBOOL init(const CWSTRING& strConfFile);
 
 	virtual cwTerrainTile* getTerrainTile() { return nullptr; }
+	virtual CWFLOAT getHeight(const cwVector3D& pos);
+	virtual cwVector3D getMovedPosition(const cwVector3D& pos, const cwVector3D& dir, CWFLOAT fMoveLen);
+
+	inline sTerrainData* getTerrainData() { return m_pTerrainData; }
 
 protected:
 	sTerrainData* m_pTerrainData;

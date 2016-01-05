@@ -48,6 +48,7 @@ struct sTerrainTileData
 	CWUINT m_iHeightMapHeight;
 	cwAABB m_nBoundingBox;
 	cwVector2D m_nBoundY; //x:minY, y:maxY
+	CWFLOAT m_fCellSpace;
 
 	sTerrainTexture m_nHeightMap;
 	std::vector<sTerrainTexture> m_nVecLayers;
@@ -78,8 +79,11 @@ public:
 
 	virtual CWBOOL init(sTerrainTileData* pTerrainTileData);
 	virtual CWVOID loadResource() = 0;
+	inline sTerrainTileData* getTerrainTileData() { return m_pTerrainTileData; }
 
 	virtual CWVOID refreshBoundingBox() override;
+	CWFLOAT getHeight(const cwVector3D& pos);
+	cwVector3D getMovedPosition(const cwVector3D& pos, const cwVector3D& dir, CWFLOAT fMoveLen);
 
 protected:
 	virtual CWVOID buildHeightMapTexture() = 0;

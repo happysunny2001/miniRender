@@ -17,11 +17,12 @@
 				<Texture File="terrain.raw" ShaderParam="gHeightMap"/>
 			</HeightMap>
 			<Layers>
-				<Texture File="grass.dds" ShaderParam="gTextureGrass"/>
+				<Texture File="bricks.dds" ShaderParam="gTextureGrass"/>
 				<Texture File="darkdirt.dds" ShaderParam="gTextureDarkDirt"/>
 				<Texture File="stone.dds" ShaderParam="gTextureStone"/>
 				<Texture File="lightdirt.dds" ShaderParam="gTextureLightDirt"/>
 				<Texture File="snow.dds" ShaderParam="gTextureSnow"/>
+				<Texture File="bricks_nmap.dds" ShaderParam="gNormalMap"/>
 			</Layers>
 			<Blend>
 				<Texture File="blend.dds" ShaderParam="gTextureBlend"/>

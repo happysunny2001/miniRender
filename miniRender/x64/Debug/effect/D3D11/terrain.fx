@@ -34,6 +34,7 @@ cbuffer cbPerFrame
 
 Texture2D gHeightMap;
 Texture2D gTextureGrass;
+Texture2D gNormalMap;
 Texture2D gTextureDarkDirt;
 Texture2D gTextureStone;
 Texture2D gTextureLightDirt;
@@ -194,12 +195,15 @@ float4 PS(DomainOut pIn, uniform bool gFogEnable) : SV_Target
 	float3 bitan   = normalize(float3(0.0f, bottomY-topY, -2.0f*gWorldCellSpace));
 	float3 normalW = cross(tangent, bitan);
 
+	float3 normalMapSampleT = gNormalMap.Sample(samLinear, pIn.TiledTex).rgb;
+	float3 bumpedNormalW = processNormalMapToWorld(normalMapSampleT, normalW, tangent);
+
 	float3 toEyeW = gEyePosWorld - pIn.PosW;
 	float toEyeDistance = length(toEyeW);
 	toEyeW /= toEyeDistance;
 
 	float4 ambient, diffuse, spec;
-	processLight(gMaterial, pIn.PosW, normalW, toEyeW, ambient, diffuse, spec);
+	processLight(gMaterial, pIn.PosW, bumpedNormalW, toEyeW, ambient, diffuse, spec);
 
 	float4 texGrass     = gTextureGrass.Sample(samLinear, pIn.TiledTex);
 	float4 texDarkDirt  = gTextureDarkDirt.Sample(samLinear, pIn.TiledTex);

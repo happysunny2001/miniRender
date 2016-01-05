@@ -96,6 +96,12 @@ CWVOID cwCamera::strafe(CWFLOAT fDist)
 	updateViewMatrix();
 }
 
+CWVOID cwCamera::setPos(const cwVector3D& pos)
+{
+	m_nPos = pos;
+	updateViewMatrix();
+}
+
 CWVOID cwCamera::yaw(CWFLOAT fRadian)
 {
 	cwMatrix4X4 matRot;

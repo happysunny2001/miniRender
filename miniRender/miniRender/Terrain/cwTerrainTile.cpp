@@ -158,6 +158,58 @@ CWBOOL cwTerrainTile::init(sTerrainTileData* pTerrainTileData)
 	return CWTRUE;
 }
 
+CWFLOAT cwTerrainTile::getHeight(const cwVector3D& pos)
+{
+	CWFLOAT fXOffset = pos.x - m_nBoundingBox.m_nMin.x;
+	CWFLOAT fZOffset = m_nBoundingBox.m_nMax.z - pos.z;
+
+	CWFLOAT fIndexX = fXOffset / m_pTerrainTileData->m_fCellSpace;
+	CWFLOAT fIndexZ = fZOffset / m_pTerrainTileData->m_fCellSpace;
+
+	CWINT iIndexX = (CWINT)floor(fIndexX);
+	CWINT iIndexZ = (CWINT)floor(fIndexZ);
+
+	CWUINT iHeightMapWidth = m_pTerrainTileData->m_iHeightMapWidth;
+	CWUINT iHeightMapHeight = m_pTerrainTileData->m_iHeightMapHeight;
+
+	if (iIndexX < 0 || iIndexX >= (CWINT)(iHeightMapWidth - 1) ||
+		iIndexZ < 0 || iIndexZ >= (CWINT)(iHeightMapHeight - 1)) return 0;
+
+	CWFLOAT A = m_pTerrainTileData->m_pHeightMap[iIndexZ*iHeightMapWidth + iIndexX];
+	CWFLOAT B = m_pTerrainTileData->m_pHeightMap[iIndexZ*iHeightMapWidth + iIndexX + 1];
+	CWFLOAT C = m_pTerrainTileData->m_pHeightMap[(iIndexZ + 1)*iHeightMapWidth + iIndexX];
+	CWFLOAT D = m_pTerrainTileData->m_pHeightMap[(iIndexZ + 1)*iHeightMapWidth + iIndexX + 1];
+
+	CWFLOAT s = fIndexX - (CWFLOAT)iIndexX;
+	CWFLOAT t = fIndexZ - (CWFLOAT)iIndexZ;
+
+	if (s + t <= 1.0f) {
+		CWFLOAT u = B - A;
+		CWFLOAT v = C - A;
+		return A + s*u + t*v;
+	}
+
+	CWFLOAT u = C - D;
+	CWFLOAT v = B - D;
+
+	return D + (1.0f - s)*u + (1.0f - t)*v;
+}
+
+cwVector3D cwTerrainTile::getMovedPosition(const cwVector3D& pos, const cwVector3D& dir, CWFLOAT fMoveLen)
+{
+	CWFLOAT fStartHeight = getHeight(pos);
+	cwVector3D terrainStartPos = cwVector3D(pos.x, fStartHeight, pos.z);
+	cwVector3D terrainEndPos = terrainStartPos + dir*fMoveLen;
+
+	CWFLOAT fEndHeight = getHeight(terrainEndPos);
+	terrainEndPos.y = fEndHeight;
+
+	cwVector3D moveDir = terrainEndPos - terrainStartPos;
+	moveDir.normalize();
+
+	return terrainStartPos + moveDir*fMoveLen;
+}
+
 CWVOID cwTerrainTile::releaseResource()
 {
 	CW_SAFE_RELEASE_NULL(m_pTexHeightMap);

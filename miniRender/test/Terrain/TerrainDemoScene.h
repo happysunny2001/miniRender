@@ -33,17 +33,22 @@ public:
 
 	virtual CWBOOL init() override;
 	virtual CWVOID update(CWFLOAT dt) override;
+	virtual CWVOID onKeyDown(cwKeyboard* pKey) override;
 
 protected:
 	CWVOID buildTerrain();
 	CWVOID buildLight();
 	CWVOID buildLabel();
 
+	CWVOID updateCamera(CWFLOAT dt);
+
 protected:
 	cwTerrain* m_pTerrain;
 	cwLabel* m_pLblPosX;
 	cwLabel* m_pLblPosY;
 	cwLabel* m_pLblPosZ;
+
+	KeyCode m_nCurrKeyCode;
 
 };
 

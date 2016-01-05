@@ -103,6 +103,7 @@ sTerrainData* cwTerrainParser::parse(const CWSTRING& strFileName)
 			terrainTile.m_pHeightMap = nullptr;
 			terrainTile.m_iHeightMapWidth = pTerrainData->m_iTileVertexWidth;
 			terrainTile.m_iHeightMapHeight = pTerrainData->m_iTileVertexHeight;
+			terrainTile.m_fCellSpace = pTerrainData->m_fCellSpace;
 
 			pTileElement = pTileElement->NextSiblingElement("Tile");
 		}

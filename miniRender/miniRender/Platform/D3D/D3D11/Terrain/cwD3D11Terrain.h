@@ -42,6 +42,8 @@ public:
 
 	virtual CWBOOL init(const CWSTRING& strConfFile) override;
 	virtual cwTerrainTile* getTerrainTile() override;
+	virtual CWFLOAT getHeight(const cwVector3D& pos) override;
+	virtual cwVector3D getMovedPosition(const cwVector3D& pos, const cwVector3D& dir, CWFLOAT fMoveLen) override;
 
 protected:
 	CWVOID buildTerrainVertexBuffer();

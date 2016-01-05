@@ -41,7 +41,7 @@ CWVOID TerrainDemo::globalInit()
 void TerrainDemo::gameBegin()
 {
 	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0.0f, 40.0f, 99.0f);
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0.0f, 40.0f, 145.0f);
 	//cwRepertory::getInstance().getEngine()->getDefaultCamera()->pitch(cwMathUtil::cwPI*0.1f);
 	cwRepertory::getInstance().getEngine()->setFrameEnable(CWTRUE);
 
