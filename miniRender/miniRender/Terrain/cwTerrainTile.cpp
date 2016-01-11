@@ -121,7 +121,7 @@ CWVOID sTerrainTileData::createBoundY()
 	m_nBoundY.set(fMinY, fMaxY);
 }
 
-CWVOID sTerrainTileData::loadTextures()
+CWVOID sTerrainTileData::loadResources()
 {
 	cwRepertory& repertory = cwRepertory::getInstance();
 	cwTextureManager* pTexManager = repertory.getTextureManager();

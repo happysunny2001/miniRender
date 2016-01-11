@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #ifdef _CW_D3D11_
 
+#include "Base/cwMap.h"
 #include "Terrain/cwTerrain.h"
 
 NS_MINIR_BEGIN
@@ -41,15 +42,11 @@ public:
 	virtual ~cwD3D11Terrain();
 
 	virtual CWBOOL init(const CWSTRING& strConfFile) override;
-	virtual cwTerrainTile* getTerrainTile() override;
-	virtual CWFLOAT getHeight(const cwVector3D& pos) override;
-	virtual cwVector3D getMovedPosition(const cwVector3D& pos, const cwVector3D& dir, CWFLOAT fMoveLen) override;
 
 protected:
 	CWVOID buildTerrainVertexBuffer();
 	CWVOID buildEffect();
-
-	CWVOID buildTerrainTile();
+	CWVOID buildTerrainTile(CWUSHORT i, CWUSHORT j);
 
 protected:
 	CWUINT m_iPatchVertexWidth;
@@ -68,8 +65,6 @@ protected:
 	CWFLOAT m_fTexelCellSpaceV;
 
 	cwRenderObject* m_pRenderObject;
-
-	cwTerrainTile* m_pTerrainTile;
 
 };
 

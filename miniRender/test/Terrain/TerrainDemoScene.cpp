@@ -61,10 +61,23 @@ CWBOOL TerrainDemoScene::init()
 CWVOID TerrainDemoScene::update(CWFLOAT dt)
 {
 	updateCamera(dt);
-	//cwRepertory& repertory = cwRepertory::getInstance();
 
-	//cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getDefaultCamera();
-	//const cwVector3D& pos = pCamera->getPos();
+	cwRepertory& repertory = cwRepertory::getInstance();
+
+	cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getDefaultCamera();
+	const cwVector3D& pos = pCamera->getPos();
+
+	std::stringstream ss;
+	ss << (int)pos.x;
+	m_pLblPosX->setString(ss.str());
+
+	ss.str("");
+	ss << (int)pos.y;
+	m_pLblPosY->setString(ss.str());
+
+	ss.str("");
+	ss << (int)pos.z;
+	m_pLblPosZ->setString(ss.str());
 
 	//cwTerrainTile* pTile = m_pTerrain->getTerrainTile();
 	//int iSect = pCamera->getFrustum().intersection(pTile->getBoundingBox());
@@ -159,6 +172,12 @@ CWVOID TerrainDemoScene::updateCamera(CWFLOAT dt)
 	else if (m_nCurrKeyCode == KeyCode::Up) {
 		cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getDefaultCamera();
 		cwVector3D endPos = m_pTerrain->getMovedPosition(pCamera->getPos(), pCamera->getLookDir(), fMovSpeed*dt);
+		endPos.y += 5.0f;
+		pCamera->setPos(endPos);
+	}
+	else if (m_nCurrKeyCode == KeyCode::Down) {
+		cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getDefaultCamera();
+		cwVector3D endPos = m_pTerrain->getMovedPosition(pCamera->getPos(), -pCamera->getLookDir(), fMovSpeed*dt);
 		endPos.y += 5.0f;
 		pCamera->setPos(endPos);
 	}

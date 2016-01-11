@@ -24,14 +24,36 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-CWFLOAT sTerrainData::terrainTileWidth()
+cwVector3D sTerrainData::terrainTilePosition(CWUSHORT i, CWUSHORT j)
 {
-	return (m_iTileVertexWidth - 1)*m_fCellSpace;
+	CWFLOAT fHalfTerrainWidth = terrainWidth()*0.5f;
+	CWFLOAT fHalfTerrainHeight = terrainHeight()*0.5f;
+	CWFLOAT fStartX = -fHalfTerrainWidth + terrainTileWidth()*0.5f;
+	CWFLOAT fStartZ = fHalfTerrainHeight - terrainTileHeight()*0.5f;
+
+	return cwVector3D(fStartX + i*terrainTileWidth(), 0, fStartZ - j*terrainTileHeight());
 }
 
-CWFLOAT sTerrainData::terrainTileHeight()
+CWUSHORT sTerrainData::getTerrainTileIndexX(CWFLOAT x)
 {
-	return (m_iTileVertexHeight - 1)*m_fCellSpace;
+	CWFLOAT fHalfTerrainWidth = terrainWidth()*0.5f;
+	CWFLOAT fLeft = fHalfTerrainWidth + x;
+	if (fLeft < 0) return gInvalidTerrainTileIndex;
+	CWUSHORT index = (CWUSHORT)floorf(fLeft / terrainTileWidth());
+	if (index >= m_iHorizTileCnt) return gInvalidTerrainTileIndex;
+
+	return index;
+}
+
+CWUSHORT sTerrainData::getTerrainTileIndexY(CWFLOAT y)
+{
+	CWFLOAT fHalfTerrainHeight = terrainHeight()*0.5f;
+	CWFLOAT fTop = fHalfTerrainHeight - y;
+	if (fTop < 0) return gInvalidTerrainTileIndex;
+	CWUSHORT index = (CWUSHORT)floorf(fTop / terrainTileHeight());
+	if (index >= m_iVertTileCnt) return gInvalidTerrainTileIndex;
+
+	return index;
 }
 
 cwTerrain::cwTerrain() : 
@@ -61,12 +83,38 @@ CWBOOL cwTerrain::init(const CWSTRING& strConfFile)
 
 CWFLOAT cwTerrain::getHeight(const cwVector3D& pos)
 {
+	cwTerrainTile* pTerrainTile = getTerrainTile(pos);
+	if (pTerrainTile) {
+		return pTerrainTile->getHeight(pos);
+	}
+
 	return 0;
 }
 
 cwVector3D cwTerrain::getMovedPosition(const cwVector3D& pos, const cwVector3D& dir, CWFLOAT fMoveLen)
 {
-	return cwVector3D::ZERO;
+	cwTerrainTile* pTerrainTile = getTerrainTile(pos);
+	if (pTerrainTile) {
+		return pTerrainTile->getMovedPosition(pos, dir, fMoveLen);
+	}
+
+	cwVector3D endPos = pos + dir*fMoveLen;
+	endPos.y = 0;
+	return endPos;
+}
+
+cwTerrainTile* cwTerrain::getTerrainTile(const cwVector3D& pos)
+{
+	CWUSHORT uIdxX = m_pTerrainData->getTerrainTileIndexX(pos.x);
+	if (uIdxX == gInvalidTerrainTileIndex) return nullptr;
+
+	CWUSHORT uIdxY = m_pTerrainData->getTerrainTileIndexY(pos.z);
+	if (uIdxY == gInvalidTerrainTileIndex) return nullptr;
+
+	CWUINT iKey = sTerrainTileData::getKey(uIdxX, uIdxY);
+	auto it = m_nMapTiles.find(iKey);
+	if (it == m_nMapTiles.end()) return nullptr;
+	return it->second;
 }
 
 NS_MINIR_END

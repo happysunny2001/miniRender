@@ -410,6 +410,13 @@ typedef enum {
 	ePUStageLayerEffect,
 }ePURenderType;
 
+typedef enum {
+	eTerrainLoadOnce = 1,
+	eTerrainThreading = 2,
+}eTerrainLoadType;
+
+const CWUSHORT gInvalidTerrainTileIndex = 0xFFFF;
+
 #define CW_CONTROL MK_CONTROL
 #define CW_LBUTTON MK_LBUTTON
 #define CW_MBUTTON MK_MBUTTON

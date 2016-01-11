@@ -39,8 +39,8 @@ struct sTerrainTexture
 
 struct sTerrainTileData
 {
-	CWUINT x;
-	CWUINT y;
+	CWUSHORT x;
+	CWUSHORT y;
 	CWBOOL m_bLoaded;
 
 	CWFLOAT* m_pHeightMap;
@@ -54,13 +54,18 @@ struct sTerrainTileData
 	std::vector<sTerrainTexture> m_nVecLayers;
 	std::vector<sTerrainTexture> m_nVecBlend;
 
+	static CWUINT getKey(CWUSHORT x, CWUSHORT y) {
+		CWUINT iKey = x;
+		return iKey << 16 | y;
+	}
+
 	sTerrainTileData() : m_pHeightMap(nullptr), m_bLoaded(CWFALSE), x(0), y(0) {}
 
 	CWBOOL loadHeightMap(CWFLOAT fScale);
 	CWVOID releaseHeightMap();
 	CWUINT heightMapSize() { return m_iHeightMapWidth*m_iHeightMapHeight; }
 
-	CWVOID loadTextures();
+	CWVOID loadResources();
 
 private:
 	CWBOOL isValid(CWINT i, CWINT j);

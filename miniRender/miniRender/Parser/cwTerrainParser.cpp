@@ -71,45 +71,44 @@ sTerrainData* cwTerrainParser::parse(const CWSTRING& strFileName)
 	pTerrainData->m_iTileVertexHeight = pInfoElement->IntAttribute("TileVertexHeight");
 	pTerrainData->m_fHeightScale      = pInfoElement->FloatAttribute("HeightScale");
 
-	pTerrainData->m_pTerrainTiles = new sTerrainTileData[pTerrainData->m_iHorizTileCnt*pTerrainData->m_iVertTileCnt];
-	if (!pTerrainData->m_pTerrainTiles) {
-		CW_SAFE_DELETE(pTerrainData);
-		return nullptr;
-	}
-
 	tinyxml2::XMLElement* pTileElement = pTileListElement->FirstChildElement("Tile");
-	for (CWUINT j = 0; j < pTerrainData->m_iVertTileCnt; ++j) {
-		for (CWUINT i = 0; i < pTerrainData->m_iHorizTileCnt; ++i) {
-			if (!pTileElement) break;
 
-			CWUINT iTileIndex = j*pTerrainData->m_iHorizTileCnt + i;
-			sTerrainTileData& terrainTile = pTerrainData->m_pTerrainTiles[iTileIndex];
-
-			tinyxml2::XMLElement* pHeightMapElement = pTileElement->FirstChildElement("HeightMap");
-			std::vector<sTerrainTexture> vecHeightMap = parseTexture(pHeightMapElement);
-			if (!vecHeightMap.empty()) {
-				terrainTile.m_nHeightMap = vecHeightMap[0];
-			}
-
-			tinyxml2::XMLElement* pLayerElement = pTileElement->FirstChildElement("Layers");
-			terrainTile.m_nVecLayers = parseTexture(pLayerElement);
-
-			tinyxml2::XMLElement* pBlendElement = pTileElement->FirstChildElement("Blend");
-			terrainTile.m_nVecBlend = parseTexture(pBlendElement);
-
-			terrainTile.x = i;
-			terrainTile.y = j;
-			terrainTile.m_bLoaded = CWFALSE;
-			terrainTile.m_pHeightMap = nullptr;
-			terrainTile.m_iHeightMapWidth = pTerrainData->m_iTileVertexWidth;
-			terrainTile.m_iHeightMapHeight = pTerrainData->m_iTileVertexHeight;
-			terrainTile.m_fCellSpace = pTerrainData->m_fCellSpace;
-
-			pTileElement = pTileElement->NextSiblingElement("Tile");
+	while (pTileElement) {
+		sTerrainTileData* pTileData = new sTerrainTileData();
+		if (!pTileData) {
+			break;
 		}
 
-		if (!pTileElement) break;
+		tinyxml2::XMLElement* pHeightMapElement = pTileElement->FirstChildElement("HeightMap");
+		std::vector<sTerrainTexture> vecHeightMap = parseTexture(pHeightMapElement);
+		if (!vecHeightMap.empty()) {
+			pTileData->m_nHeightMap = vecHeightMap[0];
+		}
+
+		tinyxml2::XMLElement* pLayerElement = pTileElement->FirstChildElement("Layers");
+		pTileData->m_nVecLayers = parseTexture(pLayerElement);
+
+		tinyxml2::XMLElement* pBlendElement = pTileElement->FirstChildElement("Blend");
+		pTileData->m_nVecBlend = parseTexture(pBlendElement);
+
+		CWUINT iIndexX = pTileElement->IntAttribute("x");
+		CWUINT iIndexY = pTileElement->IntAttribute("y");
+
+		pTileData->x = iIndexX;
+		pTileData->y = iIndexY;
+		pTileData->m_bLoaded = CWFALSE;
+		pTileData->m_pHeightMap = nullptr;
+		pTileData->m_iHeightMapWidth = pTerrainData->m_iTileVertexWidth;
+		pTileData->m_iHeightMapHeight = pTerrainData->m_iTileVertexHeight;
+		pTileData->m_fCellSpace = pTerrainData->m_fCellSpace;
+
+		pTerrainData->m_nTerrainTiles.insert(std::make_pair(sTerrainTileData::getKey(iIndexX, iIndexY), pTileData));
+
+		pTileElement = pTileElement->NextSiblingElement("Tile");
 	}
+
+	pTerrainData->m_nArea.m_nMin.set(-pTerrainData->terrainWidth()*0.5f, -cwMathUtil::cwInfinity, -pTerrainData->terrainHeight()*0.5f);
+	pTerrainData->m_nArea.m_nMax.set(pTerrainData->terrainWidth()*0.5f, cwMathUtil::cwInfinity, pTerrainData->terrainHeight()*0.5f);
 
 	return pTerrainData;
 }

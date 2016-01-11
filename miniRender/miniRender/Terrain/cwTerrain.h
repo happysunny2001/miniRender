@@ -22,29 +22,60 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
+#include "Base/cwUtils.h"
+#include "Base/cwMap.h"
 #include "Entity/cwRenderNode.h"
 #include "cwTerrainTile.h"
+
+#include <unordered_map>
 
 NS_MINIR_BEGIN
 
 struct sTerrainData
 {
-	CWUINT m_iHorizTileCnt;
-	CWUINT m_iVertTileCnt;
+	CWUSHORT m_iHorizTileCnt;
+	CWUSHORT m_iVertTileCnt;
 	CWFLOAT m_fCellSpace;
 	CWUINT m_iTileVertexWidth;
 	CWUINT m_iTileVertexHeight;
 	CWFLOAT m_fHeightScale;
+	eTerrainLoadType m_eLoadType;
+	cwAABB m_nArea;
 
-	sTerrainTileData* m_pTerrainTiles;
+	std::unordered_map<CWUINT, sTerrainTileData*> m_nTerrainTiles;
 
-	sTerrainData() : m_pTerrainTiles(nullptr) {}
-	~sTerrainData() {
-		CW_SAFE_DELETE_ARRAY(m_pTerrainTiles);
+	sTerrainData() {
+		m_eLoadType = eTerrainLoadOnce;
 	}
 
-	CWFLOAT terrainTileWidth();
-	CWFLOAT terrainTileHeight();
+	~sTerrainData() {
+		for (auto it = m_nTerrainTiles.begin(); it != m_nTerrainTiles.end(); ++it) {
+			if (it->second) {
+				CW_SAFE_DELETE(it->second);
+			}
+		}
+	}
+
+	inline CWFLOAT terrainTileWidth() {
+		return (m_iTileVertexWidth - 1)*m_fCellSpace;
+	}
+
+	inline CWFLOAT terrainTileHeight() {
+		return (m_iTileVertexHeight - 1)*m_fCellSpace;
+	}
+
+	inline CWFLOAT terrainWidth() {
+		return terrainTileWidth()*m_iHorizTileCnt;
+	}
+
+	inline CWFLOAT terrainHeight() {
+		return terrainTileHeight()*m_iVertTileCnt;
+	}
+
+	cwVector3D terrainTilePosition(CWUSHORT i, CWUSHORT j);
+
+	CWUSHORT getTerrainTileIndexX(CWFLOAT x);
+	CWUSHORT getTerrainTileIndexY(CWFLOAT y);
 };
 
 class cwTerrain : public cwRenderNode
@@ -55,14 +86,15 @@ public:
 
 	virtual CWBOOL init(const CWSTRING& strConfFile);
 
-	virtual cwTerrainTile* getTerrainTile() { return nullptr; }
 	virtual CWFLOAT getHeight(const cwVector3D& pos);
 	virtual cwVector3D getMovedPosition(const cwVector3D& pos, const cwVector3D& dir, CWFLOAT fMoveLen);
+	cwTerrainTile* getTerrainTile(const cwVector3D& pos);
 
 	inline sTerrainData* getTerrainData() { return m_pTerrainData; }
 
 protected:
 	sTerrainData* m_pTerrainData;
+	cwMap<CWUINT, cwTerrainTile*> m_nMapTiles;
 
 };
 

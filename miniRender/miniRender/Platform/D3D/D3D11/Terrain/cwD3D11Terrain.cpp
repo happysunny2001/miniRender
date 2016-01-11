@@ -50,8 +50,7 @@ m_fMinTessDistance(10.0f),
 m_fMaxTessDistance(1000.0f),
 m_fMinTessFactor(0),
 m_fMaxTessFactor(6),
-m_pRenderObject(nullptr),
-m_pTerrainTile(nullptr)
+m_pRenderObject(nullptr)
 {
 
 }
@@ -59,7 +58,6 @@ m_pTerrainTile(nullptr)
 cwD3D11Terrain::~cwD3D11Terrain()
 {
 	CW_SAFE_RELEASE_NULL(m_pRenderObject);
-	CW_SAFE_RELEASE_NULL(m_pTerrainTile);
 }
 
 CWBOOL cwD3D11Terrain::init(const CWSTRING& strConfFile)
@@ -79,24 +77,14 @@ CWBOOL cwD3D11Terrain::init(const CWSTRING& strConfFile)
 
 	buildTerrainVertexBuffer();
 	buildEffect();
-	buildTerrainTile();
+
+	for (CWUSHORT j = 0; j < m_pTerrainData->m_iVertTileCnt; ++j) {
+		for (CWUSHORT i = 0; i < m_pTerrainData->m_iHorizTileCnt; ++i) {
+			buildTerrainTile(i, j);
+		}
+	}
 
 	return CWTRUE;
-}
-
-cwTerrainTile* cwD3D11Terrain::getTerrainTile()
-{
-	return m_pTerrainTile;
-}
-
-CWFLOAT cwD3D11Terrain::getHeight(const cwVector3D& pos)
-{
-	return m_pTerrainTile->getHeight(pos);
-}
-
-cwVector3D cwD3D11Terrain::getMovedPosition(const cwVector3D& pos, const cwVector3D& dir, CWFLOAT fMoveLen)
-{
-	return m_pTerrainTile->getMovedPosition(pos, dir, fMoveLen);
 }
 
 CWVOID cwD3D11Terrain::buildTerrainVertexBuffer()
@@ -185,31 +173,34 @@ CWVOID cwD3D11Terrain::buildEffect()
 	this->setEffect(pEffect);
 }
 
-CWVOID cwD3D11Terrain::buildTerrainTile()
+CWVOID cwD3D11Terrain::buildTerrainTile(CWUSHORT i, CWUSHORT j)
 {
 	if (!m_pTerrainData) return;
-	if (!m_pTerrainData->m_pTerrainTiles) return;
 
-	m_pTerrainData->m_pTerrainTiles[0].loadHeightMap(m_pTerrainData->m_fHeightScale);
-	m_pTerrainData->m_pTerrainTiles[0].loadTextures();
+	sTerrainTileData* pTileData = m_pTerrainData->m_nTerrainTiles[sTerrainTileData::getKey(i, j)];
+	pTileData->loadHeightMap(m_pTerrainData->m_fHeightScale);
+	pTileData->loadResources();
 
-	m_pTerrainTile = cwD3D11TerrainTile::create(&(m_pTerrainData->m_pTerrainTiles[0]));
-	CW_SAFE_RETAIN(m_pTerrainTile);
-	m_pTerrainTile->loadResource();
+	cwTerrainTile* pTerrainTile = cwD3D11TerrainTile::create(pTileData);
+	if (!pTerrainTile) return;
+	pTerrainTile->loadResource();
 
+	cwVector3D tilePos = m_pTerrainData->terrainTilePosition(i, j);
 	CWFLOAT fHalfWidth = m_pTerrainData->terrainTileWidth()*0.5f;
 	CWFLOAT fHalfHeight = m_pTerrainData->terrainTileHeight()*0.5f;
-	const cwVector2D& bound = m_pTerrainData->m_pTerrainTiles[0].m_nBoundY;
+	const cwVector2D& bound = pTileData->m_nBoundY;
 
 	cwAABB aabb;
-	aabb.m_nMin.set(-fHalfWidth, bound.x, -fHalfHeight);
-	aabb.m_nMax.set(fHalfWidth, bound.y, fHalfHeight);
-	m_pTerrainTile->setBoundingBox(aabb);
+	aabb.m_nMin.set(tilePos.x - fHalfWidth, bound.x, tilePos.z - fHalfHeight);
+	aabb.m_nMax.set(tilePos.x + fHalfWidth, bound.y, tilePos.z + fHalfHeight);
 
-	m_pTerrainTile->setEffect(m_pEffect);
-	m_pTerrainTile->setRenderObject(m_pRenderObject);
+	pTerrainTile->setBoundingBox(aabb);
+	pTerrainTile->setPosition(tilePos);
+	pTerrainTile->setEffect(m_pEffect);
+	pTerrainTile->setRenderObject(m_pRenderObject);
 
-	this->addChild(m_pTerrainTile);
+	this->addChild(pTerrainTile);
+	m_nMapTiles.insert(sTerrainTileData::getKey(i, j), pTerrainTile);
 }
 
 NS_MINIR_END

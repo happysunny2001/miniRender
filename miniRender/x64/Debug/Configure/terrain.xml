@@ -9,10 +9,58 @@
 		PatchCellWidth:2^n
 		PatchCellHeight:2^n
 	-->
-	<Info Horiz="1" Vert="1" CellSpace="0.5" TileVertexWidth="2049" TileVertexHeight="2049" HeightScale="50.0"/>
+	<Info Horiz="2" Vert="2" CellSpace="0.5" TileVertexWidth="2049" TileVertexHeight="2049" HeightScale="50.0"/>
 
 	<TileList>
-		<Tile HeightMap="terrain.raw">
+		<Tile x="0" y="0">
+			<HeightMap>
+				<Texture File="terrain.raw" ShaderParam="gHeightMap"/>
+			</HeightMap>
+			<Layers>
+				<Texture File="bricks.dds" ShaderParam="gTextureGrass"/>
+				<Texture File="darkdirt.dds" ShaderParam="gTextureDarkDirt"/>
+				<Texture File="stone.dds" ShaderParam="gTextureStone"/>
+				<Texture File="lightdirt.dds" ShaderParam="gTextureLightDirt"/>
+				<Texture File="snow.dds" ShaderParam="gTextureSnow"/>
+				<Texture File="bricks_nmap.dds" ShaderParam="gNormalMap"/>
+			</Layers>
+			<Blend>
+				<Texture File="blend.dds" ShaderParam="gTextureBlend"/>
+			</Blend>
+		</Tile>
+		<Tile x="0" y="1">
+			<HeightMap>
+				<Texture File="terrain.raw" ShaderParam="gHeightMap"/>
+			</HeightMap>
+			<Layers>
+				<Texture File="bricks.dds" ShaderParam="gTextureGrass"/>
+				<Texture File="darkdirt.dds" ShaderParam="gTextureDarkDirt"/>
+				<Texture File="stone.dds" ShaderParam="gTextureStone"/>
+				<Texture File="lightdirt.dds" ShaderParam="gTextureLightDirt"/>
+				<Texture File="snow.dds" ShaderParam="gTextureSnow"/>
+				<Texture File="bricks_nmap.dds" ShaderParam="gNormalMap"/>
+			</Layers>
+			<Blend>
+				<Texture File="blend.dds" ShaderParam="gTextureBlend"/>
+			</Blend>
+		</Tile>
+		<Tile x="1" y="0">
+			<HeightMap>
+				<Texture File="terrain.raw" ShaderParam="gHeightMap"/>
+			</HeightMap>
+			<Layers>
+				<Texture File="bricks.dds" ShaderParam="gTextureGrass"/>
+				<Texture File="darkdirt.dds" ShaderParam="gTextureDarkDirt"/>
+				<Texture File="stone.dds" ShaderParam="gTextureStone"/>
+				<Texture File="lightdirt.dds" ShaderParam="gTextureLightDirt"/>
+				<Texture File="snow.dds" ShaderParam="gTextureSnow"/>
+				<Texture File="bricks_nmap.dds" ShaderParam="gNormalMap"/>
+			</Layers>
+			<Blend>
+				<Texture File="blend.dds" ShaderParam="gTextureBlend"/>
+			</Blend>
+		</Tile>
+		<Tile x="1" y="1">
 			<HeightMap>
 				<Texture File="terrain.raw" ShaderParam="gHeightMap"/>
 			</HeightMap>
