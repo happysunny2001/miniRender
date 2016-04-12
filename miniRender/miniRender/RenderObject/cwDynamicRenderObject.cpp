@@ -79,13 +79,22 @@ CWBOOL cwDynamicRenderObject::rebuild(
 	CWVOID* pIndexData, CWUINT uIndexCnt,
 	CWUINT uPositionOffset)
 {
-	CWBOOL bVert = m_pVertexBuffer->rebuild(
-		pVertexData, uVertexStride*uVertexCnt,
-		eBufferUsageDynamic, eBufferBindVertex, eAccessFlagWrite, 0, uVertexStride, uPositionOffset);
+	CWBOOL bVert = CWTRUE;
+	CWBOOL bIndex = CWTRUE;
 
-	CWBOOL bIndex = m_pIndexBuffer->rebuild(
-		pIndexData, sizeof(CWUINT)*uIndexCnt,
-		eBufferUsageDynamic, eBufferBindIndex, eAccessFlagWrite, 0, sizeof(CWUINT), 0);
+	if (pVertexData) {
+		bVert = m_pVertexBuffer->rebuild(
+			pVertexData, uVertexStride*uVertexCnt,
+			eBufferUsageDynamic, eBufferBindVertex, eAccessFlagWrite, 0, uVertexStride, uPositionOffset);
+	}
+
+	if (pIndexData) {
+		bIndex = m_pIndexBuffer->rebuild(
+			pIndexData, sizeof(CWUINT)*uIndexCnt,
+			eBufferUsageDynamic, eBufferBindIndex, eAccessFlagWrite, 0, sizeof(CWUINT), 0);
+	}
+
+	saveBufferData(pVertexData, uVertexStride, uVertexCnt, uPositionOffset, pIndexData, uIndexCnt);
 
 	return bVert&&bIndex;
 }
@@ -113,24 +122,24 @@ CWVOID cwDynamicRenderObject::preRender()
 	}
 
 	if (m_bIndexRefresh) {
-		m_pIndexBuffer->refresh(m_pIndexData, m_uVertexRefreshSize);
+		m_pIndexBuffer->refresh(m_pIndexData, m_uIndexRefreshSize);
 		m_bIndexRefresh = CWFALSE;
 		m_uIndexRefreshSize = 0;
 	}
 }
 
-CWVOID cwDynamicRenderObject::updateVertexData(CWVOID* pData, CWUINT uSize)
+CWVOID cwDynamicRenderObject::updateVertexData(CWVOID* pData, CWUINT iCnt)
 {
-	cwRenderObject::updateVertexData(pData, uSize);
+	cwRenderObject::updateVertexData(pData, iCnt);
 	m_bVertexRefresh = CWTRUE;
-	m_uVertexRefreshSize = uSize;
+	m_uVertexRefreshSize = iCnt*m_uStride;
 }
 
-CWVOID cwDynamicRenderObject::updateIndexData(CWVOID* pData, CWUINT uSize)
+CWVOID cwDynamicRenderObject::updateIndexData(CWVOID* pData, CWUINT iCnt)
 {
-	cwRenderObject::updateIndexData(pData, uSize);
+	cwRenderObject::updateIndexData(pData, iCnt);
 	m_bIndexRefresh = CWTRUE;
-	m_uIndexRefreshSize = uSize;
+	m_uIndexRefreshSize = iCnt*sizeof(CWUINT);
 }
 
 NS_MINIR_END

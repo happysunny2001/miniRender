@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Texture/cwTextureManager.h"
 #include "Shader/cwShaderManager.h"
+#include "cwStreaming.h"
 
 NS_MINIR_BEGIN
 
@@ -36,7 +37,8 @@ cwLoadBatch* cwLoadBatch::create()
 }
 
 cwLoadBatch::cwLoadBatch():
-onLoadOver(nullptr)
+onLoadOver(nullptr),
+m_pObjStreaming(nullptr)
 {
 
 }
@@ -44,11 +46,16 @@ onLoadOver(nullptr)
 cwLoadBatch::~cwLoadBatch()
 {
 	onLoadOver = nullptr;
+	m_pObjStreaming = nullptr;
+}
+
+CWVOID cwLoadBatch::reset()
+{
+
 }
 
 CWVOID cwLoadBatch::addResource(cwResourceInfo& resInfo)
 {
-	if (checkResourceExist(resInfo)) return;
 	m_nVecResource.push_back(resInfo);
 }
 
@@ -76,27 +83,23 @@ CWVOID cwLoadBatch::addShader(const CWSTRING& strName)
 	addResource(resInfo);
 }
 
-CWBOOL cwLoadBatch::checkResourceExist(cwResourceInfo& resInfo)
-{
-	switch (resInfo.m_eType)
-	{
-	case eResourceTypeTexture2D:
-	case eResourceTypeTextureCube:
-		return cwRepertory::getInstance().getTextureManager()->isExist(resInfo.m_nStrName);
-	case eResourceTypeShader:
-		return cwRepertory::getInstance().getShaderManager()->isExist(resInfo.m_nStrName);
-	default:
-		break;
-	}
-
-	return CWFALSE;
-}
-
 CWVOID cwLoadBatch::onOverCallback()
 {
 	if (onLoadOver) {
 		onLoadOver(this);
 	}
+}
+
+CWVOID cwLoadBatch::onStreaming()
+{
+	if (m_pObjStreaming)
+		m_pObjStreaming->streaming();
+}
+
+CWVOID cwLoadBatch::streamingEnd()
+{
+	if (m_pObjStreaming)
+		m_pObjStreaming->streamEnd();
 }
 
 NS_MINIR_END

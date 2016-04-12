@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang (happy.sunny.2001@163.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -415,7 +415,11 @@ typedef enum {
 	eTerrainThreading = 2,
 }eTerrainLoadType;
 
-const CWUSHORT gInvalidTerrainTileIndex = 0xFFFF;
+typedef enum {
+	eTerrainTileOffline = 1,
+	eTerrainTileLoading,
+	eTerrainTileOnline,
+}eTerrainTileState;
 
 #define CW_CONTROL MK_CONTROL
 #define CW_LBUTTON MK_LBUTTON

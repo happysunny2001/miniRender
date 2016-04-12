@@ -29,6 +29,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
+class cwStreaming;
+
 typedef enum {
 	eResourceTypeNone = 0,
 	eResourceTypeTexture2D = 1,
@@ -55,6 +57,7 @@ public:
 	cwLoadBatch();
 	virtual ~cwLoadBatch();
 
+	CWVOID reset();
 	CWVOID addResource(cwResourceInfo& resInfo);
 	CWVOID addTexture2D(const CWSTRING& strName);
 	CWVOID addTextureCube(const CWSTRING& strName);
@@ -64,15 +67,18 @@ public:
 	std::vector<cwResourceInfo>::iterator end() { return m_nVecResource.end(); }
 
 	CWVOID onOverCallback();
+	CWVOID onStreaming();
+	CWVOID streamingEnd();
 
 protected:
-	CWBOOL checkResourceExist(cwResourceInfo& resInfo);
+	//CWBOOL checkResourceExist(cwResourceInfo& resInfo);
 
 protected:
 	std::vector<cwResourceInfo> m_nVecResource;
 
 public:
 	LoadCallbackFunc onLoadOver;
+	cwStreaming* m_pObjStreaming;
 
 };
 

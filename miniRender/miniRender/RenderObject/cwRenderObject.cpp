@@ -49,6 +49,8 @@ cwRenderObject::~cwRenderObject()
 	m_uStride = 0;
 	m_uVertexCnt = 0;
 	m_uIndexCnt = 0;
+	m_uValidVertexCnt = 0;
+	m_uValidIndexCnt = 0;
 }
 
 CWBOOL cwRenderObject::init(
@@ -92,13 +94,13 @@ CWBOOL cwRenderObject::rebuild(
 
 CWVOID cwRenderObject::updateVertexData(CWVOID* pData)
 {
-	updateVertexData(pData, m_uStride*m_uVertexCnt);
+	updateVertexData(pData, m_uVertexCnt);
 }
 
-CWVOID cwRenderObject::updateVertexData(CWVOID* pData, CWUINT uSize)
+CWVOID cwRenderObject::updateVertexData(CWVOID* pData, CWUINT iCnt)
 {
 	if (pData) {
-		memcpy(m_pVertexData, pData, uSize);
+		memcpy(m_pVertexData, pData, iCnt*m_uStride);
 	}
 }
 
@@ -111,10 +113,10 @@ CWVOID* cwRenderObject::getVertexData(CWUINT i)
 	return nullptr;
 }
 
-CWVOID cwRenderObject::updateIndexData(CWVOID* pData, CWUINT uSize)
+CWVOID cwRenderObject::updateIndexData(CWVOID* pData, CWUINT iCnt)
 {
 	if (pData) {
-		memcpy(m_pIndexBuffer, pData, uSize);
+		memcpy(m_pIndexData, pData, iCnt*sizeof(CWUINT));
 	}
 }
 
@@ -127,6 +129,7 @@ CWVOID cwRenderObject::saveBufferData(
 
 	m_uStride = uVertexStride;
 	m_uVertexCnt = uVertexCnt;
+	m_uValidVertexCnt = uVertexCnt;
 	m_pVertexData = (CWVOID*)malloc(uVertexStride*uVertexCnt);
 
 	if (m_pVertexData) {
@@ -137,6 +140,7 @@ CWVOID cwRenderObject::saveBufferData(
 	}
 
 	m_uIndexCnt = uIndexCnt;
+	m_uValidIndexCnt = uIndexCnt;
 
 	if (pIndexData) {
 		m_pIndexData = (CWUINT*)malloc(sizeof(CWUINT)*uIndexCnt);

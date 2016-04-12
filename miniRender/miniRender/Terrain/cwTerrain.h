@@ -24,12 +24,17 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwBasicType.h"
 #include "Base/cwUtils.h"
 #include "Base/cwMap.h"
+#include "Math/cwMathUtil.h"
 #include "Entity/cwRenderNode.h"
 #include "cwTerrainTile.h"
 
 #include <unordered_map>
 
 NS_MINIR_BEGIN
+
+const CWUSHORT gInvalidTerrainTileIndex = cwMathUtil::cwUShortInfinity;
+
+class cwLoadBatch;
 
 struct sTerrainData
 {
@@ -39,13 +44,14 @@ struct sTerrainData
 	CWUINT m_iTileVertexWidth;
 	CWUINT m_iTileVertexHeight;
 	CWFLOAT m_fHeightScale;
+	CWFLOAT m_fBoundingBoxOffsetScale;
 	eTerrainLoadType m_eLoadType;
 	cwAABB m_nArea;
 
 	std::unordered_map<CWUINT, sTerrainTileData*> m_nTerrainTiles;
 
 	sTerrainData() {
-		m_eLoadType = eTerrainLoadOnce;
+		m_eLoadType = eTerrainThreading;
 	}
 
 	~sTerrainData() {
@@ -73,9 +79,14 @@ struct sTerrainData
 	}
 
 	cwVector3D terrainTilePosition(CWUSHORT i, CWUSHORT j);
+	cwAABB terrainTileBoundingBox(CWUSHORT i, CWUSHORT j);
 
 	CWUSHORT getTerrainTileIndexX(CWFLOAT x);
 	CWUSHORT getTerrainTileIndexY(CWFLOAT y);
+	CWUSHORT getTerrainTileIndexXIn(CWFLOAT x);
+	CWUSHORT getTerrainTileIndexYIn(CWFLOAT y);
+
+	CWVOID getTerrainTiles(const cwVector3D& pos, CWFLOAT fRadius, std::vector<sTerrainTileData*>& vecRet);
 };
 
 class cwTerrain : public cwRenderNode
@@ -91,6 +102,19 @@ public:
 	cwTerrainTile* getTerrainTile(const cwVector3D& pos);
 
 	inline sTerrainData* getTerrainData() { return m_pTerrainData; }
+	inline cwMap<CWUINT, cwTerrainTile*>::iterator tileBegin() { return m_nMapTiles.begin(); }
+	inline cwMap<CWUINT, cwTerrainTile*>::iterator tileEnd() { return m_nMapTiles.end(); }
+
+	virtual CWVOID update(CWFLOAT dt) override;
+
+protected:
+	CWVOID loadTerrainTileOver(cwLoadBatch*);
+	virtual CWVOID addTerrainTile(cwTerrainTile* pTerrainTile);
+	virtual CWVOID removeTerrainTile(cwTerrainTile* pTerrainTile);
+	virtual cwTerrainTile* createTerrainTile(sTerrainTileData* pTileData);
+
+	CWVOID checkTileRelease();
+	CWVOID checkTerrainLoad();
 
 protected:
 	sTerrainData* m_pTerrainData;

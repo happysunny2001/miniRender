@@ -33,6 +33,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Math/cwMath.h"
 #include "Resource/cwResourceLoader.h"
 #include "SpatialSorting/cwSpatialFactory.h"
+#include "effect/cwEffectManager.h"
 
 #ifdef _CW_D3D11_
 #include "Platform/D3D/D3D11/Repertory/cwD3D11Repertory.h"
@@ -60,7 +61,8 @@ m_pEventManager(nullptr),
 m_pSchedulerManager(nullptr),
 m_pParserManager(nullptr),
 m_pResourceLoader(nullptr),
-m_pSpatialFactory(nullptr)
+m_pSpatialFactory(nullptr),
+m_pEffectManager(nullptr)
 {
 	m_pAutoReleasePool = new cwAutoReleasePool();
 }
@@ -77,6 +79,7 @@ cwRepertory::~cwRepertory()
 	CW_SAFE_RELEASE_NULL(m_pEventManager);
 	CW_SAFE_RELEASE_NULL(m_pSchedulerManager);
 	CW_SAFE_RELEASE_NULL(m_pParserManager);
+	CW_SAFE_RELEASE_NULL(m_pEffectManager);
 	CW_SAFE_DELETE(m_pSpatialFactory);
 	CW_SAFE_DELETE(m_pDevice);
 }
@@ -117,8 +120,12 @@ void cwRepertory::initAll()
 
 	specialInit();
 
+	m_pEffectManager = cwEffectManager::create();
+	CW_SAFE_RETAIN(m_pEffectManager);
+
 	m_pEngine = cwEngine::create();
 	CW_SAFE_RETAIN(m_pEngine);
+	
 //	m_pEngine->deferParseRenderer();
 }
 

@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang (happy.sunny.2001@163.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -60,6 +60,16 @@ public:
 
 	size_t erase(const K& key) {
 		iterator it = find(key);
+		if (it != m_nData.end()) {
+			CW_SAFE_RELEASE(it->second);
+			m_nData.erase(it);
+			return 1;
+		}
+		return 0;
+	}
+
+	size_t erase(iterator it)
+	{
 		if (it != m_nData.end()) {
 			CW_SAFE_RELEASE(it->second);
 			m_nData.erase(it);

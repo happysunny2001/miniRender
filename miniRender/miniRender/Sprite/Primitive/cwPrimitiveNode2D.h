@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -17,47 +17,59 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_LABEL_H__
-#define __CW_LABEL_H__
+#ifndef __CW_PRIMITIVE_NODE2D_H__
+#define __CW_PRIMITIVE_NODE2D_H__
 
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
-#include "Math/cwMath.h"
-#include "cwSprite.h"
+#include "Base/cwUtils.h"
+#include "Base/cwStruct.h"
+#include "RenderObject/cwDynamicRenderObject.h"
+#include "Sprite/cwRenderNode2D.h"
+#include "cwPrimitive2D.h"
+
+#include <vector>
 
 NS_MINIR_BEGIN
 
-class cwLabel : public cwSprite
+class cwPrimitiveNode2D : public cwRenderNode2D
 {
 public:
-	static cwLabel* create(const CWSTRING& strText, const CWSTRING& strFontTexture, CWCHAR cStartChar, CWUINT uCharWidth);
+	static CWUINT uMaxVertexCnt;
 
-	cwLabel();
-	virtual ~cwLabel();
+public:
+	static cwPrimitiveNode2D* create(CWBOOL bThreading=CWFALSE);
 
-	virtual CWBOOL init(const CWSTRING& strText, const CWSTRING& strFontTexture, CWCHAR cStartChar, CWUINT uCharWidth);
-	virtual CWUINT getVertexCnt() const override;
-	virtual CWVOID refreshTransform() override;
+	cwPrimitiveNode2D();
+	virtual ~cwPrimitiveNode2D();
+
+	virtual CWBOOL init() override;
 	virtual CWVOID render(cwCamera* pCamera) override;
 
-	virtual CWVOID setString(const CWSTRING& strText);
+	CWVOID drawLine(const cwVector2D& start, const cwVector2D& end, const cwVector4D& color);
+	CWVOID drawQuad(
+		const cwVector2D& p0,
+		const cwVector2D& p1,
+		const cwVector2D& p2,
+		const cwVector2D& p3,
+		const cwVector4D& color, CWBOOL bFill);
 
 protected:
-	virtual CWBOOL buildVertexBuffer() override;
-	virtual CWVOID refreshVertexBuffer();
-	//virtual CWVOID transformBuffer();
-	virtual CWVOID refreshRenderObject();
+	CWVOID buildRenderBuffer();
+	CWVOID buildEffect();
 
 protected:
-	CWSTRING m_nStrText;
-	CWUINT m_uMaxCharCnt;
-	CWUINT m_uVertexSize;
-	CWCHAR m_cStartChar;
-	CWUINT m_uCharWidth;
-	cwVertexPosTex* m_pVertexBuffer;
+	cwVertexPosColor* m_pFrameVertexBuffer;
+	CWUINT m_uFrameVertexCnt;
+	cwDynamicRenderObject* m_pFrameRenderObjects;
+
+	cwVertexPosColor* m_pSolidVertexBuffer;
+	CWUINT m_uSolidVertexCnt;
+	cwDynamicRenderObject* m_pSolidRenderObjects;
 
 };
 
 NS_MINIR_END
 
 #endif
+

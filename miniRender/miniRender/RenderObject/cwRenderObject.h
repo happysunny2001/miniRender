@@ -50,9 +50,8 @@ public:
 
 	virtual CWVOID preRender() {}
 	CWVOID updateVertexData(CWVOID* pData);
-	virtual CWVOID updateVertexData(CWVOID* pData, CWUINT uSize);
-
-	virtual CWVOID updateIndexData(CWVOID* pData, CWUINT uSize);
+	virtual CWVOID updateVertexData(CWVOID* pData, CWUINT iCnt);
+	virtual CWVOID updateIndexData(CWVOID* pData, CWUINT iCnt);
 
 	inline cwLayouts* getInputLayout() { return m_pLayout; }
 	inline ePrimitiveType getPrimitiveTopology() { return m_nTopology; }
@@ -70,6 +69,19 @@ public:
 	inline CWUINT* getIndexData() { return m_pIndexData; }
 	inline CWUINT getIndexCnt() const { return m_uIndexCnt; }
 
+	inline CWUINT getValidVertexCnt() const { return m_uValidVertexCnt; }
+	inline CWUINT getValidIndexCnt() const { return m_uValidIndexCnt; }
+
+	inline CWVOID setValidVertexCnt(CWUINT uCnt) {
+		if (uCnt <= m_uVertexCnt)
+			m_uValidVertexCnt = uCnt;
+	}
+
+	inline CWVOID setValidIndexCnt(CWUINT uCnt) {
+		if (uCnt <= m_uIndexCnt)
+			m_uValidIndexCnt = uCnt;
+	}
+
 protected:
 	CWVOID saveBufferData(CWVOID* pVertexData, CWUINT uVertexStride, CWUINT uVertexCnt, CWUINT uPositionOffset, CWVOID* pIndexData, CWUINT uIndexCnt);
 	CWVOID calBoundingBox();
@@ -86,10 +98,12 @@ protected:
 	CWVOID* m_pVertexData;
 	CWUINT m_uStride;
 	CWUINT m_uVertexCnt;
+	CWUINT m_uValidVertexCnt;
 	CWUINT m_uPositionOffset;
 
 	CWUINT* m_pIndexData;
 	CWUINT m_uIndexCnt;
+	CWUINT m_uValidIndexCnt;
 
 	cwAABB m_nAabb;
 

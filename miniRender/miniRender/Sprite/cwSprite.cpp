@@ -23,6 +23,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Texture/cwTexture.h"
 #include "Texture/cwTextureManager.h"
 #include "Math/cwMath.h"
+#include "RenderObject/cwRenderObject.h"
+#include "Generator/cwGeometryGenerator.h"
+#include "effect/cwEffectManager.h"
+#include "effect/cwEffect.h"
+#include "Device/cwDevice.h"
 
 NS_MINIR_BEGIN
 
@@ -52,7 +57,8 @@ cwSprite* cwSprite::create(const std::string& strFile)
 
 cwSprite::cwSprite():
 m_pTexture(nullptr),
-m_pVertexBuffer(nullptr)
+//m_pVertexBuffer(nullptr),
+m_pRenderObject(nullptr)
 {
 	m_eRenderType = eRenderTypeSprite;
 	m_nColor.set(1.0f, 1.0f, 1.0f, 1.0f);
@@ -61,7 +67,8 @@ m_pVertexBuffer(nullptr)
 cwSprite::~cwSprite()
 {
 	CW_SAFE_RELEASE_NULL(m_pTexture);
-	CW_SAFE_DELETE(m_pVertexBuffer);
+	//CW_SAFE_DELETE(m_pVertexBuffer);
+	CW_SAFE_RELEASE_NULL(m_pRenderObject);
 }
 
 CWBOOL cwSprite::init()
@@ -85,65 +92,13 @@ CWBOOL cwSprite::loadTexture(const std::string& strFile)
 {
 	CW_SAFE_RELEASE_NULL(m_pTexture);
 
-	m_pTexture = cwRepertory::getInstance().getTextureManager()->getTexture(strFile);
+	cwRepertory& repetory = cwRepertory::getInstance();
+	m_pTexture = repetory.getTextureManager()->getTexture(strFile);
 	if (!m_pTexture) return CWFALSE;
 	CW_SAFE_RETAIN(m_pTexture);
 
-	return CWTRUE;
-}
+	this->setEffect(repetory.getEffectManager()->defaultSpriteEffect());
 
-CWBOOL cwSprite::buildVertexBuffer()
-{
-	CW_SAFE_DELETE(m_pVertexBuffer);
-
-	m_pVertexBuffer = new cwVertexPosTexColor[6];
-	if (!m_pVertexBuffer) return CWFALSE;
-
-	initVertexBuffer(m_pVertexBuffer);
-
-	return CWTRUE;
-}
-
-CWVOID cwSprite::initVertexBuffer(cwVertexPosTexColor* pVertexBuffer)
-{
-	CWFLOAT fHalfTexWidth  = 0.5f;
-	CWFLOAT fHalfTexHeight = 0.5f;
-
-	if (m_pTexture) {
-		fHalfTexWidth  = m_pTexture->getWidth()*0.5f;
-		fHalfTexHeight = m_pTexture->getWidth()*0.5f;
-	}
-
-	pVertexBuffer[0].pos.set(-fHalfTexWidth, -fHalfTexHeight, 0);
-	pVertexBuffer[0].tex.set(0, 1.0f);
-	pVertexBuffer[0].color = m_nColor;
-
-	pVertexBuffer[1].pos.set(-fHalfTexWidth, fHalfTexHeight, 0);
-	pVertexBuffer[1].tex.set(0, 0);
-	pVertexBuffer[1].color = m_nColor;
-
-	pVertexBuffer[2].pos.set(fHalfTexWidth, -fHalfTexHeight, 0);
-	pVertexBuffer[2].tex.set(1.0f, 1.0f);
-	pVertexBuffer[2].color = m_nColor;
-
-	pVertexBuffer[3].pos.set(-fHalfTexWidth, fHalfTexHeight, 0);
-	pVertexBuffer[3].tex.set(0, 0);
-	pVertexBuffer[3].color = m_nColor;
-
-	pVertexBuffer[4].pos.set(fHalfTexWidth, fHalfTexHeight, 0);
-	pVertexBuffer[4].tex.set(1.0f, 0);
-	pVertexBuffer[4].color = m_nColor;
-
-	pVertexBuffer[5].pos.set(fHalfTexWidth, -fHalfTexHeight, 0);
-	pVertexBuffer[5].tex.set(1.0f, 1.0f);
-	pVertexBuffer[5].color = m_nColor;
-
-	m_nBoundingBox.m_nMin = pVertexBuffer[0].pos;
-	m_nBoundingBox.m_nMax = pVertexBuffer[4].pos;
-}
-
-CWVOID cwSprite::initVertexBuffer(cwVector4D* pVertexBuffer)
-{
 	CWFLOAT fHalfTexWidth = 0.5f;
 	CWFLOAT fHalfTexHeight = 0.5f;
 
@@ -152,37 +107,124 @@ CWVOID cwSprite::initVertexBuffer(cwVector4D* pVertexBuffer)
 		fHalfTexHeight = m_pTexture->getWidth()*0.5f;
 	}
 
-	pVertexBuffer[0].set(-fHalfTexWidth, -fHalfTexHeight, 0, 1.0f);
-	pVertexBuffer[1].set(-fHalfTexWidth, fHalfTexHeight, 0, 1.0f);
-	pVertexBuffer[2].set(fHalfTexWidth, -fHalfTexHeight, 0, 1.0f);
+	m_nMatSizeScale.setScale(fHalfTexWidth, fHalfTexHeight, 1.0f);
 
-	pVertexBuffer[3].set(-fHalfTexWidth, fHalfTexHeight, 0, 1.0f);
-	pVertexBuffer[4].set(fHalfTexWidth, fHalfTexHeight, 0, 1.0f);
-	pVertexBuffer[5].set(fHalfTexWidth, -fHalfTexHeight, 0, 1.0f);
+	return CWTRUE;
 }
+
+CWBOOL cwSprite::buildVertexBuffer()
+{
+	//CW_SAFE_DELETE(m_pVertexBuffer);
+
+	//m_pVertexBuffer = new cwVertexPosTexColor[6];
+	//if (!m_pVertexBuffer) return CWFALSE;
+
+	//initVertexBuffer(m_pVertexBuffer);
+
+	cwRepertory& repetory = cwRepertory::getInstance();
+	m_pRenderObject = repetory.getGeoGenerator()->defaultSpriteRenderObject();
+	CW_SAFE_RETAIN(m_pRenderObject);
+
+	return CWTRUE;
+}
+
+//CWVOID cwSprite::initVertexBuffer(cwVertexPosTexColor* pVertexBuffer)
+//{
+//	CWFLOAT fHalfTexWidth  = 0.5f;
+//	CWFLOAT fHalfTexHeight = 0.5f;
+//
+//	if (m_pTexture) {
+//		fHalfTexWidth  = m_pTexture->getWidth()*0.5f;
+//		fHalfTexHeight = m_pTexture->getWidth()*0.5f;
+//	}
+//
+//	pVertexBuffer[0].pos.set(-fHalfTexWidth, -fHalfTexHeight, 0);
+//	pVertexBuffer[0].tex.set(0, 1.0f);
+//	pVertexBuffer[0].color = m_nColor;
+//
+//	pVertexBuffer[1].pos.set(-fHalfTexWidth, fHalfTexHeight, 0);
+//	pVertexBuffer[1].tex.set(0, 0);
+//	pVertexBuffer[1].color = m_nColor;
+//
+//	pVertexBuffer[2].pos.set(fHalfTexWidth, -fHalfTexHeight, 0);
+//	pVertexBuffer[2].tex.set(1.0f, 1.0f);
+//	pVertexBuffer[2].color = m_nColor;
+//
+//	pVertexBuffer[3].pos.set(-fHalfTexWidth, fHalfTexHeight, 0);
+//	pVertexBuffer[3].tex.set(0, 0);
+//	pVertexBuffer[3].color = m_nColor;
+//
+//	pVertexBuffer[4].pos.set(fHalfTexWidth, fHalfTexHeight, 0);
+//	pVertexBuffer[4].tex.set(1.0f, 0);
+//	pVertexBuffer[4].color = m_nColor;
+//
+//	pVertexBuffer[5].pos.set(fHalfTexWidth, -fHalfTexHeight, 0);
+//	pVertexBuffer[5].tex.set(1.0f, 1.0f);
+//	pVertexBuffer[5].color = m_nColor;
+//
+//	m_nBoundingBox.m_nMin = pVertexBuffer[0].pos;
+//	m_nBoundingBox.m_nMax = pVertexBuffer[4].pos;
+//}
+
+//CWVOID cwSprite::initVertexBuffer(cwVector4D* pVertexBuffer)
+//{
+//	CWFLOAT fHalfTexWidth = 0.5f;
+//	CWFLOAT fHalfTexHeight = 0.5f;
+//
+//	if (m_pTexture) {
+//		fHalfTexWidth = m_pTexture->getWidth()*0.5f;
+//		fHalfTexHeight = m_pTexture->getWidth()*0.5f;
+//	}
+//
+//	pVertexBuffer[0].set(-fHalfTexWidth, -fHalfTexHeight, 0, 1.0f);
+//	pVertexBuffer[1].set(-fHalfTexWidth, fHalfTexHeight, 0, 1.0f);
+//	pVertexBuffer[2].set(fHalfTexWidth, -fHalfTexHeight, 0, 1.0f);
+//
+//	pVertexBuffer[3].set(-fHalfTexWidth, fHalfTexHeight, 0, 1.0f);
+//	pVertexBuffer[4].set(fHalfTexWidth, fHalfTexHeight, 0, 1.0f);
+//	pVertexBuffer[5].set(fHalfTexWidth, -fHalfTexHeight, 0, 1.0f);
+//}
 
 CWVOID cwSprite::refreshTransform()
 {
 	cwRenderNode::refreshTransform();
-	transformBuffer();
+	m_nTrans = m_nMatSizeScale*m_nTrans;
+
+	//transformBuffer();
 }
 
-CWVOID cwSprite::transformBuffer()
-{
-	cwVector4D nVertex[6];
-	initVertexBuffer(nVertex);
-
-	for (CWUINT i = 0; i < 6; ++i) {
-		m_pVertexBuffer[i].pos = nVertex[i] * m_nTrans;
-	}
-
-	m_nBoundingBox.m_nMin = m_pVertexBuffer[0].pos;
-	m_nBoundingBox.m_nMax = m_pVertexBuffer[4].pos;
-}
+//CWVOID cwSprite::transformBuffer()
+//{
+//	cwVector4D nVertex[6];
+//	initVertexBuffer(nVertex);
+//
+//	for (CWUINT i = 0; i < 6; ++i) {
+//		m_pVertexBuffer[i].pos = nVertex[i] * m_nTrans;
+//	}
+//
+//	m_nBoundingBox.m_nMin = m_pVertexBuffer[0].pos;
+//	m_nBoundingBox.m_nMax = m_pVertexBuffer[4].pos;
+//}
 
 CWVOID cwSprite::refreshBoundingBox()
 {
 
+}
+
+CWVOID cwSprite::render(cwCamera* pCamera)
+{
+	if (!m_pEffect) return;
+	cwRepertory& repertory = cwRepertory::getInstance();
+
+	if (this->getStencil())
+		repertory.getDevice()->setStencil(this->getStencil());
+
+	cwShader* pShader = m_pEffect->getShader();
+	if (pShader) {
+		repertory.getDevice()->setShaderWorldTrans(pShader, this->getTransformMatrix(), pCamera);
+		pShader->setVariableTexture(eShaderParamDiffuseTexture, this->getTexture());
+		repertory.getDevice()->draw(pShader, m_pEffect->getTech(), m_pRenderObject);
+	}
 }
 
 NS_MINIR_END

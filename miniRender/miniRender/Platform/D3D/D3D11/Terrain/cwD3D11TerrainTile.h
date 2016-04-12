@@ -40,13 +40,22 @@ public:
 	virtual CWVOID loadResource() override;
 	virtual CWVOID render(cwRenderBatch* pRenderBatch) override;
 
-protected:
-	virtual CWVOID buildHeightMapTexture() override;
-	virtual CWVOID buildLayerTexture() override;
-	virtual CWVOID buildBlendTexture() override;
+	virtual CWVOID streamPrepare() override;
+	virtual CWVOID streamBegin() override;
+	virtual CWVOID streaming() override;
+	virtual CWVOID streamEnd() override;
+	virtual CWVOID streamRelease() override;
+	virtual cwRemoveBatch* buildRemoveBatch() override;
 
 protected:
-	cwMaterialUnitFloatArray* m_pMatUnitFloatArray;
+	virtual CWVOID buildHeightMapTexture() override;
+	virtual CWVOID buildLayerTexture(CWBOOL bThreading = CWFALSE) override;
+	virtual CWVOID buildBlendTexture(CWBOOL bThreading = CWFALSE) override;
+
+	virtual CWVOID buildMaterial() override;
+
+protected:
+	cwMaterialUnitFloatArray* m_pMatUnitFrustum;
 
 };
 

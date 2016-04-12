@@ -167,4 +167,9 @@ CWVOID cwRenderNode2D::refreshSpatialNode()
 
 }
 
+CWVOID cwRenderNode2D::render(cwCamera* pCamera)
+{
+
+}
+
 NS_MINIR_END

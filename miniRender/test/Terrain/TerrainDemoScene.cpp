@@ -79,6 +79,8 @@ CWVOID TerrainDemoScene::update(CWFLOAT dt)
 	ss << (int)pos.z;
 	m_pLblPosZ->setString(ss.str());
 
+	//checkTerrainTileVisible();
+
 	//cwTerrainTile* pTile = m_pTerrain->getTerrainTile();
 	//int iSect = pCamera->getFrustum().intersection(pTile->getBoundingBox());
 	//if (pCamera->getFrustum().isCollide(iSect)) {
@@ -104,11 +106,26 @@ CWVOID TerrainDemoScene::update(CWFLOAT dt)
 	//m_pLblPosZ->setString(ss.str());
 }
 
+CWVOID TerrainDemoScene::checkTerrainTileVisible()
+{
+	const cwFrustum& frustum = cwRepertory::getInstance().getEngine()->getDefaultCamera()->getFrustum();
+	CWUINT i = 0;
+
+	for (auto it = m_pTerrain->tileBegin(); it != m_pTerrain->tileEnd(); ++it) {
+		const cwAABB& aabb = it->second->getBoundingBox();
+		int iRet = frustum.intersection(aabb);
+		if (frustum.isCollide(iRet))
+			i++;
+	}
+}
+
 CWVOID TerrainDemoScene::buildTerrain()
 {
 	m_pTerrain = cwRepertory::getInstance().getDevice()->createTerrain("terrain.xml");
 	CW_SAFE_RETAIN(m_pTerrain);
 	this->addChild(m_pTerrain);
+
+	cwTextureManager* pManager = cwRepertory::getInstance().getTextureManager();
 }
 
 CWVOID TerrainDemoScene::buildLight()

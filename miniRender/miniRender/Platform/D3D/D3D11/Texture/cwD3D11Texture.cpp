@@ -87,6 +87,17 @@ cwD3D11Texture* cwD3D11Texture::create(CWVOID* pData, CWUINT iWidth, CWUINT iHei
 	return nullptr;
 }
 
+cwD3D11Texture* cwD3D11Texture::createThreadSafe(CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format)
+{
+	cwD3D11Texture* pTexture = new cwD3D11Texture();
+	if (pTexture && pTexture->init(pData, iWidth, iHeight, iElementSize, format)) {
+		return pTexture;
+	}
+
+	CW_SAFE_DELETE(pTexture);
+	return nullptr;
+}
+
 cwD3D11Texture::cwD3D11Texture() :
 m_pShaderResource(nullptr)
 {

@@ -31,9 +31,10 @@ public:
 	cwRef();
 	virtual ~cwRef();
 
-	void retain();
-	void release();
-	void autorelease();
+	inline CWVOID retain() { m_iRef++; }
+	CWVOID release();
+	CWVOID autorelease();
+	inline CWUINT retainCount() const { return m_iRef; }
 
 protected:
 	CWUINT m_iRef;

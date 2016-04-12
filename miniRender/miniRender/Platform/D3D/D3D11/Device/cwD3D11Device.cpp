@@ -576,6 +576,11 @@ cwTexture* cwD3D11Device::createTexture(CWVOID* pData, CWUINT iWidth, CWUINT iHe
 	return cwD3D11Texture::create(pData, iWidth, iHeight, iElementSize, format);
 }
 
+cwTexture* cwD3D11Device::createTextureThreadSafe(CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format)
+{
+	return cwD3D11Texture::createThreadSafe(pData, iWidth, iHeight, iElementSize, format);
+}
+
 cwTexture* cwD3D11Device::createCubeTexture(const CWSTRING& strFileName)
 {
 	return cwD3D11CubeTexture::create(strFileName);
@@ -687,11 +692,13 @@ void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPo
 		this->setIndexBuffer(pRenderObj->getIndexBuffer());
 
 		pShader->apply(0, 0);
-		m_pD3D11DeviceContext->DrawIndexed(pRenderObj->getIndexBuffer()->getElementCount(), 0, 0);
+		//m_pD3D11DeviceContext->DrawIndexed(pRenderObj->getIndexBuffer()->getElementCount(), 0, 0);
+		m_pD3D11DeviceContext->DrawIndexed(pRenderObj->getValidIndexCnt(), 0, 0);
 	}
 	else {
 		pShader->apply(0, 0);
-		m_pD3D11DeviceContext->Draw(pRenderObj->getVertexBuffer()->getElementCount(), 0);
+		//m_pD3D11DeviceContext->Draw(pRenderObj->getVertexBuffer()->getElementCount(), 0);
+		m_pD3D11DeviceContext->Draw(pRenderObj->getValidVertexCnt(), 0);
 	}
 }
 
@@ -723,7 +730,8 @@ void cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObj
 			this->setIndexBuffer(pRenderObj->getIndexBuffer());
 
 			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
-			m_pD3D11DeviceContext->DrawIndexed(pRenderObj->getIndexBuffer()->getElementCount(), 0, 0);
+			//m_pD3D11DeviceContext->DrawIndexed(pRenderObj->getIndexBuffer()->getElementCount(), 0, 0);
+			m_pD3D11DeviceContext->DrawIndexed(pRenderObj->getValidIndexCnt(), 0, 0);
 		}
 	}
 	else {
@@ -731,7 +739,8 @@ void cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObj
 			this->setVertexBuffer(pRenderObj->getVertexBuffer());
 
 			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
-			m_pD3D11DeviceContext->Draw(pRenderObj->getVertexBuffer()->getElementCount(), 0);
+			//m_pD3D11DeviceContext->Draw(pRenderObj->getVertexBuffer()->getElementCount(), 0);
+			m_pD3D11DeviceContext->Draw(pRenderObj->getValidVertexCnt(), 0);
 		}
 	}
 }
@@ -772,7 +781,8 @@ CWVOID cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, std::vect
 			this->setIndexBuffer(pMeshRenderObj->getIndexBuffer());
 
 			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
-			m_pD3D11DeviceContext->DrawIndexedInstanced(pMeshRenderObj->getIndexBuffer()->getElementCount(), uCnt, 0, 0, 0);
+			//m_pD3D11DeviceContext->DrawIndexedInstanced(pMeshRenderObj->getIndexBuffer()->getElementCount(), uCnt, 0, 0, 0);
+			m_pD3D11DeviceContext->DrawIndexedInstanced(pMeshRenderObj->getValidIndexCnt(), uCnt, 0, 0, 0);
 		}
 	}
 	else {
@@ -780,7 +790,8 @@ CWVOID cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, std::vect
 			this->setVertexBuffer(arrBuffer, iSize);
 
 			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
-			m_pD3D11DeviceContext->DrawInstanced(pMeshRenderObj->getVertexBuffer()->getElementCount(), uCnt, 0, 0);
+			//m_pD3D11DeviceContext->DrawInstanced(pMeshRenderObj->getVertexBuffer()->getElementCount(), uCnt, 0, 0);
+			m_pD3D11DeviceContext->DrawInstanced(pMeshRenderObj->getValidVertexCnt(), uCnt, 0, 0);
 		}
 	}
 }

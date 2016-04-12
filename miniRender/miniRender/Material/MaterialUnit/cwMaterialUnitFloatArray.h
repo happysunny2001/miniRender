@@ -29,8 +29,8 @@ NS_MINIR_BEGIN
 class cwMaterialUnitFloatArray : public cwMaterialUnit
 {
 public:
-	static cwMaterialUnitFloatArray* create(const CWFLOAT* pFloats, CWUINT iSize);
-	static cwMaterialUnitFloatArray* create(CWUINT iSize);
+	static cwMaterialUnitFloatArray* create(const CWFLOAT* pFloats, CWUINT iSize, CWBOOL bThreading=CWFALSE);
+	static cwMaterialUnitFloatArray* create(CWUINT iSize, CWBOOL bThreading = CWFALSE);
 
 	cwMaterialUnitFloatArray();
 	virtual ~cwMaterialUnitFloatArray();

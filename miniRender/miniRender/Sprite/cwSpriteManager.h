@@ -36,6 +36,7 @@ class cwDynamicRenderObject;
 class cwCamera;
 class cwEffect;
 class cwBlend;
+class cwRenderObject;
 
 class CW_DLL cwSpriteManager : public cwRef
 {
@@ -58,7 +59,7 @@ protected:
 	CWBOOL buildEffect();
 	CWBOOL buildBlend();
 
-	CWVOID renderBatch(cwSprite* pSprite);
+	CWVOID render(cwRenderNode2D* pNode);
 
 	CWVOID refreshSprite();
 	CWVOID addRefreshNode(cwRenderNode2D* pNode);
@@ -79,6 +80,7 @@ protected:
 	cwCamera* m_pOrthoCamera;
 	cwEffect* m_pDefEffect;
 	cwBlend* m_pAlphaBlend;
+	//cwRenderObject* m_pSpriteRenderObject;
 
 };
 

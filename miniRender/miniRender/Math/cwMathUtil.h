@@ -35,6 +35,7 @@ public:
 	static const CWFLOAT cwAngleInv180;
 	static const CWFLOAT cwPiInv;
 	static const CWFLOAT cwInfinity;
+	static const CWUSHORT cwUShortInfinity;
 
 public:
 	static void cwSinCos(CWFLOAT* fSin, CWFLOAT* fCos, CWFLOAT fTheta)

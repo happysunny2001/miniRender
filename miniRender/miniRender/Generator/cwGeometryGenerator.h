@@ -79,12 +79,14 @@ public:
 	CWFLOAT getTerrainHeight(CWFLOAT x, CWFLOAT z);
 	cwVector3D getTerrainNormal(CWFLOAT x, CWFLOAT z);
 
+	cwRenderObject* defaultSpriteRenderObject();
+
 private:
 	static cwGeometryGenerator* create();
-	cwGeometryGenerator(){}
+	cwGeometryGenerator();
 	cwGeometryGenerator(cwGeometryGenerator const&){}
 	cwGeometryGenerator& operator=(cwGeometryGenerator const&){}
-	~cwGeometryGenerator(){}
+	~cwGeometryGenerator();
 
 	void buildCylinderCap(
 		CWFLOAT bottomRadius, CWFLOAT topRadius,
@@ -96,7 +98,8 @@ private:
 
 	friend class cwRepertory;
 
-protected:
+private:
+	cwRenderObject* m_pDefaultSpriteRenderObject;
 
 };
 

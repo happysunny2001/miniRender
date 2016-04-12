@@ -35,12 +35,7 @@ cwRef::~cwRef()
 	m_iRef = 0;
 }
 
-void cwRef::retain()
-{
-	m_iRef++;
-}
-
-void cwRef::release()
+CWVOID cwRef::release()
 {
 	assert(m_iRef > 0);
 	m_iRef--;
@@ -49,7 +44,7 @@ void cwRef::release()
 	}
 }
 
-void cwRef::autorelease()
+CWVOID cwRef::autorelease()
 {
 	cwRepertory::getInstance().getAutoReleasePool()->addAutoReleaseRef(this);
 }

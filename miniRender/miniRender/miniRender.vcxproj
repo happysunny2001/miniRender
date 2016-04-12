@@ -42,6 +42,7 @@
     <ClInclude Include="Effect\cwEffect.h" />
     <ClInclude Include="effect\cwEffectFloatArrayParameter.h" />
     <ClInclude Include="Effect\cwEffectFloatParameter.h" />
+    <ClInclude Include="effect\cwEffectManager.h" />
     <ClInclude Include="Effect\cwEffectMatrixParameter.h" />
     <ClInclude Include="Effect\cwEffectParameter.h" />
     <ClInclude Include="Effect\cwEffectTextureParameter.h" />
@@ -173,11 +174,13 @@
     <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerRenderState.h" />
     <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerStencil.h" />
     <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerWorldTrans.h" />
+    <ClInclude Include="Repertory\cwGlobalParameter.h" />
     <ClInclude Include="Repertory\cwRepertory.h" />
     <ClInclude Include="Resource\cwLoadBatch.h" />
     <ClInclude Include="Resource\cwLoadResult.h" />
     <ClInclude Include="Resource\cwRemoveBatch.h" />
     <ClInclude Include="Resource\cwResourceLoader.h" />
+    <ClInclude Include="Resource\cwStreaming.h" />
     <ClInclude Include="Scheduler\cwScheduleInterface.h" />
     <ClInclude Include="Scheduler\cwSchedulerManager.h" />
     <ClInclude Include="Shader\cwShader.h" />
@@ -189,6 +192,8 @@
     <ClInclude Include="SpatialSorting\cwSpatial.h" />
     <ClInclude Include="SpatialSorting\cwSpatialFactory.h" />
     <ClInclude Include="Sprite\cwLabel.h" />
+    <ClInclude Include="Sprite\Primitive\cwPrimitive2D.h" />
+    <ClInclude Include="Sprite\Primitive\cwPrimitiveNode2D.h" />
     <ClInclude Include="Sprite\cwRenderNode2D.h" />
     <ClInclude Include="Sprite\cwSpriteManager.h" />
     <ClInclude Include="Sprite\cwSprite.h" />
@@ -219,6 +224,7 @@
     <ClCompile Include="Effect\cwEffect.cpp" />
     <ClCompile Include="effect\cwEffectFloatArrayParameter.cpp" />
     <ClCompile Include="Effect\cwEffectFloatParameter.cpp" />
+    <ClCompile Include="effect\cwEffectManager.cpp" />
     <ClCompile Include="Effect\cwEffectMatrixParameter.cpp" />
     <ClCompile Include="Effect\cwEffectParameter.cpp" />
     <ClCompile Include="Effect\cwEffectTextureParameter.cpp" />
@@ -335,11 +341,13 @@
     <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerRenderState.cpp" />
     <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerStencil.cpp" />
     <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerWorldTrans.cpp" />
+    <ClCompile Include="Repertory\cwGlobalParameter.cpp" />
     <ClCompile Include="Repertory\cwRepertory.cpp" />
     <ClCompile Include="Resource\cwLoadBatch.cpp" />
     <ClCompile Include="Resource\cwLoadResult.cpp" />
     <ClCompile Include="Resource\cwRemoveBatch.cpp" />
     <ClCompile Include="Resource\cwResourceLoader.cpp" />
+    <ClCompile Include="Resource\cwStreaming.cpp" />
     <ClCompile Include="Scheduler\cwScheduleInterface.cpp" />
     <ClCompile Include="Scheduler\cwSchedulerManager.cpp" />
     <ClCompile Include="Shader\cwShader.cpp" />
@@ -350,6 +358,8 @@
     <ClCompile Include="SpatialSorting\cwSpatial.cpp" />
     <ClCompile Include="SpatialSorting\cwSpatialFactory.cpp" />
     <ClCompile Include="Sprite\cwLabel.cpp" />
+    <ClCompile Include="Sprite\Primitive\cwPrimitive2D.cpp" />
+    <ClCompile Include="Sprite\Primitive\cwPrimitiveNode2D.cpp" />
     <ClCompile Include="Sprite\cwRenderNode2D.cpp" />
     <ClCompile Include="Sprite\cwSprite.cpp" />
     <ClCompile Include="Sprite\cwSpriteManager.cpp" />

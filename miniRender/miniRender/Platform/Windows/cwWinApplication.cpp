@@ -107,6 +107,7 @@ CWVOID cwApplication::globalInit()
 
 CWVOID cwApplication::init()
 {
+	globalInit();
 	cwRepertory::getInstance().initAll();
 
 	gameBegin();

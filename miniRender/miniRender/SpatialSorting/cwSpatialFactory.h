@@ -36,12 +36,6 @@ public:
 	//strType: [Octree,Normal,LooseOctree]
 	cwSpatial* createSpatial(const CWSTRING& strType);
 
-	CWVOID setWorldSize(const cwAABB& aabb);
-	CWVOID setOctreeDepth(CWUINT uDepth);
-
-private:
-	cwOctree::sOctreeInit m_nOctreeInit;
-
 };
 
 NS_MINIR_END

@@ -30,9 +30,9 @@ class cwTexture;
 class cwMaterialUnitTexture : public cwMaterialUnit
 {
 public:
-	static cwMaterialUnitTexture* create(const CWSTRING& strTexture, const CWSTRING& strParamName);
-	static cwMaterialUnitTexture* create(cwTexture* pTexture, const CWSTRING& strParamName);
-	static cwMaterialUnitTexture* createCube(const CWSTRING& strTexture, const CWSTRING& strParamName);
+	static cwMaterialUnitTexture* create(const CWSTRING& strTexture, const CWSTRING& strParamName, CWBOOL bThreading=CWFALSE);
+	static cwMaterialUnitTexture* create(cwTexture* pTexture, const CWSTRING& strParamName, CWBOOL bThreading = CWFALSE);
+	static cwMaterialUnitTexture* createCube(const CWSTRING& strTexture, const CWSTRING& strParamName, CWBOOL bThreading = CWFALSE);
 
 	cwMaterialUnitTexture();
 	virtual ~cwMaterialUnitTexture();

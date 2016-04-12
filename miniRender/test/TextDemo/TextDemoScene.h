@@ -42,6 +42,7 @@ protected:
 	cwSprite* m_pSpriteCenter;
 	cwSprite* m_pSpriteLeft;
 	cwSprite* m_pSpriteRight;
+	cwPrimitiveNode2D* m_pPrimitive;
 
 	cwLabel* m_pLabel;
 	CWFLOAT m_fNumber;

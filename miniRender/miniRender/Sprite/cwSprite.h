@@ -28,6 +28,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 NS_MINIR_BEGIN
 
 class cwTexture;
+class cwRenderObject;
 
 class CW_DLL cwSprite : public cwRenderNode2D
 {
@@ -41,25 +42,29 @@ public:
 	virtual CWBOOL init() override;
 	virtual CWBOOL init(const std::string& strFile);
 
-	inline const cwVertexPosTexColor* getVertexBuffer() const { return m_pVertexBuffer; }
+	//inline const cwVertexPosTexColor* getVertexBuffer() const { return m_pVertexBuffer; }
 	virtual CWUINT getVertexCnt() const { return 6; }
 	inline cwTexture* getTexture() { return m_pTexture; }
 
 	virtual CWVOID refreshTransform() override;
 	virtual CWVOID refreshBoundingBox() override;
 
+	virtual CWVOID render(cwCamera* pCamera) override;
+
 protected:
 	CWBOOL loadTexture(const std::string& strFile);
 	virtual CWBOOL buildVertexBuffer();
-	CWVOID initVertexBuffer(cwVertexPosTexColor* pVertexBuffer);
-	CWVOID initVertexBuffer(cwVector4D* pVertexBuffer);
+	//CWVOID initVertexBuffer(cwVertexPosTexColor* pVertexBuffer);
+	//CWVOID initVertexBuffer(cwVector4D* pVertexBuffer);
 	
-	virtual CWVOID transformBuffer();
+	//virtual CWVOID transformBuffer();
 
 protected:
 	cwTexture* m_pTexture;
 	cwVector4D m_nColor;
-	cwVertexPosTexColor* m_pVertexBuffer;
+	cwMatrix4X4 m_nMatSizeScale;
+	cwRenderObject* m_pRenderObject;
+	//cwVertexPosTexColor* m_pVertexBuffer;
 
 };
 

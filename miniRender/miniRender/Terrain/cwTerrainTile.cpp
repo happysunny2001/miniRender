@@ -22,12 +22,14 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Resource/cwResourceLoader.h"
 #include "Material/cwMaterial.h"
 #include "Texture/cwTextureManager.h"
+#include "Base/cwLog.h"
+#include "cwTerrain.h"
 
 NS_MINIR_BEGIN
 
 CWBOOL sTerrainTileData::loadHeightMap(CWFLOAT fScale)
 {
-	if (m_bLoaded) return CWTRUE;
+	if (m_eState != eTerrainTileLoading) return CWTRUE;
 
 	CW_SAFE_DELETE_ARRAY(m_pHeightMap);
 
@@ -53,15 +55,12 @@ CWBOOL sTerrainTileData::loadHeightMap(CWFLOAT fScale)
 	smooth();
 	createBoundY();
 
-	m_bLoaded = CWTRUE;
-
 	return CWTRUE;
 }
 
 CWVOID sTerrainTileData::releaseHeightMap()
 {
 	CW_SAFE_DELETE_ARRAY(m_pHeightMap);
-	m_bLoaded = CWFALSE;
 }
 
 CWBOOL sTerrainTileData::isValid(CWINT i, CWINT j)
@@ -119,6 +118,27 @@ CWVOID sTerrainTileData::createBoundY()
 	}
 
 	m_nBoundY.set(fMinY, fMaxY);
+
+	m_nBoundingBox.m_nMin.y = m_nBoundY.x;
+	m_nBoundingBox.m_nMax.y = m_nBoundY.y;
+}
+
+CWVOID sTerrainTileData::updateBoundingBox()
+{
+	CWFLOAT fBoxOffsetWidth = m_pTerrainData->terrainTileWidth()*m_pTerrainData->m_fBoundingBoxOffsetScale;
+	CWFLOAT fBoxOffsetHeight = m_pTerrainData->terrainTileHeight()*m_pTerrainData->m_fBoundingBoxOffsetScale;
+
+	m_nBoxLoad = m_nBoundingBox;
+	m_nBoxLoad.m_nMin.x -= fBoxOffsetWidth;
+	m_nBoxLoad.m_nMax.x += fBoxOffsetWidth;
+	m_nBoxLoad.m_nMin.z -= fBoxOffsetHeight;
+	m_nBoxLoad.m_nMax.z += fBoxOffsetHeight;
+
+	m_nBoxRelease = m_nBoundingBox;
+	m_nBoxRelease.m_nMin.x -= fBoxOffsetWidth*2.0f;
+	m_nBoxRelease.m_nMax.x += fBoxOffsetWidth*2.0f;
+	m_nBoxRelease.m_nMin.z -= fBoxOffsetHeight*2.0f;
+	m_nBoxRelease.m_nMax.z += fBoxOffsetHeight*2.0f;
 }
 
 CWVOID sTerrainTileData::loadResources()
@@ -146,6 +166,8 @@ cwTerrainTile::~cwTerrainTile()
 {
 	m_pTerrainTileData = nullptr;
 	releaseResource();
+
+	cwLog::print("cwTerrainTile::~cwTerrainTile.\n");
 }
 
 CWBOOL cwTerrainTile::init(sTerrainTileData* pTerrainTileData)
@@ -163,8 +185,8 @@ CWFLOAT cwTerrainTile::getHeight(const cwVector3D& pos)
 	CWFLOAT fXOffset = pos.x - m_nBoundingBox.m_nMin.x;
 	CWFLOAT fZOffset = m_nBoundingBox.m_nMax.z - pos.z;
 
-	CWFLOAT fIndexX = fXOffset / m_pTerrainTileData->m_fCellSpace;
-	CWFLOAT fIndexZ = fZOffset / m_pTerrainTileData->m_fCellSpace;
+	CWFLOAT fIndexX = fXOffset / m_pTerrainTileData->m_pTerrainData->m_fCellSpace;
+	CWFLOAT fIndexZ = fZOffset / m_pTerrainTileData->m_pTerrainData->m_fCellSpace;
 
 	CWINT iIndexX = (CWINT)floor(fIndexX);
 	CWINT iIndexZ = (CWINT)floor(fIndexZ);
@@ -215,11 +237,14 @@ CWVOID cwTerrainTile::releaseResource()
 	CW_SAFE_RELEASE_NULL(m_pTexHeightMap);
 
 	m_pMaterial->clearMaterialUnit();
-	m_nVecLayerTextures.clear();
-	m_nVecBlendTextures.clear();
 }
 
 CWVOID cwTerrainTile::refreshBoundingBox()
+{
+
+}
+
+CWVOID cwTerrainTile::streaming()
 {
 
 }

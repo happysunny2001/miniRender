@@ -25,6 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/cwFileSystem.h"
 #include "Device/cwDevice.h"
 #include "cwResourceLoader.h"
+#include "cwStreaming.h"
 
 #include <thread>
 
@@ -48,6 +49,10 @@ m_pLoadBatch(nullptr)
 
 cwLoadResult::~cwLoadResult()
 {
+	if (m_pLoadBatch && m_pLoadBatch->m_pObjStreaming) {
+		m_pLoadBatch->m_pObjStreaming->streamClean();
+	}
+
 	CW_SAFE_RELEASE_NULL(m_pLoadBatch);
 }
 
@@ -61,28 +66,19 @@ CWVOID cwLoadResult::setLoadBatch(cwLoadBatch* pBatch)
 
 CWVOID cwLoadResult::distribute()
 {
-	cwRepertory& repertory = cwRepertory::getInstance();
-	cwTextureManager* pTexManager = repertory.getTextureManager();
-
-	for (auto pTex : m_nVecTexture) {
-		pTexManager->appendTexture(pTex);
-		CW_SAFE_RELEASE(pTex);
-	}
-
-	cwShaderManager* pShaderManager = repertory.getShaderManager();
-	for (auto pShader : m_nVecShader) {
-		pShaderManager->appendShader(pShader);
-		CW_SAFE_RELEASE(pShader);
-	}
-
 	if (m_pLoadBatch) {
 		m_pLoadBatch->onOverCallback();
+		m_pLoadBatch->streamingEnd();
 	}
 }
 
 CWVOID cwLoadResult::load()
 {
 	if (!m_pLoadBatch) return;
+
+	if (m_pLoadBatch->m_pObjStreaming) {
+		m_pLoadBatch->m_pObjStreaming->streamBegin();
+	}
 
 	for (auto it = m_pLoadBatch->begin(); it != m_pLoadBatch->end(); ++it) {
 		switch (it->m_eType)
@@ -100,60 +96,23 @@ CWVOID cwLoadResult::load()
 			break;
 		}
 	}
+
+	m_pLoadBatch->onStreaming();
 }
 
 CWVOID cwLoadResult::loadTexture2D(const cwResourceInfo& resInfo)
 {
-	cwRepertory& repertory = cwRepertory::getInstance();
-
-	cwData* pData = repertory.getResourceLoader()->getTextureData(resInfo.m_nStrName);
-	if (pData) {
-		if (pData->m_pData && pData->m_uSize > 0) {
-			cwTexture* pTex = repertory.getDevice()->createTextureThreadSafe(pData->m_pData, pData->m_uSize);
-			if (pTex) {
-				pTex->setName(resInfo.m_nStrName);
-				m_nVecTexture.push_back(pTex);
-			}
-		}
-
-		delete pData;
-	}
+	cwRepertory::getInstance().getTextureManager()->createTextureThreadSafe(resInfo.m_nStrName);
 }
 
 CWVOID cwLoadResult::loadTextureCubeMap(const cwResourceInfo& resInfo)
 {
-	cwRepertory& repertory = cwRepertory::getInstance();
-
-	cwData* pData = repertory.getResourceLoader()->getTextureData(resInfo.m_nStrName);
-	if (pData) {
-		if (pData->m_pData && pData->m_uSize > 0) {
-			cwTexture* pTex = repertory.getDevice()->createCubeTextureThreadSafe(pData->m_pData, pData->m_uSize);
-			if (pTex) {
-				pTex->setName(resInfo.m_nStrName);
-				m_nVecTexture.push_back(pTex);
-			}
-		}
-
-		delete pData;
-	}
+	cwRepertory::getInstance().getTextureManager()->createCubeTextureThreadSafe(resInfo.m_nStrName);
 }
 
 CWVOID cwLoadResult::loadShader(const cwResourceInfo& resInfo)
 {
-	cwRepertory& repertory = cwRepertory::getInstance();
-
-	cwData* pData = repertory.getResourceLoader()->getShaderData(resInfo.m_nStrName);
-	if (pData) {
-		if (pData->m_pData && pData->m_uSize > 0) {
-			cwShader* pShader = repertory.getDevice()->createShaderThreadSafe((CWCHAR*)pData->m_pData, pData->m_uSize);
-			if (pShader) {
-				pShader->setName(resInfo.m_nStrName);
-				m_nVecShader.push_back(pShader);
-			}
-		}
-
-		delete pData;
-	}
+	cwRepertory::getInstance().getShaderManager()->createShaderThreadSafe(resInfo.m_nStrName);
 }
 
 NS_MINIR_END

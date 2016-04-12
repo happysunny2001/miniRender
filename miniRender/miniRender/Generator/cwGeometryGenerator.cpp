@@ -46,6 +46,17 @@ cwGeometryGenerator* cwGeometryGenerator::create()
 	return nullptr;
 }
 
+cwGeometryGenerator::cwGeometryGenerator() : 
+m_pDefaultSpriteRenderObject(nullptr)
+{
+
+}
+
+cwGeometryGenerator::~cwGeometryGenerator()
+{
+	CW_SAFE_RELEASE_NULL(m_pDefaultSpriteRenderObject);
+}
+
 void cwGeometryGenerator::generateGrid(CWFLOAT width, CWFLOAT height, CWUINT m, CWUINT n, cwMeshData& mesh)
 {
 	CWUINT vertexCnt = m*n;
@@ -649,6 +660,43 @@ CWVOID cwGeometryGenerator::cwMeshData::buildTangent()
 	}
 	
 	CW_SAFE_DELETE(tan1);
+}
+
+cwRenderObject* cwGeometryGenerator::defaultSpriteRenderObject()
+{
+	if (m_pDefaultSpriteRenderObject == nullptr) {
+		cwVertexPosTex spriteBuffer[6];
+
+		spriteBuffer[0].pos.set(-1.0, -1.0, 0);
+		spriteBuffer[0].tex.set(0, 1.0f);
+
+		spriteBuffer[1].pos.set(-1.0, 1.0, 0);
+		spriteBuffer[1].tex.set(0, 0);
+
+		spriteBuffer[2].pos.set(1.0, -1.0, 0);
+		spriteBuffer[2].tex.set(1.0f, 1.0f);
+
+		spriteBuffer[3].pos.set(-1.0, 1.0, 0);
+		spriteBuffer[3].tex.set(0, 0);
+
+		spriteBuffer[4].pos.set(1.0, 1.0, 0);
+		spriteBuffer[4].tex.set(1.0f, 0);
+
+		spriteBuffer[5].pos.set(1.0, -1.0, 0);
+		spriteBuffer[5].tex.set(1.0f, 1.0f);
+
+		m_pDefaultSpriteRenderObject = cwStaticRenderObject::create(
+			ePrimitiveTypeTriangleList, 
+			spriteBuffer, 
+			sizeof(cwVertexPosTex), 
+			6, 
+			NULL, 
+			0, 
+			"PosTex");
+		CW_SAFE_RETAIN(m_pDefaultSpriteRenderObject);
+	}
+
+	return m_pDefaultSpriteRenderObject;
 }
 
 NS_MINIR_END

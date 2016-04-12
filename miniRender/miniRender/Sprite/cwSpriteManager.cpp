@@ -26,6 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Engine/cwEngine.h"
 #include "Entity/cwScene.h"
 #include "RenderObject/cwDynamicRenderObject.h"
+#include "RenderObject/cwStaticRenderObject.h"
 #include "Render/cwRenderer.h"
 #include "effect/cwEffect.h"
 #include "Shader/cwShader.h"
@@ -33,6 +34,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "Stencil/cwStencil.h"
 #include "Blend/cwBlend.h"
+#include "Generator/cwGeometryGenerator.h"
 
 #include <algorithm>
 #include <queue>
@@ -66,6 +68,7 @@ m_uVertexCnt(0),
 m_pCurrCamera(nullptr),
 m_pAlphaBlend(nullptr),
 m_pOrthoCamera(nullptr)
+//m_pSpriteRenderObject(nullptr)
 {
 
 }
@@ -76,6 +79,7 @@ cwSpriteManager::~cwSpriteManager()
 	CW_SAFE_RELEASE_NULL(m_pDefEffect);
 	CW_SAFE_RELEASE_NULL(m_pRootSprite);
 	CW_SAFE_RELEASE_NULL(m_pAlphaBlend);
+	//CW_SAFE_RELEASE_NULL(m_pSpriteRenderObject);
 }
 
 CWBOOL cwSpriteManager::init()
@@ -97,6 +101,29 @@ CWBOOL cwSpriteManager::buildRenderObjects()
 	m_pRenderObjects = cwDynamicRenderObject::create(ePrimitiveTypeTriangleList, m_nVertexBuffer, sizeof(cwVertexPosTexColor), CW_DEF_SPRITE_BUFFER_CNT, NULL, 0, "PosTexColor");
 	if (!m_pRenderObjects) return CWFALSE;
 	CW_SAFE_RETAIN(m_pRenderObjects);
+
+	//cwVertexPosTex spriteBuffer[6];
+
+	//spriteBuffer[0].pos.set(-1.0, -1.0, 0);
+	//spriteBuffer[0].tex.set(0, 1.0f);
+
+	//spriteBuffer[1].pos.set(-1.0, 1.0, 0);
+	//spriteBuffer[1].tex.set(0, 0);
+
+	//spriteBuffer[2].pos.set(1.0, -1.0, 0);
+	//spriteBuffer[2].tex.set(1.0f, 1.0f);
+
+	//spriteBuffer[3].pos.set(-1.0, 1.0, 0);
+	//spriteBuffer[3].tex.set(0, 0);
+
+	//spriteBuffer[4].pos.set(1.0, 1.0, 0);
+	//spriteBuffer[4].tex.set(1.0f, 0);
+
+	//spriteBuffer[5].pos.set(1.0, -1.0, 0);
+	//spriteBuffer[5].tex.set(1.0f, 1.0f);
+
+	//m_pSpriteRenderObject = cwStaticRenderObject::create(ePrimitiveTypeTriangleList, spriteBuffer, sizeof(cwVertexPosTex), 6, NULL, 0, "PosTex");
+	//CW_SAFE_RETAIN(m_pSpriteRenderObject);
 
 	return CWTRUE;
 }
@@ -165,9 +192,12 @@ CWVOID cwSpriteManager::renderNode()
 		cwRenderNode2D* pFront = queueNode.front();
 		queueNode.pop();
 
-		if (pFront->getRenderType() == eRenderTypeSprite) {
-			renderBatch(static_cast<cwSprite*>(pFront));
-		}
+		render(pFront);
+
+		//if (pFront->getRenderType() == eRenderTypeSprite) {
+		//	//renderBatch(static_cast<cwSprite*>(pFront));
+		//	render(static_cast<cwSprite*>(pFront));
+		//}
 
 		cwVector<cwRenderNode*>& nVecChildren = pFront->getChildren();
 		std::vector<cwRenderNode2D*> nVecNodes;
@@ -185,34 +215,16 @@ CWVOID cwSpriteManager::renderNode()
 	}
 }
 
-CWVOID cwSpriteManager::renderBatch(cwSprite* pSprite)
+CWVOID cwSpriteManager::render(cwRenderNode2D* pNode)
 {
 	cwRepertory& repertory = cwRepertory::getInstance();
 
-	m_uVertexCnt = 0;
-	const cwVertexPosTexColor* pSpriteVertexBuffer = pSprite->getVertexBuffer();
-	CWUINT iCnt = pSprite->getVertexCnt();
-
-	if (!pSpriteVertexBuffer || iCnt == 0) return;
-	if (m_uVertexCnt + iCnt >= CW_DEF_SPRITE_BUFFER_CNT) return;
-
-	for (CWUINT i = 0; i < iCnt; ++i) {
-		m_nVertexBuffer[m_uVertexCnt++] = pSpriteVertexBuffer[i];
-	}
-
-	m_pRenderObjects->updateVertexData(m_nVertexBuffer, m_uVertexCnt*sizeof(cwVertexPosTexColor));
-
-	if (!pSprite->getBlend())
+	if (!pNode->getBlend())
 		repertory.getDevice()->setBlend(m_pAlphaBlend);
 	else
-		repertory.getDevice()->setBlend(pSprite->getBlend());
+		repertory.getDevice()->setBlend(pNode->getBlend());
 
-	if (pSprite->getStencil())
-		repertory.getDevice()->setStencil(pSprite->getStencil());
-
-	repertory.getDevice()->setShaderWorldTrans(m_pDefEffect->getShader(), pSprite->getTransformMatrix(), m_pOrthoCamera);
-	m_pDefEffect->getShader()->setVariableTexture(eShaderParamDiffuseTexture, pSprite->getTexture());
-	repertory.getDevice()->draw(m_pDefEffect->getShader(), m_pDefEffect->getTech(), m_pRenderObjects);
+	pNode->render(m_pOrthoCamera);
 }
 
 CWVOID cwSpriteManager::end()

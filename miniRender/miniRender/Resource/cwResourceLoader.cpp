@@ -27,6 +27,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Parser/cwParserManager.h"
 #include "Parser/cwResourceConfParser.h"
 #include "Platform/cwFileSystem.h"
+#include "cwStreaming.h"
 
 #include <thread>
 #include <atomic>
@@ -102,6 +103,18 @@ CWVOID cwResourceLoader::loadAsync(cwLoadBatch* pBatch)
 		m_nQueueBatch.push(pBatch);
 		CW_SAFE_RETAIN(pBatch);
 		m_nCondNotEmpty.notify_one();
+	}
+}
+
+CWVOID cwResourceLoader::loadAsync(cwStreaming* pObjStreaming)
+{
+	if (pObjStreaming) {
+		pObjStreaming->streamPrepare();
+		
+		cwLoadBatch* pBatch = pObjStreaming->getLoadBatch();
+		if (pBatch) {
+			loadAsync(pBatch);
+		}
 	}
 }
 

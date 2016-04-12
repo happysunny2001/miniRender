@@ -113,8 +113,8 @@ CWBOOL cwText::buildVertexData()
 
 CWBOOL cwText::buildNativeBuffer()
 {
-	CW_SAFE_DELETE(m_pVertexData);
-	CW_SAFE_DELETE(m_pIndexData);
+	CW_SAFE_DELETE_ARRAY(m_pVertexData);
+	CW_SAFE_DELETE_ARRAY(m_pIndexData);
 
 	m_pVertexData = new cwVertexPosTex[m_uMaxCharCnt * 4];
 	if (!m_pVertexData) return CWFALSE;
@@ -172,7 +172,7 @@ CWBOOL cwText::refreshText()
 		m_pVertexData[4 * i + 3].tex.x = fStartU + fUStep;
 	}
 
-	m_pRenderObj->updateVertexData(m_pVertexData, uStrlen * 4 * sizeof(cwVertexPosTex));
+	m_pRenderObj->updateVertexData(m_pVertexData, uStrlen * 4);
 	m_pRenderObj->getIndexBuffer()->setElementCount(uStrlen * 6);
 
 	return CWTRUE;

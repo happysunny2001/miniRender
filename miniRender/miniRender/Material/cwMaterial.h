@@ -46,13 +46,14 @@ public:
 	};
 
 public:
-	static cwMaterial* create();
+	static cwMaterial* create(CWBOOL bThreading=CWFALSE);
 
 	static cwMaterial* create(
 		const cwVector4D& ambient,
 		const cwVector4D& diffuse,
 		const cwVector4D& specular,
-		const cwVector4D& reflect);
+		const cwVector4D& reflect,
+		CWBOOL bThreading=CWFALSE);
 
 
 	cwMaterial();

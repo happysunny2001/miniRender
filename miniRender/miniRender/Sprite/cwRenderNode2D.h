@@ -60,6 +60,8 @@ public:
 
 	inline CWUINT getRenderOrder() const { return m_uRenderOrder; }
 	virtual CWVOID setRenderOrder(CWUINT uOrder);
+	
+	virtual CWVOID render(cwCamera* pCamera);
 
 protected:
 	virtual CWVOID insertSpatialNode(cwRenderNode* pNode) override;

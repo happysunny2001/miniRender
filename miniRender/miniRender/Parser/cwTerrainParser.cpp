@@ -70,6 +70,7 @@ sTerrainData* cwTerrainParser::parse(const CWSTRING& strFileName)
 	pTerrainData->m_iTileVertexWidth  = pInfoElement->IntAttribute("TileVertexWidth");
 	pTerrainData->m_iTileVertexHeight = pInfoElement->IntAttribute("TileVertexHeight");
 	pTerrainData->m_fHeightScale      = pInfoElement->FloatAttribute("HeightScale");
+	pTerrainData->m_fBoundingBoxOffsetScale = 0.1f;
 
 	tinyxml2::XMLElement* pTileElement = pTileListElement->FirstChildElement("Tile");
 
@@ -96,12 +97,13 @@ sTerrainData* cwTerrainParser::parse(const CWSTRING& strFileName)
 
 		pTileData->x = iIndexX;
 		pTileData->y = iIndexY;
-		pTileData->m_bLoaded = CWFALSE;
 		pTileData->m_pHeightMap = nullptr;
 		pTileData->m_iHeightMapWidth = pTerrainData->m_iTileVertexWidth;
 		pTileData->m_iHeightMapHeight = pTerrainData->m_iTileVertexHeight;
-		pTileData->m_fCellSpace = pTerrainData->m_fCellSpace;
+		pTileData->m_pTerrainData = pTerrainData;
+		pTileData->m_nBoundingBox = pTerrainData->terrainTileBoundingBox(iIndexX, iIndexY);
 
+		pTileData->updateBoundingBox();
 		pTerrainData->m_nTerrainTiles.insert(std::make_pair(sTerrainTileData::getKey(iIndexX, iIndexY), pTileData));
 
 		pTileElement = pTileElement->NextSiblingElement("Tile");

@@ -26,10 +26,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Entity/cwEntity.h"
 #include "Math/cwAABB.h"
 #include "Texture/cwTexture.h"
+#include "Resource/cwStreaming.h"
 
 #include <vector>
 
 NS_MINIR_BEGIN
+
+struct sTerrainData;
 
 struct sTerrainTexture
 {
@@ -39,16 +42,20 @@ struct sTerrainTexture
 
 struct sTerrainTileData
 {
+	//the index of tile, top left is [0, 0]
 	CWUSHORT x;
 	CWUSHORT y;
-	CWBOOL m_bLoaded;
+	eTerrainTileState m_eState;
 
 	CWFLOAT* m_pHeightMap;
 	CWUINT m_iHeightMapWidth;
 	CWUINT m_iHeightMapHeight;
-	cwAABB m_nBoundingBox;
 	cwVector2D m_nBoundY; //x:minY, y:maxY
-	CWFLOAT m_fCellSpace;
+	sTerrainData* m_pTerrainData;
+
+	cwAABB m_nBoundingBox;
+	cwAABB m_nBoxLoad;
+	cwAABB m_nBoxRelease;
 
 	sTerrainTexture m_nHeightMap;
 	std::vector<sTerrainTexture> m_nVecLayers;
@@ -59,11 +66,12 @@ struct sTerrainTileData
 		return iKey << 16 | y;
 	}
 
-	sTerrainTileData() : m_pHeightMap(nullptr), m_bLoaded(CWFALSE), x(0), y(0) {}
+	sTerrainTileData() : m_pHeightMap(nullptr), m_eState(eTerrainTileOffline), x(0), y(0) {}
 
 	CWBOOL loadHeightMap(CWFLOAT fScale);
 	CWVOID releaseHeightMap();
 	CWUINT heightMapSize() { return m_iHeightMapWidth*m_iHeightMapHeight; }
+	CWVOID updateBoundingBox();
 
 	CWVOID loadResources();
 
@@ -76,7 +84,7 @@ private:
 
 };
 
-class cwTerrainTile : public cwEntity
+class cwTerrainTile : public cwEntity, public cwStreaming
 {
 public:
 	cwTerrainTile();
@@ -90,18 +98,20 @@ public:
 	CWFLOAT getHeight(const cwVector3D& pos);
 	cwVector3D getMovedPosition(const cwVector3D& pos, const cwVector3D& dir, CWFLOAT fMoveLen);
 
+	virtual CWVOID streaming() override;
+
 protected:
 	virtual CWVOID buildHeightMapTexture() = 0;
-	virtual CWVOID buildLayerTexture() = 0;
-	virtual CWVOID buildBlendTexture() = 0;
+	virtual CWVOID buildLayerTexture(CWBOOL bThreading=CWFALSE) = 0;
+	virtual CWVOID buildBlendTexture(CWBOOL bThreading=CWFALSE) = 0;
 	virtual CWVOID releaseResource();
 
 protected:
 	sTerrainTileData* m_pTerrainTileData;
 	cwTexture* m_pTexHeightMap;
 
-	cwVector<cwTexture*> m_nVecLayerTextures;
-	cwVector<cwTexture*> m_nVecBlendTextures;
+	//cwVector<cwTexture*> m_nVecLayerTextures;
+	//cwVector<cwTexture*> m_nVecBlendTextures;
 
 };
 

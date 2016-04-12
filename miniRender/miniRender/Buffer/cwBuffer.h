@@ -68,7 +68,7 @@ public:
 	inline CWUINT getStride() const { return m_nStride; }
 	inline CWUINT getOffset() const { return m_nOffset; }
 	inline CWVOID setOffset(CWUINT uOffset) { m_nOffset = uOffset; }
-	inline CWUINT getElementCount() const { return m_iElementCnt; }
+	//inline CWUINT getElementCount() const { return m_iElementCnt; }
 	
 	inline CWVOID setElementCount(CWUINT u) { m_iElementCnt = u; }
 

@@ -19,6 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwLabel.h"
 #include "Texture/cwTexture.h"
+#include "RenderObject/cwDynamicRenderObject.h"
 
 NS_MINIR_BEGIN
 
@@ -38,14 +39,15 @@ cwLabel::cwLabel():
 m_uVertexSize(0),
 m_uMaxCharCnt(0),
 m_cStartChar(0),
-m_uCharWidth(0)
+m_uCharWidth(0),
+m_pVertexBuffer(nullptr)
 {
 
 }
 
 cwLabel::~cwLabel()
 {
-
+	CW_SAFE_DELETE_ARRAY(m_pVertexBuffer);
 }
 
 CWBOOL cwLabel::init(const CWSTRING& strText, const CWSTRING& strFontTexture, CWCHAR cStartChar, CWUINT uCharWidth)
@@ -76,9 +78,22 @@ CWBOOL cwLabel::buildVertexBuffer()
 		m_uMaxCharCnt = (CWUINT)((CWFLOAT)(m_nStrText.size())*1.5f + 1.0f);
 	}
 
+	CW_SAFE_DELETE_ARRAY(m_pVertexBuffer);
 	m_uVertexSize = m_uMaxCharCnt * 6;
-	m_pVertexBuffer = new cwVertexPosTexColor[m_uVertexSize];
+	m_pVertexBuffer = new cwVertexPosTex[m_uVertexSize];
 	if (!m_pVertexBuffer) return CWFALSE;
+
+	if (m_pRenderObject == nullptr) {
+		m_pRenderObject = cwDynamicRenderObject::create(
+			ePrimitiveTypeTriangleList,
+			m_pVertexBuffer,
+			sizeof(cwVertexPosTex),
+			m_uVertexSize,
+			nullptr,
+			0,
+			"PosTex");
+		CW_SAFE_RETAIN(m_pRenderObject);
+	}
 
 	refreshVertexBuffer();
 
@@ -101,68 +116,83 @@ CWVOID cwLabel::refreshVertexBuffer()
 
 		m_pVertexBuffer[6 * i + 0].pos.set(fStartX, -fHalfTextureHeight, 0.0f);
 		m_pVertexBuffer[6 * i + 0].tex.set(fStartU, 1.0f);
-		m_pVertexBuffer[6 * i + 0].color = m_nColor;
 
 		m_pVertexBuffer[6 * i + 1].pos.set(fStartX, fHalfTextureHeight, 0.0f);
 		m_pVertexBuffer[6 * i + 1].tex.set(fStartU, 0.0f);
-		m_pVertexBuffer[6 * i + 1].color = m_nColor;
 
 		m_pVertexBuffer[6 * i + 2].pos.set(fStartX+m_uCharWidth, -fHalfTextureHeight, 0.0f);
 		m_pVertexBuffer[6 * i + 2].tex.set(fStartU + fUStep, 1.0f);
-		m_pVertexBuffer[6 * i + 2].color = m_nColor;
 
 		m_pVertexBuffer[6 * i + 3].pos.set(fStartX, fHalfTextureHeight, 0.0f);
 		m_pVertexBuffer[6 * i + 3].tex.set(fStartU, 0.0f);
-		m_pVertexBuffer[6 * i + 3].color = m_nColor;
 
 		m_pVertexBuffer[6 * i + 4].pos.set(fStartX + m_uCharWidth, fHalfTextureHeight, 0.0f);
 		m_pVertexBuffer[6 * i + 4].tex.set(fStartU + fUStep, 0.0f);
-		m_pVertexBuffer[6 * i + 4].color = m_nColor;
 
 		m_pVertexBuffer[6 * i + 5].pos.set(fStartX + m_uCharWidth, -fHalfTextureHeight, 0.0f);
 		m_pVertexBuffer[6 * i + 5].tex.set(fStartU + fUStep, 1.0f);
-		m_pVertexBuffer[6 * i + 5].color = m_nColor;
 
 		fStartX += m_uCharWidth;
 	}
-
-	m_nBoundingBox.m_nMin = m_pVertexBuffer[0].pos;
-	m_nBoundingBox.m_nMax = m_pVertexBuffer[iChatSize * 6 - 2].pos;
 }
 
-CWVOID cwLabel::transformBuffer()
-{
-	refreshVertexBuffer();
-
-	CWUINT iChatSize = (CWUINT)(m_nStrText.size());
-	if (iChatSize == 0) return;
-
-	cwVector4D pos;
-	for (CWUINT i = 0; i < iChatSize * 6; ++i) {
-		pos.set(m_pVertexBuffer[i].pos.x, m_pVertexBuffer[i].pos.y, 0, 1.0f);
-		m_pVertexBuffer[i].pos = pos * m_nTrans;
-	}
-
-	m_nBoundingBox.m_nMin = m_pVertexBuffer[0].pos;
-	m_nBoundingBox.m_nMax = m_pVertexBuffer[iChatSize * 6 - 2].pos;
-}
+//CWVOID cwLabel::transformBuffer()
+//{
+//	refreshVertexBuffer();
+//
+//	CWUINT iChatSize = (CWUINT)(m_nStrText.size());
+//	if (iChatSize == 0) return;
+//
+//	m_nBoundingBox.empty();
+//	cwVector4D pos;
+//	for (CWUINT i = 0; i < iChatSize * 6; ++i) {
+//		pos.set(m_pVertexBuffer[i].pos.x, m_pVertexBuffer[i].pos.y, 0, 1.0f);
+//		m_pVertexBuffer[i].pos = pos * m_nTrans;
+//		m_nBoundingBox.add(m_pVertexBuffer[i].pos);
+//	}
+//}
 
 CWVOID cwLabel::setString(const CWSTRING& strText)
 {
 	if (strText == m_nStrText) return;
 
-	CWUINT uSize = (CWUINT)(strText.size());
+	m_nStrText = strText;
+	CWUINT uSize = (CWUINT)(m_nStrText.size());
 	if (uSize > m_uMaxCharCnt) {
-		m_uMaxCharCnt = (CWUINT)(uSize*1.5f + 1.0f);
+		buildVertexBuffer();
+	}
+	else {
+		refreshVertexBuffer();
+	}
+	
+	//transformBuffer();
+	refreshRenderObject();
+}
 
-		CW_SAFE_DELETE(m_pVertexBuffer);
-		m_uVertexSize = m_uMaxCharCnt * 6;
-		m_pVertexBuffer = new cwVertexPosTexColor[m_uVertexSize];
-		if (!m_pVertexBuffer) return;
+CWVOID cwLabel::refreshRenderObject()
+{
+	if (m_pRenderObject->getVertexCnt() != m_uVertexSize) {
+		m_pRenderObject->rebuild(
+			m_pVertexBuffer,
+			sizeof(cwVertexPosTex),
+			m_uVertexSize,
+			nullptr,
+			0);
 	}
 
-	m_nStrText = strText;
-	transformBuffer();
+	m_pRenderObject->updateVertexData(m_pVertexBuffer, getVertexCnt());
+	m_pRenderObject->setValidVertexCnt(getVertexCnt());
+}
+
+CWVOID cwLabel::refreshTransform()
+{
+	cwRenderNode::refreshTransform();
+	//transformBuffer();
+}
+
+CWVOID cwLabel::render(cwCamera* pCamera)
+{
+	cwSprite::render(pCamera);
 }
 
 NS_MINIR_END

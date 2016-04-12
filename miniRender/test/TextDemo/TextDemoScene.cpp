@@ -38,7 +38,8 @@ m_pSpriteCenter(nullptr),
 m_pSpriteLeft(nullptr),
 m_pSpriteRight(nullptr),
 m_pLabel(nullptr),
-m_fNumber(0)
+m_fNumber(0),
+m_pPrimitive(nullptr)
 {
 
 }
@@ -80,6 +81,15 @@ CWVOID TextDemoScene::update(CWFLOAT dt)
 			m_pLabel->setString(ss.str());
 		}
 	}
+
+	m_pPrimitive->drawLine(cwVector2D(-100, -200), cwVector2D(100, -200), cwColor::red);
+	m_pPrimitive->drawQuad(
+		cwVector2D(-100, 100),
+		cwVector2D(100, 100),
+		cwVector2D(100, 0),
+		cwVector2D(-100, 0),
+		cwColor::blue,
+		CWTRUE);
 }
 
 CWVOID TextDemoScene::buildText()
@@ -122,4 +132,10 @@ CWVOID TextDemoScene::buildSprite()
 	m_pLabel->setPosition(-100, -100);
 	cwRepertory::getInstance().getEngine()->addNode2D(m_pLabel);
 	m_pLabel->setTag(200);
+
+	m_pPrimitive = cwPrimitiveNode2D::create();
+	m_pPrimitive->setPosition(0, 0);
+	cwRepertory::getInstance().getEngine()->addNode2D(m_pPrimitive);
+	m_pPrimitive->setTag(201);
+	m_pPrimitive->setRenderOrder(10);
 }

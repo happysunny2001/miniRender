@@ -17,44 +17,44 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_FUNC_NODE_H__
-#define __CW_FUNC_NODE_H__
-
-#include "cwMacros.h"
-#include <functional>
+#include "cwEffectManager.h"
+#include "effect/cwEffect.h"
+#include "Repertory/cwRepertory.h"
+#include "Shader/cwShaderManager.h"
 
 NS_MINIR_BEGIN
 
-template<typename M, typename R, typename... Args>
-class cwFuncNode
+cwEffectManager* cwEffectManager::create()
 {
-public:
-	cwFuncNode(std::function<R(Args...)> func)
-	{
-		_func = func;
-		//_calller = caller;
-		//_funcPtr = funcPtr;
+	cwEffectManager* pEffectManager = new cwEffectManager();
+	if (pEffectManager) {
+		pEffectManager->autorelease();
+		return pEffectManager;
 	}
 
-	R operator()(Args... args)
-	{
-		return _func(args...);
+	return nullptr;
+}
+
+cwEffectManager::cwEffectManager():
+m_pDefaultSpriteEffect(nullptr)
+{
+
+}
+
+cwEffectManager::~cwEffectManager()
+{
+	CW_SAFE_RELEASE_NULL(m_pDefaultSpriteEffect);
+}
+
+cwEffect* cwEffectManager::defaultSpriteEffect()
+{
+	if (m_pDefaultSpriteEffect == nullptr) {
+		m_pDefaultSpriteEffect = cwEffect::create();
+		m_pDefaultSpriteEffect->setShader(cwRepertory::getInstance().getShaderManager()->getDefShader(eDefShaderTex));
+		CW_SAFE_RETAIN(m_pDefaultSpriteEffect);
 	}
 
-	//inline void* caller() { return _calller; }
-	//inline F& funcPtr() { return _funcPtr; }
-	inline M& data() { return _data; }
-
-	inline void setData(const M& d) { _data = d; }
-
-private:
-	std::function<R(Args...)> _func;
-	//void* _calller;
-	//F _funcPtr;
-	M _data;
-
-};
+	return m_pDefaultSpriteEffect;
+}
 
 NS_MINIR_END
-
-#endif

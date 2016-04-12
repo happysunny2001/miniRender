@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015-2016 Ziwei Wang (happy.sunny.2001@163.com)
+Copyright © 2015 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -17,44 +17,56 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_FUNC_NODE_H__
-#define __CW_FUNC_NODE_H__
-
-#include "cwMacros.h"
-#include <functional>
+#include "cwStreaming.h"
+#include "cwLoadBatch.h"
+#include "Base/cwLog.h"
 
 NS_MINIR_BEGIN
 
-template<typename M, typename R, typename... Args>
-class cwFuncNode
+cwStreaming::cwStreaming() : 
+m_pLoadBatch(nullptr)
 {
-public:
-	cwFuncNode(std::function<R(Args...)> func)
-	{
-		_func = func;
-		//_calller = caller;
-		//_funcPtr = funcPtr;
-	}
 
-	R operator()(Args... args)
-	{
-		return _func(args...);
-	}
+}
 
-	//inline void* caller() { return _calller; }
-	//inline F& funcPtr() { return _funcPtr; }
-	inline M& data() { return _data; }
+cwStreaming::~cwStreaming()
+{
+	CW_SAFE_RELEASE_NULL(m_pLoadBatch);
+	cwLog::print("cwStreaming::~cwStreaming.\n");
+}
 
-	inline void setData(const M& d) { _data = d; }
+CWVOID cwStreaming::streamPrepare()
+{
+	CW_SAFE_RELEASE_NULL(m_pLoadBatch);
+	m_pLoadBatch = cwLoadBatch::create();
+	CW_SAFE_RETAIN(m_pLoadBatch);
+	if (m_pLoadBatch)
+		m_pLoadBatch->m_pObjStreaming = this;
+}
 
-private:
-	std::function<R(Args...)> _func;
-	//void* _calller;
-	//F _funcPtr;
-	M _data;
+CWVOID cwStreaming::streamBegin()
+{
 
-};
+}
+
+CWVOID cwStreaming::streamEnd()
+{
+
+}
+
+CWVOID cwStreaming::streamClean()
+{
+	CW_SAFE_RELEASE_NULL(m_pLoadBatch);
+}
+
+CWVOID cwStreaming::streamRelease()
+{
+
+}
+
+cwRemoveBatch* cwStreaming::buildRemoveBatch()
+{
+	return nullptr;
+}
 
 NS_MINIR_END
-
-#endif

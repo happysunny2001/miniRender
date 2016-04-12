@@ -39,6 +39,7 @@ public:
 	static cwD3D11Texture* createThreadSafe(CWVOID* pData, CWUINT64 uSize);
 
 	static cwD3D11Texture* create(CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format);
+	static cwD3D11Texture* createThreadSafe(CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format);
 
 	cwD3D11Texture();
 	virtual ~cwD3D11Texture();

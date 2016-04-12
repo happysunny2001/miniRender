@@ -53,8 +53,6 @@ protected:
 	CWVOID loadShader(const cwResourceInfo& resInfo);
 
 protected:
-	std::vector<cwTexture*> m_nVecTexture;
-	std::vector<cwShader*> m_nVecShader;
 	cwLoadBatch* m_pLoadBatch;
 
 };

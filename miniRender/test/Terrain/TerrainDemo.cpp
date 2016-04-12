@@ -32,16 +32,16 @@ TerrainDemo::~TerrainDemo()
 CWVOID TerrainDemo::globalInit()
 {
 	cwAABB aabb;
-	aabb.m_nMin.set(-2000.0f, -2000.0f, -2000.0f);
-	aabb.m_nMax.set(2000.0f, 2000.0f, 2000.0f);
+	aabb.m_nMin.set(-4000.0f, -4000.0f, -4000.0f);
+	aabb.m_nMax.set(4000.0f, 4000.0f, 4000.0f);
 
-	cwRepertory::getInstance().getSpatialFactory()->setWorldSize(aabb);
+	cwGlobalParameter::OctreeDefaultSize = aabb;
 }
 
 void TerrainDemo::gameBegin()
 {
 	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 0, 0);
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 15, 0);
 	//cwRepertory::getInstance().getEngine()->getDefaultCamera()->pitch(cwMathUtil::cwPI*0.1f);
 	cwRepertory::getInstance().getEngine()->setFrameEnable(CWTRUE);
 

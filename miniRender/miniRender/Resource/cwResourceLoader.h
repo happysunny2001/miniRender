@@ -38,6 +38,7 @@ class cwLoadBatch;
 class cwLoadResult;
 class cwResourceInfo;
 class cwRemoveBatch;
+class cwStreaming;
 
 class cwResourceLoader : public cwRef
 {
@@ -45,6 +46,7 @@ public:
 	virtual ~cwResourceLoader();
 
 	CWVOID loadAsync(cwLoadBatch* pBatch);
+	CWVOID loadAsync(cwStreaming* pObjStreaming);
 	CWBOOL loadSync(cwLoadBatch* pBatch);
 
 	CWVOID remove(cwRemoveBatch* pBatch);

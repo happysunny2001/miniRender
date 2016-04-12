@@ -72,7 +72,7 @@ CWBOOL cwPrimitiveEntity::init()
 CWVOID cwPrimitiveEntity::render(cwRenderBatch* pRenderBatch)
 {
 	if (m_uVertexCnt == 0) return;
-	m_pRenderObj->updateVertexData(m_pVertexData, m_uVertexCnt*m_pRenderObj->getVertexStride());
+	m_pRenderObj->updateVertexData(m_pVertexData, m_uVertexCnt);
 
 	if (pRenderBatch && pRenderBatch->m_pEffect) {
 		cwDevice* pDevice = cwRepertory::getInstance().getDevice();

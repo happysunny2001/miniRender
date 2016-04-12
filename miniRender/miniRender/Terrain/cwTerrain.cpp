@@ -21,6 +21,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Parser/cwParserManager.h"
 #include "Parser/cwTerrainParser.h"
 #include "Repertory/cwRepertory.h"
+#include "Resource/cwLoadBatch.h"
+#include "Resource/cwStreaming.h"
+#include "Resource/cwResourceLoader.h"
+#include "Engine/cwEngine.h"
+#include "Camera/cwCamera.h"
+#include "Base/cwLog.h"
 
 NS_MINIR_BEGIN
 
@@ -32,6 +38,19 @@ cwVector3D sTerrainData::terrainTilePosition(CWUSHORT i, CWUSHORT j)
 	CWFLOAT fStartZ = fHalfTerrainHeight - terrainTileHeight()*0.5f;
 
 	return cwVector3D(fStartX + i*terrainTileWidth(), 0, fStartZ - j*terrainTileHeight());
+}
+
+cwAABB sTerrainData::terrainTileBoundingBox(CWUSHORT i, CWUSHORT j)
+{
+	cwVector3D tilePos = this->terrainTilePosition(i, j);
+	CWFLOAT fHalfWidth = this->terrainTileWidth()*0.5f;
+	CWFLOAT fHalfHeight = this->terrainTileHeight()*0.5f;
+	
+	cwAABB aabb;
+	aabb.m_nMin.set(tilePos.x - fHalfWidth, -cwMathUtil::cwInfinity, tilePos.z - fHalfHeight);
+	aabb.m_nMax.set(tilePos.x + fHalfWidth, cwMathUtil::cwInfinity, tilePos.z + fHalfHeight);
+
+	return aabb;
 }
 
 CWUSHORT sTerrainData::getTerrainTileIndexX(CWFLOAT x)
@@ -56,6 +75,52 @@ CWUSHORT sTerrainData::getTerrainTileIndexY(CWFLOAT y)
 	return index;
 }
 
+CWUSHORT sTerrainData::getTerrainTileIndexXIn(CWFLOAT x)
+{
+	CWFLOAT fHalfTerrainWidth = terrainWidth()*0.5f;
+	CWFLOAT fLeft = fHalfTerrainWidth + x;
+	if (fLeft < 0) return 0;
+	CWUSHORT index = (CWUSHORT)floorf(fLeft / terrainTileWidth());
+	if (index >= m_iHorizTileCnt) return m_iHorizTileCnt-1;
+
+	return index;
+}
+
+CWUSHORT sTerrainData::getTerrainTileIndexYIn(CWFLOAT y)
+{
+	CWFLOAT fHalfTerrainHeight = terrainHeight()*0.5f;
+	CWFLOAT fTop = fHalfTerrainHeight - y;
+	if (fTop < 0) return 0;
+	CWUSHORT index = (CWUSHORT)floorf(fTop / terrainTileHeight());
+	if (index >= m_iVertTileCnt) return m_iVertTileCnt-1;
+
+	return index;
+}
+
+CWVOID sTerrainData::getTerrainTiles(const cwVector3D& pos, CWFLOAT fRadius, std::vector<sTerrainTileData*>& vecRet)
+{
+	cwVector3D bl = pos - cwVector3D(fRadius, 0, -fRadius);
+	cwVector3D tr = pos + cwVector3D(fRadius, 0, -fRadius);
+
+	CWUSHORT blX = getTerrainTileIndexXIn(bl.x);
+	CWUSHORT blY = getTerrainTileIndexYIn(bl.z);
+	CWUSHORT trX = getTerrainTileIndexXIn(tr.x);
+	CWUSHORT trY = getTerrainTileIndexYIn(tr.z);
+
+	if (blX > 0) blX--;
+	if (blY > 0) blY--;
+	if (trX < m_iHorizTileCnt - 1) trX++;
+	if (trY < m_iVertTileCnt - 1) trY++;
+
+	for (CWUSHORT j = blY; j <= trY; ++j) {
+		for (CWUSHORT i = blX; i <= trX; ++i) {
+			auto it = m_nTerrainTiles.find(sTerrainTileData::getKey(i, j));
+			if (it != m_nTerrainTiles.end() && it->second->m_eState == eTerrainTileOffline)
+				vecRet.push_back(it->second);
+		}
+	}
+}
+
 cwTerrain::cwTerrain() : 
 m_pTerrainData(nullptr)
 {
@@ -77,6 +142,10 @@ CWBOOL cwTerrain::init(const CWSTRING& strConfFile)
 
 	m_pTerrainData = pTerrainParser->parse(strConfFile);
 	if (!m_pTerrainData) return CWFALSE;
+
+	if (m_pTerrainData->m_eLoadType == eTerrainThreading) {
+		this->schedulerUpdate();
+	}
 
 	return CWTRUE;
 }
@@ -115,6 +184,132 @@ cwTerrainTile* cwTerrain::getTerrainTile(const cwVector3D& pos)
 	auto it = m_nMapTiles.find(iKey);
 	if (it == m_nMapTiles.end()) return nullptr;
 	return it->second;
+}
+
+CWVOID cwTerrain::loadTerrainTileOver(cwLoadBatch* pBatch)
+{
+	if (pBatch && pBatch->m_pObjStreaming) {
+		cwTerrainTile* pTile = dynamic_cast<cwTerrainTile*>(pBatch->m_pObjStreaming);
+		if (pTile) {
+			this->addTerrainTile(pTile);
+			CW_SAFE_RELEASE(pTile);
+		}
+	}
+}
+
+CWVOID cwTerrain::addTerrainTile(cwTerrainTile* pTerrainTile)
+{
+	if (pTerrainTile) {
+		const cwAABB& boundingBox = pTerrainTile->getBoundingBox();
+		cwPoint3D center = boundingBox.center();
+		center.y = 0;
+		pTerrainTile->setPosition(center);
+		pTerrainTile->setEffect(m_pEffect);
+
+		this->addChild(pTerrainTile);
+		sTerrainTileData* pTerrainTileData = pTerrainTile->getTerrainTileData();
+		m_nMapTiles.insert(sTerrainTileData::getKey(pTerrainTileData->x, pTerrainTileData->y), pTerrainTile);
+	}
+}
+
+CWVOID cwTerrain::removeTerrainTile(cwTerrainTile* pTerrainTile)
+{
+	if (pTerrainTile) {
+		sTerrainTileData* pTerrainTileData = pTerrainTile->getTerrainTileData();
+
+		cwLog::print("Release Terrain Tile:[%d,%d]\n", pTerrainTileData->x, pTerrainTileData->y);
+		
+		cwRemoveBatch* pRemoveBatch = pTerrainTile->buildRemoveBatch();
+		pTerrainTile->streamRelease();
+		this->removeChild(pTerrainTile);
+		
+		m_nMapTiles.erase(sTerrainTileData::getKey(pTerrainTileData->x, pTerrainTileData->y));
+		cwRepertory::getInstance().getResourceLoader()->remove(pRemoveBatch);
+
+		pTerrainTileData->m_eState = eTerrainTileOffline;
+	}
+}
+
+CWVOID cwTerrain::update(CWFLOAT dt)
+{
+	checkTileRelease();
+	checkTerrainLoad();
+}
+
+CWVOID cwTerrain::checkTileRelease()
+{
+	static std::vector<cwTerrainTile*> vecRemoveTiles;
+
+	cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getDefaultCamera();
+	if (!pCamera) return;
+
+	vecRemoveTiles.clear();
+	//const cwFrustum& frustum = pCamera->getFrustum();
+	cwCircle cCamera(pCamera->getPos(), pCamera->getFarZ());
+
+	for (auto it = m_nMapTiles.begin(); it != m_nMapTiles.end(); ++it) {
+		sTerrainTileData* pTerrainTileData = it->second->getTerrainTileData();
+		if (!cCamera.intersection(pTerrainTileData->m_nBoxRelease)) {
+			vecRemoveTiles.push_back(it->second);
+		}
+		/*int iSect = frustum.intersection(pTerrainTileData->m_nBoxRelease);
+		if (!frustum.isCollide(iSect)) {
+			vecRemoveTiles.push_back(it->second);
+		}*/
+	}
+
+	if (!vecRemoveTiles.empty()) {
+		for (auto pTerainTile : vecRemoveTiles) {
+			this->removeTerrainTile(pTerainTile);
+		}
+		vecRemoveTiles.clear();
+	}
+}
+
+CWVOID cwTerrain::checkTerrainLoad()
+{
+	static std::vector<sTerrainTileData*> vecRet;
+	static std::vector<sTerrainTileData*> vecLoad;
+
+	cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getDefaultCamera();
+	if (!pCamera) return;
+
+	vecRet.clear();
+	m_pTerrainData->getTerrainTiles(pCamera->getPos(), pCamera->getFarZ(), vecRet);
+	if (vecRet.empty()) return;
+	vecLoad.clear();
+
+	cwCircle cCamera(pCamera->getPos(), pCamera->getFarZ());
+	for (auto pTileData : vecRet) {
+		if (pTileData->m_eState != eTerrainTileOffline) continue;
+
+		if (cCamera.intersection(pTileData->m_nBoxLoad)) {
+			vecLoad.push_back(pTileData);
+		}
+	}
+
+	if (!vecLoad.empty()) {
+		cwResourceLoader* pResLoader = cwRepertory::getInstance().getResourceLoader();
+		for (auto pTileData : vecLoad) {
+			cwLog::print("Begin Load Terrain Tile [%d,%d]\n", pTileData->x, pTileData->y);
+			cwTerrainTile* pTerrainTile = createTerrainTile(pTileData);
+			if (pTerrainTile) {
+				pResLoader->loadAsync(pTerrainTile);
+				CW_SAFE_RETAIN(pTerrainTile);
+
+				static_cast<cwStreaming*>(pTerrainTile)->getLoadBatch()->onLoadOver = CW_CALLBACK_1(cwTerrain::loadTerrainTileOver, this);
+			}
+		}
+
+		vecLoad.clear();
+	}
+
+	vecRet.clear();
+}
+
+cwTerrainTile* cwTerrain::createTerrainTile(sTerrainTileData* pTileData)
+{
+	return nullptr;
 }
 
 NS_MINIR_END

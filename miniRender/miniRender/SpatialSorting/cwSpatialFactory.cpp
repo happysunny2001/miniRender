@@ -20,14 +20,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwSpatialFactory.h"
 #include "Octree/cwOctree.h"
 #include "Octree/cwLooseOctree.h"
+#include "Repertory/cwGlobalParameter.h"
 #include "cwNormalSorting.h"
 
 NS_MINIR_BEGIN
 
 cwSpatialFactory::cwSpatialFactory()
 {
-	m_nOctreeInit.m_uDepth = cwOctree::m_uDefaultDepth;
-	m_nOctreeInit.m_nMaxSpace = cwOctree::m_nDefaultSize;
 }
 
 cwSpatialFactory::~cwSpatialFactory()
@@ -37,24 +36,24 @@ cwSpatialFactory::~cwSpatialFactory()
 
 cwSpatial* cwSpatialFactory::createSpatial(const CWSTRING& strType)
 {
-	if (strType == "Octree")
-		return cwOctree::create(m_nOctreeInit);
+	if (strType == "Octree") {
+		cwOctree::sOctreeInit octreeInit;
+		octreeInit.m_uDepth = cwGlobalParameter::OctreeDefaultDepth;
+		octreeInit.m_nMaxSpace = cwGlobalParameter::OctreeDefaultSize;
+
+		return cwOctree::create(octreeInit);
+	}
 	else if (strType == "Normal")
 		return cwNormalSorting::create();
-	else if (strType == "LooseOctree")
-		return cwLooseOctree::create(m_nOctreeInit);
+	else if (strType == "LooseOctree") {
+		cwOctree::sOctreeInit octreeInit;
+		octreeInit.m_uDepth = cwGlobalParameter::OctreeDefaultDepth;
+		octreeInit.m_nMaxSpace = cwGlobalParameter::OctreeDefaultSize;
+
+		return cwLooseOctree::create(octreeInit);
+	}
 
 	return nullptr;
-}
-
-CWVOID cwSpatialFactory::setWorldSize(const cwAABB& aabb)
-{
-	m_nOctreeInit.m_nMaxSpace = aabb;
-}
-
-CWVOID cwSpatialFactory::setOctreeDepth(CWUINT uDepth)
-{
-	m_nOctreeInit.m_uDepth = uDepth;
 }
 
 NS_MINIR_END

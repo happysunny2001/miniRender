@@ -29,6 +29,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "RenderObject/cwStaticRenderObject.h"
 #include "Terrain/cwTerrainTile.h"
 #include "cwD3D11TerrainTile.h"
+#include "Resource/cwLoadBatch.h"
+#include "Resource/cwStreaming.h"
 
 NS_MINIR_BEGIN
 
@@ -78,11 +80,11 @@ CWBOOL cwD3D11Terrain::init(const CWSTRING& strConfFile)
 	buildTerrainVertexBuffer();
 	buildEffect();
 
-	for (CWUSHORT j = 0; j < m_pTerrainData->m_iVertTileCnt; ++j) {
-		for (CWUSHORT i = 0; i < m_pTerrainData->m_iHorizTileCnt; ++i) {
-			buildTerrainTile(i, j);
-		}
-	}
+	//for (CWUSHORT j = 0; j < m_pTerrainData->m_iVertTileCnt; ++j) {
+	//	for (CWUSHORT i = 0; i < m_pTerrainData->m_iHorizTileCnt; ++i) {
+	//		buildTerrainTile(i, j);
+	//	}
+	//}
 
 	return CWTRUE;
 }
@@ -180,27 +182,32 @@ CWVOID cwD3D11Terrain::buildTerrainTile(CWUSHORT i, CWUSHORT j)
 	sTerrainTileData* pTileData = m_pTerrainData->m_nTerrainTiles[sTerrainTileData::getKey(i, j)];
 	pTileData->loadHeightMap(m_pTerrainData->m_fHeightScale);
 	pTileData->loadResources();
+	pTileData->m_eState = eTerrainTileOnline;
 
 	cwTerrainTile* pTerrainTile = cwD3D11TerrainTile::create(pTileData);
 	if (!pTerrainTile) return;
 	pTerrainTile->loadResource();
 
-	cwVector3D tilePos = m_pTerrainData->terrainTilePosition(i, j);
-	CWFLOAT fHalfWidth = m_pTerrainData->terrainTileWidth()*0.5f;
-	CWFLOAT fHalfHeight = m_pTerrainData->terrainTileHeight()*0.5f;
-	const cwVector2D& bound = pTileData->m_nBoundY;
-
-	cwAABB aabb;
-	aabb.m_nMin.set(tilePos.x - fHalfWidth, bound.x, tilePos.z - fHalfHeight);
-	aabb.m_nMax.set(tilePos.x + fHalfWidth, bound.y, tilePos.z + fHalfHeight);
-
-	pTerrainTile->setBoundingBox(aabb);
-	pTerrainTile->setPosition(tilePos);
+	pTerrainTile->setBoundingBox(pTerrainTile->getTerrainTileData()->m_nBoundingBox);
+	pTerrainTile->setPosition(m_pTerrainData->terrainTilePosition(i, j));
 	pTerrainTile->setEffect(m_pEffect);
 	pTerrainTile->setRenderObject(m_pRenderObject);
 
 	this->addChild(pTerrainTile);
 	m_nMapTiles.insert(sTerrainTileData::getKey(i, j), pTerrainTile);
+}
+
+CWVOID cwD3D11Terrain::addTerrainTile(cwTerrainTile* pTerrainTile)
+{
+	if (pTerrainTile) {
+		pTerrainTile->setRenderObject(m_pRenderObject);
+		cwTerrain::addTerrainTile(pTerrainTile);
+	}
+}
+
+cwTerrainTile* cwD3D11Terrain::createTerrainTile(sTerrainTileData* pTileData)
+{
+	return cwD3D11TerrainTile::create(pTileData);
 }
 
 NS_MINIR_END

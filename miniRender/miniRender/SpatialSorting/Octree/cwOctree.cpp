@@ -25,13 +25,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Render/cwRenderer.h"
 #include "Base/cwColor.h"
 #include "Base/cwLog.h"
+#include "Repertory/cwGlobalParameter.h"
 
 NS_MINIR_BEGIN
-
-const CWUINT cwOctree::MAX_DEPTH = 8;
-const CWUINT cwOctree::m_uDefaultDepth = 5;
-//const cwAABB cwOctree::m_nDefaultSize(cwPoint3D(-1000.0f, -1000.0f, -1000.0f), cwPoint3D(1000.0f, 1000.0f, 1000.0f));
-const cwAABB cwOctree::m_nDefaultSize(cwPoint3D(-1000.0f, -1000.0f, -1000.0f), cwPoint3D(1000.0f, 1000.0f, 1000.0f));
 
 cwOctree::sOctreeNode::sOctreeNode()
 {
@@ -96,8 +92,8 @@ cwOctree::~cwOctree()
 CWBOOL cwOctree::init()
 {
 	sOctreeInit initData;
-	initData.m_uDepth = m_uDefaultDepth;
-	initData.m_nMaxSpace = m_nDefaultSize;
+	initData.m_uDepth = cwGlobalParameter::OctreeDefaultDepth;
+	initData.m_nMaxSpace = cwGlobalParameter::OctreeDefaultSize;
 
 	return this->init(initData);
 }
@@ -639,7 +635,7 @@ const cwAABB& cwOctree::getBoundingBox()
 {
 	if (m_pRoot)
 		return m_pRoot->m_nBox;
-	return cwOctree::m_nDefaultSize;
+	return cwGlobalParameter::OctreeDefaultSize;
 }
 
 NS_MINIR_END

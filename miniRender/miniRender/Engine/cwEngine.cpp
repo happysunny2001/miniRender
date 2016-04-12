@@ -262,7 +262,7 @@ CWVOID cwEngine::renderSprite()
 		m_pSpriteManager->render();
 
 		if (m_bShowFrame && m_pLabelFrameRate) {
-			m_pSpriteManager->renderBatch(m_pLabelFrameRate);
+			m_pSpriteManager->render(m_pLabelFrameRate);
 		}
 
 		m_pSpriteManager->end();

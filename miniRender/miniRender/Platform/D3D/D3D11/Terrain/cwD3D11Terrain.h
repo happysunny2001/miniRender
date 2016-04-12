@@ -48,6 +48,9 @@ protected:
 	CWVOID buildEffect();
 	CWVOID buildTerrainTile(CWUSHORT i, CWUSHORT j);
 
+	virtual CWVOID addTerrainTile(cwTerrainTile* pTerrainTile) override;
+	virtual cwTerrainTile* createTerrainTile(sTerrainTileData* pTileData) override;
+
 protected:
 	CWUINT m_iPatchVertexWidth;
 	CWUINT m_iPatchVertexHeight;

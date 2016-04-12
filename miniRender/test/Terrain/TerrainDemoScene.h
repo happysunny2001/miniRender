@@ -41,6 +41,7 @@ protected:
 	CWVOID buildLabel();
 
 	CWVOID updateCamera(CWFLOAT dt);
+	CWVOID checkTerrainTileVisible();
 
 protected:
 	cwTerrain* m_pTerrain;

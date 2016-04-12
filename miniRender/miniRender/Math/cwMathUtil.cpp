@@ -27,6 +27,7 @@ const CWFLOAT cwMathUtil::cwPIx2         = 6.2831852f;
 const CWFLOAT cwMathUtil::cwAngleInv180  = 1.0f / 180.0f;
 const CWFLOAT cwMathUtil::cwPiInv        = 1.0f / cwMathUtil::cwPI;
 const CWFLOAT cwMathUtil::cwInfinity     = FLT_MAX;
+const CWUSHORT cwMathUtil::cwUShortInfinity = 0xFFFF;
 
 CWFLOAT cwMathUtil::angleFrom(CWFLOAT x, CWFLOAT y)
 {

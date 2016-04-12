@@ -32,11 +32,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwMaterial* cwMaterial::create()
+cwMaterial* cwMaterial::create(CWBOOL bThreading)
 {
 	cwMaterial* pMaterial = new cwMaterial();
 	if (pMaterial && pMaterial->init()) {
-		pMaterial->autorelease();
+		if (!bThreading)
+			pMaterial->autorelease();
 		return pMaterial;
 	}
 
@@ -48,11 +49,13 @@ cwMaterial* cwMaterial::create(
 	const cwVector4D& ambient,
 	const cwVector4D& diffuse,
 	const cwVector4D& specular,
-	const cwVector4D& reflect)
+	const cwVector4D& reflect,
+	CWBOOL bThreading)
 {
 	cwMaterial* pMaterial = new cwMaterial();
 	if (pMaterial && pMaterial->init(ambient, diffuse, specular, reflect)) {
-		pMaterial->autorelease();
+		if (!bThreading)
+			pMaterial->autorelease();
 		return pMaterial;
 	}
 

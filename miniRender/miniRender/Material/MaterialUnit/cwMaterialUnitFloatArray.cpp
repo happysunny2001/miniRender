@@ -23,11 +23,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwMaterialUnitFloatArray* cwMaterialUnitFloatArray::create(const CWFLOAT* pFloats, CWUINT iSize)
+cwMaterialUnitFloatArray* cwMaterialUnitFloatArray::create(const CWFLOAT* pFloats, CWUINT iSize, CWBOOL bThreading)
 {
 	cwMaterialUnitFloatArray* pMatUnit = new cwMaterialUnitFloatArray();
 	if (pMatUnit && pMatUnit->init(pFloats, iSize)) {
-		pMatUnit->autorelease();
+		if (!bThreading)
+			pMatUnit->autorelease();
 		return pMatUnit;
 	}
 
@@ -35,11 +36,12 @@ cwMaterialUnitFloatArray* cwMaterialUnitFloatArray::create(const CWFLOAT* pFloat
 	return nullptr;
 }
 
-cwMaterialUnitFloatArray* cwMaterialUnitFloatArray::create(CWUINT iSize)
+cwMaterialUnitFloatArray* cwMaterialUnitFloatArray::create(CWUINT iSize, CWBOOL bThreading)
 {
 	cwMaterialUnitFloatArray* pMatUnit = new cwMaterialUnitFloatArray();
 	if (pMatUnit && pMatUnit->init(iSize)) {
-		pMatUnit->autorelease();
+		if (!bThreading)
+			pMatUnit->autorelease();
 		return pMatUnit;
 	}
 

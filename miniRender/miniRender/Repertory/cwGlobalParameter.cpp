@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015-2016 Ziwei Wang (happy.sunny.2001@163.com)
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -17,44 +17,14 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_FUNC_NODE_H__
-#define __CW_FUNC_NODE_H__
-
-#include "cwMacros.h"
-#include <functional>
+#include "cwGlobalParameter.h"
 
 NS_MINIR_BEGIN
 
-template<typename M, typename R, typename... Args>
-class cwFuncNode
-{
-public:
-	cwFuncNode(std::function<R(Args...)> func)
-	{
-		_func = func;
-		//_calller = caller;
-		//_funcPtr = funcPtr;
-	}
+CWUINT cwGlobalParameter::OctreeMaxDepth = 8;
+CWUINT cwGlobalParameter::OctreeDefaultDepth = 5;
+cwAABB cwGlobalParameter::OctreeDefaultSize = cwAABB(cwPoint3D(-1000.0f, -1000.0f, -1000.0f), cwPoint3D(1000.0f, 1000.0f, 1000.0f));
 
-	R operator()(Args... args)
-	{
-		return _func(args...);
-	}
-
-	//inline void* caller() { return _calller; }
-	//inline F& funcPtr() { return _funcPtr; }
-	inline M& data() { return _data; }
-
-	inline void setData(const M& d) { _data = d; }
-
-private:
-	std::function<R(Args...)> _func;
-	//void* _calller;
-	//F _funcPtr;
-	M _data;
-
-};
+CWUINT cwGlobalParameter::primitive2DBuffSize = 10240;
 
 NS_MINIR_END
-
-#endif

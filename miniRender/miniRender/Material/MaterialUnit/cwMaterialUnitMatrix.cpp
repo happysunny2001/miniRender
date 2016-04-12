@@ -23,11 +23,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwMaterialUnitMatrix* cwMaterialUnitMatrix::create()
+cwMaterialUnitMatrix* cwMaterialUnitMatrix::create(CWBOOL bThreading)
 {
 	cwMaterialUnitMatrix* pMUMatrix = new cwMaterialUnitMatrix();
 	if (pMUMatrix && pMUMatrix->init()) {
-		pMUMatrix->autorelease();
+		if (!bThreading)
+			pMUMatrix->autorelease();
 		return pMUMatrix;
 	}
 

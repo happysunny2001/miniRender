@@ -17,41 +17,34 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_FUNC_NODE_H__
-#define __CW_FUNC_NODE_H__
+#ifndef __CW_EFFECT_MANAGER_H__
+#define __CW_EFFECT_MANAGER_H__
 
-#include "cwMacros.h"
-#include <functional>
+#include "Base/cwMacros.h"
+#include "Base/cwBasicType.h"
+#include "Ref/cwRef.h"
+#include "Repertory/cwRepertory.h"
 
 NS_MINIR_BEGIN
 
-template<typename M, typename R, typename... Args>
-class cwFuncNode
+class cwEffect;
+
+class cwEffectManager : public cwRef
 {
 public:
-	cwFuncNode(std::function<R(Args...)> func)
-	{
-		_func = func;
-		//_calller = caller;
-		//_funcPtr = funcPtr;
-	}
-
-	R operator()(Args... args)
-	{
-		return _func(args...);
-	}
-
-	//inline void* caller() { return _calller; }
-	//inline F& funcPtr() { return _funcPtr; }
-	inline M& data() { return _data; }
-
-	inline void setData(const M& d) { _data = d; }
+	cwEffect* defaultSpriteEffect();
 
 private:
-	std::function<R(Args...)> _func;
-	//void* _calller;
-	//F _funcPtr;
-	M _data;
+	static cwEffectManager* create();
+	cwEffectManager();
+	cwEffectManager(cwEffectManager const&){}
+	cwEffectManager& operator=(cwEffectManager const&){}
+	~cwEffectManager();
+
+	friend class cwRepertory;
+
+private:
+	cwEffect* m_pDefaultSpriteEffect;
 
 };
 

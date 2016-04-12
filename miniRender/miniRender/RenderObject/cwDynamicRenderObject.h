@@ -50,8 +50,8 @@ public:
 		CWUINT uPositionOffset = 0) override;
 
 	virtual CWVOID preRender() override;
-	virtual CWVOID updateVertexData(CWVOID* pData, CWUINT uSize) override;
-	virtual CWVOID updateIndexData(CWVOID* pData, CWUINT uSize) override;
+	virtual CWVOID updateVertexData(CWVOID* pData, CWUINT iCnt) override;
+	virtual CWVOID updateIndexData(CWVOID* pData, CWUINT iCnt) override;
 
 protected:
 	virtual CWBOOL buildIndexBuffer(CWVOID* pIndexData, CWUINT uIndexCnt) override;

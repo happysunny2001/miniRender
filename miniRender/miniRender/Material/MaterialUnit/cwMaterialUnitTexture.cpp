@@ -27,11 +27,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwMaterialUnitTexture* cwMaterialUnitTexture::create(const CWSTRING& strTexture, const CWSTRING& strParamName)
+cwMaterialUnitTexture* cwMaterialUnitTexture::create(const CWSTRING& strTexture, const CWSTRING& strParamName, CWBOOL bThreading)
 {
 	cwMaterialUnitTexture* pMUTexture = new cwMaterialUnitTexture();
 	if (pMUTexture && pMUTexture->init(strTexture, strParamName)) {
-		pMUTexture->autorelease();
+		if (!bThreading)
+			pMUTexture->autorelease();
 		return pMUTexture;
 	}
 
@@ -39,11 +40,12 @@ cwMaterialUnitTexture* cwMaterialUnitTexture::create(const CWSTRING& strTexture,
 	return nullptr;
 }
 
-cwMaterialUnitTexture* cwMaterialUnitTexture::create(cwTexture* pTexture, const CWSTRING& strParamName)
+cwMaterialUnitTexture* cwMaterialUnitTexture::create(cwTexture* pTexture, const CWSTRING& strParamName, CWBOOL bThreading)
 {
 	cwMaterialUnitTexture* pMUTexture = new cwMaterialUnitTexture();
 	if (pMUTexture && pMUTexture->init(pTexture, strParamName)) {
-		pMUTexture->autorelease();
+		if (!bThreading)
+			pMUTexture->autorelease();
 		return pMUTexture;
 	}
 
@@ -51,11 +53,12 @@ cwMaterialUnitTexture* cwMaterialUnitTexture::create(cwTexture* pTexture, const 
 	return nullptr;
 }
 
-cwMaterialUnitTexture* cwMaterialUnitTexture::createCube(const CWSTRING& strTexture, const CWSTRING& strParamName)
+cwMaterialUnitTexture* cwMaterialUnitTexture::createCube(const CWSTRING& strTexture, const CWSTRING& strParamName, CWBOOL bThreading)
 {
 	cwMaterialUnitTexture* pMUTexture = new cwMaterialUnitTexture();
 	if (pMUTexture && pMUTexture->initCube(strTexture, strParamName)) {
-		pMUTexture->autorelease();
+		if (!bThreading)
+			pMUTexture->autorelease();
 		return pMUTexture;
 	}
 
@@ -91,7 +94,6 @@ CWBOOL cwMaterialUnitTexture::init(cwTexture* pTexture, const CWSTRING& strParam
 {
 	if (!cwMaterialUnit::init()) return CWFALSE;
 	if (!pTexture) return CWFALSE;
-
 	
 	this->setTexture(pTexture);
 	m_nStrShaderParam = strParamName;

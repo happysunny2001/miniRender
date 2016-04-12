@@ -41,11 +41,12 @@ public:
 	virtual CWVOID loadDefaultShader();
 
 	cwShader* createShader(const CWSTRING& strFile);
+	cwShader* createShaderThreadSafe(const CWSTRING& strFile);
 
 	cwShader* getShader(const CWSTRING& strFile);
 	cwShader* getDefShader(eDefShaderID eShaderID);
 
-	CWBOOL isExist(const CWSTRING& strFile);
+	cwShader* isExist(const CWSTRING& strFile);
 	CWVOID appendShader(cwShader* pShader);
 
 	CWVOID removeShader(cwShader* pShader);

@@ -36,10 +36,6 @@ NS_MINIR_BEGIN
 class CW_DLL cwOctree : public cwSpatial
 {
 public:
-	static const CWUINT MAX_DEPTH;
-	static const CWUINT m_uDefaultDepth;
-	static const cwAABB m_nDefaultSize;
-
 	enum eOctreeNode
 	{
 		eOctreeTopFarLeft = 0,
@@ -67,6 +63,9 @@ public:
 	{
 		CWUINT m_uDepth;
 		cwAABB m_nMaxSpace;
+
+		sOctreeInit() {}
+		sOctreeInit(CWUINT uDepth, const cwAABB& space) : m_uDepth(uDepth), m_nMaxSpace(space) {}
 	};
 
 public:

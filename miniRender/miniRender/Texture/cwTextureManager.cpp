@@ -43,9 +43,12 @@ cwTextureManager::~cwTextureManager()
 
 cwTexture* cwTextureManager::createTexture(const CWSTRING& strName)
 {
-	cwRepertory& repertory = cwRepertory::getInstance();
-	cwTexture* pTex = nullptr;
+	cwTexture* pTex = isExist(strName);
+	if (pTex) {
+		return pTex;
+	}
 
+	cwRepertory& repertory = cwRepertory::getInstance();
 	cwData* pData = repertory.getResourceLoader()->getTextureData(strName);
 	if (pData) {
 		pTex = repertory.getDevice()->createTexture(pData->m_pData, pData->m_uSize);
@@ -59,11 +62,36 @@ cwTexture* cwTextureManager::createTexture(const CWSTRING& strName)
 	return pTex;
 }
 
+cwTexture* cwTextureManager::createTextureThreadSafe(const CWSTRING& strName)
+{
+	cwTexture* pTex = isExist(strName);
+	if (pTex) {
+		return pTex;
+	}
+
+	cwRepertory& repertory = cwRepertory::getInstance();
+	cwData* pData = repertory.getResourceLoader()->getTextureData(strName);
+	if (pData) {
+		pTex = repertory.getDevice()->createTextureThreadSafe(pData->m_pData, pData->m_uSize); // ref count:1
+		if (pTex) {
+			pTex->setName(strName);
+			appendTexture(pTex); // ref count: 2
+			CW_SAFE_RELEASE(pTex);  //ref count: 1
+		}
+		delete pData;
+	}
+
+	return pTex;
+}
+
 cwTexture* cwTextureManager::createTexture(const CWSTRING& strName, CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format)
 {
-	cwRepertory& repertory = cwRepertory::getInstance();
-	cwTexture* pTex = nullptr;
+	cwTexture* pTex = isExist(strName);
+	if (pTex) {
+		return pTex;
+	}
 
+	cwRepertory& repertory = cwRepertory::getInstance();
 	pTex = repertory.getDevice()->createTexture(pData, iWidth, iHeight, iElementSize, format);
 	if (pTex) {
 		pTex->setName(strName);
@@ -73,17 +101,61 @@ cwTexture* cwTextureManager::createTexture(const CWSTRING& strName, CWVOID* pDat
 	return pTex;
 }
 
+cwTexture* cwTextureManager::createTextureThreadSafe(const CWSTRING& strName, CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format)
+{
+	cwTexture* pTex = isExist(strName);
+	if (pTex) {
+		return pTex;
+	}
+
+	cwRepertory& repertory = cwRepertory::getInstance();
+	pTex = repertory.getDevice()->createTextureThreadSafe(pData, iWidth, iHeight, iElementSize, format); //ref count: 1
+	if (pTex) {
+		pTex->setName(strName);
+		appendTexture(pTex); // ref count:2
+		CW_SAFE_RELEASE(pTex); //ref count: 1
+	}
+
+	return pTex;
+}
+
 cwTexture* cwTextureManager::createCubeTexture(const CWSTRING& strName)
 {
-	cwRepertory& repertory = cwRepertory::getInstance();
-	cwTexture* pTex = nullptr;
+	cwTexture* pTex = isExist(strName);
+	if (pTex) {
+		return pTex;
+	}
 
+	cwRepertory& repertory = cwRepertory::getInstance();
 	cwData* pData = repertory.getResourceLoader()->getTextureData(strName);
 	if (pData) {
 		pTex = repertory.getDevice()->createCubeTexture(pData->m_pData, pData->m_uSize);
 		if (pTex) {
 			pTex->setName(strName);
 			appendTexture(pTex);
+		}
+
+		delete pData;
+	}
+
+	return pTex;
+}
+
+cwTexture* cwTextureManager::createCubeTextureThreadSafe(const CWSTRING& strName)
+{
+	cwTexture* pTex = isExist(strName);
+	if (pTex) {
+		return pTex;
+	}
+
+	cwRepertory& repertory = cwRepertory::getInstance();
+	cwData* pData = repertory.getResourceLoader()->getTextureData(strName);
+	if (pData) {
+		pTex = repertory.getDevice()->createCubeTextureThreadSafe(pData->m_pData, pData->m_uSize); //ref count: 1
+		if (pTex) {
+			pTex->setName(strName);
+			appendTexture(pTex); // ref count: 2
+			CW_SAFE_RELEASE(pTex); // ref count: 1
 		}
 
 		delete pData;
@@ -101,7 +173,12 @@ cwTexture* cwTextureManager::createTextureArray(const std::vector<CWSTRING>& vec
 {
 	if (vecFiles.empty()) return nullptr;
 
-	cwTexture* pTex = cwRepertory::getInstance().getDevice()->createTextureArray(vecFiles);
+	cwTexture* pTex = isExist(vecFiles[0]);
+	if (pTex) {
+		return pTex;
+	}
+
+	pTex = cwRepertory::getInstance().getDevice()->createTextureArray(vecFiles);
 	if (pTex) {
 		pTex->setName(vecFiles[0]);
 		appendTexture(pTex);
@@ -123,16 +200,20 @@ cwRenderTexture* cwTextureManager::createRenderTexture(float fWidth, float fHeig
 
 cwTexture* cwTextureManager::getTexture(const string& strName)
 {
-	auto itFind = m_mapTexture.find(strName);
-	if (itFind != m_mapTexture.end()) return itFind->second;
+	cwTexture* pTex = isExist(strName);
+	if (pTex) {
+		return pTex;
+	}
 
 	return createTexture(strName);
 }
 
 cwTexture* cwTextureManager::getCubeTexture(const CWSTRING& strName)
 {
-	auto itFind = m_mapTexture.find(strName);
-	if (itFind != m_mapTexture.end()) return itFind->second;
+	cwTexture* pTex = isExist(strName);
+	if (pTex) {
+		return pTex;
+	}
 
 	return createCubeTexture(strName);
 }
@@ -141,36 +222,47 @@ cwTexture* cwTextureManager::getTextureArray(const std::vector<CWSTRING>& vecFil
 {
 	if (vecFiles.empty()) return nullptr;
 
-	auto itFind = m_mapTexture.find(vecFiles[0]);
-	if (itFind != m_mapTexture.end()) return itFind->second;
+	cwTexture* pTex = isExist(vecFiles[0]);
+	if (pTex) {
+		return pTex;
+	}
 
 	return createTextureArray(vecFiles);
 }
 
-CWBOOL cwTextureManager::isExist(const CWSTRING& strName)
+cwTexture* cwTextureManager::isExist(const CWSTRING& strName)
 {
 	std::unique_lock<std::mutex> lock(m_nMutex);
 
-	if (m_mapTexture.find(strName) == m_mapTexture.end()) return CWFALSE;
-	return CWTRUE;
+	auto itFind = m_mapTexture.find(strName);
+	if (itFind != m_mapTexture.end()) return itFind->second;
+
+	return nullptr;
 }
 
 CWVOID cwTextureManager::appendTexture(cwTexture* pTex)
 {
 	if (pTex) {
+		std::unique_lock<std::mutex> lock(m_nMutex);
 		m_mapTexture.insert(pTex->getName(), pTex);
 	}
 }
 
 void cwTextureManager::removeTexture(const string& strName)
 {
-	m_mapTexture.erase(strName);
+	std::unique_lock<std::mutex> lock(m_nMutex);
+
+	auto it = m_mapTexture.find(strName);
+	if (it == m_mapTexture.end()) return;
+
+	if (1 == it->second->retainCount())
+		m_mapTexture.erase(it);
 }
 
 CWVOID cwTextureManager::removeTexture(cwTexture* pTex)
 {
 	if (pTex) {
-		m_mapTexture.erase(pTex->getName());
+		removeTexture(pTex->getName());
 	}
 }
 

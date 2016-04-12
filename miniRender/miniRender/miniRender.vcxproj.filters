@@ -693,6 +693,21 @@
     <ClInclude Include="Material\MaterialUnit\cwMaterialUnitFloatArray.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\cwStreaming.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Repertory\cwGlobalParameter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite\Primitive\cwPrimitiveNode2D.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite\Primitive\cwPrimitive2D.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\cwEffectManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -1170,6 +1185,21 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Material\MaterialUnit\cwMaterialUnitFloatArray.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\cwStreaming.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Repertory\cwGlobalParameter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite\Primitive\cwPrimitiveNode2D.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite\Primitive\cwPrimitive2D.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="effect\cwEffectManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

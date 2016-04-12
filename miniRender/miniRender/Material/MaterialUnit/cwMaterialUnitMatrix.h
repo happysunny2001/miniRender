@@ -29,7 +29,7 @@ NS_MINIR_BEGIN
 class cwMaterialUnitMatrix : public cwMaterialUnit
 {
 public:
-	static cwMaterialUnitMatrix* create();
+	static cwMaterialUnitMatrix* create(CWBOOL bThreading=CWFALSE);
 
 	cwMaterialUnitMatrix();
 	virtual ~cwMaterialUnitMatrix();
