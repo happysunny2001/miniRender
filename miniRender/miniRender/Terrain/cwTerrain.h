@@ -24,6 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwBasicType.h"
 #include "Base/cwUtils.h"
 #include "Base/cwMap.h"
+#include "Base/cwLog.h"
 #include "Math/cwMathUtil.h"
 #include "Entity/cwRenderNode.h"
 #include "cwTerrainTile.h"
@@ -48,18 +49,12 @@ struct sTerrainData
 	eTerrainLoadType m_eLoadType;
 	cwAABB m_nArea;
 
-	std::unordered_map<CWUINT, sTerrainTileData*> m_nTerrainTiles;
-
 	sTerrainData() {
 		m_eLoadType = eTerrainThreading;
 	}
 
 	~sTerrainData() {
-		for (auto it = m_nTerrainTiles.begin(); it != m_nTerrainTiles.end(); ++it) {
-			if (it->second) {
-				CW_SAFE_DELETE(it->second);
-			}
-		}
+		cwLog::print("sTerrainData release.\n");
 	}
 
 	inline CWFLOAT terrainTileWidth() {
@@ -86,7 +81,6 @@ struct sTerrainData
 	CWUSHORT getTerrainTileIndexXIn(CWFLOAT x);
 	CWUSHORT getTerrainTileIndexYIn(CWFLOAT y);
 
-	CWVOID getTerrainTiles(const cwVector3D& pos, CWFLOAT fRadius, std::vector<sTerrainTileData*>& vecRet);
 };
 
 class cwTerrain : public cwRenderNode
@@ -100,10 +94,15 @@ public:
 	virtual CWFLOAT getHeight(const cwVector3D& pos);
 	virtual cwVector3D getMovedPosition(const cwVector3D& pos, const cwVector3D& dir, CWFLOAT fMoveLen);
 	cwTerrainTile* getTerrainTile(const cwVector3D& pos);
+	CWVOID getTerrainTiles(const cwVector3D& pos, CWFLOAT fRadius, std::vector<sTerrainTileData*>& vecRet);
+	CWVOID addTerrainTileData(sTerrainTileData* pTerrainTileData);
 
 	inline sTerrainData* getTerrainData() { return m_pTerrainData; }
+	inline CWVOID setTerrainData(sTerrainData* pTerrainData) { m_pTerrainData = pTerrainData; }
 	inline cwMap<CWUINT, cwTerrainTile*>::iterator tileBegin() { return m_nMapTiles.begin(); }
 	inline cwMap<CWUINT, cwTerrainTile*>::iterator tileEnd() { return m_nMapTiles.end(); }
+	inline cwMap<CWUINT, sTerrainTileData*>::iterator tileDataBegin() { return m_mapTerrainTiles.begin(); }
+	inline cwMap<CWUINT, sTerrainTileData*>::iterator tileDataEnd() { return m_mapTerrainTiles.end(); }
 
 	virtual CWVOID update(CWFLOAT dt) override;
 
@@ -118,7 +117,9 @@ protected:
 
 protected:
 	sTerrainData* m_pTerrainData;
+	cwMap<CWUINT, sTerrainTileData*> m_mapTerrainTiles;
 	cwMap<CWUINT, cwTerrainTile*> m_nMapTiles;
+	cwMap<CWUINT, cwTerrainTile*> m_nLoadingTiles;
 
 };
 

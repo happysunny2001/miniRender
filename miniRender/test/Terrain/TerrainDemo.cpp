@@ -19,6 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "TerrainDemo.h"
 #include "TerrainDemoScene.h"
+#include "TempScene.h"
 
 TerrainDemo::TerrainDemo()
 {
@@ -41,11 +42,11 @@ CWVOID TerrainDemo::globalInit()
 void TerrainDemo::gameBegin()
 {
 	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDefault.xml");
-	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 15, 0);
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 0, -10);
 	//cwRepertory::getInstance().getEngine()->getDefaultCamera()->pitch(cwMathUtil::cwPI*0.1f);
 	cwRepertory::getInstance().getEngine()->setFrameEnable(CWTRUE);
 
-	TerrainDemoScene* pScene = TerrainDemoScene::create();
+	cwScene* pScene = TerrainDemoScene::create();
 	cwRepertory::getInstance().getEngine()->setScene(pScene);
 }
 

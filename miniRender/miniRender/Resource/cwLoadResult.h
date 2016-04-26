@@ -43,6 +43,7 @@ public:
 	virtual ~cwLoadResult();
 
 	CWVOID setLoadBatch(cwLoadBatch* pBatch);
+	inline cwLoadBatch* getLoadBatch() { return m_pLoadBatch; }
 
 	CWVOID load();
 	CWVOID distribute();

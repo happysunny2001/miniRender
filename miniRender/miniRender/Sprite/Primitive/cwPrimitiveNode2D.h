@@ -26,7 +26,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwStruct.h"
 #include "RenderObject/cwDynamicRenderObject.h"
 #include "Sprite/cwRenderNode2D.h"
-#include "cwPrimitive2D.h"
 
 #include <vector>
 

@@ -702,9 +702,6 @@
     <ClInclude Include="Sprite\Primitive\cwPrimitiveNode2D.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Sprite\Primitive\cwPrimitive2D.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="effect\cwEffectManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -1194,9 +1191,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Sprite\Primitive\cwPrimitiveNode2D.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Sprite\Primitive\cwPrimitive2D.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="effect\cwEffectManager.cpp">

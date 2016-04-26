@@ -58,8 +58,8 @@ public:
 
 	virtual CWVOID refreshBoundingBox() override;
 
-	inline CWUINT getRenderOrder() const { return m_uRenderOrder; }
-	virtual CWVOID setRenderOrder(CWUINT uOrder);
+	inline CWINT getRenderOrder() const { return m_uRenderOrder; }
+	virtual CWVOID setRenderOrder(CWINT uOrder);
 	
 	virtual CWVOID render(cwCamera* pCamera);
 
@@ -69,7 +69,7 @@ protected:
 	virtual CWVOID refreshSpatialNode() override;
 
 protected:
-	CWUINT m_uRenderOrder;
+	CWINT m_uRenderOrder;
 
 };
 

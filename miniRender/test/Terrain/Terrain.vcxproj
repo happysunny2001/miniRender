@@ -147,10 +147,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="TempScene.h" />
     <ClInclude Include="TerrainDemo.h" />
     <ClInclude Include="TerrainDemoScene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="TempScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TerrainDemo.cpp" />
     <ClCompile Include="TerrainDemoScene.cpp" />

@@ -18,6 +18,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwLoadBatch.h"
+#include "Base/cwLog.h"
 #include "Repertory/cwRepertory.h"
 #include "Texture/cwTextureManager.h"
 #include "Shader/cwShaderManager.h"
@@ -47,6 +48,7 @@ cwLoadBatch::~cwLoadBatch()
 {
 	onLoadOver = nullptr;
 	m_pObjStreaming = nullptr;
+	cwLog::print("cwLoadBatch::~cwLoadBatch.\n");
 }
 
 CWVOID cwLoadBatch::reset()
@@ -100,6 +102,28 @@ CWVOID cwLoadBatch::streamingEnd()
 {
 	if (m_pObjStreaming)
 		m_pObjStreaming->streamEnd();
+}
+
+CWVOID cwLoadBatch::streamRelease()
+{
+	if (m_pObjStreaming) {
+		m_pObjStreaming->streamRelease();
+	}
+}
+
+CWVOID cwLoadBatch::loadFailed()
+{
+	if (m_pObjStreaming)
+		m_pObjStreaming->streamFailed();
+}
+
+CWBOOL cwLoadBatch::isStreamCancelled()
+{
+	if (m_pObjStreaming) {
+		return m_pObjStreaming->getStreamState() == eStreamStateCancel;
+	}
+
+	return CWFALSE;
 }
 
 NS_MINIR_END

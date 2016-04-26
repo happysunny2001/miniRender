@@ -58,6 +58,7 @@ public:
 
 public:
 	CWVOID setScene(cwScene* pScene);
+	CWVOID replaceScene(cwScene* pScene);
 	cwScene* getCurrScene() { return m_pCurrScene; }
 
 	cwSpatial* getSpatial() const { return m_pSpatial; }

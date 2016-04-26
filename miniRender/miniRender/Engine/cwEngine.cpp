@@ -138,6 +138,15 @@ CWVOID cwEngine::setScene(cwScene* pScene)
 	if (pScene == m_pCurrScene) return;
 	CW_SAFE_RETAIN(pScene);
 
+	CW_SAFE_RELEASE_NULL(m_pCurrScene);
+	m_pCurrScene = pScene;
+}
+
+CWVOID cwEngine::replaceScene(cwScene* pScene)
+{
+	if (pScene == m_pCurrScene) return;
+	CW_SAFE_RETAIN(pScene);
+
 	if (m_pSpatial) {
 		m_pSpatial->remove(m_pCurrScene);
 	}
@@ -151,8 +160,11 @@ CWVOID cwEngine::mainLoop(CWFLOAT dt)
 	cwRepertory& repertory = cwRepertory::getInstance();
 
 	repertory.getEventManager()->dispatchEvent();
-	repertory.getSchedulerManager()->update(dt);
-	repertory.getResourceLoader()->update(dt);
+	if (repertory.getSchedulerManager())
+		repertory.getSchedulerManager()->update(dt);
+
+	if (repertory.getResourceLoader())
+		repertory.getResourceLoader()->update(dt);
 
 	if (m_pSpatial) {
 		m_pSpatial->update();

@@ -26,6 +26,14 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Texture/cwTextureManager.h"
 #include "Engine/cwEngine.h"
 #include "Base/cwValueMap.h"
+#include "effect/cwEffectManager.h"
+#include "Scheduler/cwSchedulerManager.h"
+#include "Generator/cwGeometryGenerator.h"
+#include "Event/cwEventManager.h"
+#include "Platform/cwFileSystem.h"
+#include "Parser/cwParserManager.h"
+#include "SpatialSorting/cwSpatialFactory.h"
+#include "Resource/cwResourceLoader.h"
 
 #include <assert.h>
 
@@ -38,9 +46,10 @@ cwD3D11Repertory::cwD3D11Repertory()
 
 cwD3D11Repertory::~cwD3D11Repertory()
 {
+
 }
 
-bool cwD3D11Repertory::specialInit()
+CWBOOL cwD3D11Repertory::specialInit()
 {
 	m_pDevice = new cwD3D11Device();
 	assert(m_pDevice != nullptr);
@@ -55,10 +64,32 @@ bool cwD3D11Repertory::specialInit()
 	assert(m_pLayoutManager != nullptr);
 	CW_SAFE_RETAIN(m_pLayoutManager);
 
-	return true;
+	return CWTRUE;
 }
 
-void cwD3D11Repertory::refreshWindowTitle(const CWSTRING& strTitle)
+CWVOID cwD3D11Repertory::releaseAll()
+{
+	cwRepertory::releaseAll();
+
+	CW_SAFE_RELEASE_NULL(m_pResourceLoader);
+	
+	CW_SAFE_RELEASE_NULL(m_pEngine);
+	CW_SAFE_RELEASE_NULL(m_pEventManager);
+	CW_SAFE_RELEASE_NULL(m_pSchedulerManager);
+
+	CW_SAFE_RELEASE_NULL(m_pEffectManager);
+	CW_SAFE_RELEASE_NULL(m_pTextureManager);
+	CW_SAFE_RELEASE_NULL(m_pLayoutManager);
+	CW_SAFE_RELEASE_NULL(m_pShaderManager);
+	CW_SAFE_DELETE(m_pDevice);
+
+	CW_SAFE_RELEASE_NULL(m_pGeoGenerator);
+	CW_SAFE_RELEASE_NULL(m_pFileSystem);
+	CW_SAFE_RELEASE_NULL(m_pParserManager);
+	CW_SAFE_DELETE(m_pSpatialFactory);
+}
+
+CWVOID cwD3D11Repertory::refreshWindowTitle(const CWSTRING& strTitle)
 {
 	//if (!pcTitle) return;
 

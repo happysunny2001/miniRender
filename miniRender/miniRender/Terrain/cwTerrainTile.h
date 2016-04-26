@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
+#include "Base/cwLog.h"
 #include "Ref/cwRef.h"
 #include "Entity/cwEntity.h"
 #include "Math/cwAABB.h"
@@ -40,8 +41,9 @@ struct sTerrainTexture
 	CWSTRING m_nStrParamName;
 };
 
-struct sTerrainTileData
+class sTerrainTileData : public cwRef
 {
+public:
 	//the index of tile, top left is [0, 0]
 	CWUSHORT x;
 	CWUSHORT y;
@@ -61,12 +63,22 @@ struct sTerrainTileData
 	std::vector<sTerrainTexture> m_nVecLayers;
 	std::vector<sTerrainTexture> m_nVecBlend;
 
+	static sTerrainTileData* create();
+
 	static CWUINT getKey(CWUSHORT x, CWUSHORT y) {
 		CWUINT iKey = x;
 		return iKey << 16 | y;
 	}
 
-	sTerrainTileData() : m_pHeightMap(nullptr), m_eState(eTerrainTileOffline), x(0), y(0) {}
+	CWUINT getKey() {
+		CWUINT iKey = x;
+		return iKey << 16 | y;
+	}
+	
+	~sTerrainTileData() {
+		releaseHeightMap();
+		cwLog::print("sTerrainTileData release.\n");
+	}
 
 	CWBOOL loadHeightMap(CWFLOAT fScale);
 	CWVOID releaseHeightMap();
@@ -76,6 +88,8 @@ struct sTerrainTileData
 	CWVOID loadResources();
 
 private:
+	sTerrainTileData() : m_pHeightMap(nullptr), m_eState(eTerrainTileOffline), x(0), y(0) {}
+
 	CWBOOL isValid(CWINT i, CWINT j);
 	CWFLOAT average(CWINT i, CWINT j);
 	CWVOID smooth();
@@ -93,6 +107,7 @@ public:
 	virtual CWBOOL init(sTerrainTileData* pTerrainTileData);
 	virtual CWVOID loadResource() = 0;
 	inline sTerrainTileData* getTerrainTileData() { return m_pTerrainTileData; }
+	CWVOID setTerrainTileData(sTerrainTileData* pTerrainTileData);
 
 	virtual CWVOID refreshBoundingBox() override;
 	CWFLOAT getHeight(const cwVector3D& pos);

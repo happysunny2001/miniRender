@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015-2016 Ziwei Wang
+Copyright © 2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -17,49 +17,29 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_PRIMITIVE_2D_H__
-#define __CW_PRIMITIVE_2D_H__
+#ifndef __TEMP_SCENE_H__
+#define __TEMP_SCENE_H__
 
-#include "Base/cwMacros.h"
-#include "Base/cwBasicType.h"
-#include "Math/cwMath.h"
+#include "cwMiniRender.h"
+NS_USING_MINIR;
 
-NS_MINIR_BEGIN
-
-class cwPrimitive2D
+class TempScene : public cwBaseScene
 {
 public:
-	cwPrimitive2D();
+	static TempScene* create();
 
-	virtual CWUINT getVertexCnt();
+	TempScene();
+	virtual ~TempScene();
 
-public:
-	CWUINT m_uPriority;
-	CWBOOL m_bFill;
-	cwVector4D m_nColor;
+	virtual CWBOOL init() override;
+	virtual CWVOID update(CWFLOAT dt) override;
 
-};
+protected:
+	CWVOID buildLabel();
 
-class cwPrimitive2DLine : public cwPrimitive2D
-{
-public:
-	cwPrimitive2DLine(const cwVector3D& start, const cwVector3D& end);
-
-	virtual CWUINT getVertexCnt() override;
-
-public:
-	cwVector3D m_nStart;
-	cwVector3D m_nEnd;
+private:
+	cwLabel* m_pLblCnt;
 
 };
-
-class cwPrimitive2DQuad : public cwPrimitive2D
-{
-public:
-	cwVector3D quad[4];
-
-};
-
-NS_MINIR_END
 
 #endif

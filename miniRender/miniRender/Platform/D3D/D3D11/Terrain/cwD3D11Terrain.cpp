@@ -179,7 +179,10 @@ CWVOID cwD3D11Terrain::buildTerrainTile(CWUSHORT i, CWUSHORT j)
 {
 	if (!m_pTerrainData) return;
 
-	sTerrainTileData* pTileData = m_pTerrainData->m_nTerrainTiles[sTerrainTileData::getKey(i, j)];
+	auto it = m_mapTerrainTiles.find(sTerrainTileData::getKey(i, j));
+	if (it == m_mapTerrainTiles.end()) return;
+
+	sTerrainTileData* pTileData = it->second;
 	pTileData->loadHeightMap(m_pTerrainData->m_fHeightScale);
 	pTileData->loadResources();
 	pTileData->m_eState = eTerrainTileOnline;

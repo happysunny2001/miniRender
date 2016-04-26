@@ -292,6 +292,7 @@ LRESULT cwApplication::msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 	{
 	case WM_DESTROY:
 		gameEnd();
+		gameRelease();
 		PostQuitMessage(0);
 		return 0;
 	case WM_SIZE:
@@ -344,6 +345,11 @@ LRESULT cwApplication::msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam
 	}
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
+}
+
+CWVOID cwApplication::gameRelease()
+{
+	cwRepertory::getInstance().releaseAll();
 }
 
 CWVOID cwApplication::refreshTitle(const CWSTRING& strTitle)

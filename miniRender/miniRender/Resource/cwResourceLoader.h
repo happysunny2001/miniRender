@@ -61,6 +61,9 @@ public:
 	cwData* getTextureData(const CWSTRING& strFileName);
 	cwData* getFileData(const CWSTRING& strFileName);
 
+	inline int getThreadState() { return m_iThreadState; }
+	inline void setThreadState(int iState) { m_iThreadState = iState; }
+
 private:
 	static cwResourceLoader* create();
 
@@ -76,6 +79,7 @@ private:
 	cwLoadResult* load(cwLoadBatch* pBatch);
 
 	CWVOID remove(cwResourceInfo& resInfo);
+	CWVOID exit();
 
 	friend class cwRepertory;
 	friend CWVOID loadingProcessThread(cwResourceLoader*);
@@ -89,6 +93,7 @@ protected:
 	std::mutex m_nMutex;
 	std::mutex m_nMutexResult;
 	std::condition_variable m_nCondNotEmpty;
+	int m_iThreadState;
 
 };
 

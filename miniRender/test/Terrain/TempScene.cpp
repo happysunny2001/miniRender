@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015-2016 Ziwei Wang
+Copyright © 2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -17,33 +17,54 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwPrimitive2D.h"
-#include "Base/cwColor.h"
+#include "TempScene.h"
+#include <sstream>
 
-NS_MINIR_BEGIN
-
-cwPrimitive2D::cwPrimitive2D() :
-m_uPriority(0),
-m_bFill(CWTRUE),
-m_nColor(cwColor::white)
+TempScene* TempScene::create()
 {
+	TempScene* pScene = new TempScene();
+	if (pScene && pScene->init()) {
+		pScene->autorelease();
+		return pScene;
+	}
+
+	CW_SAFE_DELETE(pScene);
+	return nullptr;
 }
 
-CWUINT cwPrimitive2D::getVertexCnt()
-{
-	return 0;
-}
-
-cwPrimitive2DLine::cwPrimitive2DLine(const cwVector3D& start, const cwVector3D& end):
-m_nStart(start),
-m_nEnd(end)
+TempScene::TempScene() 
 {
 
 }
 
-CWUINT cwPrimitive2DLine::getVertexCnt()
+TempScene::~TempScene()
 {
-	return 2;
+	if (m_pLblCnt) {
+		m_pLblCnt->removeFromParent();
+		m_pLblCnt = NULL;
+	}
 }
 
-NS_MINIR_END
+CWBOOL TempScene::init()
+{
+	if (!cwBaseScene::init()) return CWFALSE;
+
+	buildLabel();
+
+	return CWTRUE;
+}
+
+CWVOID TempScene::update(CWFLOAT dt)
+{
+	std::stringstream ss;
+	ss << cwRepertory::getInstance().getEngine()->getSpatial()->getObjCnt();
+	m_pLblCnt->setString(ss.str());
+}
+
+CWVOID TempScene::buildLabel()
+{
+	m_pLblCnt = cwLabel::create("0", "frame_text.png", '0', 10);
+	m_pLblCnt->setPosition(-100, -100);
+	cwRepertory::getInstance().getEngine()->addNode2D(m_pLblCnt);
+	m_pLblCnt->setTag(200);
+}

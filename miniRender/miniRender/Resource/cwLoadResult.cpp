@@ -19,6 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwLoadResult.h"
 #include "cwLoadBatch.h"
+#include "Base/cwLog.h"
 #include "Repertory/cwRepertory.h"
 #include "Texture/cwTextureManager.h"
 #include "Shader/cwShaderManager.h"
@@ -54,6 +55,8 @@ cwLoadResult::~cwLoadResult()
 	}
 
 	CW_SAFE_RELEASE_NULL(m_pLoadBatch);
+	cwLog::print("cwLoadResult::~cwLoadResult\n");
+
 }
 
 CWVOID cwLoadResult::setLoadBatch(cwLoadBatch* pBatch)

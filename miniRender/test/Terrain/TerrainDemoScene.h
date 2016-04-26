@@ -48,6 +48,7 @@ protected:
 	cwLabel* m_pLblPosX;
 	cwLabel* m_pLblPosY;
 	cwLabel* m_pLblPosZ;
+	cwPrimitiveNode2D* m_pPrimitive;
 
 	KeyCode m_nCurrKeyCode;
 

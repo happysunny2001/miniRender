@@ -20,11 +20,14 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwStreaming.h"
 #include "cwLoadBatch.h"
 #include "Base/cwLog.h"
+#include "Repertory/cwRepertory.h"
+#include "Resource/cwResourceLoader.h"
 
 NS_MINIR_BEGIN
 
 cwStreaming::cwStreaming() : 
-m_pLoadBatch(nullptr)
+m_pLoadBatch(nullptr),
+m_eState(eStreamStateOffline)
 {
 
 }
@@ -37,6 +40,8 @@ cwStreaming::~cwStreaming()
 
 CWVOID cwStreaming::streamPrepare()
 {
+	m_eState = eStreamStateStreaming;
+
 	CW_SAFE_RELEASE_NULL(m_pLoadBatch);
 	m_pLoadBatch = cwLoadBatch::create();
 	CW_SAFE_RETAIN(m_pLoadBatch);
@@ -46,12 +51,12 @@ CWVOID cwStreaming::streamPrepare()
 
 CWVOID cwStreaming::streamBegin()
 {
-
+	
 }
 
 CWVOID cwStreaming::streamEnd()
 {
-
+	m_eState = eStreamStateOnline;
 }
 
 CWVOID cwStreaming::streamClean()
@@ -61,12 +66,40 @@ CWVOID cwStreaming::streamClean()
 
 CWVOID cwStreaming::streamRelease()
 {
+	if (!canRelease()) {
+		streamCancel();
+		return;
+	}
 
+	if (m_eState == eStreamStateOnline) {
+		cwRemoveBatch* pRemoveBatch = this->buildRemoveBatch();
+		if (pRemoveBatch) {
+			cwRepertory::getInstance().getResourceLoader()->remove(pRemoveBatch);
+		}
+	}
+
+	m_eState = eStreamStateOffline;
+}
+
+CWVOID cwStreaming::streamFailed()
+{
+	m_eState = eStreamStateOffline;
+}
+
+CWVOID cwStreaming::streamCancel()
+{
+	m_eState = eStreamStateCancel;
 }
 
 cwRemoveBatch* cwStreaming::buildRemoveBatch()
 {
 	return nullptr;
+}
+
+CWBOOL cwStreaming::canRelease()
+{
+	if (m_eState == eStreamStateStreaming) return CWFALSE;
+	return CWTRUE;
 }
 
 NS_MINIR_END

@@ -33,10 +33,11 @@ public:
 	cwD3D11Repertory();
 	virtual ~cwD3D11Repertory();
 
-	virtual void refreshWindowTitle(const CWSTRING& strTitle) override;
+	virtual CWVOID releaseAll() override;
+	virtual CWVOID refreshWindowTitle(const CWSTRING& strTitle) override;
 
 protected:
-	virtual bool specialInit();
+	virtual CWBOOL specialInit();
 
 protected:
 

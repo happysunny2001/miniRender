@@ -147,7 +147,7 @@ CWVOID cwRenderNode2D::scale(CWFLOAT x, CWFLOAT y)
 	cwRenderNode::scale(x, y, 0.0f);
 }
 
-CWVOID cwRenderNode2D::setRenderOrder(CWUINT uOrder)
+CWVOID cwRenderNode2D::setRenderOrder(CWINT uOrder)
 {
 	m_uRenderOrder = uOrder;
 }

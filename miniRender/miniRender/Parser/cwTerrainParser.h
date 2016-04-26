@@ -31,6 +31,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
+class cwTerrain;
+
 class cwTerrainParser : public cwRef
 {
 public:
@@ -38,7 +40,7 @@ public:
 
 	cwTerrainParser();
 
-	sTerrainData* parse(const CWSTRING& strFileName);
+	CWBOOL parse(cwTerrain* pTerrain, const CWSTRING& strFileName);
 	std::vector<sTerrainTexture> parseTexture(tinyxml2::XMLElement* pElement);
 	
 

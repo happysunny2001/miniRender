@@ -187,6 +187,8 @@ CWVOID cwD3D11TerrainTile::streamPrepare()
 
 CWVOID cwD3D11TerrainTile::streamBegin()
 {
+	cwStreaming::streamBegin();
+
 	if (m_pLoadBatch) {
 		for (auto it = m_pTerrainTileData->m_nVecLayers.begin(); it != m_pTerrainTileData->m_nVecLayers.end(); ++it) {
 			m_pLoadBatch->addTexture2D(it->m_nStrTextureFile);
@@ -266,6 +268,8 @@ CWVOID cwD3D11TerrainTile::streaming()
 CWVOID cwD3D11TerrainTile::streamEnd()
 {
 	m_pTerrainTileData->m_eState = eTerrainTileOnline;
+	cwStreaming::streamEnd();
+
 	cwLog::print("Terrain Tile [%d,%d] Loading Finished!, pos:[%f,%f,%f]\n", 
 		m_pTerrainTileData->x, m_pTerrainTileData->y,
 		this->getPosition().x, this->getPosition().y, this->getPosition().z);
@@ -273,9 +277,14 @@ CWVOID cwD3D11TerrainTile::streamEnd()
 
 CWVOID cwD3D11TerrainTile::streamRelease()
 {
-	if (m_pTerrainTileData) {
-		m_pTerrainTileData->releaseHeightMap();
+	if (canRelease()) {
+		if (m_pTerrainTileData) {
+			m_pTerrainTileData->releaseHeightMap();
+			m_pTerrainTileData->m_eState = eTerrainTileOffline;
+		}
 	}
+
+	cwStreaming::streamRelease();
 }
 
 cwRemoveBatch* cwD3D11TerrainTile::buildRemoveBatch()

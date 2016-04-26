@@ -18,6 +18,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "TerrainDemoScene.h"
+#include "TempScene.h"
 
 #include <sstream>
 
@@ -42,6 +43,11 @@ m_nCurrKeyCode(KeyCode::KeyNone)
 
 TerrainDemoScene::~TerrainDemoScene()
 {
+	m_pLblPosX->removeFromParent();
+	m_pLblPosY->removeFromParent();
+	m_pLblPosZ->removeFromParent();
+	m_pPrimitive->removeFromParent();
+
 	CW_SAFE_RELEASE_NULL(m_pTerrain);
 }
 
@@ -68,7 +74,7 @@ CWVOID TerrainDemoScene::update(CWFLOAT dt)
 	const cwVector3D& pos = pCamera->getPos();
 
 	std::stringstream ss;
-	ss << (int)pos.x;
+	ss << cwRepertory::getInstance().getEngine()->getSpatial()->getObjCnt();// (int)pos.x;
 	m_pLblPosX->setString(ss.str());
 
 	ss.str("");
@@ -79,7 +85,7 @@ CWVOID TerrainDemoScene::update(CWFLOAT dt)
 	ss << (int)pos.z;
 	m_pLblPosZ->setString(ss.str());
 
-	//checkTerrainTileVisible();
+	checkTerrainTileVisible();
 
 	//cwTerrainTile* pTile = m_pTerrain->getTerrainTile();
 	//int iSect = pCamera->getFrustum().intersection(pTile->getBoundingBox());
@@ -111,11 +117,40 @@ CWVOID TerrainDemoScene::checkTerrainTileVisible()
 	const cwFrustum& frustum = cwRepertory::getInstance().getEngine()->getDefaultCamera()->getFrustum();
 	CWUINT i = 0;
 
-	for (auto it = m_pTerrain->tileBegin(); it != m_pTerrain->tileEnd(); ++it) {
-		const cwAABB& aabb = it->second->getBoundingBox();
-		int iRet = frustum.intersection(aabb);
-		if (frustum.isCollide(iRet))
-			i++;
+	float fMaxWidth = m_pTerrain->getTerrainData()->m_iHorizTileCnt * 11;
+	float fMaxHeight = m_pTerrain->getTerrainData()->m_iVertTileCnt * 11;
+	float fScreenWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
+	float fScreenHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
+
+	float fStartX = fScreenWidth*0.5f - fMaxWidth;
+	float fStartY = -fScreenHeight*0.5f + fMaxHeight;
+
+	sTerrainData* pTerrainData = m_pTerrain->getTerrainData();
+	for (auto it = m_pTerrain->tileDataBegin(); it != m_pTerrain->tileDataEnd(); ++it) {
+		float fLeft = fStartX + it->second->x * 11;
+		float fTop = fStartY - it->second->y * 11;
+
+		cwVector4D* pColor = nullptr;
+
+		if (it->second->m_eState == eTerrainTileOnline) {
+			pColor = &(cwColor::red);
+		}
+		else if (it->second->m_eState == eTerrainTileOffline) {
+			pColor = &(cwColor::blue);
+		}
+		else if (it->second->m_eState == eTerrainTileLoading) {
+			pColor = &cwColor::green;
+		}
+
+		if (pColor) {
+			m_pPrimitive->drawQuad(
+				cwVector2D(fLeft, fTop),
+				cwVector2D(fLeft + 10, fTop),
+				cwVector2D(fLeft + 10, fTop - 10),
+				cwVector2D(fLeft, fTop - 10),
+				*pColor,
+				CWTRUE);
+		}
 	}
 }
 
@@ -168,6 +203,12 @@ CWVOID TerrainDemoScene::buildLabel()
 	m_pLblPosZ->setPosition(-100, -160);
 	cwRepertory::getInstance().getEngine()->addNode2D(m_pLblPosZ);
 	m_pLblPosZ->setTag(202);
+
+	m_pPrimitive = cwPrimitiveNode2D::create();
+	m_pPrimitive->setPosition(0, 0);
+	cwRepertory::getInstance().getEngine()->addNode2D(m_pPrimitive);
+	m_pPrimitive->setTag(203);
+	m_pPrimitive->setRenderOrder(20);
 }
 
 CWVOID TerrainDemoScene::onKeyDown(cwKeyboard* pKey)
@@ -197,6 +238,10 @@ CWVOID TerrainDemoScene::updateCamera(CWFLOAT dt)
 		cwVector3D endPos = m_pTerrain->getMovedPosition(pCamera->getPos(), -pCamera->getLookDir(), fMovSpeed*dt);
 		endPos.y += 5.0f;
 		pCamera->setPos(endPos);
+	}
+	else if (m_nCurrKeyCode == KeyCode::F1) {
+		TempScene* tmpScene = TempScene::create();
+		cwRepertory::getInstance().getEngine()->replaceScene(tmpScene);
 	}
 
 	m_nCurrKeyCode = KeyCode::KeyNone;

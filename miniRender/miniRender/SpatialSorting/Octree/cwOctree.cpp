@@ -324,7 +324,7 @@ cwOctree::sOctreeNode* cwOctree::getTreeNodeBelong(cwRenderNode* pNode, sOctreeN
 
 cwOctree::sOctreeNode* cwOctree::getTreeNodeBelongRude(cwRenderNode* pNode, sOctreeNode* pOctreeNode)
 {
-	cwLog::print("cwOctree::getTreeNodeBelongRude, bad!");
+	cwLog::print("cwOctree::getTreeNodeBelongRude, bad!\n");
 	for (auto pInnerNode : pOctreeNode->m_nListObjs) {
 		if (pInnerNode == pNode) return pOctreeNode;
 	}
@@ -636,6 +636,26 @@ const cwAABB& cwOctree::getBoundingBox()
 	if (m_pRoot)
 		return m_pRoot->m_nBox;
 	return cwGlobalParameter::OctreeDefaultSize;
+}
+
+CWUINT cwOctree::getObjCnt()
+{
+	return getObjCnt(m_pRoot);
+}
+
+CWUINT cwOctree::getObjCnt(sOctreeNode* pNode)
+{
+	if (!pNode) return 0;
+	if (isLeafNode(pNode)) return pNode->m_nListObjs.size();
+
+	CWUINT c = pNode->m_nListObjs.size();
+
+	for (CWUINT i = 0; i < 8; ++i)  {
+		if (pNode->m_pChildren[i])
+			c += getObjCnt(pNode->m_pChildren[i]);
+	}
+
+	return c;
 }
 
 NS_MINIR_END

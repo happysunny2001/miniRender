@@ -90,6 +90,14 @@ CWVOID TextDemoScene::update(CWFLOAT dt)
 		cwVector2D(-100, 0),
 		cwColor::blue,
 		CWTRUE);
+
+	m_pPrimitive->drawQuad(
+		cwVector2D(120, 100),
+		cwVector2D(220, 100),
+		cwVector2D(220, 0),
+		cwVector2D(120, 0),
+		cwColor::red,
+		CWTRUE);
 }
 
 CWVOID TextDemoScene::buildText()
@@ -107,6 +115,7 @@ CWVOID TextDemoScene::buildSprite()
 	m_pSpriteCenter->setPosition(0, 0);
 	cwRepertory::getInstance().getEngine()->addNode2D(m_pSpriteCenter);
 	m_pSpriteCenter->setTag(100);
+	m_pSpriteCenter->setRenderOrder(10);
 
 	m_pSpriteLeft = cwSprite::create("cc.png");
 	m_pSpriteLeft->setPosition(-100, 0);
@@ -137,5 +146,5 @@ CWVOID TextDemoScene::buildSprite()
 	m_pPrimitive->setPosition(0, 0);
 	cwRepertory::getInstance().getEngine()->addNode2D(m_pPrimitive);
 	m_pPrimitive->setTag(201);
-	m_pPrimitive->setRenderOrder(10);
+	m_pPrimitive->setRenderOrder(20);
 }

@@ -84,7 +84,7 @@ cwRepertory::~cwRepertory()
 	CW_SAFE_DELETE(m_pDevice);
 }
 
-void cwRepertory::initAll()
+CWVOID cwRepertory::initAll()
 {
 //	m_pLog = new cwLog();
 
@@ -129,12 +129,17 @@ void cwRepertory::initAll()
 //	m_pEngine->deferParseRenderer();
 }
 
-bool cwRepertory::specialInit()
+CWVOID cwRepertory::releaseAll()
 {
-	return true;
+	m_pResourceLoader->exit();
 }
 
-void cwRepertory::addValue(const string& strName, const cwValueMap& value)
+CWBOOL cwRepertory::specialInit()
+{
+	return CWTRUE;
+}
+
+CWVOID cwRepertory::addValue(const string& strName, const cwValueMap& value)
 {
 	m_mapData[strName] = value;
 }

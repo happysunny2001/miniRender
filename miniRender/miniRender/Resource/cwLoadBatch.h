@@ -69,9 +69,9 @@ public:
 	CWVOID onOverCallback();
 	CWVOID onStreaming();
 	CWVOID streamingEnd();
-
-protected:
-	//CWBOOL checkResourceExist(cwResourceInfo& resInfo);
+	CWVOID streamRelease();
+	CWVOID loadFailed();
+	CWBOOL isStreamCancelled();
 
 protected:
 	std::vector<cwResourceInfo> m_nVecResource;

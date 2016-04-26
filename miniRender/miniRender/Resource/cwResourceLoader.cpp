@@ -28,6 +28,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Parser/cwResourceConfParser.h"
 #include "Platform/cwFileSystem.h"
 #include "cwStreaming.h"
+#include "Base/cwLog.h"
 
 #include <thread>
 #include <atomic>
@@ -50,7 +51,8 @@ cwResourceLoader* cwResourceLoader::create()
 	return nullptr;
 }
 
-cwResourceLoader::cwResourceLoader()
+cwResourceLoader::cwResourceLoader() : 
+m_iThreadState(0)
 {
 
 }
@@ -115,6 +117,9 @@ CWVOID cwResourceLoader::loadAsync(cwStreaming* pObjStreaming)
 		if (pBatch) {
 			loadAsync(pBatch);
 		}
+
+		cwRef* pRef = dynamic_cast<cwRef*>(pObjStreaming);
+		CW_SAFE_RETAIN(pRef);
 	}
 }
 
@@ -135,7 +140,9 @@ cwLoadResult* cwResourceLoader::load(cwLoadBatch* pBatch)
 {
 	cwLoadResult* pResult = cwLoadResult::create();
 	pResult->setLoadBatch(pBatch);
-	pResult->load();
+
+	if (!pBatch->isStreamCancelled())
+		pResult->load();
 
 	return pResult;
 }
@@ -165,7 +172,7 @@ CWVOID cwResourceLoader::remove(cwResourceInfo& resInfo)
 CWBOOL cwResourceLoader::update(float dt)
 {
 	if (g_aResult == 0)
-		return false;
+		return CWFALSE;
 
 	cwLoadResult* pResult = nullptr;
 
@@ -179,12 +186,27 @@ CWBOOL cwResourceLoader::update(float dt)
 
 	lockResult.unlock();
 
-	if (!pResult) return false;
+	if (!pResult) return CWFALSE;
+
+	cwStreaming*p = pResult->getLoadBatch()->m_pObjStreaming;
+	cwRef* pRef = dynamic_cast<cwRef*>(p);
+
+	if (pResult->getLoadBatch()) {
+		if (pResult->getLoadBatch()->isStreamCancelled()) {
+			cwLog::print("load result cancel!\n");
+			pResult->getLoadBatch()->streamRelease();
+			pResult->release();
+			CW_SAFE_RELEASE_NULL(pRef);
+
+			return CWTRUE;
+		}
+	}
 
 	pResult->distribute();
 	pResult->release();
+	CW_SAFE_RELEASE_NULL(pRef);
 
-	return true;
+	return CWTRUE;
 }
 
 CWSTRING cwResourceLoader::getFullPath(const CWSTRING& strFileName)
@@ -263,12 +285,48 @@ cwData* cwResourceLoader::getFileData(const CWSTRING& strFileName)
 	return cwRepertory::getInstance().getFileSystem()->getFileData(strFullPath);
 }
 
+CWVOID cwResourceLoader::exit()
+{
+	this->m_iThreadState = 1;
+	this->m_nCondNotEmpty.notify_one();
+
+	while (true) {
+		if (this->m_iThreadState == 2)
+			break;
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
+
+	while (!m_nQueueBatch.empty()) {
+		cwLoadBatch* pFirst = m_nQueueBatch.front();
+		m_nQueueBatch.pop();
+		pFirst->loadFailed();
+		CW_SAFE_RELEASE(pFirst);
+	}
+
+	while (!m_nQueueResult.empty()) {
+		cwLoadResult* pResult = m_nQueueResult.front();
+		m_nQueueResult.pop();
+
+		if (pResult) {
+			pResult->distribute();
+			pResult->release();
+		}
+	}
+}
+
 CWVOID loadingProcessThread(cwResourceLoader* pLoader)
 {
 	while (true) {
 		std::unique_lock<std::mutex> lock(pLoader->m_nMutex);
-		while (pLoader->batchEmpty()) {
+		while (pLoader->batchEmpty() && pLoader->getThreadState() == 0) {
 			pLoader->m_nCondNotEmpty.wait(lock);
+		}
+
+		if (pLoader->getThreadState() != 0) {
+			lock.unlock();
+			pLoader->setThreadState(2);
+			break;
 		}
 
 		cwLoadBatch* pCurrBatch = pLoader->firstBatch();
@@ -276,6 +334,19 @@ CWVOID loadingProcessThread(cwResourceLoader* pLoader)
 		pLoader->popBatch();
 
 		lock.unlock();
+
+		//if (pCurrBatch->isStreamCancelled()) {
+		//	cwLog::print("batch cancel!\n");
+		//	if (pCurrBatch->m_pObjStreaming)
+		//		pCurrBatch->m_pObjStreaming->streamClean();
+		//	pCurrBatch->releaseSteamObject();
+		//	CW_SAFE_RELEASE_NULL(pCurrBatch);
+		//	continue;
+		//}
+
+		if (pCurrBatch->isStreamCancelled()) {
+			cwLog::print("batch cancel!\n");
+		}
 
 		cwLoadResult* pResult = pLoader->load(pCurrBatch);
 		CW_SAFE_RELEASE_NULL(pCurrBatch);
@@ -288,6 +359,8 @@ CWVOID loadingProcessThread(cwResourceLoader* pLoader)
 			lockResult.unlock();
 		}
 	}
+
+	cwLog::print("resource loader thread end.\n");
 }
 
 NS_MINIR_END

@@ -97,6 +97,7 @@ public:
 	virtual const cwAABB& getBoundingBox() override;
 
 	inline CWUINT getMaxDepth() const { return m_uMaxDepth; }
+	virtual CWUINT getObjCnt() override;
 
 protected:
 	CWBOOL insertNode(cwRenderNode*);
@@ -128,6 +129,7 @@ protected:
 	CWVOID checkOctreeNodeEmpty(sOctreeNode*);
 
 	CWVOID renderOctreeNodePrimitiveFrame(sOctreeNode*);
+	CWUINT getObjCnt(sOctreeNode* pNode);
 
 protected:
 	sOctreeNode* m_pRoot;

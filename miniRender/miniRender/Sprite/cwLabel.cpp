@@ -54,12 +54,12 @@ CWBOOL cwLabel::init(const CWSTRING& strText, const CWSTRING& strFontTexture, CW
 {
 	if (!cwRenderNode2D::init()) return CWFALSE;
 
-	m_nStrText = strText;
 	m_cStartChar = cStartChar;
 	m_uCharWidth = uCharWidth;
 
 	if (!loadTexture(strFontTexture)) return CWFALSE;
 	if (!buildVertexBuffer()) return CWFALSE;
+	this->setString(strText);
 
 	return CWTRUE;
 }

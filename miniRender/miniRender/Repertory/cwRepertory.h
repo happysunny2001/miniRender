@@ -49,8 +49,9 @@ class CW_DLL cwRepertory
 public:
 	static cwRepertory& getInstance();
 
-	virtual void initAll();
-	virtual void addValue(const string& strName, const cwValueMap& value);
+	virtual CWVOID initAll();
+	virtual CWVOID releaseAll();
+	virtual CWVOID addValue(const string& strName, const cwValueMap& value);
 	CWFLOAT getFloat(const string& strName);
 	CWUINT  getUInt(const string& strName);
 	CWVOID* getPtr(const string& strName);
@@ -70,7 +71,7 @@ public:
 	inline cwSpatialFactory* getSpatialFactory() { return m_pSpatialFactory; }
 	inline cwEffectManager* getEffectManager() { return m_pEffectManager; }
 
-	virtual void refreshWindowTitle(const CWSTRING& strTitle) {}
+	virtual CWVOID refreshWindowTitle(const CWSTRING& strTitle) {}
 
 protected:
 	cwRepertory();
@@ -78,7 +79,7 @@ protected:
 	cwRepertory& operator=(cwRepertory const&) {}
 	virtual ~cwRepertory();
 
-	virtual bool specialInit();
+	virtual CWBOOL specialInit();
 	
 protected:
 	cwDevice* m_pDevice;

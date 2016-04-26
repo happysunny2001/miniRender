@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
+#include "Base/cwUtils.h"
 
 NS_MINIR_BEGIN
 
@@ -39,14 +40,19 @@ public:
 	virtual CWVOID streaming() = 0;
 	virtual CWVOID streamEnd();
 	virtual CWVOID streamClean();
-
+	virtual CWVOID streamFailed();
+	virtual CWVOID streamCancel();
 	virtual CWVOID streamRelease();
+
 	virtual cwRemoveBatch* buildRemoveBatch();
 
 	inline cwLoadBatch* getLoadBatch() const { return m_pLoadBatch; }
+	inline eStreamState getStreamState() const { return m_eState; }
+	CWBOOL canRelease();
 
 protected:
 	cwLoadBatch* m_pLoadBatch;
+	eStreamState m_eState;
 
 };
 

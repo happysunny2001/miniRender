@@ -21,6 +21,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Resource/cwResourceLoader.h"
 #include "Repertory/cwRepertory.h"
 #include "Base/cwStringConvert.h"
+#include "Terrain/cwTerrain.h"
 
 NS_MINIR_BEGIN
 
@@ -40,29 +41,29 @@ cwTerrainParser::cwTerrainParser()
 
 }
 
-sTerrainData* cwTerrainParser::parse(const CWSTRING& strFileName)
+CWBOOL cwTerrainParser::parse(cwTerrain* pTerrain, const CWSTRING& strFileName)
 {
 	cwData* pFileData = cwRepertory::getInstance().getResourceLoader()->getFileData(strFileName);
-	if (!pFileData) return nullptr;
+	if (!pFileData) return CWFALSE;
 
 	tinyxml2::XMLDocument doc;
 	tinyxml2::XMLError error = doc.Parse((const char*)(pFileData->m_pData), pFileData->m_uSize);
 	if (error != tinyxml2::XMLError::XML_SUCCESS) {
-		return nullptr;
+		return CWFALSE;
 	}
 
 	CW_SAFE_DELETE(pFileData);
 
 	tinyxml2::XMLElement* pTerrainElement = doc.FirstChildElement("Terrain");
-	if (!pTerrainElement) return nullptr;
+	if (!pTerrainElement) return CWFALSE;
 
 	tinyxml2::XMLElement* pInfoElement = pTerrainElement->FirstChildElement("Info");
 	tinyxml2::XMLElement* pTileListElement = pTerrainElement->FirstChildElement("TileList");
 
-	if (!pInfoElement || !pTileListElement) return nullptr;
+	if (!pInfoElement || !pTileListElement) return CWFALSE;
 
 	sTerrainData* pTerrainData = new sTerrainData();
-	if (!pTerrainData) return nullptr;
+	if (!pTerrainData) return CWFALSE;
 
 	pTerrainData->m_iHorizTileCnt     = pInfoElement->IntAttribute("Horiz");
 	pTerrainData->m_iVertTileCnt      = pInfoElement->IntAttribute("Vert");
@@ -71,11 +72,12 @@ sTerrainData* cwTerrainParser::parse(const CWSTRING& strFileName)
 	pTerrainData->m_iTileVertexHeight = pInfoElement->IntAttribute("TileVertexHeight");
 	pTerrainData->m_fHeightScale      = pInfoElement->FloatAttribute("HeightScale");
 	pTerrainData->m_fBoundingBoxOffsetScale = 0.1f;
+	pTerrain->setTerrainData(pTerrainData);
 
 	tinyxml2::XMLElement* pTileElement = pTileListElement->FirstChildElement("Tile");
 
 	while (pTileElement) {
-		sTerrainTileData* pTileData = new sTerrainTileData();
+		sTerrainTileData* pTileData = sTerrainTileData::create();
 		if (!pTileData) {
 			break;
 		}
@@ -104,7 +106,8 @@ sTerrainData* cwTerrainParser::parse(const CWSTRING& strFileName)
 		pTileData->m_nBoundingBox = pTerrainData->terrainTileBoundingBox(iIndexX, iIndexY);
 
 		pTileData->updateBoundingBox();
-		pTerrainData->m_nTerrainTiles.insert(std::make_pair(sTerrainTileData::getKey(iIndexX, iIndexY), pTileData));
+		//pTerrainData->m_nTerrainTiles.insert(std::make_pair(sTerrainTileData::getKey(iIndexX, iIndexY), pTileData));
+		pTerrain->addTerrainTileData(pTileData);
 
 		pTileElement = pTileElement->NextSiblingElement("Tile");
 	}
@@ -112,7 +115,7 @@ sTerrainData* cwTerrainParser::parse(const CWSTRING& strFileName)
 	pTerrainData->m_nArea.m_nMin.set(-pTerrainData->terrainWidth()*0.5f, -cwMathUtil::cwInfinity, -pTerrainData->terrainHeight()*0.5f);
 	pTerrainData->m_nArea.m_nMax.set(pTerrainData->terrainWidth()*0.5f, cwMathUtil::cwInfinity, pTerrainData->terrainHeight()*0.5f);
 
-	return pTerrainData;
+	return CWTRUE;
 }
 
 std::vector<sTerrainTexture> cwTerrainParser::parseTexture(tinyxml2::XMLElement* pElement)

@@ -54,6 +54,7 @@ private:
 	CWVOID onResize(CWUINT width, CWUINT height);
 	CWBOOL buildWindow();
 	CWVOID mainLoop();
+	CWVOID gameRelease();
 
 	LRESULT msgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	friend LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

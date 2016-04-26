@@ -56,6 +56,7 @@ public:
 	virtual CWVOID renderPrimitiveFrame() override;
 
 	virtual const cwAABB& getBoundingBox() override;
+	virtual CWUINT getObjCnt() override;
 
 protected:
 	CWBOOL insertNode(cwRenderNode*);

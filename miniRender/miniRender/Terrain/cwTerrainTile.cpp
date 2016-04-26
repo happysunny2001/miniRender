@@ -27,6 +27,17 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
+sTerrainTileData* sTerrainTileData::create()
+{
+	sTerrainTileData* pTerrainData = new sTerrainTileData();
+	if (pTerrainData) {
+		pTerrainData->autorelease();
+		return pTerrainData;
+	}
+
+	return nullptr;
+}
+
 CWBOOL sTerrainTileData::loadHeightMap(CWFLOAT fScale)
 {
 	if (m_eState != eTerrainTileLoading) return CWTRUE;
@@ -164,7 +175,7 @@ m_pTexHeightMap(nullptr)
 
 cwTerrainTile::~cwTerrainTile()
 {
-	m_pTerrainTileData = nullptr;
+	CW_SAFE_RELEASE_NULL(m_pTerrainTileData);
 	releaseResource();
 
 	cwLog::print("cwTerrainTile::~cwTerrainTile.\n");
@@ -175,7 +186,7 @@ CWBOOL cwTerrainTile::init(sTerrainTileData* pTerrainTileData)
 	if (!cwEntity::init()) return CWFALSE;
 	if (!pTerrainTileData) return CWFALSE;
 
-	m_pTerrainTileData = pTerrainTileData;
+	this->setTerrainTileData(pTerrainTileData);
 
 	return CWTRUE;
 }
@@ -236,7 +247,17 @@ CWVOID cwTerrainTile::releaseResource()
 {
 	CW_SAFE_RELEASE_NULL(m_pTexHeightMap);
 
-	m_pMaterial->clearMaterialUnit();
+	if (m_pMaterial)
+		m_pMaterial->clearMaterialUnit();
+}
+
+CWVOID cwTerrainTile::setTerrainTileData(sTerrainTileData* pTerrainTileData)
+{
+	if (m_pTerrainTileData != pTerrainTileData) {
+		CW_SAFE_RETAIN(pTerrainTileData);
+		CW_SAFE_RELEASE_NULL(m_pTerrainTileData);
+		m_pTerrainTileData = pTerrainTileData;
+	}
 }
 
 CWVOID cwTerrainTile::refreshBoundingBox()

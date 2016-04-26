@@ -192,7 +192,6 @@
     <ClInclude Include="SpatialSorting\cwSpatial.h" />
     <ClInclude Include="SpatialSorting\cwSpatialFactory.h" />
     <ClInclude Include="Sprite\cwLabel.h" />
-    <ClInclude Include="Sprite\Primitive\cwPrimitive2D.h" />
     <ClInclude Include="Sprite\Primitive\cwPrimitiveNode2D.h" />
     <ClInclude Include="Sprite\cwRenderNode2D.h" />
     <ClInclude Include="Sprite\cwSpriteManager.h" />
@@ -358,7 +357,6 @@
     <ClCompile Include="SpatialSorting\cwSpatial.cpp" />
     <ClCompile Include="SpatialSorting\cwSpatialFactory.cpp" />
     <ClCompile Include="Sprite\cwLabel.cpp" />
-    <ClCompile Include="Sprite\Primitive\cwPrimitive2D.cpp" />
     <ClCompile Include="Sprite\Primitive\cwPrimitiveNode2D.cpp" />
     <ClCompile Include="Sprite\cwRenderNode2D.cpp" />
     <ClCompile Include="Sprite\cwSprite.cpp" />

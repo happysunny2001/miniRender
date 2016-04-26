@@ -38,6 +38,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include <algorithm>
 #include <queue>
+#include <stack>
 
 NS_MINIR_BEGIN
 
@@ -46,6 +47,11 @@ NS_MINIR_BEGIN
 static bool compRenderOrder(cwRenderNode2D* pLeft, cwRenderNode2D* pRight)
 {
 	return pLeft->getRenderOrder() < pRight->getRenderOrder();
+}
+
+static bool compRenderOrderInvert(cwRenderNode2D* pLeft, cwRenderNode2D* pRight)
+{
+	return pLeft->getRenderOrder() > pRight->getRenderOrder();
 }
 
 cwSpriteManager* cwSpriteManager::create()
@@ -185,21 +191,18 @@ CWVOID cwSpriteManager::render()
 
 CWVOID cwSpriteManager::renderNode()
 {
-	std::queue<cwRenderNode2D*> queueNode;
-	queueNode.push(m_pRootSprite);
+	std::stack<cwRenderNode2D*> _stackNodes;
+	_stackNodes.push(m_pRootSprite);
 
-	while (!queueNode.empty()) {
-		cwRenderNode2D* pFront = queueNode.front();
-		queueNode.pop();
+	while (!_stackNodes.empty()) {
+		cwRenderNode2D* pCurrNode = _stackNodes.top();
+		_stackNodes.pop();
 
-		render(pFront);
+		if (!pCurrNode) continue;
 
-		//if (pFront->getRenderType() == eRenderTypeSprite) {
-		//	//renderBatch(static_cast<cwSprite*>(pFront));
-		//	render(static_cast<cwSprite*>(pFront));
-		//}
+		render(pCurrNode);
 
-		cwVector<cwRenderNode*>& nVecChildren = pFront->getChildren();
+		cwVector<cwRenderNode*>& nVecChildren = pCurrNode->getChildren();
 		std::vector<cwRenderNode2D*> nVecNodes;
 		nVecNodes.reserve(nVecChildren.size());
 
@@ -208,10 +211,10 @@ CWVOID cwSpriteManager::renderNode()
 				nVecNodes.push_back(static_cast<cwRenderNode2D*>(pNode));
 		}
 
-		std::sort(nVecNodes.begin(), nVecNodes.end(), compRenderOrder);
+		std::sort(nVecNodes.begin(), nVecNodes.end(), compRenderOrderInvert);
 
 		for (auto pNode2D : nVecNodes)
-			queueNode.push(pNode2D);
+			_stackNodes.push(pNode2D);
 	}
 }
 

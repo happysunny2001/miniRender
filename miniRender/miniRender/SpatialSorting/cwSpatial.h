@@ -57,6 +57,7 @@ public:
 	virtual CWVOID renderPrimitiveFrame() = 0;
 
 	virtual const cwAABB& getBoundingBox() = 0;
+	virtual CWUINT getObjCnt() = 0;
 
 protected:
 
