@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -79,7 +79,7 @@ CWBOOL cwRenderer::init()
 {
 	buildPrimitiveEntity();
 
-	return true;
+	return CWTRUE;
 }
 
 CWVOID cwRenderer::buildPrimitiveEntity()
@@ -162,7 +162,11 @@ CWVOID cwRenderer::setCurrShader(cwShader* pShader)
 {
 	if (m_pCurrShader == pShader) return;
 	m_pCurrShader = pShader;
-	configLight();
+
+	if (m_pCurrShader) {
+		perFrameConfig();
+		configLight();
+	}
 }
 
 CWVOID cwRenderer::createViewPort(CWFLOAT fTopLeftX, CWFLOAT fTopLeftY, CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fMinDepth, CWFLOAT fMaxDepth)
@@ -257,6 +261,9 @@ CWVOID cwRenderer::render(cwStage* pStage)
 {
 	if (!pStage) return;
 
+	m_pCurrCamera = nullptr;
+	m_pCurrShader = nullptr;
+
 	pStage->begin();
 	pStage->render();
 	pStage->end();
@@ -268,10 +275,45 @@ CWVOID cwRenderer::render(cwRenderBatch* pBatch)
 		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
 
 		this->setCurrShader(pBatch->m_pEffect->getShader());
-		pDevice->setShaderWorldTrans(pBatch->m_pEffect->getShader(), pBatch->m_nWorldTrans, m_pCurrCamera);
+		this->batchConfig(pBatch);
+		//pDevice->setShaderWorldTrans(pBatch->m_pEffect->getShader(), pBatch->m_nWorldTrans, m_pCurrCamera);
 
 		pBatch->m_pEffect->render(pBatch);
 	}
+}
+
+CWVOID cwRenderer::batchConfig(cwRenderBatch* pBatch)
+{
+	cwShader* pShader = pBatch->m_pEffect->getShader();
+
+	cwMatrix4X4& worldTrans = pBatch->m_nWorldTrans;
+	pShader->setVariableMatrix("gMatWorld", worldTrans);
+
+	if (worldTrans.inverseExist()) {
+		cwMatrix4X4 matWorldInvTrans = worldTrans.inverse().transpose();
+		pShader->setVariableMatrix("gMatWorldInvTranspose", matWorldInvTrans);
+	}
+	else {
+		cwMatrix4X4& M = cwMatrix4X4::identityMatrix;
+		pShader->setVariableMatrix("gMatWorldInvTranspose", M);
+	}
+}
+
+CWVOID cwRenderer::perFrameConfig()
+{
+	if (!m_pCurrCamera || !m_pCurrShader) return;
+
+	m_pCurrShader->setVariableMatrix("gMatViewProj", m_pCurrCamera->getViewProjMatrix());
+	m_pCurrShader->setVariableMatrix("gMatView", m_pCurrCamera->getViewMatrix());
+	m_pCurrShader->setVariableMatrix("gMatProj", m_pCurrCamera->getProjMatrix());
+
+	const cwVector3D& pos = m_pCurrCamera->getPos();
+	m_pCurrShader->setVariableData("gEyePosWorld", (CWVOID*)&pos, 0, sizeof(cwVector3D));
+
+	cwVector4D nearFar = cwVector4D::ZERO;
+	nearFar.x = m_pCurrCamera->getFarZ();
+	nearFar.y = m_pCurrCamera->getNearZ();
+	m_pCurrShader->setVariableData("gCameraNearFarZ", (CWVOID*)&nearFar, 0, sizeof(cwVector4D));
 }
 
 cwStage* cwRenderer::getStage(const CWSTRING& strName)
@@ -321,6 +363,7 @@ CWVOID cwRenderer::configDirectionalLight()
 		!m_pCurrShader->hasVariable(eShaderParamDirectionalLightCnt)) return;
 
 	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
+	if (!pCurrScene) return;
 	const cwVector<cwDirectionalLight*>& vecLight = pCurrScene->getDirectionalLights();
 	if (vecLight.empty()) {
 		m_pCurrShader->setVariableInt(eShaderParamDirectionalLightCnt, 0);
@@ -341,6 +384,7 @@ CWVOID cwRenderer::configPointLight()
 		!m_pCurrShader->hasVariable(eShaderParamPointLightCnt)) return;
 
 	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
+	if (!pCurrScene) return;
 	const cwVector<cwPointLight*>& vecLight = pCurrScene->getPointLights();
 	if (vecLight.empty()) {
 		m_pCurrShader->setVariableInt(eShaderParamPointLightCnt, 0);
@@ -361,6 +405,7 @@ CWVOID cwRenderer::configSpotLight()
 		!m_pCurrShader->hasVariable(eShaderParamSpotLightCnt)) return;
 
 	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
+	if (!pCurrScene) return;
 	const cwVector<cwSpotLight*>& vecLight = pCurrScene->getSpotLights();
 	if (vecLight.empty()) {
 		m_pCurrShader->setVariableInt(eShaderParamSpotLightCnt, 0);

@@ -58,17 +58,35 @@ CWBOOL cwDirectionalLight::init(
 	this->setDiffuse(diffuse);
 	this->setSpecular(specular);
 
+	m_nLightAttr.set(0, 0, 0, 0);
+
 	return CWTRUE;
 }
 
 CWUINT cwDirectionalLight::size() const
 {
-	return sizeof(cwVector4D)* 4;
+	return sizeof(cwVector4D)* 5;
 }
 
 CWVOID* cwDirectionalLight::data() const
 {
 	return (CWVOID*)&(this->m_nDirection);
+}
+
+CWVOID cwDirectionalLight::setCastShadow(CWBOOL b)
+{
+	if (b) {
+		m_nLightAttr.x = 1.0f;
+	}
+	else {
+		m_nLightAttr.x = 0.0f;
+	}
+}
+
+CWBOOL cwDirectionalLight::getCastShadow() const
+{
+	if (m_nLightAttr.x == 0) return CWFALSE;
+	return CWTRUE;
 }
 
 NS_MINIR_END

@@ -35,7 +35,8 @@ public:
 	static cwD3D11ViewPort* create(
 		CWFLOAT fTopLeftX, CWFLOAT fTopLeftY,
 		CWFLOAT fWidth, CWFLOAT fHeight,
-		CWFLOAT fMinDepth, CWFLOAT fMaxDepth);
+		CWFLOAT fMinDepth, CWFLOAT fMaxDepth, 
+		CWBOOL bThreading=CWFALSE);
 
 	virtual CWBOOL init(
 		CWFLOAT fTopLeftX, CWFLOAT fTopLeftY,

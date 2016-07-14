@@ -22,6 +22,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
+cwRenderTexture::cwRenderTexture() :
+m_bResizeable(CWTRUE)
+//m_bMultiRenderTarget(CWFALSE)
+{
+
+}
+
 CWBOOL cwRenderTexture::init(CWFLOAT fWidth, CWFLOAT fHeight)
 {
 	m_fWidth = fWidth;
@@ -52,6 +59,36 @@ CWHANDLE cwRenderTexture::getWritablehandle() const
 }
 
 CWVOID cwRenderTexture::beginResize()
+{
+
+}
+
+CWVOID cwRenderTexture::setRenderTargetCount(CWUINT iCount)
+{
+
+}
+
+CWVOID cwRenderTexture::setRenderTarget(eFormat format, CWUINT index)
+{
+
+}
+
+CWHANDLE cwRenderTexture::getRenderTargetHandle(CWUINT index) const
+{
+	return NULL;
+}
+
+CWHANDLE cwRenderTexture::getShaderResourceHandle(CWUINT index) const
+{
+	return NULL;
+}
+
+cwTexture* cwRenderTexture::getRenderTexture(CWINT index) const
+{
+	return nullptr;
+}
+
+CWVOID cwRenderTexture::enableDepthBufferShaderResource()
 {
 
 }

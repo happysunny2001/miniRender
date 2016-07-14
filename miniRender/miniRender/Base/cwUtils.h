@@ -68,7 +68,35 @@ typedef enum {
 	eStageTypeSkyDome,
 	eStageTypeReflection,
 	eStageTypePrimitive,
+	eStageTypeShadowMap,
 }eStageType;
+
+typedef enum {
+	eDepthStencilViewUnknown = 0,
+	eDepthStencilViewTexture1D,
+	eDepthStencilViewTexture1DArray,
+	eDepthStencilViewTexture2D,
+	eDepthStencilViewTexture2DArray,
+	eDepthStencilViewTexture2DMS,
+	eDepthStencilViewTexture2DMSArray,
+	eDepthStencilViewMaxCount
+}eDepthStencilViewDimension;
+
+typedef enum {
+	eShaderResourceViewUnknown = 0,
+	eShaderResourceViewBuffer,
+	eShaderResourceViewTexture1D,
+	eShaderResourceViewTexture1DArray,
+	eShaderResourceViewTexture2D,
+	eShaderResourceViewTexture2DArray,
+	eShaderResourceViewTexture2DMS,
+	eShaderResourceViewTexture2DMSArray,
+	eShaderResourceViewTexture3D,
+	eShaderResourceViewTextureCube,
+	eShaderResourceViewTextureCubeArray,
+	eShaderResourceViewTextureBufferEx,
+	eShaderResourceViewMaxCount
+}eShaderResourceViewDimension;
 
 typedef enum {
 	ePrimitiveTypePointList = 0,
@@ -330,6 +358,8 @@ typedef enum {
 	eRenderTextureTarget,
 	eRenderTextureShader,
 	eRenderTextureWritable,
+	eRenderTextureShadowMap,
+	eRenderTextureMultiTarget,
 }eRenderTextureType;
 
 typedef enum {
@@ -387,11 +417,13 @@ typedef enum {
 	eParserStencil,
 	eParserStageLayer,
 	eParserStageLayerPU,
+	eParserBatchPU,
 	eParserTexture,
 	eParserEffect,
 	eParserRenderState,
 	eParserResourceConf,
 	eParserTerrain,
+	eParserRenderTarget,
 	eParserTypeMax
 }eParserType;
 
@@ -427,6 +459,24 @@ typedef enum {
 	eStreamStateStreaming,
 	eStreamStateCancel,
 }eStreamState;
+
+typedef enum {
+	eShaderParamFreqPreFrame = 1,
+	eShaderParamFreqPreObject,
+}eShaderParamFreq;
+
+typedef enum {
+	eShaderParamSourceData = 1,
+	eShaderParamSourceEngine,
+}eShaderParamSource;
+
+typedef enum {
+	eShaderParamTypeNone = 0,
+	eShaderParamTypeFloat = 1,
+	eShaderParamTypeFloatArray,
+	eShaderParamTypeTexture,
+	eShaderParamTypeMatrix,
+}eShaderParamType;
 
 #define CW_CONTROL MK_CONTROL
 #define CW_LBUTTON MK_LBUTTON

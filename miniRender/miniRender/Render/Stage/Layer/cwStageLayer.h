@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -37,6 +37,8 @@ class cwEffect;
 class cwBlend;
 class cwStencil;
 class cwPUStageLayer;
+class cwPUBatch;
+class cwCamera;
 
 class cwStageLayer : public cwRef
 {
@@ -54,16 +56,26 @@ public:
 	CWVOID reset();
 	CWVOID begin(std::vector<cwRenderNode*>* vecEntities);
 	CWVOID begin(cwRenderNode* pNode);
-	CWVOID render();
+	virtual CWVOID render();
 	CWVOID end();
 
 	CWVOID setPUList(cwVector<cwPUStageLayer*>& vecPU);
 	CWVOID addPU(cwPUStageLayer* pPUStageLayer);
 	cwPUStageLayer* getPU(ePURenderType eType);
 
+	CWVOID setBatchPUList(cwVector<cwPUBatch*>& vecPU);
+	CWVOID batchPUUpdate(cwRenderBatch* pBatch);
+
+	CWVOID setCamera(cwCamera* pCamera);
+	CWVOID setCamera(const CWSTRING& strCamName);
+	inline CWVOID setCameraName(const CWSTRING& str) { m_nCameraName = str; }
+	inline const CWSTRING& getCameraName() const { return m_nCameraName; }
+	inline cwCamera* getCamera() const { return m_pCamera; }
+
 	inline CWVOID setRenderState(eRenderState eState) { m_eRenderState = eState; }
 
 	inline std::unordered_map<cwShader*, cwRenderPipeline*>& getRenderPipeline() { return m_nMapPipeline; }
+	inline const CWSTRING& getLayerType() const { return m_nLayerType; }
 
 protected:
 	cwStageLayer();
@@ -72,15 +84,22 @@ protected:
 	cwRenderPipeline* getPipeline(cwRenderNode* pEntity);
 	cwRenderPipeline* getUnusePipeline(cwShader* pShader);
 
-	CWVOID addEntities(std::vector<cwRenderNode*>* vecEntities);
-	CWVOID addEntities(cwRenderNode* pNode);
+	virtual CWVOID addEntities(std::vector<cwRenderNode*>* vecEntities);
+	virtual CWVOID addEntities(cwRenderNode* pNode);
 
 protected:
+	//stage layer name
 	CWSTRING m_nStrName;
 	eStageLayerFliterType m_eFilterType;
 	CWBOOL m_bTransparent;
+	CWSTRING m_nLayerType;
+
+	//render camera
+	CWSTRING m_nCameraName;
+	cwCamera* m_pCamera;
 
 	cwVector<cwPUStageLayer*> m_nVecPU;
+	cwVector<cwPUBatch*> m_nVecPUBatch;
 
 	eRenderState m_eRenderState;
 	eRenderState m_eOldRenderState;

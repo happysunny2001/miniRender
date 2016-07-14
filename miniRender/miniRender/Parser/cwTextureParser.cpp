@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Texture/cwTextureManager.h"
 #include "Texture/cwRenderTexture.h"
 #include "Texture/cwCubeTexture.h"
+#include "Texture/cwRenderTexture.h"
 #include "Render/cwRenderer.h"
 #include "Render/Stage/cwStage.h"
 #include "Engine/cwEngine.h"
@@ -140,7 +141,19 @@ cwTexture* cwTextureParser::parseTextureStageRenderTarget(tinyxml2::XMLElement* 
 	if (pcLocation) {
 		cwStage* pOtherStage = cwRepertory::getInstance().getEngine()->getRenderer()->getStage(pcLocation);
 		if (pOtherStage) {
-			return pOtherStage->getRenderTexture();
+			cwTexture* pTexture = pOtherStage->getRenderTexture();
+
+			const char* pcIndex = pTextureData->Attribute("Index");
+			if (pcIndex && pTexture && pTexture->getType() == eRenderTextureMultiTarget) {
+				cwRenderTexture* pRenderTexture = dynamic_cast<cwRenderTexture*>(pTexture);
+				CWINT index = cwStringConvert::convertToInt(pcIndex);
+
+				if (pRenderTexture) {
+					pTexture = pRenderTexture->getRenderTexture(index);
+				}
+			}
+
+			return pTexture;
 		}
 	}
 

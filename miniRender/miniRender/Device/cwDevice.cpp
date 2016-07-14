@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -34,13 +34,15 @@ m_eRenderState(eRenderStateSolid),
 m_bEnableMsaa4x(CWTRUE),
 m_pBlendState(nullptr),
 m_pRenderTargetBkBuffer(nullptr),
-m_pCurrRenderTarget(nullptr),
+//m_pCurrRenderTarget(nullptr),
 m_bRefreshRenderTarget(false),
 m_pDefaultViewPort(nullptr),
 m_pCurrViewPort(nullptr),
 m_bRefreshViewPort(false),
 m_pStencil(nullptr),
-m_pDisableZBuffer(nullptr)
+m_pDisableZBuffer(nullptr),
+m_pRenderTarget(nullptr),
+m_pDepthStencil(nullptr)
 {
 
 }
@@ -53,8 +55,10 @@ cwDevice::~cwDevice()
 	CW_SAFE_RELEASE_NULL(m_pCurrViewPort);
 
 	CW_SAFE_RELEASE_NULL(m_pRenderTargetBkBuffer);
-	CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
+	//CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
 	CW_SAFE_RELEASE_NULL(m_pDisableZBuffer);
+	CW_SAFE_RELEASE_NULL(m_pRenderTarget);
+	CW_SAFE_RELEASE_NULL(m_pDepthStencil);
 }
 
 eRenderState cwDevice::getRenderState()
@@ -62,18 +66,40 @@ eRenderState cwDevice::getRenderState()
 	return m_eRenderState;
 }
 
-void cwDevice::setRenderTarget(cwTexture* pRenderTexture)
+//CWVOID cwDevice::setRenderTarget(cwTexture* pRenderTexture)
+//{
+//	if (m_pCurrRenderTarget == pRenderTexture) return;
+//	if (pRenderTexture == nullptr) {
+//		if(m_pCurrRenderTarget == m_pRenderTargetBkBuffer) return;
+//		pRenderTexture = m_pRenderTargetBkBuffer;
+//	}
+//
+//	CW_SAFE_RETAIN(pRenderTexture);
+//	CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
+//	m_pCurrRenderTarget = pRenderTexture;
+//
+//	m_bRefreshRenderTarget = CWTRUE;
+//}
+
+CWVOID cwDevice::setRenderTarget(cwTexture* pRenderTexture)
 {
-	if (m_pCurrRenderTarget == pRenderTexture) return;
-	if (pRenderTexture == nullptr) {
-		if(m_pCurrRenderTarget == m_pRenderTargetBkBuffer) return;
-		pRenderTexture = m_pRenderTargetBkBuffer;
-	}
+	if (m_pRenderTarget == pRenderTexture) return;
 
 	CW_SAFE_RETAIN(pRenderTexture);
-	CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
-	m_pCurrRenderTarget = pRenderTexture;
+	CW_SAFE_RELEASE(m_pRenderTarget);
 
+	m_pRenderTarget = pRenderTexture;
+	m_bRefreshRenderTarget = CWTRUE;
+}
+
+CWVOID cwDevice::setDepthStencil(cwTexture* pDepthStencil)
+{
+	if (m_pDepthStencil == pDepthStencil) return;
+
+	CW_SAFE_RETAIN(pDepthStencil);
+	CW_SAFE_RELEASE(m_pDepthStencil);
+
+	m_pDepthStencil = pDepthStencil;
 	m_bRefreshRenderTarget = CWTRUE;
 }
 
@@ -113,7 +139,9 @@ CWVOID cwDevice::createDefaultRenderTarget()
 		CW_SAFE_RELEASE_NULL(m_pRenderTargetBkBuffer);
 	}
 
-	m_pRenderTargetBkBuffer = cwRepertory::getInstance().getTextureManager()->createRenderTexture(1.0f, 1.0f, eRenderTextureTarget);
+	cwRenderTexture* pTex = cwRepertory::getInstance().getTextureManager()->createRenderTexture(1.0f, 1.0f, eRenderTextureTarget);
+	pTex->setClearColor(cwColor::red);
+	m_pRenderTargetBkBuffer = pTex;
 	CW_SAFE_RETAIN(m_pRenderTargetBkBuffer);
 	this->setRenderTarget(m_pRenderTargetBkBuffer);
 }
@@ -166,6 +194,32 @@ CWBOOL cwDevice::enableZBuffer()
 {
 	this->setStencil(nullptr);
 	return CWTRUE;
+}
+
+CWVOID cwDevice::pushDeviceStatus()
+{
+	cwDeviceStatus devStatus;
+
+	devStatus.m_eRenderState = m_eRenderState;
+	//devStatus.m_pRenderTarget = m_pCurrRenderTarget;
+	devStatus.m_pViewPort = m_pCurrViewPort;
+	devStatus.m_pBlendState = m_pBlendState;
+	devStatus.m_pStencil = m_pStencil;
+
+	m_nDeviceStatusStack.push(devStatus);
+}
+
+CWVOID cwDevice::popDeviceStatus()
+{
+	cwDeviceStatus& devStatus = m_nDeviceStatusStack.top();
+
+	this->setRenderState(devStatus.m_eRenderState);
+	//this->setRenderTarget(devStatus.m_pRenderTarget);
+	this->setViewPort(devStatus.m_pViewPort);
+	this->setBlend(devStatus.m_pBlendState);
+	this->setStencil(devStatus.m_pStencil);
+
+	m_nDeviceStatusStack.pop();
 }
 
 NS_MINIR_END

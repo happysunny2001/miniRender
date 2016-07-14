@@ -92,6 +92,9 @@ public:
 	inline CWINT getTag() const { return m_iTag; }
 	inline CWVOID setTag(CWINT i) { m_iTag = i; }
 
+	inline CWBOOL getCastShadow() const { return m_bCastShadow; }
+	inline CWVOID setCastShadow(CWBOOL b) { m_bCastShadow = b; }
+
 	cwVector<cwRenderNode*>& getChildren() { return m_nVecChildren; }
 
 	virtual CWVOID refreshBoundingBox();
@@ -127,6 +130,7 @@ protected:
 protected:
 	eRenderType m_eRenderType;
 	CWBOOL m_bVisible;
+	CWBOOL m_bCastShadow;
 
 	cwVector3D m_nPos;
 	//angle of rotation around the x, y, z axis, in radians

@@ -180,8 +180,9 @@ CWVOID cwLabel::refreshRenderObject()
 			0);
 	}
 
-	m_pRenderObject->updateVertexData(m_pVertexBuffer, getVertexCnt());
-	m_pRenderObject->setValidVertexCnt(getVertexCnt());
+	CWUINT iVertCnt = this->getVertexCnt();
+	m_pRenderObject->updateVertexData(m_pVertexBuffer, iVertCnt);
+	m_pRenderObject->setValidVertexCnt(iVertCnt);
 }
 
 CWVOID cwLabel::refreshTransform()

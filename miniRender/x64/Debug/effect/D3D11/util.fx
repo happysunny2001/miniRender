@@ -4,6 +4,7 @@ cbuffer cbTransform
 	float4x4 gMatWorldInvTranspose; //transform normal
 	float4x4 gMatWorldViewProj;
 	float4x4 gViewProj;
+	float4x4 gMatShadowTransform; 
 	float3 gEyePosWorld;	      //camera position in world space
 };
 

@@ -94,6 +94,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Resource/cwResourceLoader.h"
 #include "Terrain/cwTerrain.h"
 #include "Terrain/cwTerrainTile.h"
+#include "Render/cwRenderer.h"
+#include "Render/TBDR/cwTBDRRenderer.h"
 
 #if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
 #include "Platform/Windows/cwWinApplication.h"

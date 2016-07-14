@@ -40,6 +40,14 @@ public:
 		CWUINT structureByteStride,
 		CWUINT offset = 0);
 
+	static cwD3D11BufferShader* create(
+		CWVOID* pData,
+		CWUINT uSize,
+		eBufferUsage usage,
+		eAccessFlag uCpuFlag,
+		CWUINT structureByteStride,
+		CWUINT offset = 0);
+
 	cwD3D11BufferShader();
 	virtual ~cwD3D11BufferShader();
 

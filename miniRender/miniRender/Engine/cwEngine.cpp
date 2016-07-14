@@ -42,6 +42,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Sprite/cwLabel.h"
 #include "Event/cwTouchEvent.h"
 #include "Resource/cwResourceLoader.h"
+#include "Base/cwLog.h"
 
 #include <sstream>
 
@@ -110,6 +111,14 @@ CWVOID cwEngine::loadRenderer(const CWSTRING& strConfFile)
 
 		pRendererParser->deferParse(m_pRenderer);
 	}
+}
+
+CWVOID cwEngine::setRenderer(cwRenderer* pRenderer)
+{
+	if (m_pRenderer == pRenderer) return;
+	CW_SAFE_RETAIN(pRenderer);
+	CW_SAFE_RELEASE_NULL(m_pRenderer);
+	m_pRenderer = pRenderer;
 }
 
 CWVOID cwEngine::buildSpriteManager()

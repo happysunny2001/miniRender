@@ -26,11 +26,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwD3D11RenderTexture* cwD3D11RenderTexture::create(CWFLOAT fWidth, CWFLOAT fHeight)
+cwD3D11RenderTexture* cwD3D11RenderTexture::create(CWFLOAT fWidth, CWFLOAT fHeight, CWBOOL bThreading)
 {
 	cwD3D11RenderTexture* pRenderTex = new cwD3D11RenderTexture();
 	if (pRenderTex && pRenderTex->init(fWidth, fHeight)) {
-		pRenderTex->autorelease();
+		if (!bThreading)
+			pRenderTex->autorelease();
 		return pRenderTex;
 	}
 
@@ -49,19 +50,19 @@ cwD3D11RenderTexture::~cwD3D11RenderTexture()
 	CW_RELEASE_COM(m_pShaderResource);
 }
 
-bool cwD3D11RenderTexture::init(CWFLOAT fWidth, CWFLOAT fHeight)
+CWBOOL cwD3D11RenderTexture::init(CWFLOAT fWidth, CWFLOAT fHeight)
 {
 	return cwRenderTexture::init(fWidth, fHeight);
 }
 
-void cwD3D11RenderTexture::beginResize()
+CWVOID cwD3D11RenderTexture::beginResize()
 {
 
 }
 
-bool cwD3D11RenderTexture::onResize(bool bForce)
+CWBOOL cwD3D11RenderTexture::onResize(CWBOOL bForce)
 {
-	if (!bForce && m_fWidth > 1.0f) return true;
+	if (!bForce && m_fWidth > 1.0f) return CWTRUE;
 
 	CW_RELEASE_COM(m_pShaderResource);
 	CW_RELEASE_COM(m_pRenderTarget);
@@ -82,7 +83,7 @@ bool cwD3D11RenderTexture::onResize(bool bForce)
 	}
 
 	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
-	if (!pDevice) return false;
+	if (!pDevice) return CWFALSE;
 
 	D3D11_TEXTURE2D_DESC texDesc;
 
@@ -101,7 +102,7 @@ bool cwD3D11RenderTexture::onResize(bool bForce)
 
 	ID3D11Texture2D* pTex = NULL;
 	ID3D11Device* pD3D11Device = pDevice->getD3D11Device();
-	if (!pD3D11Device) return false;
+	if (!pD3D11Device) return CWFALSE;
 
 	CW_HR(pD3D11Device->CreateTexture2D(&texDesc, NULL, &pTex));
 	CW_HR(pD3D11Device->CreateShaderResourceView(pTex, NULL, &m_pShaderResource));
@@ -111,7 +112,7 @@ bool cwD3D11RenderTexture::onResize(bool bForce)
 
 	buildDepthStencilBuffer(texWidth, texHeight);
 
-	return true;
+	return CWTRUE;
 }
 
 CWVOID cwD3D11RenderTexture::buildDepthStencilBuffer(CWUINT iWidth, CWUINT iHeight)

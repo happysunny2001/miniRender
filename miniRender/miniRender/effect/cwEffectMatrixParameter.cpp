@@ -44,7 +44,7 @@ cwEffectMatrixParameter::~cwEffectMatrixParameter()
 
 CWVOID cwEffectMatrixParameter::binding(cwShader* pShader)
 {
-	if (pShader) {
+	if (pShader && pShader->hasVariable(m_nStrParamName)) {
 		pShader->setVariableMatrix(m_nStrParamName, (CWFLOAT*)(&m_nMat));
 	}
 }

@@ -30,7 +30,7 @@ NS_MINIR_BEGIN
 class cwD3D11RenderTextureWritable : public cwD3D11RenderTexture
 {
 public:
-	static cwD3D11RenderTextureWritable* create(CWFLOAT fWidth, CWFLOAT fHeight);
+	static cwD3D11RenderTextureWritable* create(CWFLOAT fWidth, CWFLOAT fHeight, CWBOOL bThreading=CWFALSE);
 
 	cwD3D11RenderTextureWritable();
 	virtual ~cwD3D11RenderTextureWritable();
@@ -49,6 +49,6 @@ NS_MINIR_END
 
 #endif //_CW_D3D11_
 
-#endif //__CW_D3D11_RENDER_TEXTURE_MULTI_THREAD_H__
+#endif //__CW_D3D11_RENDER_TEXTURE_WRITABLE_H__
 
 

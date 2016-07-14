@@ -43,6 +43,7 @@ public:
 	virtual CWVOID updateCamera(CWFLOAT fPosX, CWFLOAT fPosY, CWFLOAT fPosZ);
 	virtual CWVOID updateProjMatrixFov(CWFLOAT fFov, CWFLOAT fAspect, CWFLOAT fNearZ, CWFLOAT fFarZ);
 	virtual CWVOID updateProjMatrix(CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fNearZ, CWFLOAT fFarZ);
+	virtual CWVOID updateProjMatrix(CWFLOAT fLeft, CWFLOAT fRight, CWFLOAT fTop, CWFLOAT fBottom, CWFLOAT fNearZ, CWFLOAT fFarZ);
 
 	virtual CWVOID walk(CWFLOAT fDist);
 	virtual CWVOID strafe(CWFLOAT fDist);
@@ -57,6 +58,8 @@ public:
 	inline const cwMatrix4X4& getViewMatrix() const { return m_nViewMatrix; }
 	inline const cwMatrix4X4& getProjMatrix() const { return m_nProjMatrix; }
 	inline const cwMatrix4X4& getViewProjMatrix() const { return m_nViewProjMatrix; }
+	inline const cwMatrix4X4& getInvertViewProjMatrix() const { return m_nInvertViewProjMatrix; }
+	inline const cwMatrix4X4& getInvertProjMatrix() const { return m_nInvertProjMatrix; }
 
 	inline const cwVector3D& getPos() const { return m_nPos; }
 	CWVOID setPos(const cwVector3D& pos);
@@ -80,6 +83,8 @@ protected:
 	cwMatrix4X4 m_nViewMatrix;
 	cwMatrix4X4 m_nProjMatrix;
 	cwMatrix4X4 m_nViewProjMatrix;
+	cwMatrix4X4 m_nInvertViewProjMatrix;
+	cwMatrix4X4 m_nInvertProjMatrix;
 
 	cwVector3D m_nPos;
 	cwVector3D m_nLook;

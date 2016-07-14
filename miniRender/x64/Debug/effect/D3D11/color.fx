@@ -1,8 +1,3 @@
-//***************************************************************************************
-// color.fx by Frank Luna (C) 2011 All Rights Reserved.
-//
-// Transforms and colors geometry.
-//***************************************************************************************
 #include "util.fx"
 
 struct VertexIn
@@ -42,7 +37,7 @@ technique11 ColorTech
         SetVertexShader( CompileShader( vs_5_0, VS() ) );
         SetHullShader( NULL );
         SetDomainShader( NULL );
-		SetGeometryShader( NULL );
+	SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PS() ) );
     }
 }

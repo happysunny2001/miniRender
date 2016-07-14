@@ -21,15 +21,31 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
+//cwPointLight* cwPointLight::create(
+//const cwVector4D& position,
+//const cwVector4D& ambient,
+//const cwVector4D& diffuse,
+//const cwVector4D& specular,
+//const cwVector4D& attenuation)
+//{
+//	cwPointLight* pLight = new cwPointLight();
+//	if (pLight && pLight->init(position, ambient, diffuse, specular, attenuation)) {
+//		pLight->autorelease();
+//		return pLight;
+//	}
+//
+//	CW_SAFE_DELETE(pLight);
+//	return nullptr;
+//}
+
 cwPointLight* cwPointLight::create(
-const cwVector4D& position,
-const cwVector4D& ambient,
-const cwVector4D& diffuse,
-const cwVector4D& specular,
-const cwVector4D& attenuation)
+	const cwVector3D& pos,
+	const cwVector3D& color,
+	CWFLOAT radiusBegin,
+	CWFLOAT radiusEnd)
 {
 	cwPointLight* pLight = new cwPointLight();
-	if (pLight && pLight->init(position, ambient, diffuse, specular, attenuation)) {
+	if (pLight && pLight->init(pos, color, radiusBegin, radiusEnd)) {
 		pLight->autorelease();
 		return pLight;
 	}
@@ -48,31 +64,45 @@ cwPointLight::~cwPointLight()
 
 }
 
+//CWBOOL cwPointLight::init(
+//	const cwVector4D& position,
+//	const cwVector4D& ambient,
+//	const cwVector4D& diffuse,
+//	const cwVector4D& specular,
+//	const cwVector4D& attenuation)
+//{
+//	this->setPosition(position);
+//	this->setAmbient(ambient);
+//	this->setDiffuse(diffuse);
+//	this->setSpecular(specular);
+//	this->setAttenuation(attenuation);
+//	this->setRange(attenuation.w);
+//
+//	return CWTRUE;
+//}
+
 CWBOOL cwPointLight::init(
-	const cwVector4D& position,
-	const cwVector4D& ambient,
-	const cwVector4D& diffuse,
-	const cwVector4D& specular,
-	const cwVector4D& attenuation)
+	const cwVector3D& pos,
+	const cwVector3D& color,
+	CWFLOAT radiusBegin,
+	CWFLOAT radiusEnd)
 {
-	this->setPosition(position);
-	this->setAmbient(ambient);
-	this->setDiffuse(diffuse);
-	this->setSpecular(specular);
-	this->setAttenuation(attenuation);
-	this->setRange(attenuation.w);
+	m_nPointLight.m_nPosition = pos;
+	m_nPointLight.m_nColor = color;
+	m_nPointLight.m_fRadiusBegin = radiusBegin;
+	m_nPointLight.m_fRadiusEnd = radiusEnd;
 
 	return CWTRUE;
 }
 
 CWUINT cwPointLight::size() const
 {
-	return sizeof(cwVector4D)* 5;
+	return sizeof(PointLight_Struct);
 }
 
 CWVOID* cwPointLight::data() const
 {
-	return (CWVOID*)&(this->m_nPosition);
+	return (CWVOID*)&(this->m_nPointLight);
 }
 
 NS_MINIR_END

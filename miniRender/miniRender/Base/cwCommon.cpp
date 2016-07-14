@@ -18,32 +18,22 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwCommon.h"
-#include <algorithm>
+#include "cwStringConvert.h"
+#include <mutex>
 
 NS_MINIR_BEGIN
 
-//CWBYTE cwCommon::parseHexStringByte(const CWSTRING& strHex)
-//{
-//	static CWBYTE baseData[23] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0, 0, 0, 0, 10, 11, 12, 13, 14, 15};
-//
-//	CWBYTE ret = 0;
-//
-//	CWSTRING strLower = strHex;
-//	std::transform(strLower.begin(), strLower.end(), strLower.begin(), ::toupper);
-//
-//	auto nPos = strLower.find('X');
-//	if (nPos == std::string::npos) return ret;
-//	if (nPos + 2 >= strLower.size()) return ret;
-//
-//	CWUINT indexUpper = strLower[nPos + 1] - '0';
-//	if (indexUpper < 23)
-//		ret |= baseData[indexUpper] << 4;
-//
-//	CWUINT indexLower = strLower[nPos + 2] - '0';
-//	if (indexLower < 23)
-//		ret |= baseData[indexLower];
-//
-//	return ret;
-//}
+CWUINT cwCommon::m_iGTextureID = 1000;
+static std::mutex m_nTextureIDMutex;
+
+CWSTRING cwCommon::getNewTextureID()
+{
+	CWUINT i = 0;
+	{
+		std::unique_lock<std::mutex> lock(m_nTextureIDMutex);
+		i = m_iGTextureID++;
+	}
+	return cwStringConvert::convertToString(i);
+}
 
 NS_MINIR_END

@@ -41,4 +41,14 @@ CWVOID* cwLight::data() const
 	return nullptr;
 }
 
+CWVOID cwLight::setCastShadow(CWBOOL b)
+{
+
+}
+
+CWBOOL cwLight::getCastShadow() const
+{
+	return CWFALSE;
+}
+
 NS_MINIR_END

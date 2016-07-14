@@ -43,11 +43,17 @@ public:
 	cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles);
 	cwTexture* createCubeTexture(const CWSTRING& strName);
 	cwTexture* createCubeTexture(CWUINT iSize);
-	cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader);
+	cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader, CWBOOL bThreading=CWFALSE);
 
 	cwTexture* createTextureThreadSafe(const CWSTRING& strName);
 	cwTexture* createTextureThreadSafe(const CWSTRING& strName, CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format);
 	cwTexture* createCubeTextureThreadSafe(const CWSTRING& strName);
+
+	cwTexture* createRWTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bThreadSafe=CWFALSE);
+	cwTexture* createRTTexture(CWBOOL bThreadSafe = CWFALSE);
+	cwTexture* createRTTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE);
+	cwTexture* createDSTexture(CWFLOAT fWidth, CWFLOAT fHeight, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE);
+	cwTexture* createDSTexture(CWBOOL bThreadSafe = CWFALSE);
 
 	cwTexture* getTexture(const CWSTRING& strName);
 	cwTexture* getCubeTexture(const CWSTRING& strName);

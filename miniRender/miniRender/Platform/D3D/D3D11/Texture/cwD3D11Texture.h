@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #ifdef _CW_D3D11_
 
 #include "Base/cwUtils.h"
+#include "Base/cwStruct.h"
 #include "Base/cwBasicType.h"
 #include "Texture/cwTexture.h"
 #include "Platform/D3D/D3D11/cwD3D11Utils.h"
@@ -41,16 +42,26 @@ public:
 	static cwD3D11Texture* create(CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format);
 	static cwD3D11Texture* createThreadSafe(CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format);
 
+	static cwD3D11Texture* create(CWVOID* pData, const CW_TEXTURE_DESC& texDesc, const CW_SHADER_RESOURCE_VIEW_DESC& srvDesc, CWBOOL bThreading);
+
 	cwD3D11Texture();
 	virtual ~cwD3D11Texture();
 
 	virtual CWBOOL init(const CWSTRING& strFileName);
 	virtual CWBOOL init(CWVOID* pData, CWUINT64 uSize);
 	virtual CWBOOL init(CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format);
+	virtual CWBOOL init(CWVOID* pData, const CW_TEXTURE_DESC& texDesc, const CW_SHADER_RESOURCE_VIEW_DESC& srvDesc);
 	virtual CWHANDLE getHandle() const override;
+	
+protected:
+	static cwD3D11Texture* create(ID3D11ShaderResourceView* pShaderResource);
+	virtual CWBOOL init(ID3D11ShaderResourceView* pShaderResource);
+
+	friend class cwD3D11MultiRenderTarget;
 
 protected:
 	ID3D11ShaderResourceView* m_pShaderResource;
+	CWBOOL m_bShaderUsage;
 
 };
 

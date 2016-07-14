@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Device/cwDevice.h"
 #include "Platform/cwFileSystem.h"
 #include "Resource/cwResourceLoader.h"
+#include "Base/cwCommon.h"
 
 NS_MINIR_BEGIN
 
@@ -164,6 +165,71 @@ cwTexture* cwTextureManager::createCubeTextureThreadSafe(const CWSTRING& strName
 	return pTex;
 }
 
+cwTexture* cwTextureManager::createRWTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bThreadSafe)
+{
+	cwTexture* pTexture = cwRepertory::getInstance().getDevice()->createRWTexture(fWidth, fHeight, format, bThreadSafe);
+	if (pTexture) {
+		pTexture->setName(cwCommon::getNewTextureID());
+		appendTexture(pTexture);
+		if (bThreadSafe)
+			CW_SAFE_RELEASE(pTexture);
+	}
+
+	return pTexture;
+}
+
+cwTexture* cwTextureManager::createRTTexture(CWBOOL bThreadSafe)
+{
+	cwTexture* pTexture = cwRepertory::getInstance().getDevice()->createRTTexture(bThreadSafe);
+	if (pTexture) {
+		pTexture->setName(cwCommon::getNewTextureID());
+		appendTexture(pTexture);
+		if (bThreadSafe)
+			CW_SAFE_RELEASE(pTexture);
+	}
+
+	return pTexture;
+}
+
+cwTexture* cwTextureManager::createRTTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bShaderUsage, CWBOOL bThreadSafe)
+{
+	cwTexture* pTexture = cwRepertory::getInstance().getDevice()->createRTTexture(fWidth, fHeight, format, bShaderUsage, bThreadSafe);
+	if (pTexture) {
+		pTexture->setName(cwCommon::getNewTextureID());
+		appendTexture(pTexture);
+		if (bThreadSafe)
+			CW_SAFE_RELEASE(pTexture);
+	}
+
+	return pTexture;
+}
+
+cwTexture* cwTextureManager::createDSTexture(CWFLOAT fWidth, CWFLOAT fHeight, CWBOOL bShaderUsage, CWBOOL bThreadSafe)
+{
+	cwTexture* pTexture = cwRepertory::getInstance().getDevice()->createDSTexture(fWidth, fHeight, bShaderUsage, bThreadSafe);
+	if (pTexture) {
+		pTexture->setName(cwCommon::getNewTextureID());
+		appendTexture(pTexture);
+		if (bThreadSafe)
+			CW_SAFE_RELEASE(pTexture);
+	}
+
+	return pTexture;
+}
+
+cwTexture* cwTextureManager::createDSTexture(CWBOOL bThreadSafe)
+{
+	cwTexture* pTexture = cwRepertory::getInstance().getDevice()->createDSTexture(bThreadSafe);
+	if (pTexture) {
+		pTexture->setName(cwCommon::getNewTextureID());
+		appendTexture(pTexture);
+		if (bThreadSafe)
+			CW_SAFE_RELEASE(pTexture);
+	}
+
+	return pTexture;
+}
+
 cwTexture* cwTextureManager::createCubeTexture(CWUINT iSize)
 {
 	return cwRepertory::getInstance().getDevice()->createCubeTexture(iSize);
@@ -188,9 +254,9 @@ cwTexture* cwTextureManager::createTextureArray(const std::vector<CWSTRING>& vec
 	return nullptr;
 }
 
-cwRenderTexture* cwTextureManager::createRenderTexture(float fWidth, float fHeight, eRenderTextureType eType)
+cwRenderTexture* cwTextureManager::createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType, CWBOOL bThreading)
 {
-	cwRenderTexture* pRenderTex = cwRepertory::getInstance().getDevice()->createRenderTexture(fWidth, fHeight, eType);
+	cwRenderTexture* pRenderTex = cwRepertory::getInstance().getDevice()->createRenderTexture(fWidth, fHeight, eType, bThreading);
 	if (pRenderTex) {
 		m_vecRenderTexture.pushBack(pRenderTex);
 	}
@@ -276,14 +342,16 @@ void cwTextureManager::removeRenderTexture(cwRenderTexture* pTex)
 void cwTextureManager::beginResize()
 {
 	for (auto pRenderTex : m_vecRenderTexture) {
-		pRenderTex->beginResize();
+		if (pRenderTex && pRenderTex->getResizeable())
+			pRenderTex->beginResize();
 	}
 }
 
 void cwTextureManager::onResize()
 {
 	for (auto pRenderTex : m_vecRenderTexture) {
-		pRenderTex->onResize();
+		if (pRenderTex && pRenderTex->getResizeable())
+			pRenderTex->onResize();
 	}
 }
 

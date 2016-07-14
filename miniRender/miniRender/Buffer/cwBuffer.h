@@ -47,6 +47,7 @@ public:
 
 	virtual CWHANDLE getHandle();
 	virtual CWHANDLE getShaderHandle();
+	virtual CWHANDLE getWritablehandle();
 
 	virtual CWVOID refresh(CWVOID* pData);
 	virtual CWVOID refresh(CWVOID* pData, CWUINT uSize);
@@ -62,13 +63,12 @@ public:
 		CWUINT structureByteStride,
 		CWUINT offset);
 
-	inline CWUINT getSize() const { return m_uBufferSize; }
+	inline CWUINT getSize() const { return m_iElementCnt*m_nStride; }
 	inline eAccessFlag getAcessFlag() const { return m_nAccessFlag; }
 	inline eBufferUsage getUsage() const { return m_nUsage; }
 	inline CWUINT getStride() const { return m_nStride; }
 	inline CWUINT getOffset() const { return m_nOffset; }
 	inline CWVOID setOffset(CWUINT uOffset) { m_nOffset = uOffset; }
-	//inline CWUINT getElementCount() const { return m_iElementCnt; }
 	
 	inline CWVOID setElementCount(CWUINT u) { m_iElementCnt = u; }
 

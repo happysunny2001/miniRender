@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -97,6 +97,8 @@ public:
 
 protected:
 	virtual CWVOID render(cwStage* pStage);
+	virtual CWVOID batchConfig(cwRenderBatch* pBatch);
+	virtual CWVOID perFrameConfig();
 	virtual CWVOID configDirectionalLight();
 	virtual CWVOID configPointLight();
 	virtual CWVOID configSpotLight();

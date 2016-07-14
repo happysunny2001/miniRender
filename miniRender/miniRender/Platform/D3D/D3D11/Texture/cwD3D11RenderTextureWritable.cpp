@@ -27,11 +27,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwD3D11RenderTextureWritable* cwD3D11RenderTextureWritable::create(CWFLOAT fWidth, CWFLOAT fHeight)
+cwD3D11RenderTextureWritable* cwD3D11RenderTextureWritable::create(CWFLOAT fWidth, CWFLOAT fHeight, CWBOOL bThreading)
 {
 	cwD3D11RenderTextureWritable* pRenderTexture = new cwD3D11RenderTextureWritable();
 	if (pRenderTexture && pRenderTexture->init(fWidth, fHeight)) {
-		pRenderTexture->autorelease();
+		if (!bThreading)
+			pRenderTexture->autorelease();
 		return pRenderTexture;
 	}
 

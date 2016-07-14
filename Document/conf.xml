@@ -4,23 +4,35 @@
 	<ViewPort TopLeftX="0.0" TopLeftY="0.0" Width="1.0" Height="1.0" MinDepth="0.0" MaxDepth="1.0" />
 	<Camera Name="Default" />
 	<StageList>
-		<!-- stage Type:[Normal, Sprite, Primitive, SkyDome, ...], default value:normal, if others, the parser will create specific stage
+		<!-- stage Type:[Normal, Sprite, Primitive, SkyDome, ShadowMap], default value:normal, if others, the parser will create specific stage
 												Normal:normal stage
 												Sprite:render 2d sprite, all child nodes information in stage will skip
 												Primitive:render frame primitive
 												SkyDome: render sky dome
+												ShadowMap : render for shadow map, RenderTarget's Type must be 'ShadowMap'
 			Enable:[True,False], default value:[true]
 			Generator:[None,Mirror...]. Generator:None means none .  Mirror:Generate mirror stage when current stage render over
 			-->
 		<Stage Name="S1" Type="Normal" Enable="True" Generator="">
+			
+			<!-- camera name default value:[Default,Homo], Homo means homogeneous coordinates, the camera's view-projection matrix is identity. -->
+			<Camera Name="Default" /> 
 
-			<Camera Name="Default" /> <!-- camera name default value:[Default,Homo], Homo means homogeneous coordinates, the camera's view-projection matrix is identity. -->
-
-			<!-- Type:[backbuffer, texture], default value:[backbuffer], if type is texture, then width and height is the size
+			<!-- Type:[backbuffer, texture, ShadowMap, Multi], default value:[backbuffer]
+						if type is texture, then width and height is the size, if type is ShadowMap, 
+						then width and height must texture size in pixel, not precentage
+				 Width and Height:size of texture, if < 1.0, means width_value=screenSize*Width; if > 1.0 means the actual pixel size
 				 IsClearColor,IsClearDepth,IsClearStencil:[True,False],default True
 				 Writable:[True,False], only available twhen Type is texture, if True, then the texture is writable texture, default is False
+				 DepthResource:[True,False],only available for multi render target, if it's 'True', depth buffer can binding to shader, default it's 'False'
 			-->
-			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" IsClearColor="" IsClearDepth="" IsClearStencil="" Writable="" />
+			<RenderTarget Type="backbuffer" Width="1.0" Height="1.0" IsClearColor="" IsClearDepth="" IsClearStencil="" Writable="" DepthResource="">
+				<!--
+					G-Buffer : only for 'Multi' render target.
+					Format: buffer format
+				-->
+				<G-Buffer Format=""/>
+			</RenderTarget>
 
 			<!-- stage texture list
 				Name : the texture name, must not null
@@ -38,10 +50,12 @@
 					if Type=StageRenderTarget, it's the Stage name
 					if Type=Create, then ignore it
 					if Type=Cube, then ignore it
+				Index: if Type=StageRenderTarget, and it's multi render target, this's the index of render target, base 0, 
+					   if index=-1, return depth buffer shader resource
 				Width,Height,Writable : if Type=Create, they are the texture attributes, if Type=Cube, then with should more than 1.0f
 			-->
 			<TextureList>
-				<Texture Name="" Type="" Location="" Width="1.0" Height="1.0" Writable="" />
+				<Texture Name="" Type="" Location="" Index="" Width="1.0" Height="1.0" Writable="" />
 			</TextureList>
 
 			<!--stage entity list, the entities have no parent, and draw at last.-->
@@ -69,22 +83,25 @@
 			</EntityList>
 
 			<!-- optional, fliter entity base on some algorithm, if not exist, a default layer will create privately.
+				Type: [Normal, ShadowMap], default is Normal.
 				EntityType: the entity type for render, default is Entity
 							Entity : get all visible entities from scene
 							Mirror : get Mirror entities from scene
-							Stage : only add the Geometries from stage's GeometryList element
+							Stage : only add the Geometries from stage's EntityList element
 							None : render nothing
 				Transparent:[Yes,No], whether or not add transparent entity,default No
 			-->
-			<Layer Name="" EntityType="Entity" Transparent="No">
+			<Layer Name="" Type="" EntityType="Entity" Transparent="No">
+				<!-- camera name default value:[Default,Homo], Homo means homogeneous coordinates, the camera's view-projection matrix is identity. -->
+				<Camera Name="Default" /> 
 				<!--
 					processing unit: do some spec operation
 				-->
 				<PU>
 					<!--
 						layer render state
-						Type:[BuildIn,Create]. BuildIn:use the build-in render state which name is the 'Name' attribute value. Create:create new render state object.
-						Name:[Solid,Wire,NoCull,CW].
+						Type:[BuildIn]. BuildIn:use the build-in render state which name is the 'Name' attribute value.
+						Name:[Solid,Wire,NoCull,CW,None].
 					-->
 					<RenderState Type="BuildIn" Name="">
 					</RenderState>
@@ -120,7 +137,7 @@
 					</Stencil>
 
 					<!-- Stage Layer effect, if specified, then all entities in the stage Layer will
-						 omit their own effect and use the default effect.
+						 omit their own effect and use the effect.
 						 Type : [Normal, GP], Normal effect and GP effect, GP for GPGPU
 					-->
 					<Effect Name="" Type="">
@@ -128,14 +145,14 @@
 						<GP GroupX="" GroupY="" GroupZ="" />
 						<!-- shader config
 							Type : [default,specific],if default, then user the engine default shader, else it will load shader by it's name.
-							Shader : the name of shader, if Type=default, then it's value means the index of default shaders.
+							Name : the file name of shader, if Type=default, then it's value means the index of default shaders.
 						-->
 						<Shader Type="" Name="" Tech="" />
-						<!-- param name:the name of the parameter in shader.
-							 type:[Float, FloatArray, Texture, Matrix]
-							 Writable : [True,False]
+						<!-- Name:the name of the parameter in shader.
+							 Type:[Float, FloatArray, Texture, Matrix]
+							 Writable : [True,False], only for texture parameter.
 						-->
-						<Param Name="" Type="" Writable=""/>
+						<Param Name="" Type="" Writable="">
 							<!-- Data
 									if Type is Float, then Data is float value
 									if Type is FloatArray, then Data is float values with separator ';'.
@@ -146,9 +163,63 @@
 						</Param>
 					</Effect>
 				</PU>
+				
+				<!--
+					Do configuration for every batch.
+				-->
+				<BatchPU>
+					<!-- ShaderParam
+						 Name:the name of the parameter in shader.
+						 Type:[Float, FloatArray, Texture, Matrix].
+						 Source: [Data, Engine]
+						 Freq:[PreFrame, PreObject]
+						 Writable : [True,False], only for texture parameter.
+					-->
+					<ShaderParam Name="" Type="" Source="" Freq="" Writable="">
+						<!-- Engine
+								Type : [Camera, StageTexture]
+								Name : if Type=Camera , then it's then name of the camera in global engine object
+									   if Type=StageTexture, then it's the stage name.
+								Attr : if Type=Camera and ShaderParam.Type=Matrix, then [ViewMatrix, ProjMatrix, ViewProjMatrix, InvertViewProjMatrix]
+									   if Type=Camera and ShaderParam.Type=FloatArray, then [Position]
+									   if Type=StageTexture and ShaderParam.Type=Texture, then it's then texture name in stage texture list.
+									   
+						-->
+						<Engine Type="" Name="" Attr=""/>
+
+						<!-- Data
+								if Type is Float, then Data is float value
+								if Type is FloatArray, then Data is float values with separator ';'.
+								if type is Texture, Data is the texture file name.
+								if type is Matrix,then Data is float values with separator ';', 4x4 matrix.
+						-->
+						<Data></Data>
+					</ShaderParam>
+
+					<!-- 
+						Name: name of the pu
+						StageName: shadow stage name
+					-->
+					<ShadowMap Name="" StageName="">
+						<!--
+							shadow map shader parameter information
+							Type:[Texture,Transform].Texture:Shadow Map Texture; Transform:Shadow map transform matrix
+							Name:Shader parameter name
+						-->
+						<Param Type="" Name=""/>
+						<Param Type="" Name=""/>
+					</ShadowMap>
+				</BatchPU>
 			</Layer>
-
-
+			
+			<!-- for Reflection stage generate dynamic cubemap. the stage will render the stages to six cubemap face. -->
+			<StageList>
+				<!-- the previous stage -->
+				<!-- Name:stage name -->
+				<!-- ReplaceRenderTarget:replace the render target with cubemap face -->
+				<StageReference Name="S1" ReplaceRenderTarget="True">
+				</StageReference>
+			</StageList>
 		</Stage>
 	</StageList>
 </Renderer>

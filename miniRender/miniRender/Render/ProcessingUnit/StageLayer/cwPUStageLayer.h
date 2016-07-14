@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -23,23 +23,29 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
 #include "Ref/cwRef.h"
-#include "Render/ProcessingUnit/cwPURender.h"
+//#include "Render/ProcessingUnit/cwPURender.h"
 
 NS_MINIR_BEGIN
 
 class cwStageLayer;
 
-class cwPUStageLayer : public cwPURender
+class cwPUStageLayer : public cwRef
 {
 public:
 	cwPUStageLayer();
 	virtual ~cwPUStageLayer();
 
+	virtual CWVOID begin() = 0;
+	virtual CWVOID end() = 0;
+
 	inline CWVOID setStageLayer(cwStageLayer* pStageLayer) { m_pStageLayer = pStageLayer; }
 	inline cwStageLayer* getStageLayer() const { return m_pStageLayer; }
 
+	ePURenderType getType() const { return m_eType; }
+
 protected:
 	cwStageLayer* m_pStageLayer;
+	ePURenderType m_eType;
 
 };
 

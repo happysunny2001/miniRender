@@ -22,11 +22,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwStageLayerParser.h"
 #include "cwParserManager.h"
 #include "cwTextureParser.h"
+#include "cwRenderTargetParser.h"
 #include "Render/Stage/cwStage.h"
 #include "Render/Stage/cwSpriteStage.h"
 #include "Render/Stage/cwPrimitiveStage.h"
 #include "Render/Stage/cwSkyDomeStage.h"
-#include "Render/Stage/cwStageLayer.h"
+#include "Render/Stage/Layer/cwStageLayer.h"
 #include "Render/cwRenderer.h"
 #include "Device/cwDevice.h"
 #include "Repertory/cwRepertory.h"
@@ -36,6 +37,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Engine/cwEngine.h"
 #include "Render/Generator/cwRenderGenerator.h"
 #include "Render/Stage/cwReflectionStage.h"
+#include "Render/Stage/Shadow/cwShadowMapStage.h"
 
 NS_MINIR_BEGIN
 
@@ -79,6 +81,9 @@ cwStage* cwStageParser::createStage(tinyxml2::XMLElement* pStageData)
 		else if (strncmp(pcType, "Reflection", 10) == 0) {
 			return cwReflectionStage::create();
 		}
+		else if (CW_STRING_MATCH(pcType, "ShadowMap")) {
+			return cwShadowMapStage::create();
+		}
 	}
 
 	return nullptr;
@@ -97,14 +102,6 @@ cwStage* cwStageParser::parse(tinyxml2::XMLElement* pStageData)
 	while (pChildNode) {
 		parseElement(pStage, pChildNode);
 		pChildNode = pChildNode->NextSiblingElement();
-	}
-
-	tinyxml2::XMLElement* pRenderTargetElement = pStageData->FirstChildElement("RenderTarget");
-	if (pRenderTargetElement) {
-		pStage->setRefreshRenderTarget(CWTRUE);
-	}
-	else {
-		pStage->setRefreshRenderTarget(CWFALSE);
 	}
 
 	return pStage;
@@ -157,35 +154,18 @@ CWVOID cwStageParser::parseCamera(cwStage* pStage, tinyxml2::XMLElement* pCamera
 
 CWVOID cwStageParser::parseRenderTarget(cwStage* pStage, tinyxml2::XMLElement* pRenderTarget)
 {
+	if (!pRenderTarget || !pStage) return;
+
 	const CWCHAR* pcType = pRenderTarget->Attribute("Type");
 	if (!pcType) return;
 
-	if (strncmp(pcType, "backbuffer", 10) == 0) {
-
-	}
-	else if (strncmp(pcType, "texture", 7) == 0) {
-		CWFLOAT fWidth = pRenderTarget->FloatAttribute("Width");
-		CWFLOAT fHeight = pRenderTarget->FloatAttribute("Height");
-		const char* pcWritable = pRenderTarget->Attribute("Writable");
-
-		cwRenderTexture* pRenderTexture = nullptr;
-
-		if (pcWritable) {
-			if (cwRepertory::getInstance().getParserManager()->getBool(pcWritable))
-				pRenderTexture = cwRepertory::getInstance().getTextureManager()->createRenderTexture(fWidth, fHeight, eRenderTextureWritable);
-			else 
-				pRenderTexture = cwRepertory::getInstance().getTextureManager()->createRenderTexture(fWidth, fHeight);
-		}
-		else {
-			pRenderTexture = cwRepertory::getInstance().getTextureManager()->createRenderTexture(fWidth, fHeight);
-		}
-
-		if (pRenderTexture) {
-			pStage->setRenderTexture(pRenderTexture);
-		}
-	}
-
 	cwParserManager* pParserManager = cwRepertory::getInstance().getParserManager();
+	cwRenderTargetParser* pParser = static_cast<cwRenderTargetParser*>(pParserManager->getParser(eParserRenderTarget));
+	cwRenderTexture* pRenderTexture = pParser->parse(pRenderTarget);
+
+	if (pRenderTexture) {
+		pStage->setRenderTexture(pRenderTexture);
+	}
 
 	const char* pcIsClearColor = pRenderTarget->Attribute("IsClearColor");
 	if (pcIsClearColor)
@@ -198,6 +178,8 @@ CWVOID cwStageParser::parseRenderTarget(cwStage* pStage, tinyxml2::XMLElement* p
 	const char* pcIsClearStencil = pRenderTarget->Attribute("IsClearStencil");
 	if (pcIsClearStencil)
 		pStage->setIsClearStencil(pParserManager->getBool(pcIsClearStencil));
+
+	pStage->setRefreshRenderTarget(CWTRUE);
 }
 
 CWVOID cwStageParser::parseLayer(cwStage* pStage, tinyxml2::XMLElement* pLayerData)

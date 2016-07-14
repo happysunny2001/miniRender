@@ -34,6 +34,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Parser/cwParserManager.h"
 #include "SpatialSorting/cwSpatialFactory.h"
 #include "Resource/cwResourceLoader.h"
+#include "Ref/cwObjectMonitor.h"
+#include "Base/cwLog.h"
 
 #include <assert.h>
 
@@ -72,11 +74,9 @@ CWVOID cwD3D11Repertory::releaseAll()
 	cwRepertory::releaseAll();
 
 	CW_SAFE_RELEASE_NULL(m_pResourceLoader);
-	
 	CW_SAFE_RELEASE_NULL(m_pEngine);
 	CW_SAFE_RELEASE_NULL(m_pEventManager);
 	CW_SAFE_RELEASE_NULL(m_pSchedulerManager);
-
 	CW_SAFE_RELEASE_NULL(m_pEffectManager);
 	CW_SAFE_RELEASE_NULL(m_pTextureManager);
 	CW_SAFE_RELEASE_NULL(m_pLayoutManager);

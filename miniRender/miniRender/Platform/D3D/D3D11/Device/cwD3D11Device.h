@@ -69,6 +69,7 @@ public:
 	virtual cwBuffer* createShaderBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, CWBOOL bWritable = CWFALSE, CWBOOL bAppend = CWFALSE) override;
 	virtual cwBuffer* createBufferOutput(CWUINT uStride, CWUINT uCnt) override;
 	virtual cwBuffer* createBuffer(CWUINT uCnt, eBufferUsage usage, eBufferBindFlag bindFlag, eAccessFlag uCpuFlag, CWUINT miscFlag, CWUINT uStride) override;
+	virtual cwBuffer* createShaderStructedBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) override;
 
 	virtual cwBlend* createBlend(const cwBlendData& blendData) override;
 	virtual cwStencil* createStencil(const cwStencilData& stencliData) override;
@@ -86,9 +87,15 @@ public:
 	virtual cwTexture* createCubeTexture(CWVOID* pData, CWUINT64 uSize) override;
 	virtual cwTexture* createCubeTextureThreadSafe(CWVOID* pData, CWUINT64 uSize) override;
 
-	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) override;
+	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader, CWBOOL bThreading = CWFALSE) override;
 	virtual cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles) override;
 	virtual cwTexture* createTextureArrayThreadSafe(const std::vector<CWSTRING>& vecFiles) override;
+
+	virtual cwTexture* createRTTexture(CWBOOL bThreadSafe = CWFALSE) override;
+	virtual cwTexture* createRTTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE) override;
+	virtual cwTexture* createRWTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bThreadSafe = CWFALSE) override;
+	virtual cwTexture* createDSTexture(CWFLOAT fWidth, CWFLOAT fHeight, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE) override;
+	virtual cwTexture* createDSTexture(CWBOOL bThreadSafe = CWFALSE) override;
 
 	virtual cwBatchEntity* createBatchEntity() override;
 
@@ -127,7 +134,10 @@ private:
 	CWVOID initBufferUsageData();
 	CWVOID initPrimitiveTypeData();
 	CWVOID initFormatTypeData();
+	CWVOID initFormatTypeSizeData();
 	CWVOID initClassification();
+	CWVOID initDepthStencilViewTypeData();
+	CWVOID initShaderResourceViewTypeData();
 
 protected:
 	ID3D11Device* m_pD3D11Device;
@@ -156,7 +166,10 @@ public:
 	static CWUINT bufferUsage[eBufferUsageMaxCount];
 	static CWUINT primitiveType[ePrimitiveTypeMaxCount];
 	static CWUINT formatType[eFormatMaxCount];
+	static CWUINT formatTypeSize[eFormatMaxCount];
+	static D3D11_DSV_DIMENSION depthStencilViewDimension[eDepthStencilViewMaxCount];
 	static D3D11_INPUT_CLASSIFICATION classificationType[eClassificationMaxCount];
+	static D3D11_SRV_DIMENSION shaderResourceViewDimension[eShaderResourceViewMaxCount];
 
 	static inline D3D11_BLEND getBlendFactor(eBlendFactor index) { return static_cast<D3D11_BLEND>(blendFactor[index]); }
 	static inline D3D11_BLEND_OP getBlendOp(eBlendOp index) { return static_cast<D3D11_BLEND_OP>(blendOp[index]); }
@@ -167,11 +180,16 @@ public:
 
 	static inline CWUINT getAccessFlag(eAccessFlag index) { return accessFlag[index]; }
 	static inline D3D11_BIND_FLAG getBufferBindFlag(eBufferBindFlag index) { return static_cast<D3D11_BIND_FLAG>(bufferBindFlag[index]); }
+	static CWUINT getBufferBindFlags(CWUINT flags);
 	static inline D3D11_USAGE getBufferUsage(eBufferUsage index) { return static_cast<D3D11_USAGE>(bufferUsage[index]); }
 
 	static inline D3D11_PRIMITIVE_TOPOLOGY getPrimitiveType(ePrimitiveType index) { return static_cast<D3D11_PRIMITIVE_TOPOLOGY>(primitiveType[index]); }
 	static inline DXGI_FORMAT getFormatType(eFormat index) { return static_cast<DXGI_FORMAT>(formatType[index]); }
+	static eFormat getFormatTypeDXGI(DXGI_FORMAT format);
+	static inline CWUINT getFormatTypeSize(eFormat index) { return formatTypeSize[index]; }
 	static D3D11_INPUT_CLASSIFICATION getClassificationType(eClassification index) { return classificationType[index]; }
+	static D3D11_DSV_DIMENSION getDepthStencilViewDimension(eDepthStencilViewDimension index) { return depthStencilViewDimension[index]; }
+	static D3D11_SRV_DIMENSION getShaderResourceViewDimension(eShaderResourceViewDimension index) { return shaderResourceViewDimension[index]; }
 
 };
 

@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -30,6 +30,7 @@ class cwEffect;
 class cwRenderNode;
 class cwBlend;
 class cwStencil;
+class cwStageLayer;
 
 class cwRenderBatch
 {
@@ -45,6 +46,7 @@ public:
 	cwBlend* m_pBlend;
 	cwStencil* m_pStencil;
 	cwRenderNode* m_pEntity;
+	cwStageLayer* m_pStageLayer;
 	cwMatrix4X4 m_nWorldTrans;
 
 };

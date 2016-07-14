@@ -149,6 +149,13 @@ CWVOID cwCamera::updateViewMatrix()
 	m_nViewMatrix.lookAt(m_nPos, m_nRight, m_nUp, m_nLook);
 	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;
 
+	if (m_nViewProjMatrix.inverseExist()) {
+		m_nInvertViewProjMatrix = m_nViewProjMatrix.inverse();
+	}
+	if (m_nProjMatrix.inverseExist()) {
+		m_nInvertProjMatrix = m_nProjMatrix.inverse();
+	}
+
 	m_nFrustum.refresh(this);
 }
 
@@ -177,7 +184,19 @@ CWVOID cwCamera::updateProjMatrix(CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fNear
 	m_fFarZ   = fFarZ;
 	m_fAspect = fWidth / fHeight;
 
-	m_nProjMatrix.perspective(fWidth, m_fAspect, fHeight, m_fFarZ);
+	m_nProjMatrix.perspective(fWidth, fHeight, m_fNearZ, m_fFarZ);
+	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;
+
+	m_nFrustum.refresh(this);
+}
+
+CWVOID cwCamera::updateProjMatrix(CWFLOAT fLeft, CWFLOAT fRight, CWFLOAT fTop, CWFLOAT fBottom, CWFLOAT fNearZ, CWFLOAT fFarZ)
+{
+	m_fNearZ = fNearZ;
+	m_fFarZ = fFarZ;
+	m_fAspect = (fRight-fLeft) / (fTop-fBottom);
+
+	m_nProjMatrix.perspective((fRight - fLeft), (fTop - fBottom), m_fNearZ, m_fFarZ);
 	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;
 
 	m_nFrustum.refresh(this);

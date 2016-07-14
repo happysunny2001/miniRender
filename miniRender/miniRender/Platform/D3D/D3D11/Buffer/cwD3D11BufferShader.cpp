@@ -45,6 +45,24 @@ CWUINT offset)
 	return nullptr;
 }
 
+cwD3D11BufferShader* cwD3D11BufferShader::create(
+	CWVOID* pData,
+	CWUINT uSize,
+	eBufferUsage usage,
+	eAccessFlag uCpuFlag,
+	CWUINT structureByteStride,
+	CWUINT offset)
+{
+	cwD3D11BufferShader* pBuffer = new cwD3D11BufferShader();
+	if (pBuffer && pBuffer->init(pData, uSize, usage, eBufferBindShader, uCpuFlag, D3D11_RESOURCE_MISC_BUFFER_STRUCTURED, structureByteStride, offset)) {
+		pBuffer->autorelease();
+		return pBuffer;
+	}
+
+	CW_SAFE_DELETE(pBuffer);
+	return nullptr;
+}
+
 cwD3D11BufferShader::cwD3D11BufferShader():
 m_pShaderResource(NULL)
 {

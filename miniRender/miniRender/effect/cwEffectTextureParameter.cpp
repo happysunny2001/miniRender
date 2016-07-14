@@ -48,11 +48,14 @@ cwEffectTextureParameter::~cwEffectTextureParameter()
 CWVOID cwEffectTextureParameter::binding(cwShader* pShader)
 {
 	if (pShader) {
-		if (!m_bWritable)
-			pShader->setVariableTexture(m_nStrParamName, m_pTexture);
-		else {
-			if (m_pTexture->getType() == eRenderTextureWritable)
-				pShader->setVariableTextureWritable(m_nStrParamName, static_cast<cwRenderTexture*>(m_pTexture));
+		if (pShader->hasVariable(m_nStrParamName)) {
+			if (!m_bWritable)
+				pShader->setVariableTexture(m_nStrParamName, m_pTexture);
+			else {
+				/*if (m_pTexture->getType() == eRenderTextureWritable)
+					pShader->setVariableTextureWritable(m_nStrParamName, static_cast<cwRenderTexture*>(m_pTexture));*/
+				pShader->setVariableTextureWritable(m_nStrParamName, m_pTexture);
+			}
 		}
 	}
 }

@@ -491,10 +491,11 @@ int cwAABB::intersection(const cwCircle& circle) const
 int cwAABB::intersection(const cwAABB& aabb) const
 {
 	if (this->m_nMin.x >= aabb.m_nMax.x) return 0;
-	if (this->m_nMax.x <= aabb.m_nMin.x) return 0;
 	if (this->m_nMin.y >= aabb.m_nMax.y) return 0;
-	if (this->m_nMax.y <= aabb.m_nMin.y) return 0;
 	if (this->m_nMin.z >= aabb.m_nMax.z) return 0;
+
+	if (this->m_nMax.x <= aabb.m_nMin.x) return 0;
+	if (this->m_nMax.y <= aabb.m_nMin.y) return 0;
 	if (this->m_nMax.z <= aabb.m_nMin.z) return 0;
 
 	return 1;

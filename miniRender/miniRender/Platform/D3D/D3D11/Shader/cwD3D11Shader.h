@@ -50,11 +50,13 @@ public:
 	virtual CWVOID setVariableData(const string& strVariable, void* pData, CWUINT offset, CWUINT iSize) override;
 	virtual CWVOID setVariableData(const string& strVariable, CWUINT index, void* pData, CWUINT offset, CWUINT iSize) override;
 	virtual CWVOID setVariableMatrix(const string& strVariable, CWFLOAT* pData) override;
+	virtual CWVOID setVariableMatrix(const CWSTRING& strVariable, const cwMatrix4X4& mat) override;
 	virtual CWVOID setVariableInt(const string& strVariable, CWINT value) override;
 	virtual CWVOID setVariableFloat(const string& strVariable, CWFLOAT value) override;
 	virtual CWVOID setVariableFloatArray(const string& strVariable, CWFLOAT* pData, CWUINT count) override;
-	virtual CWVOID setVariableTexture(const string& strVariable, cwTexture* pTexture) override;
-	virtual CWVOID setVariableTextureWritable(const CWSTRING& strVariable, cwRenderTexture* pTexture) override;
+	virtual CWVOID setVariableTexture(const string& strVariable, const cwTexture* pTexture) override;
+	virtual CWVOID setVariableTextureWritable(const CWSTRING& strVariable, const cwRenderTexture* pTexture) override;
+	virtual CWVOID setVariableTextureWritable(const CWSTRING& strVariable, const cwTexture* pTexture) override;
 	virtual CWVOID setVariableBuffer(const CWSTRING& strVariable, cwBuffer* pBuffer) override;
 	virtual CWVOID setVariableBufferWritable(const CWSTRING& strVariable, cwBuffer* pBuffer) override;
 
@@ -62,11 +64,12 @@ public:
 	virtual CWVOID setVariableData(eShaderParamIndex eParam, CWVOID* pData, CWUINT offset, CWUINT iSize) override;
 	virtual CWVOID setVariableData(eShaderParamIndex eParam, CWUINT index, CWVOID* pData, CWUINT offset, CWUINT iSize) override;
 	virtual CWVOID setVariableMatrix(eShaderParamIndex eParam, CWFLOAT* pData) override;
+	virtual CWVOID setVariableMatrix(eShaderParamIndex eParam, const cwMatrix4X4& mat) override;
 	virtual CWVOID setVariableInt(eShaderParamIndex eParam, CWINT value) override;
 	virtual CWVOID setVariableFloat(eShaderParamIndex eParam, CWFLOAT value) override;
 	virtual CWVOID setVariableFloatArray(eShaderParamIndex eParam, CWFLOAT* pData, CWUINT count) override;
-	virtual CWVOID setVariableTexture(eShaderParamIndex eParam, cwTexture* pTexture) override;
-	virtual CWVOID setVariableTextureWritable(eShaderParamIndex eParam, cwRenderTexture* pTexture) override;
+	virtual CWVOID setVariableTexture(eShaderParamIndex eParam, const cwTexture* pTexture) override;
+	virtual CWVOID setVariableTextureWritable(eShaderParamIndex eParam, const cwRenderTexture* pTexture) override;
 	virtual CWVOID setVariableBuffer(eShaderParamIndex eParam, cwBuffer* pBuffer) override;
 	virtual CWVOID setVariableBufferWritable(eShaderParamIndex eParam, cwBuffer* pBuffer) override;
 

@@ -45,7 +45,7 @@ cwEffectFloatParameter::~cwEffectFloatParameter()
 
 CWVOID cwEffectFloatParameter::binding(cwShader* pShader)
 {
-	if (pShader) {
+	if (pShader && pShader->hasVariable(m_nStrParamName)) {
 		pShader->setVariableFloat(m_nStrParamName, m_fValue);
 	}
 }

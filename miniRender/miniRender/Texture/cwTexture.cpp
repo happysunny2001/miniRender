@@ -21,7 +21,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwTexture::cwTexture()
+cwTexture::cwTexture() :
+m_eTextureFormat(eFormatUnknown)
 {
 	m_eType = eRenderTextureTexture;
 }
@@ -39,6 +40,11 @@ CWHANDLE cwTexture::getRenderHandle() const
 CWHANDLE cwTexture::getWritablehandle() const
 {
 	return NULL;
+}
+
+std::vector<CWHANDLE>* cwTexture::getRenderHandleArray() const
+{
+	return nullptr;
 }
 
 CWVOID cwTexture::binding()
@@ -59,6 +65,11 @@ CWVOID cwTexture::endDraw()
 CWVOID cwTexture::generateMips()
 {
 
+}
+
+const CW_TEXTURE_DESC* cwTexture::getTextureDesc() const
+{
+	return nullptr;
 }
 
 NS_MINIR_END

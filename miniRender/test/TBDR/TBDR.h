@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -17,30 +17,26 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_PU_RENDER_H__
-#define __CW_PU_RENDER_H__
+#ifndef __TBDR_H__
+#define __TBDR_H__
 
-#include "Base/cwMacros.h"
-#include "Base/cwBasicType.h"
-#include "Base/cwUtils.h"
-#include "Ref/cwRef.h"
+#include "cwMiniRender.h"
+NS_USING_MINIR;
 
-NS_MINIR_BEGIN
-
-class cwPURender : public cwRef
+class TBDR : public cwApplication
 {
 public:
-	cwPURender();
+	TBDR();
+	virtual ~TBDR();
 
-	virtual CWVOID begin() = 0;
-	virtual CWVOID end() = 0;
+	virtual CWVOID gameBegin() override;
+	virtual CWVOID gameEnd() override;
 
-	ePURenderType getType() const { return m_eType; }
+	virtual CWVOID gameBeginBackGround() override;
+	virtual CWVOID gameEndBackGround() override;
 
 protected:
-	ePURenderType m_eType;
-};
 
-NS_MINIR_END
+};
 
 #endif

@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -23,7 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Render/cwRenderer.h"
 #include "Engine/cwEngine.h"
 #include "Effect/cwEffect.h"
-#include "Render/Stage/cwStageLayer.h"
+#include "Render/Stage/Layer/cwStageLayer.h"
 
 NS_MINIR_BEGIN
 
@@ -62,6 +62,22 @@ CWBOOL cwRenderPipeline::addEntity(cwRenderNode* pEntity, cwStageLayer* pStageLa
 	pBatch->m_pEffect = pEntity->getEffect();
 	pBatch->m_pBlend = pEntity->getBlend();
 	pBatch->m_pStencil = pEntity->getStencil();
+	pBatch->m_pStageLayer = pStageLayer;
+	pBatch->m_nWorldTrans = pEntity->getTransformMatrix();
+
+	return CWTRUE;
+}
+
+CWBOOL cwRenderPipeline::addEntity(cwRenderNode* pEntity, cwEffect* pEffect, cwBlend* pBlend, cwStencil* pStencil, cwStageLayer* pStageLayer)
+{
+	cwRenderBatch* pBatch = getNextAvailableBatch();
+	if (!pBatch) return CWFALSE;
+
+	pBatch->m_pEntity = pEntity;
+	pBatch->m_pEffect = pEffect;
+	pBatch->m_pBlend = pBlend;
+	pBatch->m_pStencil = pStencil;
+	pBatch->m_pStageLayer = pStageLayer;
 	pBatch->m_nWorldTrans = pEntity->getTransformMatrix();
 
 	return CWTRUE;

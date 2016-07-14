@@ -19,7 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Ref/cwRef.h"
-#include "Render/Stage/cwStageLayer.h"
+#include "Render/Stage/Layer/cwStageLayer.h"
 #include "tinyxml2.h"
 
 #include <functional>
@@ -39,7 +39,9 @@ public:
 protected:
 	CWVOID parseElement(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
 	CWVOID parseAttribute(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData);
+	CWVOID parseCamera(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pCameraElement);
 	CWVOID parsePU(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerPUData);
+	CWVOID parsePUBatch(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pBatchPUData);
 
 protected:
 	std::unordered_map <CWSTRING, std::function<CWVOID(cwStageLayer*, tinyxml2::XMLElement*)>> m_nMapParser;

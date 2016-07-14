@@ -60,8 +60,7 @@ public:
 	CWVOID setCamera(cwCamera* pCamera);
 
 	//inline cwViewPort* getViewPort() const { return m_pViewPort; }
-	inline cwTexture* getRenderTexture() const { return m_pRenderTarget; }
-
+	
 	CWVOID addStageTexture(const CWSTRING& strName, cwTexture* pTexture);
 	cwTexture* getStageTexture(const CWSTRING& strName);
 	CWBOOL removeStageTexture(const CWSTRING& strName);
@@ -89,13 +88,18 @@ public:
 	CWVOID setName(const CWSTRING& strName) { m_strName = strName; }
 	//CWVOID setType(eStageType eType) { m_eType = eType; }
 	CWVOID setEnable(CWBOOL bEnable) { m_bEnable = bEnable; }
-	CWVOID setRenderTexture(cwTexture* pRenderTexture);
+
+	inline cwTexture* getRenderTexture() const { return m_pRenderTarget; }
+	virtual CWVOID setRenderTexture(cwTexture* pRenderTexture);
+	inline cwTexture* getDepthStencil() const { return m_pDepthStencil; }
+	virtual CWVOID setDepthStencil(cwTexture* pDepthStencil);
 	CWVOID setRefreshRenderTarget(CWBOOL bRefresh);
+
 	CWVOID addRenderGenerator(cwRenderGenerator* pGenerator);
 	
 protected:
 	cwStage();
-	std::vector<cwRenderNode*>* getRenderEntities(eStageLayerFliterType eType);
+	std::vector<cwRenderNode*>* getRenderEntities(cwStageLayer* pStageLayer);
 
 protected:
 	CWBOOL m_bEnable;
@@ -106,6 +110,7 @@ protected:
 	cwCamera* m_pCamera;
 	
 	cwTexture* m_pRenderTarget;
+	cwTexture* m_pDepthStencil;
 	CWBOOL m_bRefreshRenderTarget;
 	CWBOOL m_bClearColor;
 	CWBOOL m_bClearDepth;

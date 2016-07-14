@@ -32,6 +32,7 @@ public:
     cwVector4D(float xx, float yy, float zz) : cwVector3D(xx, yy, zz), w(0) {}
 	cwVector4D(float xx, float yy, float zz, float ww) : cwVector3D(xx, yy, zz), w(ww) {}
 	cwVector4D(const cwVector3D& v) : cwVector3D(v), w(0) {}
+	cwVector4D(const cwVector3D& v, float ww) : cwVector3D(v), w(ww) {}
     cwVector4D(const cwVector4D& v) : cwVector3D(v.x, v.y, v.z), w(v.w) {}
     
     void zero() {

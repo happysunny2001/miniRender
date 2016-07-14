@@ -112,6 +112,27 @@ CWBOOL cwSprite::loadTexture(const std::string& strFile)
 	return CWTRUE;
 }
 
+CWVOID cwSprite::setTexture(cwTexture* pTexture)
+{
+	CW_SAFE_RETAIN(pTexture);
+	CW_SAFE_RELEASE(m_pTexture);
+	m_pTexture = pTexture;
+	if (!m_pTexture) return;
+
+	cwRepertory& repetory = cwRepertory::getInstance();
+	this->setEffect(repetory.getEffectManager()->defaultSpriteEffect());
+
+	CWFLOAT fHalfTexWidth = 0.5f;
+	CWFLOAT fHalfTexHeight = 0.5f;
+
+	if (m_pTexture) {
+		fHalfTexWidth = m_pTexture->getWidth()*0.5f;
+		fHalfTexHeight = m_pTexture->getWidth()*0.5f;
+	}
+
+	m_nMatSizeScale.setScale(fHalfTexWidth, fHalfTexHeight, 1.0f);
+}
+
 CWBOOL cwSprite::buildVertexBuffer()
 {
 	//CW_SAFE_DELETE(m_pVertexBuffer);

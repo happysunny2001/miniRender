@@ -28,7 +28,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Entity/cwRenderNode.h"
 #include "Entity/cwDynamicReflectionEntity.h"
 #include "Render/cwRenderer.h"
-#include "cwStageLayer.h"
+#include "Layer/cwStageLayer.h"
 
 NS_MINIR_BEGIN
 

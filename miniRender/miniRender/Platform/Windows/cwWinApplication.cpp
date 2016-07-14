@@ -162,16 +162,16 @@ CWINT cwApplication::go()
 
 CWVOID cwApplication::onResize(CWUINT width, CWUINT height)
 {
-	if (m_bResizing) return;
-	cwRepertory& repertory = cwRepertory::getInstance();
+	//if (m_bResizing) return;
+	//cwRepertory& repertory = cwRepertory::getInstance();
 
-	m_uWindowWidth  = width;
-	m_uWindowHeight = height;
+	//m_uWindowWidth  = width;
+	//m_uWindowHeight = height;
 
-	repertory.addValue(gValueWinWidth, cwValueMap(width));
-	repertory.addValue(gValueWinHeight, cwValueMap(height));
-	repertory.getDevice()->resize();
-	repertory.getEngine()->resize();
+	//repertory.addValue(gValueWinWidth, cwValueMap(width));
+	//repertory.addValue(gValueWinHeight, cwValueMap(height));
+	//repertory.getDevice()->resize();
+	//repertory.getEngine()->resize();
 
 	//CWFLOAT fov = repertory.getFloat(gValueFov);
 	//CWFLOAT nearZ = repertory.getFloat(gValueNearZ);

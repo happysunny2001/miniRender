@@ -78,4 +78,16 @@ CWVOID cwOrthoCamera::updateProjMatrix(CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT 
 	m_nFrustum.refresh(this);
 }
 
+CWVOID cwOrthoCamera::updateProjMatrix(CWFLOAT fLeft, CWFLOAT fRight, CWFLOAT fTop, CWFLOAT fBottom, CWFLOAT fNearZ, CWFLOAT fFarZ)
+{
+	m_fNearZ = fNearZ;
+	m_fFarZ = fFarZ;
+	m_fAspect = (fRight - fLeft) / (fTop - fBottom);
+
+	m_nProjMatrix.ortho(fLeft, fRight, fTop, fBottom, fNearZ, fFarZ);
+	m_nViewProjMatrix = m_nViewMatrix*m_nProjMatrix;
+
+	m_nFrustum.refresh(this);
+}
+
 NS_MINIR_END

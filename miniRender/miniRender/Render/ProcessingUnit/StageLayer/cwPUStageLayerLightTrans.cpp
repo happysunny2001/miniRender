@@ -72,7 +72,7 @@ CWVOID cwPUStageLayerLightTrans::savePointLight(cwScene* pScene)
 	const cwVector<cwPointLight*>& vecLight = pScene->getPointLights();
 	for (auto pLight : vecLight) {
 		m_nMapPoint[pLight] = pLight->getPosition();
-		pLight->setPosition(pLight->getPosition()*m_nMatLightTrans);
+		pLight->setPosition(cwVector4D(pLight->getPosition(), 1.0f)*m_nMatLightTrans);
 	}
 }
 
@@ -81,7 +81,7 @@ CWVOID cwPUStageLayerLightTrans::saveSpotLight(cwScene* pScene)
 	const cwVector<cwSpotLight*>& vecLight = pScene->getSpotLights();
 	for (auto pLight : vecLight) {
 		m_nMapSpot[pLight] = pLight->getPosition();
-		pLight->setPosition(pLight->getPosition()*m_nMatLightTrans);
+		pLight->setPosition(cwVector4D(pLight->getPosition())*m_nMatLightTrans);
 
 		cwVector4D vecSpotDir = pLight->getSpotDirection();
 		m_nMapSpotDir[pLight] = vecSpotDir;

@@ -10,6 +10,7 @@ struct DirectionalLight
 	float4 ambient;
 	float4 diffuse;
 	float4 specular;
+	float4 lightAttr; //x:shadow flag,0:not cast shadow,1:cast shadow
 };
 
 //point light structure
@@ -45,6 +46,33 @@ cbuffer cbLighting
 	int gSpotLightCount;			//current active spot light count
 };
 
+//Shadow map test
+static const float SMAP_SIZE = 2048.0f;
+static const float SMAP_DX = 1.0f/SMAP_SIZE;
+
+float calcShadowFactor(SamplerComparisonState samShadow, Texture2D shadowMap, float4 shadowPosH)
+{
+	shadowPosH.xyz /= shadowPosH.w;
+
+	float depth = shadowPosH.z;
+
+	const float dx = SMAP_DX;
+	const float2 offset[9] = {
+		float2(-dx, -dx),  float2(0.0f, -dx),  float2(dx, -dx),
+		float2(-dx, 0.0f), float2(0.0f, 0.0f), float2(dx, 0.0f),
+		float2(-dx, dx),   float2(0.0f, dx),   float2(dx, dx)
+	};
+
+	float percentLit = 0.0f;
+
+	[unroll]
+	for(int i = 0; i < 9; ++i) {
+		percentLit += shadowMap.SampleCmpLevelZero(samShadow, shadowPosH.xy+offset[i], depth).r;
+	}
+
+	return percentLit /= 9.0f;
+}
+
 //parameters
 //mat:    mesh material
 //light:  directional light structure
@@ -61,6 +89,7 @@ void ProcessDirectionalLight(Material mat, DirectionalLight light, float3 normal
 	float3 lightVec = -light.direction.xyz;
 	float diffuseFactor = dot(lightVec, normal);
 
+	[flatten]
 	if(diffuseFactor > 0) {
 		diffuse = diffuseFactor * mat.diffuse * light.diffuse;
 		float3 refVec = reflect(light.direction.xyz, normal);
@@ -94,6 +123,7 @@ void ProcessPointLight(Material mat, PointLight light, float3 pos, float3 normal
 	ambient = mat.ambient * light.ambient;
 	float diffuseFactor = dot(lightVec, normal);
 
+	[flatten]
 	if(diffuseFactor > 0) {
 		diffuse = diffuseFactor * mat.diffuse * light.diffuse;
 		float3 refVec = reflect(-lightVec, normal);
@@ -126,6 +156,7 @@ void processSpotLight(Material mat, SpotLight light, float3 pos, float3 normal, 
 	ambient = mat.ambient * light.ambient;
 	float diffuseFactor = dot(lightVec, normal);
 
+	[flatten]
 	if(diffuseFactor > 0) {
 		diffuse = diffuseFactor * mat.diffuse * light.diffuse;
 		float3 refVec = reflect(-lightVec, normal);
@@ -162,6 +193,52 @@ void processLight(Material mat, float3 pos, float3 normal, float3 toEye, out flo
 		ambient  += A;
 		diffuse  += D;
 		specular += S;
+	}
+	
+	[unroll]
+	for(i = 0; i < gPointLightCount; ++i) {
+		ProcessPointLight(mat, gPointLight[i], pos, normal, toEye, A, D, S);
+
+		ambient  += A;
+		diffuse  += D;
+		specular += S;
+	}
+	
+	[unroll]
+	for(i = 0; i < gSpotLightCount; ++i) {
+		processSpotLight(mat, gSpotLight[i], pos, normal, toEye, A, D, S);
+
+		ambient  += A;
+		diffuse  += D;
+		specular += S;
+	}
+}
+
+void processLightShadow(Material mat, float3 pos, float3 normal, float3 toEye, 
+			SamplerComparisonState samShadow, Texture2D shadowMap, float4 shadowPosH,
+			out float4 ambient, out float4 diffuse, out float4 specular)
+{
+	ambient  = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	diffuse  = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
+
+	float4 A, D, S;
+	int i;
+	float dShadow = 1.0f;
+	
+	[unroll]
+	for(i = 0; i < gDirectionalLightCount; ++i) {
+		ProcessDirectionalLight(mat, gDirectionalLight[i], normal, toEye, A, D, S);
+		dShadow = 1.0f;
+
+		[flatten]
+		if(gDirectionalLight[i].lightAttr.x > 0) {
+			dShadow = calcShadowFactor(samShadow, shadowMap, shadowPosH);
+		}
+		
+		ambient  += A;
+		diffuse  += dShadow*D;
+		specular += dShadow*S;
 	}
 	
 	[unroll]

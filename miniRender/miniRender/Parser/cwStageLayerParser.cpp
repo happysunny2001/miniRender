@@ -19,9 +19,14 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwStageLayerParser.h"
 #include "Repertory/cwRepertory.h"
+#include "Engine/cwEngine.h"
+#include "Render/cwRenderer.h"
 #include "Render/ProcessingUnit/StageLayer/cwPUStageLayer.h"
 #include "cwParserManager.h"
 #include "cwPUStageLayerParser.h"
+#include "cwPUBatchParser.h"
+#include "Render/ProcessingUnit/Batch/cwPUBatch.h"
+#include "Render/Stage/Layer/cwShadowMapStageLayer.h"
 
 NS_MINIR_BEGIN
 
@@ -38,14 +43,29 @@ cwStageLayerParser* cwStageLayerParser::create()
 
 cwStageLayerParser::cwStageLayerParser()
 {
-	m_nMapParser["Layer"] = CW_CALLBACK_2(cwStageLayerParser::parseAttribute, this);
+	m_nMapParser["Layer"]  = CW_CALLBACK_2(cwStageLayerParser::parseAttribute, this);
+	m_nMapParser["Camera"] = CW_CALLBACK_2(cwStageLayerParser::parseCamera, this);
 }
 
 cwStageLayer* cwStageLayerParser::parse(tinyxml2::XMLElement* pStageLayerData)
 {
 	if (!pStageLayerData) return nullptr;
 
-	cwStageLayer* pStageLayer = cwStageLayer::create();
+	cwStageLayer* pStageLayer = nullptr;
+	const char* pcType = pStageLayerData->Attribute("Type");
+
+	if (!pcType) {
+		pStageLayer = cwStageLayer::create();
+	}
+	else {
+		if (CW_STRING_MATCH(pcType, "ShadowMap")) {
+			pStageLayer = cwShadowMapStageLayer::create();
+		}
+		else {
+			pStageLayer = cwStageLayer::create();
+		}
+	}
+
 	if (!pStageLayer) return nullptr;
 
 	parseElement(pStageLayer, pStageLayerData);
@@ -62,6 +82,11 @@ cwStageLayer* cwStageLayerParser::parse(tinyxml2::XMLElement* pStageLayerData)
 CWVOID cwStageLayerParser::deferParse(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData)
 {
 	parsePU(pStageLayer, pStageLayerData->FirstChildElement("PU"));
+	parsePUBatch(pStageLayer, pStageLayerData->FirstChildElement("BatchPU"));
+
+	const CWSTRING& strCameraName = pStageLayer->getCameraName();
+	if (!strCameraName.empty())
+		pStageLayer->setCamera(cwRepertory::getInstance().getEngine()->getCamera(strCameraName));
 }
 
 CWVOID cwStageLayerParser::parseElement(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerData)
@@ -93,6 +118,14 @@ CWVOID cwStageLayerParser::parseAttribute(cwStageLayer* pStageLayer, tinyxml2::X
 	}
 }
 
+CWVOID cwStageLayerParser::parseCamera(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pCameraElement)
+{
+	const char* pcCamName = pCameraElement->Attribute("Name");
+	if (pcCamName) {
+		pStageLayer->setCameraName(pcCamName);
+	}
+}
+
 CWVOID cwStageLayerParser::parsePU(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pStageLayerPUData)
 {
 	if (!pStageLayer || !pStageLayerPUData) return;
@@ -102,6 +135,17 @@ CWVOID cwStageLayerParser::parsePU(cwStageLayer* pStageLayer, tinyxml2::XMLEleme
 
 	cwVector<cwPUStageLayer*> vecPU = pPUParser->parse(pStageLayerPUData);
 	pStageLayer->setPUList(vecPU);
+}
+
+CWVOID cwStageLayerParser::parsePUBatch(cwStageLayer* pStageLayer, tinyxml2::XMLElement* pBatchPUData)
+{
+	if (!pStageLayer || !pBatchPUData) return;
+
+	cwPUBatchParser* pPUParser = static_cast<cwPUBatchParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserBatchPU));
+	if (!pPUParser) return;
+
+	cwVector<cwPUBatch*> vecPU = pPUParser->parse(pBatchPUData);
+	pStageLayer->setBatchPUList(vecPU);
 }
 
 NS_MINIR_END

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Renderer>
+	<ViewPort TopLeftX="0.0" TopLeftY="0.0" Width="1.0" Height="1.0" MinDepth="0.0" MaxDepth="1.0" />
+	<Camera Name="Default" />
+	<StageList>
+
+		<Stage Name="S1" Type="Normal" Enable="True">
+			<RenderTarget Type="Multi" Width="1.0" Height="1.0">
+				<G-Buffer Format="R16g16Float"/>
+				<G-Buffer Format="R8g8b8a8Unorm"/>
+				<G-Buffer Format="R8g8b8a8Unorm"/>
+			</RenderTarget>
+
+			<Layer Name="S1_L1" EntityType="Stage">
+				<Camera Name="Homo" />
+			</Layer>
+
+			<Layer Name="S1_L2">
+				<Camera Name="Default" />
+				<PU>
+					<Effect Name="DeferredShading" Type="Normal">
+						<Shader Type="specific" Name="deferredShading.fx" Tech="DeferredTech" />
+					</Effect>
+				</PU>
+			</Layer>
+
+			<EntityList>
+				<Entity Type="Quad" VertexType="PosNormal">
+					<Position x="0" y="0" z="0" />
+					<Scale x="1.0" y="1.0" z="1.0" />
+					<Rotation x="0" y="0" z="0" />
+					<Material>
+						<Ambient  r="1.0" g="1.0" b="1.0" a="1.0" />
+						<Diffuse  r="1.0" g="1.0" b="1.0" a="1.0" />
+						<Specular r="1.0" g="1.0" b="1.0" a="1.0" />
+						<Reflect  r="1.0" g="1.0" b="1.0" a="1.0" />
+					</Material>
+
+					<Effect Name="DeferredClearShading" Type="Normal">
+						<Shader Type="specific" Name="deferredShading.fx" Tech="DeferredClearTech" />
+					</Effect>
+				</Entity>
+			</EntityList>
+
+		</Stage>
+
+		<Stage Name="S2" Type="Normal" Enable="True">
+			<Camera Name="Homo" />
+			<RenderTarget Type="backbuffer"/>
+
+			<Layer Name="S2_L1" EntityType="Stage">
+				<BatchPU>
+					<ShaderParam Name="gMatInvertViewProj" Type="Matrix" Source="Engine" Freq="PreFrame">
+						<Engine Type="Camera" Name="Default" Attr="InvertViewProjMatrix"/>
+					</ShaderParam>
+
+					<ShaderParam Name="gDefaultCameraPosWorld" Type="FloatArray" Source="Engine" Freq="PreFrame">
+						<Engine Type="Camera" Name="Default" Attr="Position"/>
+					</ShaderParam>
+				</BatchPU>
+			</Layer>
+
+			<TextureList>
+				<Texture Name="S1NormalTexture" Type="StageRenderTarget" Location="S1" Index="0" />
+				<Texture Name="S1DiffuseTexture" Type="StageRenderTarget" Location="S1" Index="1" />
+				<Texture Name="S1SpecularTexture" Type="StageRenderTarget" Location="S1" Index="2" />
+				<Texture Name="S1DepthTexture" Type="StageRenderTarget" Location="S1" Index="-1" />
+			</TextureList>
+
+			<EntityList>
+				<Entity Type="Quad" VertexType="PosTex">
+					<Position x="0" y="0" z="0" />
+					<Scale x="1.0" y="1.0" z="1.0" />
+					<Rotation x="0" y="0" z="0" />
+					<Material>
+						<Ambient r="1.0" g="1.0" b="1.0" a="1.0" />
+						<Diffuse r="1.0" g="1.0" b="1.0" a="1.0" />
+						<Specular r="1.0" g="1.0" b="1.0" a="1.0" />
+						<Reflect r="1.0" g="1.0" b="1.0" a="1.0" />
+					</Material>
+
+					<Effect Name="Effect1" Type="Normal">
+						<Shader Type="specific" Name="deferredShadingLighting.fx" Tech="ColorTech" />
+
+						<Param Name="gDiffuseTexture" Type="Texture" Writable="False">
+							<Data>S2/S1DiffuseTexture</Data>
+						</Param>
+
+						<Param Name="gNormalTexture" Type="Texture" Writable="False">
+							<Data>S2/S1NormalTexture</Data>
+						</Param>
+
+						<Param Name="gSpecularTexture" Type="Texture" Writable="False">
+							<Data>S2/S1SpecularTexture</Data>
+						</Param>
+
+						<Param Name="gDepthTexture" Type="Texture" Writable="False">
+							<Data>S2/S1DepthTexture</Data>
+						</Param>
+					</Effect>
+				</Entity>
+			</EntityList>
+		</Stage>
+
+		<Stage Name="SSprite" Type="Sprite" Enable="True">
+		</Stage>
+
+	</StageList>
+</Renderer>

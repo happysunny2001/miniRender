@@ -50,6 +50,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/D3D/D3D11/Texture/cwD3D11RenderTextureWritable.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11TextureArray.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11CubeTexture.h"
+#include "Platform/D3D/D3D11/Texture/cwD3D11ShadowMapTexture.h"
+#include "Platform/D3D/D3D11/Texture/cwD3D11MultiRenderTarget.h"
+#include "Platform/D3D/D3D11/Texture/cwD3D11RWTexture.h"
+#include "Platform/D3D/D3D11/Texture/cwD3D11RTTexture.h"
+#include "Platform/D3D/D3D11/Texture/cwD3D11DSTexture.h"
 #include "Platform/D3D/D3D11/Blend/cwD3D11Blend.h"
 #include "Platform/D3D/D3D11/Shader/cwD3D11Shader.h"
 #include "Platform/D3D/D3D11/ViewPort/cwD3D11ViewPort.h"
@@ -75,7 +80,10 @@ CWUINT cwD3D11Device::bufferUsage[eBufferUsageMaxCount];
 
 CWUINT cwD3D11Device::primitiveType[ePrimitiveTypeMaxCount];
 CWUINT cwD3D11Device::formatType[eFormatMaxCount];
+CWUINT cwD3D11Device::formatTypeSize[eFormatMaxCount];
+D3D11_DSV_DIMENSION cwD3D11Device::depthStencilViewDimension[eDepthStencilViewMaxCount];
 D3D11_INPUT_CLASSIFICATION cwD3D11Device::classificationType[eClassificationMaxCount];
+D3D11_SRV_DIMENSION cwD3D11Device::shaderResourceViewDimension[eShaderResourceViewMaxCount];
 
 cwD3D11Device::cwD3D11Device() :
 m_pD3D11Device(NULL),
@@ -98,6 +106,9 @@ m_pMaterialDefault(nullptr)
 	initPrimitiveTypeData();
 	initFormatTypeData();
 	initClassification();
+	initDepthStencilViewTypeData();
+	initShaderResourceViewTypeData();
+	initFormatTypeSizeData();
 }
 
 cwD3D11Device::~cwD3D11Device()
@@ -111,7 +122,6 @@ cwD3D11Device::~cwD3D11Device()
 	CW_RELEASE_COM(m_pCullCWRenderState);
 	CW_SAFE_RELEASE_NULL(m_pMaterialDefault);
 	CW_SAFE_RELEASE_NULL(m_pRenderTargetBkBuffer);
-	CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
 
 #if CW_DEBUG
 	if (m_pD3D11Debug) {
@@ -229,7 +239,7 @@ bool cwD3D11Device::initDevice()
 	CW_RELEASE_COM(dxgiFactory);
 
 	createRenderState();
-	createDefaultRenderTarget();
+	//createDefaultRenderTarget();
 	createDefaultViewPort();
 	createDefaultStencil();
 
@@ -326,21 +336,73 @@ void cwD3D11Device::createRenderState()
 
 void cwD3D11Device::beginDraw(CWBOOL bClearColor, CWBOOL bClearDepth, CWBOOL bClearStencil)
 {
-	if (m_bRefreshRenderTarget && m_pCurrRenderTarget) {
-		m_pCurrRenderTarget->binding();
-	}
+	//m_pCurrRenderTarget = m_pRenderTargetBkBuffer;
+	//if (m_bRefreshRenderTarget && m_pCurrRenderTarget) {
+	//	m_pCurrRenderTarget->binding();
+	//}
+
+	//m_pCurrRenderTarget->beginDraw(bClearColor, bClearDepth, bClearStencil);
 
 	if (m_bRefreshViewPort && m_pCurrViewPort) {
 		m_pCurrViewPort->binding();
 	}
 
-	m_pCurrRenderTarget->beginDraw(bClearColor, bClearDepth, bClearStencil);
+	ID3D11DepthStencilView* pDepthStencilView = NULL;
+	ID3D11RenderTargetView* arrTargetView[10] = { 0 };
+	CWUINT targetSize = 0;
+
+	if (m_bRefreshRenderTarget) {
+		if (m_pDepthStencil) {
+			pDepthStencilView = static_cast<ID3D11DepthStencilView*>(m_pDepthStencil->getRenderHandle());
+		}
+
+		std::vector<CWHANDLE>* vecHandle = nullptr;
+		if (m_pRenderTarget) {
+			vecHandle = m_pRenderTarget->getRenderHandleArray();
+		}
+
+		if (vecHandle) {
+			for (CWUINT i = 0; i < vecHandle->size(); ++i) {
+				arrTargetView[i] = static_cast<ID3D11RenderTargetView*>((*vecHandle)[i]);
+			}
+
+			targetSize = (CWUINT)(vecHandle->size());
+			m_pD3D11DeviceContext->OMSetRenderTargets(targetSize, arrTargetView, pDepthStencilView);
+		}
+		else {
+			m_pD3D11DeviceContext->OMSetRenderTargets(4, arrTargetView, pDepthStencilView);
+		}
+	}
+
+	if (bClearColor) {
+		cwVector4D nClearColor = cwColor::black;
+		for (CWUINT i = 0; i < targetSize; ++i) {
+			if (arrTargetView[i])
+				m_pD3D11DeviceContext->ClearRenderTargetView(arrTargetView[i], (const CWFLOAT*)&nClearColor);
+		}
+	}
+
+	if (pDepthStencilView) {
+		CWUINT nBit = 0;
+		if (bClearDepth)
+			nBit |= D3D11_CLEAR_DEPTH;
+		if (bClearStencil)
+			nBit |= D3D11_CLEAR_STENCIL;
+
+		m_pD3D11DeviceContext->ClearDepthStencilView(pDepthStencilView, nBit, 1.0f, 0);
+	}
 }
 
 void cwD3D11Device::endDraw()
 {
-	m_pCurrRenderTarget->endDraw();
+	//m_pCurrRenderTarget->endDraw();
 	this->clearShaderResource();
+
+	m_bRefreshRenderTarget = CWFALSE;
+	m_bRefreshViewPort = CWFALSE;
+
+	CW_SAFE_RELEASE_NULL(m_pRenderTarget);
+	CW_SAFE_RELEASE_NULL(m_pCurrViewPort);
 }
 
 void cwD3D11Device::swap()
@@ -371,6 +433,8 @@ void cwD3D11Device::setRenderState(eRenderState e)
 		m_pD3D11DeviceContext->RSSetState(m_pNoCullRenderState);
 	else if (e == eRenderStateCW)
 		m_pD3D11DeviceContext->RSSetState(m_pCullCWRenderState);
+	else if (e == eRenderStateNone)
+		m_pD3D11DeviceContext->RSSetState(0);
 
 	m_eRenderState = e;
 }
@@ -460,6 +524,11 @@ cwBuffer* cwD3D11Device::createBuffer(CWUINT uCnt, eBufferUsage usage, eBufferBi
 	cwD3D11Buffer* pBuffer = cwD3D11Buffer::create(NULL, uStride*uCnt, usage, bindFlag, uCpuFlag, miscFlag, uStride);
 	if (pBuffer) return pBuffer;
 	return nullptr;
+}
+
+cwBuffer* cwD3D11Device::createShaderStructedBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt)
+{
+	return cwD3D11BufferShader::create(pData, uStride*uCnt, eBufferUsageDynamic, eAccessFlagWrite, uStride);
 }
 
 cwBlend* cwD3D11Device::createBlend(const cwBlendData& blendData)
@@ -606,16 +675,20 @@ cwTexture* cwD3D11Device::createCubeTextureThreadSafe(CWVOID* pData, CWUINT64 uS
 	return cwD3D11CubeTexture::createThreadSafe(pData, uSize);
 }
 
-cwRenderTexture* cwD3D11Device::createRenderTexture(float fWidth, float fHeight, eRenderTextureType eType)
+cwRenderTexture* cwD3D11Device::createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType, CWBOOL bThreading)
 {
 	switch (eType)
 	{
 	case eRenderTextureTarget:
-		return cwD3D11RenderTarget::create();
+		return cwD3D11RenderTarget::create(bThreading);
 	case eRenderTextureShader:
-		return cwD3D11RenderTexture::create(fWidth, fHeight);
+		return cwD3D11RenderTexture::create(fWidth, fHeight, bThreading);
 	case eRenderTextureWritable:
-		return cwD3D11RenderTextureWritable::create(fWidth, fHeight);
+		return cwD3D11RenderTextureWritable::create(fWidth, fHeight, bThreading);
+	case eRenderTextureShadowMap:
+		return cwD3D11ShadowMapTexture::create(fWidth, fHeight, bThreading);
+	case eRenderTextureMultiTarget:
+		return cwD3D11MultiRenderTarget::create(fWidth, fHeight, bThreading);
 	}
 
 	return nullptr;
@@ -629,6 +702,31 @@ cwTexture* cwD3D11Device::createTextureArray(const std::vector<CWSTRING>& vecFil
 cwTexture* cwD3D11Device::createTextureArrayThreadSafe(const std::vector<CWSTRING>& vecFiles)
 {
 	return cwD3D11TextureArray::createThreadSafe(vecFiles);
+}
+
+cwTexture* cwD3D11Device::createRTTexture(CWBOOL bThreadSafe)
+{
+	return cwD3D11RTTexture::create(bThreadSafe);
+}
+
+cwTexture* cwD3D11Device::createRTTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bShaderUsage, CWBOOL bThreadSafe)
+{
+	return cwD3D11RTTexture::create(fWidth, fHeight, format, bShaderUsage, bThreadSafe);
+}
+
+cwTexture* cwD3D11Device::createRWTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bThreadSafe)
+{
+	return cwD3D11RWTexture::create(fWidth, fHeight, format, bThreadSafe);
+}
+
+cwTexture* cwD3D11Device::createDSTexture(CWFLOAT fWidth, CWFLOAT fHeight, CWBOOL bShaderUsage, CWBOOL bThreadSafe)
+{
+	return cwD3D11DSTexture::create(fWidth, fHeight, bShaderUsage, bThreadSafe);
+}
+
+cwTexture* cwD3D11Device::createDSTexture(CWBOOL bThreadSafe)
+{
+	return cwD3D11DSTexture::create(bThreadSafe);
 }
 
 cwBatchEntity* cwD3D11Device::createBatchEntity()
@@ -650,7 +748,7 @@ void cwD3D11Device::setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& tr
 	if (pShader->hasVariable(eShaderParamWorldInvTrans)) {
 		if (trans.inverseExist()) {
 			cwMatrix4X4 matWorldInvTrans = trans.inverse().transpose();
-			pShader->setVariableMatrix(eShaderParamWorldInvTrans, reinterpret_cast<CWFLOAT*>(&matWorldInvTrans));
+			pShader->setVariableMatrix(eShaderParamWorldInvTrans, matWorldInvTrans);
 		}
 		else {
 			cwMatrix4X4& M = cwMatrix4X4::identityMatrix;
@@ -820,8 +918,8 @@ CWVOID cwD3D11Device::drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInf
 		m_pD3D11DeviceContext->Dispatch(pGPInfo->groupX, pGPInfo->groupY, pGPInfo->groupZ);
 	}
 
-	ID3D11ShaderResourceView* nullSRV[1] = { 0 };
-	m_pD3D11DeviceContext->CSSetShaderResources(0, 1, nullSRV);
+	ID3D11ShaderResourceView* nullSRV[10] = { 0 };
+	m_pD3D11DeviceContext->CSSetShaderResources(0, 10, nullSRV);
 }
 
 CWVOID cwD3D11Device::clearShaderResource()
@@ -829,11 +927,11 @@ CWVOID cwD3D11Device::clearShaderResource()
 	ID3D11ShaderResourceView* pSrvs[D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT] = { 0 };
 	m_pD3D11DeviceContext->PSSetShaderResources(0, D3D11_COMMONSHADER_INPUT_RESOURCE_SLOT_COUNT, pSrvs);
 
-	ID3D11ShaderResourceView* nullSRV[1] = { 0 };
-	m_pD3D11DeviceContext->CSSetShaderResources(0, 1, nullSRV);
+	ID3D11ShaderResourceView* nullSRV[8] = { 0 };
+	m_pD3D11DeviceContext->CSSetShaderResources(0, 8, nullSRV);
 
-	ID3D11UnorderedAccessView* nullUAV[1] = { 0 };
-	m_pD3D11DeviceContext->CSSetUnorderedAccessViews(0, 1, nullUAV, 0);
+	ID3D11UnorderedAccessView* nullUAV[8] = { 0 };
+	m_pD3D11DeviceContext->CSSetUnorderedAccessViews(0, 8, nullUAV, 0);
 
 	m_pD3D11DeviceContext->CSSetShader(0, 0, 0);
 }
@@ -1067,10 +1165,165 @@ CWVOID cwD3D11Device::initFormatTypeData()
 	formatType[eFormatForceUint]              = DXGI_FORMAT_FORCE_UINT;
 }
 
+CWVOID cwD3D11Device::initFormatTypeSizeData()
+{
+	formatTypeSize[eFormatUnknown] = 0;
+	formatTypeSize[eFormatR32g32b32a32Typeless]   = 16;
+	formatTypeSize[eFormatR32g32b32a32Float]      = 16;
+	formatTypeSize[eFormatR32g32b32a32Uint]       = 16;
+	formatTypeSize[eFormatR32g32b32a32Sint]       = 16;
+	formatTypeSize[eFormatR32g32b32Typeless]      = 12;
+	formatTypeSize[eFormatR32g32b32Float]         = 12;
+	formatTypeSize[eFormatR32g32b32Uint]          = 12;
+	formatTypeSize[eFormatR32g32b32Sint]          = 12;
+	formatTypeSize[eFormatR16g16b16a16Typeless]   = 8;
+	formatTypeSize[eFormatR16g16b16a16Float]      = 8;
+	formatTypeSize[eFormatR16g16b16a16Unorm]      = 8;
+	formatTypeSize[eFormatR16g16b16a16Uint]       = 8;
+	formatTypeSize[eFormatR16g16b16a16Snorm]      = 8;
+	formatTypeSize[eFormatR16g16b16a16Sint]       = 8;
+	formatTypeSize[eFormatR32g32Typeless]         = 8;
+	formatTypeSize[eFormatR32g32Float]            = 8;
+	formatTypeSize[eFormatR32g32Uint]             = 8;
+	formatTypeSize[eFormatR32g32Sint]             = 8;
+	formatTypeSize[eFormatR32g8x24Typeless]       = 8;
+	formatTypeSize[eFormatD32FloatS8x24Uint]      = 8;
+	formatTypeSize[eFormatR32FloatX8x24Typeless]  = 8;
+	formatTypeSize[eFormatX32TypelessG8x24Uint]   = 8;
+	formatTypeSize[eFormatR10g10b10a2Typeless]    = 4;
+	formatTypeSize[eFormatR10g10b10a2Unorm]       = 4;
+	formatTypeSize[eFormatR10g10b10a2Uint]        = 4;
+	formatTypeSize[eFormatR11g11b10Float]         = 4;
+	formatTypeSize[eFormatR8g8b8a8Typeless]       = 4;
+	formatTypeSize[eFormatR8g8b8a8Unorm]          = 4;
+	formatTypeSize[eFormatR8g8b8a8UnormSrgb]      = 4;
+	formatTypeSize[eFormatR8g8b8a8Uint]           = 4;
+	formatTypeSize[eFormatR8g8b8a8Snorm]          = 4;
+	formatTypeSize[eFormatR8g8b8a8Sint]           = 4;
+	formatTypeSize[eFormatR16g16Typeless]         = 4;
+	formatTypeSize[eFormatR16g16Float]            = 4;
+	formatTypeSize[eFormatR16g16Unorm]            = 4;
+	formatTypeSize[eFormatR16g16Uint]             = 4;
+	formatTypeSize[eFormatR16g16Snorm]            = 4;
+	formatTypeSize[eFormatR16g16Sint]             = 4;
+	formatTypeSize[eFormatR32Typeless]            = 4;
+	formatTypeSize[eFormatd32Float]               = 4;
+	formatTypeSize[eFormatR32Float]               = 4;
+	formatTypeSize[eFormatR32Uint]                = 4;
+	formatTypeSize[eFormatR32Sint]                = 4;
+	formatTypeSize[eFormatR24g8Typeless]          = 4;
+	formatTypeSize[eFormatd24UnormS8Uint]         = 4;
+	formatTypeSize[eFormatR24UnormX8Typeless]     = 4;
+	formatTypeSize[eFormatx24TypelessG8Uint]      = 4;
+	formatTypeSize[eFormatR8g8Typeless]           = 2;
+	formatTypeSize[eFormatR8g8Unorm]              = 2;
+	formatTypeSize[eFormatR8g8Uint]               = 2;
+	formatTypeSize[eFormatR8g8Snorm]              = 2;
+	formatTypeSize[eFormatR8g8Sint]               = 2;
+	formatTypeSize[eFormatR16Typeless]            = 2;
+	formatTypeSize[eFormatR16Float]               = 2;
+	formatTypeSize[eFormatd16Unorm]               = 2;
+	formatTypeSize[eFormatR16Unorm]               = 2;
+	formatTypeSize[eFormatR16Uint]                = 2;
+	formatTypeSize[eFormatR16Snorm]               = 2;
+	formatTypeSize[eFormatR16Sint]                = 2;
+	formatTypeSize[eFormatR8Typeless]             = 1;
+	formatTypeSize[eFormatR8Unorm]                = 1;
+	formatTypeSize[eFormatR8Uint]                 = 1;
+	formatTypeSize[eFormatR8Snorm]                = 1;
+	formatTypeSize[eFormatR8Sint]                 = 1;
+	formatTypeSize[eFormatA8Unorm]                = 1;
+	formatTypeSize[eFormatR1Unorm]                = 0;
+	formatTypeSize[eFormatR9g9b9e5Sharedexp]      = 4;
+	formatTypeSize[eFormatR8g8_B8g8Unorm]         = 4;
+	formatTypeSize[eFormatG8r8G8b8Unorm]          = 4;
+	formatTypeSize[eFormatBc1Typeless]            = 0;
+	formatTypeSize[eFormatBc1Unorm]               = 0;
+	formatTypeSize[eFormatBc1UnormSrgb]           = 0;
+	formatTypeSize[eFormatBc2Typeless]            = 0;
+	formatTypeSize[eFormatBc2Unorm]               = 0;
+	formatTypeSize[eFormatBc2UnormSrgb]           = 0;
+	formatTypeSize[eFormatBc3Typeless]            = 0;
+	formatTypeSize[eFormatBc3Unorm]               = 0;
+	formatTypeSize[eFormatBc3UnormSrgb]           = 0;
+	formatTypeSize[eFormatBc4Typeless]            = 0;
+	formatTypeSize[eFormatBc4Unorm]               = 0;
+	formatTypeSize[eFormatBc4Snorm]               = 0;
+	formatTypeSize[eFormatBc5Typeless]            = 0;
+	formatTypeSize[eFormatBc5Unorm]               = 0;
+	formatTypeSize[eFormatBc5Snorm]               = 0;
+	formatTypeSize[eFormatB5g6r5Unorm]            = 2;
+	formatTypeSize[eFormatB5g5r5a1Unorm]          = 2;
+	formatTypeSize[eFormatB8g8r8a8Unorm]          = 4;
+	formatTypeSize[eFormatB8g8r8x8Unorm]          = 4;
+	formatTypeSize[eFormatR10g10b10XrBiasA2Unorm] = 4;
+	formatTypeSize[eFormatB8g8r8a8Typeless]       = 4;
+	formatTypeSize[eFormatB8g8r8a8UnormSrgb]      = 4;
+	formatTypeSize[eFormatB8g8r8x8Typeless]       = 4;
+	formatTypeSize[eFormatB8g8r8x8UnormSrgb]      = 4;
+	formatTypeSize[eFormatBc6hTypeless]           = 0;
+	formatTypeSize[eFormatBc6hUf16]               = 0;
+	formatTypeSize[eFormatBc6hSf16]               = 0;
+	formatTypeSize[eFormatBc7Typeless]            = 0;
+	formatTypeSize[eFormatBc7Unorm]               = 0;
+	formatTypeSize[eFormatBc7UnormSrgb]           = 0;
+	formatTypeSize[eFormatForceUint]              = 4;
+}
+
 CWVOID cwD3D11Device::initClassification()
 {
 	classificationType[eClassificationPerVertex]   = D3D11_INPUT_PER_VERTEX_DATA;
 	classificationType[eClassificationPerInstance] = D3D11_INPUT_PER_INSTANCE_DATA;
+}
+
+CWVOID cwD3D11Device::initDepthStencilViewTypeData()
+{
+	depthStencilViewDimension[eDepthStencilViewUnknown]          = D3D11_DSV_DIMENSION_UNKNOWN;
+	depthStencilViewDimension[eDepthStencilViewTexture1D]        = D3D11_DSV_DIMENSION_TEXTURE1D;
+	depthStencilViewDimension[eDepthStencilViewTexture1DArray]   = D3D11_DSV_DIMENSION_TEXTURE1DARRAY;
+	depthStencilViewDimension[eDepthStencilViewTexture2D]        = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewDimension[eDepthStencilViewTexture2DArray]   = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+	depthStencilViewDimension[eDepthStencilViewTexture2DMS]      = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+	depthStencilViewDimension[eDepthStencilViewTexture2DMSArray] = D3D11_DSV_DIMENSION_TEXTURE2DMSARRAY;
+}
+
+CWVOID cwD3D11Device::initShaderResourceViewTypeData()
+{
+	shaderResourceViewDimension[eShaderResourceViewUnknown]          = D3D11_SRV_DIMENSION_UNKNOWN;
+	shaderResourceViewDimension[eShaderResourceViewBuffer]           = D3D11_SRV_DIMENSION_BUFFER;
+	shaderResourceViewDimension[eShaderResourceViewTexture1D]        = D3D11_SRV_DIMENSION_TEXTURE1D;
+	shaderResourceViewDimension[eShaderResourceViewTexture1DArray]   = D3D11_SRV_DIMENSION_TEXTURE1DARRAY;
+	shaderResourceViewDimension[eShaderResourceViewTexture2D]        = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDimension[eShaderResourceViewTexture2DArray]   = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+	shaderResourceViewDimension[eShaderResourceViewTexture2DMS]      = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+	shaderResourceViewDimension[eShaderResourceViewTexture2DMSArray] = D3D11_SRV_DIMENSION_TEXTURE2DMSARRAY;
+	shaderResourceViewDimension[eShaderResourceViewTexture3D]        = D3D11_SRV_DIMENSION_TEXTURE3D;
+	shaderResourceViewDimension[eShaderResourceViewTextureCube]      = D3D11_SRV_DIMENSION_TEXTURECUBE;
+	shaderResourceViewDimension[eShaderResourceViewTextureCubeArray] = D3D11_SRV_DIMENSION_TEXTURECUBEARRAY;
+	shaderResourceViewDimension[eShaderResourceViewTextureBufferEx]  = D3D11_SRV_DIMENSION_BUFFEREX;
+}
+
+eFormat cwD3D11Device::getFormatTypeDXGI(DXGI_FORMAT format)
+{
+	for (CWUINT i = 0; i < eFormatMaxCount; ++i) {
+		if (formatType[i] == format) return static_cast<eFormat>(i);
+	}
+
+	return eFormatUnknown;
+}
+
+CWUINT cwD3D11Device::getBufferBindFlags(CWUINT flags)
+{
+	if (flags == 0) return 0;
+
+	CWUINT f = 0;
+	for (CWUINT i = eBufferBindVertex; i < eBufferBindMaxCount; ++i) {
+		if (i & flags) {
+			f |= getBufferBindFlags(i);
+		}
+	}
+
+	return f;
 }
 
 NS_MINIR_END

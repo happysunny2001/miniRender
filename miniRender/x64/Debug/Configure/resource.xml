@@ -8,6 +8,7 @@
 
 	<Shader>
 		effect/D3D11/
+		effect/D3D11/TBDR/
 	</Shader>
 
 	<Configure>

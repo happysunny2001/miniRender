@@ -33,6 +33,8 @@ public:
 	static CWWSTRING convertToWideChar(const CWSTRING& str);
 	static CWWSTRING createFPSString(const CWWSTRING& title, CWUINT iFPS);
 	static CWSTRING convertToMultiByte(const CWWSTRING& str);
+	static CWINT convertToInt(const CWSTRING& str, CWINT iFailed=-1);
+	static CWSTRING convertToString(CWUINT i);
 
 	static CWVOID ltrim(CWSTRING& str);
 	static CWVOID rtrim(CWSTRING& str);

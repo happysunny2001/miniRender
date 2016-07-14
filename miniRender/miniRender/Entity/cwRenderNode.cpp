@@ -53,7 +53,8 @@ m_bTransDirty(CWFALSE),
 m_pEffect(nullptr),
 m_pBlend(nullptr),
 m_pStencil(nullptr),
-m_iTag(0)
+m_iTag(0),
+m_bCastShadow(CWFALSE)
 {
 	m_eRenderType = eRenderTypeNode;
 }

@@ -47,7 +47,7 @@ cwEffectFloatArrayParameter::~cwEffectFloatArrayParameter()
 
 CWVOID cwEffectFloatArrayParameter::binding(cwShader* pShader)
 {
-	if (pShader) {
+	if (pShader && pShader->hasVariable(m_nStrParamName)) {
 		pShader->setVariableFloatArray(m_nStrParamName, m_pFloatArray, m_iCnt);
 	}
 }

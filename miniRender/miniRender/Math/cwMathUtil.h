@@ -50,6 +50,7 @@ public:
 	static CWFLOAT angleDegree(CWFLOAT angle);
 	//convert 32 bit float to 16 bit short
 	static CWHALF convertFloatToHalf(CWFLOAT f);
+	static CWFLOAT randFloat() { return (CWFLOAT)rand() / (CWFLOAT)RAND_MAX; }
 };
 
 NS_MINIR_END

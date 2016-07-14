@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -59,6 +59,7 @@ eRenderState cwRenderStateParser::parseBuildIn(tinyxml2::XMLElement* pRenderStat
 	else if (CW_STRING_MATCH(pcName, "Wire")) return eRenderStateWire;
 	else if (CW_STRING_MATCH(pcName, "NoCull")) return eRenderStateNoCull;
 	else if (CW_STRING_MATCH(pcName, "CW")) return eRenderStateCW;
+	else if (CW_STRING_MATCH(pcName, "None")) return eRenderStateNone;
 
 	return eRenderStateNone;
 }

@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -30,6 +30,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwRenderStateParser.h"
 #include "cwResourceConfParser.h"
 #include "cwTerrainParser.h"
+#include "cwPUBatchParser.h"
+#include "cwRenderTargetParser.h"
+#include "Base/cwStringConvert.h"
 
 NS_MINIR_BEGIN
 
@@ -63,6 +66,17 @@ cwParserManager::cwParserManager()
 
 	m_nMapClassification["Vertex"]   = eClassificationPerVertex;
 	m_nMapClassification["Instance"] = eClassificationPerInstance;
+
+	m_nMapShaderParamType["Float"]      = eShaderParamTypeFloat;
+	m_nMapShaderParamType["FloatArray"] = eShaderParamTypeFloatArray;
+	m_nMapShaderParamType["Texture"]    = eShaderParamTypeTexture;
+	m_nMapShaderParamType["Matrix"]     = eShaderParamTypeMatrix;
+
+	m_nMapShaderParamSource["Data"]   = eShaderParamSourceData;
+	m_nMapShaderParamSource["Engine"] = eShaderParamSourceEngine;
+
+	m_nMapShaderParamFreq["PreFrame"]  = eShaderParamFreqPreFrame;
+	m_nMapShaderParamFreq["PreObject"] = eShaderParamFreqPreObject;
 
 	initFormat();
 }
@@ -111,6 +125,12 @@ CWBOOL cwParserManager::init()
 
 	m_nArrParser[eParserTerrain] = cwTerrainParser::create();
 	CW_SAFE_RETAIN(m_nArrParser[eParserTerrain]);
+
+	m_nArrParser[eParserBatchPU] = cwPUBatchParser::create();
+	CW_SAFE_RETAIN(m_nArrParser[eParserBatchPU]);
+
+	m_nArrParser[eParserRenderTarget] = cwRenderTargetParser::create();
+	CW_SAFE_RETAIN(m_nArrParser[eParserRenderTarget]);
 
 	return CWTRUE;
 }
@@ -186,6 +206,71 @@ eClassification cwParserManager::getClassificationType(const char* strClass) con
 	}
 
 	return eClassificationPerVertex;
+}
+
+eShaderParamType cwParserManager::getShaderParamType(const char* strType) const
+{
+	if (strType) {
+		auto it = m_nMapShaderParamType.find(strType);
+		if (it != m_nMapShaderParamType.end()) return it->second;
+	}
+
+	return eShaderParamTypeNone;
+}
+
+eShaderParamSource cwParserManager::getShaderParamSource(const char* strSource) const
+{
+	if (strSource) {
+		auto it = m_nMapShaderParamSource.find(strSource);
+		if (it != m_nMapShaderParamSource.end()) return it->second;
+	}
+
+	return eShaderParamSourceData;
+}
+
+eShaderParamFreq cwParserManager::getShaderParamFreq(const char* strFreq) const
+{
+	if (strFreq) {
+		auto it = m_nMapShaderParamFreq.find(strFreq);
+		if (it != m_nMapShaderParamFreq.end()) return it->second;
+	}
+
+	return eShaderParamFreqPreFrame;
+}
+
+cwMatrix4X4 cwParserManager::parseMatrixFromString(const char* pcData)
+{
+	cwMatrix4X4 mat;
+
+	mat.identity();
+
+	CWSTRING strData(pcData);
+	strData = cwStringConvert::replace(strData, "\n", "");
+	std::vector<CWSTRING> vecFloat;
+	cwStringConvert::split(strData, ";", vecFloat);
+	if (vecFloat.empty()) return mat;
+
+	mat.m11 = CWFLOAT(atof(vecFloat[0].c_str()));
+	mat.m12 = CWFLOAT(atof(vecFloat[1].c_str()));
+	mat.m13 = CWFLOAT(atof(vecFloat[2].c_str()));
+	mat.m14 = CWFLOAT(atof(vecFloat[3].c_str()));
+
+	mat.m21 = CWFLOAT(atof(vecFloat[4].c_str()));
+	mat.m22 = CWFLOAT(atof(vecFloat[5].c_str()));
+	mat.m23 = CWFLOAT(atof(vecFloat[6].c_str()));
+	mat.m24 = CWFLOAT(atof(vecFloat[7].c_str()));
+
+	mat.m31 = CWFLOAT(atof(vecFloat[8].c_str()));
+	mat.m32 = CWFLOAT(atof(vecFloat[9].c_str()));
+	mat.m33 = CWFLOAT(atof(vecFloat[10].c_str()));
+	mat.m34 = CWFLOAT(atof(vecFloat[11].c_str()));
+
+	mat.m41 = CWFLOAT(atof(vecFloat[12].c_str()));
+	mat.m42 = CWFLOAT(atof(vecFloat[13].c_str()));
+	mat.m43 = CWFLOAT(atof(vecFloat[14].c_str()));
+	mat.m44 = CWFLOAT(atof(vecFloat[15].c_str()));
+
+	return mat;
 }
 
 CWVOID cwParserManager::initFormat()

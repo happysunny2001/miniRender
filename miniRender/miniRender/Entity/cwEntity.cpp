@@ -49,6 +49,7 @@ m_pRenderObj(nullptr),
 m_pMaterial(nullptr)
 {
 	m_eRenderType = eRenderTypeEntity;
+	m_bCastShadow = CWTRUE;
 }
 
 cwEntity::~cwEntity()

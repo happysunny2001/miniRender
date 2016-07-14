@@ -22,7 +22,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwUtils.h"
 #include "Base/cwBasicType.h"
+#include "Base/cwStruct.h"
 #include "Ref/cwRef.h"
+
+#include <vector>
 
 NS_MINIR_BEGIN
 
@@ -36,6 +39,8 @@ public:
 	virtual CWHANDLE getHandle() const = 0;
 	virtual CWHANDLE getWritablehandle() const;
 
+	virtual std::vector<CWHANDLE>* getRenderHandleArray() const;
+
 	virtual const CWSTRING& getName() const;
 	inline CWVOID setName(const CWSTRING& name) { m_nStrName = name; }
 
@@ -48,6 +53,8 @@ public:
 
 	inline CWFLOAT getWidth() const { return m_fWidth; }
 	inline CWFLOAT getHeight() const { return m_fHeight; }
+	inline eFormat getFormat() const { return m_eTextureFormat; }
+	virtual const CW_TEXTURE_DESC* getTextureDesc() const;
 
 protected:
 	CWSTRING m_nStrName;
@@ -55,6 +62,7 @@ protected:
 
 	CWFLOAT m_fWidth;
 	CWFLOAT m_fHeight;
+	eFormat m_eTextureFormat;
 
 };
 

@@ -28,6 +28,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include <DxErr.h>
 #include <xnamath.h>
 
+#include "Base/cwMacros.h"
+#include "Base/cwBasicType.h"
+#include "Base/cwStruct.h"
+
+NS_MINIR_BEGIN
+
 #define CW_HR(x) \
 do{\
 	HRESULT hr = (x); \
@@ -35,6 +41,8 @@ do{\
 		DXTrace(__FILE__, __LINE__, hr, L#x, true); \
 	}\
 } while (0)
+
+NS_MINIR_END
 
 #endif
 

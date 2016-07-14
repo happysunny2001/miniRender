@@ -32,6 +32,8 @@ NS_MINIR_BEGIN
 class CW_DLL cwRenderTexture : public cwTexture
 {
 public:
+	cwRenderTexture();
+
 	virtual CWBOOL init(CWFLOAT fWidth, CWFLOAT fHeight);
 
 	virtual CWVOID beginResize();
@@ -41,11 +43,25 @@ public:
 	virtual CWHANDLE getHandle() const override;
 	virtual CWHANDLE getWritablehandle() const override;
 
+	//for multi render target
+	virtual CWVOID setRenderTargetCount(CWUINT iCount);
+	virtual CWVOID setRenderTarget(eFormat format, CWUINT index);
+	virtual CWHANDLE getRenderTargetHandle(CWUINT index) const;
+	virtual CWHANDLE getShaderResourceHandle(CWUINT index) const;
+	virtual cwTexture* getRenderTexture(CWINT index) const;
+	//must call this method before 'setRenderTargetCount'
+	virtual CWVOID enableDepthBufferShaderResource();
+
+	inline CWBOOL getResizeable() const { return m_bResizeable; }
+	inline CWVOID setResizeable(CWBOOL b) { m_bResizeable = b; }
+
 	inline CWVOID setClearColor(const cwVector4D& color) { m_nClearColor = color; }
 	inline const cwVector4D& getClearColor() const { return m_nClearColor; }
 
 protected:
 	cwVector4D m_nClearColor;
+	CWBOOL m_bResizeable;
+	//CWBOOL m_bMultiRenderTarget;
 
 };
 

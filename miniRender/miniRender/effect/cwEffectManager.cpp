@@ -51,6 +51,7 @@ cwEffect* cwEffectManager::defaultSpriteEffect()
 	if (m_pDefaultSpriteEffect == nullptr) {
 		m_pDefaultSpriteEffect = cwEffect::create();
 		m_pDefaultSpriteEffect->setShader(cwRepertory::getInstance().getShaderManager()->getDefShader(eDefShaderTex));
+		m_pDefaultSpriteEffect->setTech("ColorTech");
 		CW_SAFE_RETAIN(m_pDefaultSpriteEffect);
 	}
 

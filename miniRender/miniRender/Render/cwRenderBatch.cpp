@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Effect/cwEffect.h"
 #include "Device/cwDevice.h"
 #include "cwRenderer.h"
+#include "Render/Stage/Layer/cwStageLayer.h"
 
 NS_MINIR_BEGIN
 
@@ -38,8 +39,11 @@ cwRenderBatch::~cwRenderBatch()
 
 CWVOID cwRenderBatch::reset()
 {
-	m_pEffect = nullptr;
-	m_pEntity = nullptr;
+	m_pEffect     = nullptr;
+	m_pBlend      = nullptr;
+	m_pStencil    = nullptr;
+	m_pEntity     = nullptr;
+	m_pStageLayer = nullptr;
 }
 
 CWVOID cwRenderBatch::render()
@@ -48,6 +52,9 @@ CWVOID cwRenderBatch::render()
 
 	repertory.getDevice()->setBlend(m_pBlend);
 	repertory.getDevice()->setStencil(m_pStencil);
+	if (m_pStageLayer) {
+		m_pStageLayer->batchPUUpdate(this);
+	}
 	repertory.getEngine()->getRenderer()->render(this);
 }
 

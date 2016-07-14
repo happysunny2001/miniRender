@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -23,6 +23,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwUtils.h"
 #include "Base/cwStruct.h"
 #include "Math/cwMath.h"
+#include "cwDeviceStatus.h"
+#include <stack>
 
 NS_MINIR_BEGIN
 
@@ -83,6 +85,7 @@ public:
 	virtual cwBuffer* createShaderBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt, CWBOOL bWritable = CWFALSE, CWBOOL bAppend = CWFALSE) = 0;
 	virtual cwBuffer* createBufferOutput(CWUINT uStride, CWUINT uCnt) = 0;
 	virtual cwBuffer* createBuffer(CWUINT uCnt, eBufferUsage usage, eBufferBindFlag bindFlag, eAccessFlag uCpuFlag, CWUINT miscFlag, CWUINT uStride) = 0;
+	virtual cwBuffer* createShaderStructedBuffer(CWVOID* pData, CWUINT uStride, CWUINT uCnt) = 0;
 
 	virtual cwBlend* createBlend(const cwBlendData& blendData) = 0;
 	virtual cwStencil* createStencil(const cwStencilData& stencliData) = 0;
@@ -100,9 +103,15 @@ public:
 	virtual cwTexture* createCubeTexture(CWVOID* pData, CWUINT64 uSize) = 0;
 	virtual cwTexture* createCubeTextureThreadSafe(CWVOID* pData, CWUINT64 uSize) = 0;
 
-	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader) = 0;
+	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader, CWBOOL bThreading=CWFALSE) = 0;
 	virtual cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles) = 0;
 	virtual cwTexture* createTextureArrayThreadSafe(const std::vector<CWSTRING>& vecFiles) = 0;
+
+	virtual cwTexture* createRTTexture(CWBOOL bThreadSafe = CWFALSE) = 0;
+	virtual cwTexture* createRTTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE) = 0;
+	virtual cwTexture* createRWTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bThreadSafe = CWFALSE) = 0;
+	virtual cwTexture* createDSTexture(CWFLOAT fWidth, CWFLOAT fHeight, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE) = 0;
+	virtual cwTexture* createDSTexture(CWBOOL bThreadSafe = CWFALSE) = 0;
 
 	virtual cwBatchEntity* createBatchEntity() = 0;
 
@@ -117,6 +126,7 @@ public:
 	virtual CWVOID setStencil(const cwStencil* pStencil) = 0;
 	virtual CWVOID setShaderWorldTrans(cwShader* pShader, const cwMatrix4X4& trans, cwCamera* pCamera) = 0;
 	virtual CWVOID setRenderTarget(cwTexture* pRenderTexture);
+	virtual CWVOID setDepthStencil(cwTexture* pDepthStencil);
 
 	virtual CWVOID clearShaderResource() = 0;
 
@@ -124,6 +134,9 @@ public:
 	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj) = 0;
 	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, std::vector<cwRenderObject*>& vecRenderObject, CWUINT uCnt) = 0;
 	virtual CWVOID drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo) = 0;
+
+	virtual CWVOID pushDeviceStatus();
+	virtual CWVOID popDeviceStatus();
 
 	inline CWBOOL getEnableMsaa4X() const { return m_bEnableMsaa4x; }
 	inline CWVOID setEnableMsaa4X(bool b) { m_bEnableMsaa4x = b; }
@@ -146,12 +159,17 @@ protected:
 	CWBOOL m_bEnableMsaa4x;
 
 	cwTexture* m_pRenderTargetBkBuffer;
-	cwTexture* m_pCurrRenderTarget;
+	//cwTexture* m_pCurrRenderTarget;
 	CWBOOL m_bRefreshRenderTarget;
+
+	cwTexture* m_pRenderTarget;
+	cwTexture* m_pDepthStencil;
 
 	cwViewPort* m_pDefaultViewPort;
 	cwViewPort* m_pCurrViewPort;
 	CWBOOL m_bRefreshViewPort;
+
+	stack<cwDeviceStatus> m_nDeviceStatusStack;
 
 };
 

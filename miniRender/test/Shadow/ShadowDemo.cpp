@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -17,13 +17,41 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cwPURender.h"
+#include "ShadowDemo.h"
+#include "ShadowDemoScene.h"
 
-NS_MINIR_BEGIN
-
-cwPURender::cwPURender()
+ShadowDemo::ShadowDemo()
 {
-	m_eType = ePUNone;
+
 }
 
-NS_MINIR_END
+ShadowDemo::~ShadowDemo()
+{
+
+}
+
+CWVOID ShadowDemo::gameBegin()
+{
+	cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderShadowMap.xml");
+	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 15.0f, -60.0f);
+	//cwRepertory::getInstance().getEngine()->getDefaultCamera()->pitch(cwMathUtil::cwPI*0.5f);
+	cwRepertory::getInstance().getEngine()->setFrameEnable(CWTRUE);
+
+	ShadowDemoScene* pScene = ShadowDemoScene::create();
+	cwRepertory::getInstance().getEngine()->setScene(pScene);
+}
+
+CWVOID ShadowDemo::gameEnd()
+{
+
+}
+
+CWVOID ShadowDemo::gameBeginBackGround()
+{
+
+}
+
+CWVOID ShadowDemo::gameEndBackGround()
+{
+
+}

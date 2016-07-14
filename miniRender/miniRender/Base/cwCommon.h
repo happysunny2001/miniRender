@@ -28,7 +28,10 @@ NS_MINIR_BEGIN
 class cwCommon
 {
 public:
-	//static CWBYTE parseHexStringByte(const CWSTRING& strHex);
+	static CWSTRING getNewTextureID();
+
+private:
+	static CWUINT m_iGTextureID;
 
 };
 

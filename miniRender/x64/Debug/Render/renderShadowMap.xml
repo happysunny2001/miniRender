@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Renderer>
+	<ViewPort TopLeftX="0.0" TopLeftY="0.0" Width="1.0" Height="1.0" MinDepth="0.0" MaxDepth="1.0" />
+	<Camera Name="Default" />
+	<StageList>
+		
+		<Stage Name="SShadow" Type="ShadowMap" Enable="True">
+			<RenderTarget Type="ShadowMap" Width="2048" Height="2048"/>
+
+			<Layer Name="SShadow_Layer1" Type="ShadowMap" EntityType="Entity" Transparent="No">
+			</Layer>
+		</Stage>
+
+		<Stage Name="S1" Type="Normal" Enable="True">
+			<RenderTarget Type="backbuffer"/>
+
+			<Layer Name="S1_Layer1" EntityType="Entity" Transparent="No">
+				<BatchPU>
+					<ShadowMap Name="ShadowConfigure" StageName="SShadow">
+						<Param Type="Texture" Name="gShadowMapTexture"/>
+						<Param Type="Transform" Name="gMatShadowTransform"/>
+					</ShadowMap>
+				</BatchPU>
+			</Layer>
+		</Stage>
+
+		<Stage Name="SSprite" Type="Sprite" Enable="True">
+		</Stage>
+
+	</StageList>
+</Renderer>

@@ -83,6 +83,38 @@ typedef struct CW_BUFFER_DESC
 	CWUINT StructureByteStride;
 }CW_BUFFER_DESC;
 
+typedef struct CW_TEXTURE_DESC
+{
+	CWUINT iWidth;
+	CWUINT iHeight;
+	CWUINT iMipLevels;
+	CWUINT iArraySize;
+	eFormat nFormat;
+	CWBOOL bMultiSampling;
+	CWUINT iMultiSamplingCount;
+	CWUINT iMultiSamplingQuality;
+	eBufferUsage nUsage;
+	CWUINT iBindFlags;
+	CWUINT iCpuAccessFlags;
+	CWUINT iMiscFlags;
+}CW_TEXTURE_DESC;
+
+typedef struct CW_DEPTH_STENCIL_VIEW_DESC
+{
+	CWUINT iFlags;
+	eFormat nFormat;
+	eDepthStencilViewDimension nDSVDimension;
+	CWUINT iMipSlice;
+}CW_DEPTH_STENCIL_VIEW_DESC;
+
+typedef struct CW_SHADER_RESOURCE_VIEW_DESC
+{
+	eFormat nFormat;
+	eShaderResourceViewDimension nSRVDimension;
+	CWUINT iMostDetailedMip;
+	CWUINT iMipLevels;
+}CW_SHADER_RESOURCE_VIEW_DESC;
+
 typedef struct cwBlendData
 {
 	CWBOOL bAlphaToCoverage;

@@ -323,6 +323,17 @@ CWVOID cwD3D11Shader::setVariableMatrix(const string& strVariable, CWFLOAT* pDat
 	}
 }
 
+CWVOID cwD3D11Shader::setVariableMatrix(const CWSTRING& strVariable, const cwMatrix4X4& mat)
+{
+	auto itVariable = m_mapVariable.find(strVariable);
+	if (itVariable != m_mapVariable.end()) {
+		ID3DX11EffectVariable* pVariable = itVariable->second;
+		//const CWFLOAT* f = &(mat.m11);
+		//pVariable->AsMatrix()->SetMatrix(const_cast<CWFLOAT*>(f));
+		pVariable->AsMatrix()->SetMatrix(const_cast<float*>(mat.getBuffer()));
+	}
+}
+
 CWVOID cwD3D11Shader::setVariableInt(const string& strVariable, CWINT value)
 {
 	auto itVariable = m_mapVariable.find(strVariable);
@@ -346,12 +357,13 @@ CWVOID cwD3D11Shader::setVariableFloatArray(const string& strVariable, CWFLOAT* 
 	auto itVariable = m_mapVariable.find(strVariable);
 	if (itVariable != m_mapVariable.end()) {
 		ID3DX11EffectVariable* pVariable = itVariable->second;
-		auto v = pVariable->AsScalar();
-		CW_HR(v->SetFloatArray(pData, 0, count));
+		//auto v = pVariable->AsScalar();
+		CW_HR(pVariable->SetRawValue(pData, 0, sizeof(CWFLOAT)*count));
+		//CW_HR(v->SetFloatArray(pData, 0, count));
 	}
 }
 
-CWVOID cwD3D11Shader::setVariableTexture(const string& strVariable, cwTexture* pTexture)
+CWVOID cwD3D11Shader::setVariableTexture(const string& strVariable, const cwTexture* pTexture)
 {
 	if (!pTexture) return;
 	auto itVariable = m_mapVariable.find(strVariable);
@@ -364,12 +376,27 @@ CWVOID cwD3D11Shader::setVariableTexture(const string& strVariable, cwTexture* p
 	}
 }
 
-CWVOID cwD3D11Shader::setVariableTextureWritable(const CWSTRING& strVariable, cwRenderTexture* pTexture)
+CWVOID cwD3D11Shader::setVariableTextureWritable(const CWSTRING& strVariable, const cwRenderTexture* pTexture)
 {
 	if (!pTexture) return;
 	auto itVariable = m_mapVariable.find(strVariable);
 	if (itVariable != m_mapVariable.end()) {
 		ID3D11UnorderedAccessView* pShaderRes = reinterpret_cast<ID3D11UnorderedAccessView*>(pTexture->getWritablehandle());
+		if (pShaderRes) {
+			ID3DX11EffectVariable* pVariable = itVariable->second;
+			CW_HR(pVariable->AsUnorderedAccessView()->SetUnorderedAccessView(pShaderRes));
+		}
+	}
+}
+
+CWVOID cwD3D11Shader::setVariableTextureWritable(const CWSTRING& strVariable, const cwTexture* pTexture)
+{
+	if (!pTexture) return;
+	CWHANDLE pHandle = pTexture->getWritablehandle();
+	if (!pHandle) return;
+	auto itVariable = m_mapVariable.find(strVariable);
+	if (itVariable != m_mapVariable.end()) {
+		ID3D11UnorderedAccessView* pShaderRes = reinterpret_cast<ID3D11UnorderedAccessView*>(pHandle);
 		if (pShaderRes) {
 			ID3DX11EffectVariable* pVariable = itVariable->second;
 			CW_HR(pVariable->AsUnorderedAccessView()->SetUnorderedAccessView(pShaderRes));
@@ -432,6 +459,12 @@ CWVOID cwD3D11Shader::setVariableMatrix(eShaderParamIndex eParam, CWFLOAT* pData
 		m_pShaderParam[eParam]->AsMatrix()->SetMatrix(pData);
 }
 
+CWVOID cwD3D11Shader::setVariableMatrix(eShaderParamIndex eParam, const cwMatrix4X4& mat)
+{
+	if (m_pShaderParam[eParam])
+		m_pShaderParam[eParam]->AsMatrix()->SetMatrix(const_cast<float*>(mat.getBuffer()));
+}
+
 CWVOID cwD3D11Shader::setVariableInt(eShaderParamIndex eParam, CWINT value)
 {
 	if (m_pShaderParam[eParam])
@@ -446,11 +479,13 @@ CWVOID cwD3D11Shader::setVariableFloat(eShaderParamIndex eParam, CWFLOAT value)
 
 CWVOID cwD3D11Shader::setVariableFloatArray(eShaderParamIndex eParam, CWFLOAT* pData, CWUINT count)
 {
-	if (m_pShaderParam[eParam])
-		CW_HR(m_pShaderParam[eParam]->AsScalar()->SetFloatArray(pData, 0, count));
+	if (m_pShaderParam[eParam]) {
+		CW_HR(m_pShaderParam[eParam]->SetRawValue(pData, 0, sizeof(CWFLOAT)*count));
+		//CW_HR(m_pShaderParam[eParam]->AsScalar()->SetFloatArray(pData, 0, count));
+	}
 }
 
-CWVOID cwD3D11Shader::setVariableTexture(eShaderParamIndex eParam, cwTexture* pTexture)
+CWVOID cwD3D11Shader::setVariableTexture(eShaderParamIndex eParam, const cwTexture* pTexture)
 {
 	if (pTexture && m_pShaderParam[eParam]) {
 		ID3D11ShaderResourceView* pShaderRes = reinterpret_cast<ID3D11ShaderResourceView*>(pTexture->getHandle());
@@ -460,7 +495,7 @@ CWVOID cwD3D11Shader::setVariableTexture(eShaderParamIndex eParam, cwTexture* pT
 	}
 }
 
-CWVOID cwD3D11Shader::setVariableTextureWritable(eShaderParamIndex eParam, cwRenderTexture* pTexture)
+CWVOID cwD3D11Shader::setVariableTextureWritable(eShaderParamIndex eParam, const cwRenderTexture* pTexture)
 {
 	if (pTexture && m_pShaderParam[eParam]) {
 		ID3D11UnorderedAccessView* pShaderRes = reinterpret_cast<ID3D11UnorderedAccessView*>(pTexture->getWritablehandle());

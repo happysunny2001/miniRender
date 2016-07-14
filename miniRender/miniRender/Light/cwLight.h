@@ -34,6 +34,8 @@ public:
 
 	virtual CWUINT size() const;
 	virtual CWVOID* data() const;
+	virtual CWVOID setCastShadow(CWBOOL b);
+	virtual CWBOOL getCastShadow() const;
 
 	inline CWVOID setName(const CWSTRING& strName) { m_strName = strName; }
 	inline const CWSTRING& getName() const { return m_strName; }

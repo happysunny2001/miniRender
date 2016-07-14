@@ -23,15 +23,15 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Platform/Windows/cwWinUtils.h"
 #include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
-#include "Platform/D3D/D3D11/cwD3D11Utils.h"
 
 NS_MINIR_BEGIN
 
-cwD3D11RenderTarget* cwD3D11RenderTarget::create()
+cwD3D11RenderTarget* cwD3D11RenderTarget::create(CWBOOL bThreading)
 {
 	cwD3D11RenderTarget* pRenderTarget = new cwD3D11RenderTarget();
 	if (pRenderTarget && pRenderTarget->init(1.0f, 1.0f)) {
-		pRenderTarget->autorelease();
+		if (!bThreading)
+			pRenderTarget->autorelease();
 		return pRenderTarget;
 	}
 
@@ -75,8 +75,9 @@ CWBOOL cwD3D11RenderTarget::onResize(CWBOOL bForce)
 	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
 	if (!pDevice) return CWFALSE;
 
+	//CW_HR(pDevice->getSwapChain()->ResizeBuffers(1, static_cast<CWUINT>(m_fWidth), static_cast<CWUINT>(m_fHeight), DXGI_FORMAT_R8G8B8A8_UNORM, 0));
 	ID3D11Texture2D* backBuffer = NULL;
-	CW_HR(pDevice->getSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBuffer));
+	CW_HR(pDevice->getSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer)));
 	CW_HR(pDevice->getD3D11Device()->CreateRenderTargetView(backBuffer, NULL, &m_pRenderTarget));
 	CW_RELEASE_COM(backBuffer);
 
@@ -151,7 +152,7 @@ CWVOID cwD3D11RenderTarget::binding()
 CWVOID cwD3D11RenderTarget::beginDraw(CWBOOL bClearColor, CWBOOL bClearDepth, CWBOOL bClearStencil)
 {
 	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
-	if (bClearColor)
+	if (bClearColor && m_pRenderTarget)
 		pDevice->getD3D11DeviceContext()->ClearRenderTargetView(m_pRenderTarget, (const CWFLOAT*)&m_nClearColor);
 
 	CWUINT nBit = 0;

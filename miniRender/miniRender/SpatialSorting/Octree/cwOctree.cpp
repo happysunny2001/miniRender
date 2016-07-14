@@ -646,9 +646,9 @@ CWUINT cwOctree::getObjCnt()
 CWUINT cwOctree::getObjCnt(sOctreeNode* pNode)
 {
 	if (!pNode) return 0;
-	if (isLeafNode(pNode)) return pNode->m_nListObjs.size();
+	if (isLeafNode(pNode)) return static_cast<CWUINT>(pNode->m_nListObjs.size());
 
-	CWUINT c = pNode->m_nListObjs.size();
+	CWUINT c = static_cast<CWUINT>(pNode->m_nListObjs.size());
 
 	for (CWUINT i = 0; i < 8; ++i)  {
 		if (pNode->m_pChildren[i])

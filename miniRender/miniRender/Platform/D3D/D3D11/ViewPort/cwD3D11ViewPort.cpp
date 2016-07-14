@@ -27,11 +27,13 @@ NS_MINIR_BEGIN
 
 cwD3D11ViewPort* cwD3D11ViewPort::create(CWFLOAT fTopLeftX, CWFLOAT fTopLeftY,
 										 CWFLOAT fWidth, CWFLOAT fHeight,
-										 CWFLOAT fMinDepth, CWFLOAT fMaxDepth)
+										 CWFLOAT fMinDepth, CWFLOAT fMaxDepth,
+										 CWBOOL bThreading)
 {
 	cwD3D11ViewPort* pViewPort = new cwD3D11ViewPort();
 	if (pViewPort && pViewPort->init(fTopLeftX, fTopLeftY, fWidth, fHeight, fMinDepth, fMaxDepth)) {
-		pViewPort->autorelease();
+		if (!bThreading)
+			pViewPort->autorelease();
 		return pViewPort;
 	}
 

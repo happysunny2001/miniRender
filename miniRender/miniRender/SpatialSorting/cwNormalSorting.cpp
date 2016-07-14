@@ -259,7 +259,7 @@ CWVOID cwNormalSorting::intersection(const cwRay& ray, cwVector<cwRenderNode*>& 
 
 CWUINT cwNormalSorting::getObjCnt()
 {
-	return m_nListNodes.size();
+	return static_cast<CWUINT>(m_nListNodes.size());
 }
 
 NS_MINIR_END

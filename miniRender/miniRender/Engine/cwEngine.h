@@ -78,6 +78,7 @@ public:
 	inline CWVOID setFrameEnable(CWBOOL b) { m_bShowFrame = b; }
 
 	inline cwRenderer* getRenderer() const { return m_pRenderer; }
+	CWVOID setRenderer(cwRenderer* pRenderer);
 	virtual CWVOID loadRenderer(const CWSTRING& strConfFile);
 
 	CWVOID renderSprite();

@@ -31,6 +31,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include <sstream>
 using namespace std;
 
+#ifdef _CW_D3D11_
+#include "Platform/D3D/D3D11/cwD3D11Utils.h"
+#endif
+
 NS_MINIR_BEGIN
 
 cwMatrix4X4 cwMatrix4X4::identityMatrix(1.0f, 0.0f, 0.0f, 0.0f,
@@ -69,6 +73,27 @@ m41(mm41), m42(mm42), m43(mm43), m44(mm44)
 cwMatrix4X4::cwMatrix4X4(const cwMatrix4X4& mm)
 {
     memcpy(m, mm.m, sizeof(m));
+}
+
+void cwMatrix4X4::set(float mm11, float mm12, float mm13,
+					  float mm21, float mm22, float mm23,
+					  float mm31, float mm32, float mm33)
+{
+	m11 = mm11; m12 = mm12; m13 = mm13; m14 = 0.0f;
+	m21 = mm21; m22 = mm22; m23 = mm23; m24 = 0.0f;
+	m31 = mm31; m32 = mm32; m33 = mm33; m34 = 0.0f;
+	m41 = 0.0f; m42 = 0.0f; m43 = 0.0f; m44 = 1.0f;
+}
+
+void cwMatrix4X4::set(float mm11, float mm12, float mm13, float mm14,
+					  float mm21, float mm22, float mm23, float mm24,
+					  float mm31, float mm32, float mm33, float mm34,
+					  float mm41, float mm42, float mm43, float mm44)
+{
+	m11 = mm11; m12 = mm12; m13 = mm13; m14 = mm14;
+	m21 = mm21; m22 = mm22; m23 = mm23; m24 = mm24;
+	m31 = mm31; m32 = mm32; m33 = mm33; m34 = mm34;
+	m41 = mm41; m42 = mm42; m43 = mm43; m44 = mm44;
 }
 
 void cwMatrix4X4::identity()
@@ -225,9 +250,23 @@ void cwMatrix4X4::setOrthoProj(const cwVector3D& n)
     m23 = m32 = -n.y*n.z;
 }
 
+float GetDeterminant(
+	float a, float b, float c,
+	float d, float e, float f,
+	float g, float h, float i)
+{
+	return ((a*e*i + d*h*c + g*b*f) - (c*e*g + f*h*a + i*b*d));
+}
+
 float cwMatrix4X4::determinant() const
 {
-    return m11*(m22*m33 - m23*m32) + m12*(m23*m31 - m21*m33) + m13*(m21*m32 - m22*m31);
+    //return m11*(m22*m33 - m23*m32) + m12*(m23*m31 - m21*m33) + m13*(m21*m32 - m22*m31);
+	float determinant =
+		+m[0][0] * GetDeterminant(m[1][1], m[1][2], m[1][3], m[2][1], m[2][2], m[2][3], m[3][1], m[3][2], m[3][3])
+		-m[0][1] * GetDeterminant(m[1][0], m[1][2], m[1][3], m[2][0], m[2][2], m[2][3], m[3][0], m[3][2], m[3][3])
+		+m[0][2] * GetDeterminant(m[1][0], m[1][1], m[1][3], m[2][0], m[2][1], m[2][3], m[3][0], m[3][1], m[3][3])
+		-m[0][3] * GetDeterminant(m[1][0], m[1][1], m[1][2], m[2][0], m[2][1], m[2][2], m[3][0], m[3][1], m[3][2]);
+	return determinant;
 }
 
 bool cwMatrix4X4::inverseExist() const
@@ -238,26 +277,125 @@ bool cwMatrix4X4::inverseExist() const
 
 cwMatrix4X4 cwMatrix4X4::inverse() const
 {
+#ifdef _CW_D3D11_
+	XMMATRIX mat;
+
+	mat._11 = this->m11; mat._12 = this->m12; mat._13 = this->m13; mat._14 = this->m14;
+	mat._21 = this->m21; mat._22 = this->m22; mat._23 = this->m23; mat._24 = this->m24;
+	mat._31 = this->m31; mat._32 = this->m32; mat._33 = this->m33; mat._34 = this->m34;
+	mat._41 = this->m41; mat._42 = this->m42; mat._43 = this->m43; mat._44 = this->m44;
+
+	XMVECTOR v;
+	XMMATRIX invMat = XMMatrixInverse(&v, mat);
+
+	cwMatrix4X4 InvM;
+
+	InvM.m11 = invMat._11; InvM.m12 = invMat._12; InvM.m13 = invMat._13; InvM.m14 = invMat._14;
+	InvM.m21 = invMat._21; InvM.m22 = invMat._22; InvM.m23 = invMat._23; InvM.m24 = invMat._24;
+	InvM.m31 = invMat._31; InvM.m32 = invMat._32; InvM.m33 = invMat._33; InvM.m34 = invMat._34;
+	InvM.m41 = invMat._41; InvM.m42 = invMat._42; InvM.m43 = invMat._43; InvM.m44 = invMat._44;
+
+	return InvM;
+#endif
+
 	cwMatrix4X4 m;
     float det = this->determinant();
 	if (fabs(det) > 0.000001f) {
 		float detInv = 1.0f / det;
 
-		m.m11 = (m22*m33 - m23*m32) * detInv;
-		m.m12 = (m13*m32 - m12*m33) * detInv;
-		m.m13 = (m12*m23 - m13*m22) * detInv;
+		//m.m11 = (m22*m33 - m23*m32) * detInv;
+		//m.m12 = (m13*m32 - m12*m33) * detInv;
+		//m.m13 = (m12*m23 - m13*m22) * detInv;
 
-		m.m21 = (m23*m31 - m21*m33) * detInv;
-		m.m22 = (m11*m33 - m13*m31) * detInv;
-		m.m23 = (m13*m21 - m11*m23) * detInv;
+		//m.m21 = (m23*m31 - m21*m33) * detInv;
+		//m.m22 = (m11*m33 - m13*m31) * detInv;
+		//m.m23 = (m13*m21 - m11*m23) * detInv;
 
-		m.m31 = (m21*m32 - m22*m31) * detInv;
-		m.m32 = (m12*m31 - m11*m32) * detInv;
-		m.m33 = (m11*m22 - m12*m21) * detInv;
+		//m.m31 = (m21*m32 - m22*m31) * detInv;
+		//m.m32 = (m12*m31 - m11*m32) * detInv;
+		//m.m33 = (m11*m22 - m12*m21) * detInv;
 
-		m.m41 = -(m41*m.m11 + m42*m.m21 + m43*m.m31);
-		m.m42 = -(m41*m.m12 + m42*m.m22 + m43*m.m32);
-		m.m43 = -(m41*m.m13 + m42*m.m23 + m43*m.m33);
+		//m.m41 = -(m41*m.m11 + m42*m.m21 + m43*m.m31);
+		//m.m42 = -(m41*m.m12 + m42*m.m22 + m43*m.m32);
+		//m.m43 = -(m41*m.m13 + m42*m.m23 + m43*m.m33);
+
+		float adj_[4][4];
+
+		adj_[0][0] = +GetDeterminant(
+			this->m[1][1], this->m[1][2], this->m[1][3],
+			this->m[2][1], this->m[2][2], this->m[2][3],
+			this->m[3][1], this->m[3][2], this->m[3][3]);
+		adj_[0][1] = -GetDeterminant(
+			this->m[1][0], this->m[1][2], this->m[1][3],
+			this->m[2][0], this->m[2][2], this->m[2][3],
+			this->m[3][0], this->m[3][2], this->m[3][3]);
+		adj_[0][2] = +GetDeterminant(
+			this->m[1][0], this->m[1][1], this->m[1][3],
+			this->m[2][0], this->m[2][1], this->m[2][3],
+			this->m[3][0], this->m[3][1], this->m[3][3]);
+		adj_[0][3] = -GetDeterminant(
+			this->m[1][0], this->m[1][1], this->m[1][2],
+			this->m[2][0], this->m[2][1], this->m[2][2],
+			this->m[3][0], this->m[3][1], this->m[3][2]);
+
+		adj_[1][0] = -GetDeterminant(
+			this->m[0][1], this->m[0][2], this->m[0][3],
+			this->m[2][1], this->m[2][2], this->m[2][3],
+			this->m[3][1], this->m[3][2], this->m[3][3]);
+		adj_[1][1] = +GetDeterminant(
+			this->m[0][0], this->m[0][2], this->m[0][3],
+			this->m[2][0], this->m[2][2], this->m[2][3],
+			this->m[3][0], this->m[3][2], this->m[3][3]);
+		adj_[1][2] = -GetDeterminant(
+			this->m[0][0], this->m[0][1], this->m[0][3],
+			this->m[2][0], this->m[2][1], this->m[2][3],
+			this->m[3][0], this->m[3][1], this->m[3][3]);
+		adj_[1][3] = +GetDeterminant(
+			this->m[0][0], this->m[0][1], this->m[0][2],
+			this->m[2][0], this->m[2][1], this->m[2][2],
+			this->m[3][0], this->m[3][1], this->m[3][2]);
+
+		adj_[2][0] = +GetDeterminant(
+			this->m[0][1], this->m[0][2], this->m[0][3],
+			this->m[1][1], this->m[1][2], this->m[1][3],
+			this->m[3][1], this->m[3][2], this->m[3][3]);
+		adj_[2][1] = -GetDeterminant(
+			this->m[0][0], this->m[0][2], this->m[0][3],
+			this->m[1][0], this->m[1][2], this->m[1][3],
+			this->m[3][0], this->m[3][2], this->m[3][3]);
+		adj_[2][2] = +GetDeterminant(
+			this->m[0][0], this->m[0][1], this->m[0][3],
+			this->m[1][0], this->m[1][1], this->m[1][3],
+			this->m[3][0], this->m[3][1], this->m[3][3]);
+		adj_[2][3] = -GetDeterminant(
+			this->m[0][0], this->m[0][1], this->m[0][2],
+			this->m[1][0], this->m[1][1], this->m[1][2],
+			this->m[3][0], this->m[3][1], this->m[3][2]);
+
+		adj_[3][0] = -GetDeterminant(
+			this->m[0][1], this->m[0][2], this->m[0][3],
+			this->m[1][1], this->m[1][2], this->m[1][3],
+			this->m[2][1], this->m[2][2], this->m[2][3]);
+		adj_[3][1] = +GetDeterminant(
+			this->m[0][0], this->m[0][2], this->m[0][3],
+			this->m[1][0], this->m[1][2], this->m[1][3],
+			this->m[2][0], this->m[2][2], this->m[2][3]);
+		adj_[3][2] = -GetDeterminant(
+			this->m[0][0], this->m[0][1], this->m[0][3],
+			this->m[1][0], this->m[1][1], this->m[1][3],
+			this->m[2][0], this->m[2][1], this->m[2][3]);
+		adj_[3][3] = +GetDeterminant(
+			this->m[0][0], this->m[0][1], this->m[0][2],
+			this->m[1][0], this->m[1][1], this->m[1][2],
+			this->m[2][0], this->m[2][1], this->m[2][2]);
+
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				m.m[i][j] = detInv * adj_[j][i];
+			}
+		}
 	}
     
     return m;
@@ -357,6 +495,21 @@ void cwMatrix4X4::ortho(float fWidth, float fHeight, float fNearZ, float fFarZ)
 	m21 = 0;             m22 = 2.0f / fHeight; m23 = 0;          m24 = 0;
 	m31 = 0;             m32 = 0;		       m33 = zf;         m34 = 0;
 	m41 = 0;             m42 = 0;              m43 = -fNearZ*zf; m44 = 1.0f;
+}
+
+void cwMatrix4X4::ortho(float fLeft, float fRight, float fTop, float fBottom, float fNear, float fFar)
+{
+	float fWidthDiv = 1.0f / (fRight - fLeft);
+	float fHeightDiv = 1.0f / (fTop - fBottom);
+	float zf = 1.0f / (fFar - fNear);
+
+	m11 = fWidthDiv + fWidthDiv; m12 = 0;                       m13 = 0;          m14 = 0;
+	m21 = 0;                     m22 = fHeightDiv + fHeightDiv; m23 = 0;          m24 = 0;
+	m31 = 0;                     m32 = 0;		                m33 = zf;         m34 = 0;
+	m41 = -(fLeft + fRight)*fWidthDiv;
+	m42 = -(fTop + fBottom)*fHeightDiv;
+	m43 = -fNear*zf;
+	m44 = 1.0f;
 }
 
 void cwMatrix4X4::reflect(const cwPlane& plane)

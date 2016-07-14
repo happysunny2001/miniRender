@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -41,6 +41,7 @@ public:
 	
 	CWVOID reset();
 	CWBOOL addEntity(cwRenderNode* pEntity, cwStageLayer* pStageLayer);
+	CWBOOL addEntity(cwRenderNode* pEntity, cwEffect* pEffect, cwBlend* pBlend, cwStencil* pStencil, cwStageLayer* pStageLayer);
 	CWBOOL full();
 
 	inline std::vector<cwRenderBatch>& getRenderBatch() { return m_nVecBatch; }

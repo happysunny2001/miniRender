@@ -14,12 +14,31 @@ struct VertexOut
 	float3 NormalW : NORMAL;      //vertex normal in world space
 };
 
+struct VertexShadowOut
+{
+	float4 PosH    : SV_POSITION; //vertex position in homogeneous space
+	float3 PosW    : POSITION;    //vertex position in world space
+	float3 NormalW : NORMAL;      //vertex normal in world space
+	float4 ShadowPosH : TEXCOORD0; 
+};
+
 VertexOut VS(VertexIn vIn)
 {
 	VertexOut vOut;
 	vOut.PosW = mul(float4(vIn.PosL, 1.0f), gMatWorld).xyz;
 	vOut.PosH = mul(float4(vIn.PosL, 1.0f), gMatWorldViewProj);
 	vOut.NormalW = mul(float4(vIn.NormalL, 0.0f), gMatWorldInvTranspose).xyz;
+
+	return vOut;
+}
+
+VertexShadowOut VSShadow(VertexIn vIn)
+{
+	VertexShadowOut vOut;
+	vOut.PosW = mul(float4(vIn.PosL, 1.0f), gMatWorld).xyz;
+	vOut.PosH = mul(float4(vIn.PosL, 1.0f), gMatWorldViewProj);
+	vOut.NormalW = mul(float4(vIn.NormalL, 0.0f), gMatWorldInvTranspose).xyz;
+	vOut.ShadowPosH = mul(float4(vIn.PosL, 1.0f), gMatShadowTransform);
 
 	return vOut;
 }
@@ -32,6 +51,20 @@ float4 PS(VertexOut pIn) : SV_Target
 	float4 ambient, diffuse, spec;
 
 	processLight(gMaterial, pIn.PosW, pIn.NormalW, toEyeW, ambient, diffuse, spec);
+	float4 litColor = ambient + diffuse + spec;
+	litColor.a = gMaterial.diffuse.a;
+
+	return litColor;
+}
+
+float4 PSShadow(VertexShadowOut pIn) : SV_Target
+{
+	pIn.NormalW = normalize(pIn.NormalW);
+	float3 toEyeW = normalize(gEyePosWorld - pIn.PosW);
+	
+	float4 ambient, diffuse, spec;
+
+	processLightShadow(gMaterial, pIn.PosW, pIn.NormalW, toEyeW, samShadow, gShadowMapTexture, pIn.ShadowPosH, ambient, diffuse, spec);
 	float4 litColor = ambient + diffuse + spec;
 	litColor.a = gMaterial.diffuse.a;
 
@@ -85,8 +118,20 @@ technique11 LightTech
         SetVertexShader( CompileShader( vs_5_0, VS() ) );
         SetHullShader( NULL );
         SetDomainShader( NULL );
-		SetGeometryShader( NULL );
+	SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PS() ) );
+    }
+}
+
+technique11 LightShadowTech
+{
+    pass P0
+    {
+        SetVertexShader( CompileShader( vs_5_0, VSShadow() ) );
+        SetHullShader( NULL );
+        SetDomainShader( NULL );
+	SetGeometryShader( NULL );
+        SetPixelShader( CompileShader( ps_5_0, PSShadow() ) );
     }
 }
 
@@ -97,7 +142,7 @@ technique11 LightTechReflect
         SetVertexShader( CompileShader( vs_5_0, VS() ) );
         SetHullShader( NULL );
         SetDomainShader( NULL );
-		SetGeometryShader( NULL );
+	SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PSReflect() ) );
     }
 }
@@ -109,7 +154,7 @@ technique11 LightTechDynamicReflect
         SetVertexShader( CompileShader( vs_5_0, VS() ) );
         SetHullShader( NULL );
         SetDomainShader( NULL );
-		SetGeometryShader( NULL );
+	SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PSDynamicReflect() ) );
     }
 }

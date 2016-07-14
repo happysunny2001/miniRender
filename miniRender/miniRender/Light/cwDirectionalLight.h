@@ -61,11 +61,16 @@ public:
 	virtual CWUINT size() const override;
 	virtual CWVOID* data() const override;
 
+	virtual CWVOID setCastShadow(CWBOOL b) override;
+	virtual CWBOOL getCastShadow() const override;
+
 protected:
 	cwVector4D m_nDirection;
 	cwVector4D m_nAmbient;
 	cwVector4D m_nDiffuse;
 	cwVector4D m_nSpecular;
+	cwVector4D m_nLightAttr; //x:shadow flag, 0:not cast shadow, 1:cast shadow, default is 0
+
 };
 
 NS_MINIR_END

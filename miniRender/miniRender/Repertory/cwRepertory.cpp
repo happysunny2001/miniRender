@@ -34,6 +34,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Resource/cwResourceLoader.h"
 #include "SpatialSorting/cwSpatialFactory.h"
 #include "effect/cwEffectManager.h"
+#include "Ref/cwObjectMonitor.h"
 
 #ifdef _CW_D3D11_
 #include "Platform/D3D/D3D11/Repertory/cwD3D11Repertory.h"
@@ -62,7 +63,8 @@ m_pSchedulerManager(nullptr),
 m_pParserManager(nullptr),
 m_pResourceLoader(nullptr),
 m_pSpatialFactory(nullptr),
-m_pEffectManager(nullptr)
+m_pEffectManager(nullptr),
+m_pObjectMonitor(nullptr)
 {
 	m_pAutoReleasePool = new cwAutoReleasePool();
 }
@@ -82,11 +84,12 @@ cwRepertory::~cwRepertory()
 	CW_SAFE_RELEASE_NULL(m_pEffectManager);
 	CW_SAFE_DELETE(m_pSpatialFactory);
 	CW_SAFE_DELETE(m_pDevice);
+	CW_SAFE_DELETE(m_pObjectMonitor);
 }
 
 CWVOID cwRepertory::initAll()
 {
-//	m_pLog = new cwLog();
+	m_pObjectMonitor = new cwObjectMonitor();
 
 	this->addValue(gValueWinWidth, cwValueMap(CWUINT(800)));
 	this->addValue(gValueWinHeight, cwValueMap(CWUINT(600)));
@@ -125,8 +128,6 @@ CWVOID cwRepertory::initAll()
 
 	m_pEngine = cwEngine::create();
 	CW_SAFE_RETAIN(m_pEngine);
-	
-//	m_pEngine->deferParseRenderer();
 }
 
 CWVOID cwRepertory::releaseAll()

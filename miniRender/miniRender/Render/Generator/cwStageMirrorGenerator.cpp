@@ -27,7 +27,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Entity/cwEntity.h"
 #include "Entity/cwMirror.h"
 #include "Render/Stage/cwStage.h"
-#include "Render/Stage/cwStageLayer.h"
+#include "Render/Stage/Layer/cwStageLayer.h"
 #include "Render/cwRenderer.h"
 #include "Render/ProcessingUnit/StageLayer/cwPUStageLayer.h"
 #include "Render/ProcessingUnit/StageLayer/cwPUStageLayerStencil.h"

@@ -49,6 +49,7 @@ cwSkyDome::cwSkyDome():
 m_pTexSkyCubMap(nullptr)
 {
 	m_eRenderType = eRenderTypeEntity;
+	m_bCastShadow = CWFALSE;
 }
 
 cwSkyDome::~cwSkyDome()

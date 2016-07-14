@@ -25,6 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/Windows/cwWinUtils.h"
 #include "Platform/D3D/D3D11/cwD3D11Utils.h"
 #include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
+#include <xnamath.h>
 
 NS_MINIR_BEGIN
 

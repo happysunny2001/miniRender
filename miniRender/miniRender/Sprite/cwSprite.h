@@ -45,6 +45,7 @@ public:
 	//inline const cwVertexPosTexColor* getVertexBuffer() const { return m_pVertexBuffer; }
 	virtual CWUINT getVertexCnt() const { return 6; }
 	inline cwTexture* getTexture() { return m_pTexture; }
+	CWVOID setTexture(cwTexture* pTexture);
 
 	virtual CWVOID refreshTransform() override;
 	virtual CWVOID refreshBoundingBox() override;

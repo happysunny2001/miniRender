@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -22,9 +22,13 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Effect/cwEffect.h"
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
+#include "Engine/cwEngine.h"
+#include "Render/cwRenderer.h"
 #include "Blend/cwBlend.h"
 #include "Stencil/cwStencil.h"
+#include "Camera/cwCamera.h"
 #include "Render/ProcessingUnit/StageLayer/cwPUStageLayer.h"
+#include "Render/ProcessingUnit/Batch/cwPUBatch.h"
 
 NS_MINIR_BEGIN
 
@@ -42,14 +46,17 @@ cwStageLayer* cwStageLayer::create()
 cwStageLayer::cwStageLayer():
 m_eFilterType(eStageLayerFliterEntity),
 m_bTransparent(CWFALSE),
-m_eRenderState(eRenderStateSolid)
+m_eRenderState(eRenderStateNone),
+m_pCamera(nullptr)
 {
 	reset();
+	m_nLayerType = "Normal";
 }
 
 cwStageLayer::~cwStageLayer()
 {
 	m_nVecPU.clear();
+	CW_SAFE_RELEASE_NULL(m_pCamera);
 }
 
 CWVOID cwStageLayer::setPUList(cwVector<cwPUStageLayer*>& vecPU)
@@ -83,6 +90,12 @@ CWVOID cwStageLayer::reset()
 {
 	m_iPipeLineIndex = 0;
 	m_nMapPipeline.clear();
+
+	if (!m_nVecPUBatch.empty()) {
+		for (auto pPUBatch : m_nVecPUBatch) {
+			pPUBatch->reset();
+		}
+	}
 }
 
 CWVOID cwStageLayer::begin(std::vector<cwRenderNode*>* vecEntities)
@@ -101,6 +114,9 @@ CWVOID cwStageLayer::begin(cwRenderNode* pNode)
 {
 	reset();
 
+	if (!m_pCamera)
+		cwRepertory::getInstance().getEngine()->getRenderer()->setCurrCamera(m_pCamera);
+
 	if (pNode) {
 		addEntities(pNode);
 	}
@@ -112,8 +128,8 @@ CWVOID cwStageLayer::begin(cwRenderNode* pNode)
 
 CWVOID cwStageLayer::render()
 {
-	m_eOldRenderState = cwRepertory::getInstance().getDevice()->getRenderState();
-	cwRepertory::getInstance().getDevice()->setRenderState(m_eRenderState);
+	//m_eOldRenderState = cwRepertory::getInstance().getDevice()->getRenderState();
+	//cwRepertory::getInstance().getDevice()->setRenderState(m_eRenderState);
 
 	for (CWUINT i = 0; i < m_iPipeLineIndex; ++i) {
 		m_nPipeline[i].render();
@@ -126,7 +142,7 @@ CWVOID cwStageLayer::end()
 		pPU->end();
 	}
 
-	cwRepertory::getInstance().getDevice()->setRenderState(m_eOldRenderState);
+	//cwRepertory::getInstance().getDevice()->setRenderState(m_eOldRenderState);
 }
 
 CWVOID cwStageLayer::addEntities(std::vector<cwRenderNode*>* vecEntities)
@@ -182,6 +198,42 @@ cwRenderPipeline* cwStageLayer::getUnusePipeline(cwShader* pShader)
 	}
 
 	return nullptr;
+}
+
+CWVOID cwStageLayer::setBatchPUList(cwVector<cwPUBatch*>& vecPU)
+{
+	m_nVecPUBatch.clear();
+
+	for (auto pPU : vecPU) {
+		pPU->setStageLayer(this);
+		m_nVecPUBatch.pushBack(pPU);
+	}
+}
+
+CWVOID cwStageLayer::batchPUUpdate(cwRenderBatch* pBatch)
+{
+	if (!m_nVecPUBatch.empty()) {
+		for (auto pPUBatch : m_nVecPUBatch) {
+			pPUBatch->updateBatch(pBatch);
+		}
+	}
+}
+
+CWVOID cwStageLayer::setCamera(cwCamera* pCamera)
+{
+	if (m_pCamera == pCamera) return;
+	CW_SAFE_RETAIN(pCamera);
+	CW_SAFE_RELEASE_NULL(m_pCamera);
+	m_pCamera = pCamera;
+}
+
+CWVOID cwStageLayer::setCamera(const CWSTRING& strCamName)
+{
+	cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getCamera(strCamName);
+	if (pCamera) {
+		this->setCamera(pCamera);
+		this->setCameraName(strCamName);
+	}
 }
 
 NS_MINIR_END

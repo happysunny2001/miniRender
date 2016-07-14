@@ -97,6 +97,10 @@ public:
 		m_nData.reserve(n);
 	}
 
+	void resize(CWUINT64 n) {
+		m_nData.resize(n);
+	}
+
 	CWUINT64 capacity() const {
 		return m_nData.capacity();
 	}
@@ -155,29 +159,32 @@ public:
 	}
 
 	void pushBack(T object) {
-		assert(object != nullptr);
 		m_nData.push_back(object);
-		object->retain();
+		if (object)
+			object->retain();
 	}
 
 	void pushBack(const cwVector<T>& V) {
 		for (const auto& obj : V) {
 			m_nData.push_back(obj);
-			obj->retain();
+			if (obj)
+				obj->retain();
 		}
 	}
 
 	void insert(CWUINT64 index, T object) {
 		assert(index <= m_nData.size());
-		assert(object != nullptr);
 		m_nData.insert(std::begin(m_nData) + index, object);
+		if (object)
+			object->retain();
 	}
 
 	void popBack() {
 		if (m_nData.empty()) return;
 		auto last = this->back();
 		m_nData.pop_back();
-		last->release();
+		if (last)
+			last->release();
 	}
 
 	void erase(T object, bool bRemoveAll = false) {
@@ -229,10 +236,11 @@ public:
 
 	void replace(T object, CWUINT64 index) {
 		assert(index < m_nData.size());
-		assert(object != nullptr);
-		m_nData[index]->release();
+		if (m_nData[index])
+			m_nData[index]->release();
 		m_nData[index] = object;
-		object->retain();
+		if (object)
+			object->retain();
 	}
 
 	void reverse() {
@@ -244,8 +252,10 @@ public:
 	}
 
 	void clear() {
+		if (m_nData.empty()) return;
 		for (auto it = m_nData.begin(); it != m_nData.end(); ++it) {
-			(*it)->release();
+			if (*it)
+				(*it)->release();
 		}
 
 		m_nData.clear();

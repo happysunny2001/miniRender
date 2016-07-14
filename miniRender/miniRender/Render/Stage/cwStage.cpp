@@ -25,7 +25,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Entity/cwScene.h"
 #include "Entity/cwEntity.h"
 #include "Device/cwDevice.h"
-#include "cwStageLayer.h"
+#include "Layer/cwStageLayer.h"
 #include "Render/cwRenderer.h"
 #include "Render/Generator/cwRenderGenerator.h"
 
@@ -47,10 +47,11 @@ m_pCamera(nullptr),
 m_bEnable(CWTRUE),
 m_eType(eStageTypeNormal),
 m_pRenderTarget(nullptr),
+m_pDepthStencil(nullptr),
 m_bClearColor(CWTRUE),
 m_bClearDepth(CWTRUE),
 m_bClearStencil(CWTRUE),
-m_bRefreshRenderTarget(CWTRUE)
+m_bRefreshRenderTarget(CWFALSE)
 {
 
 }
@@ -59,6 +60,7 @@ cwStage::~cwStage()
 {
 	CW_SAFE_RELEASE_NULL(m_pCamera);
 	CW_SAFE_RELEASE_NULL(m_pRenderTarget);
+	CW_SAFE_RELEASE_NULL(m_pDepthStencil);
 
 	clearStageEntity();
 	clearStageLayer(CWTRUE);
@@ -72,6 +74,15 @@ CWVOID cwStage::setRenderTexture(cwTexture* pRenderTexture)
 	CW_SAFE_RETAIN(pRenderTexture);
 	CW_SAFE_RELEASE_NULL(m_pRenderTarget);
 	m_pRenderTarget = pRenderTexture;
+}
+
+CWVOID cwStage::setDepthStencil(cwTexture* pDepthStencil)
+{
+	if (pDepthStencil == m_pDepthStencil) return;
+
+	CW_SAFE_RETAIN(pDepthStencil);
+	CW_SAFE_RELEASE_NULL(m_pDepthStencil);
+	m_pDepthStencil = pDepthStencil;
 }
 
 CWVOID cwStage::setRefreshRenderTarget(CWBOOL bRefresh)
@@ -105,22 +116,29 @@ CWVOID cwStage::begin()
 
 	cwRepertory::getInstance().getEngine()->getRenderer()->setCurrCamera(m_pCamera);
 	if (m_bRefreshRenderTarget) {
-		cwRepertory::getInstance().getDevice()->setRenderTarget(m_pRenderTarget);
-		cwRepertory::getInstance().getDevice()->beginDraw(m_bClearColor, m_bClearDepth, m_bClearStencil);
+		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+		pDevice->setRenderTarget(m_pRenderTarget);
+		pDevice->setDepthStencil(m_pDepthStencil);
+		pDevice->beginDraw(m_bClearColor, m_bClearDepth, m_bClearStencil);
 	}
 }
 
-std::vector<cwRenderNode*>* cwStage::getRenderEntities(eStageLayerFliterType eType)
+std::vector<cwRenderNode*>* cwStage::getRenderEntities(cwStageLayer* pStageLayer)
 {
+	eStageLayerFliterType eType = pStageLayer->getFliterType();
 	if (eType == eStageLayerFliterStage) return &m_nVecStageEntities;
 
 	m_nVecRenderNodes.clear();
+	cwCamera* pCamera = pStageLayer->getCamera();
+	if (!pCamera) {
+		pCamera = this->getCamera();
+	}
 
 	switch (eType) {
 		case eStageLayerFliterEntity:
-			cwRepertory::getInstance().getEngine()->getVisibleNodes(m_pCamera, eRenderTypeEntity, m_nVecRenderNodes);
+			cwRepertory::getInstance().getEngine()->getVisibleNodes(pCamera, eRenderTypeEntity, m_nVecRenderNodes);
 		case eStageLayerFliterMirror:
-			cwRepertory::getInstance().getEngine()->getVisibleNodes(m_pCamera, eRenderTypeMirror, m_nVecRenderNodes);
+			cwRepertory::getInstance().getEngine()->getVisibleNodes(pCamera, eRenderTypeMirror, m_nVecRenderNodes);
 	}
 
 	return &m_nVecRenderNodes;
@@ -129,7 +147,7 @@ std::vector<cwRenderNode*>* cwStage::getRenderEntities(eStageLayerFliterType eTy
 CWVOID cwStage::render()
 {
 	for (auto pLayer : m_nVecLayer) {
-		std::vector<cwRenderNode*>* vecEntities = getRenderEntities(pLayer->getFliterType());
+		std::vector<cwRenderNode*>* vecEntities = getRenderEntities(pLayer);
 		if (vecEntities) {
 			pLayer->begin(vecEntities);
 		}

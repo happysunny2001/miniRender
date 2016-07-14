@@ -69,6 +69,11 @@ CWHANDLE cwBuffer::getShaderHandle()
 	return NULL;
 }
 
+CWHANDLE cwBuffer::getWritablehandle()
+{
+	return NULL;
+}
+
 CWVOID cwBuffer::refresh(CWVOID* pData)
 {
 

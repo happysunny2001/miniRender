@@ -128,4 +128,21 @@ CWBYTE cwStringConvert::parseHexStringByte(const CWSTRING& strHex)
 	return ret;
 }
 
+CWINT cwStringConvert::convertToInt(const CWSTRING& str, CWINT iFailed)
+{
+	stringstream ss;
+	CWINT i;
+	ss << str;
+	ss >> i;
+	if (ss.fail()) return iFailed;
+	return i;
+}
+
+CWSTRING cwStringConvert::convertToString(CWUINT i)
+{
+	stringstream ss;
+	ss << i;
+	return ss.str();
+}
+
 NS_MINIR_END
