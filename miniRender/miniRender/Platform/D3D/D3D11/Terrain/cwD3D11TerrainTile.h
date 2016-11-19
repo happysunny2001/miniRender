@@ -38,7 +38,8 @@ public:
 
 	virtual CWBOOL init(sTerrainTileData* pTerrainTileData) override;
 	virtual CWVOID loadResource() override;
-	virtual CWVOID render(cwRenderBatch* pRenderBatch) override;
+	//virtual CWVOID render(cwRenderBatch* pRenderBatch) override;
+	virtual CWVOID render(cwEffect* pEffect) override;
 
 	virtual CWVOID streamPrepare() override;
 	virtual CWVOID streamBegin() override;

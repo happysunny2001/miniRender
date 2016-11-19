@@ -39,11 +39,12 @@ class cwEngine;
 class cwGeometryGenerator;
 class cwEventManager;
 class cwSchedulerManager;
-class cwParserManager;
+//class cwParserManager;
 class cwResourceLoader;
 class cwSpatialFactory;
 class cwEffectManager;
 class cwObjectMonitor;
+class cwRendererFactory;
 
 class CW_DLL cwRepertory
 {
@@ -67,11 +68,12 @@ public:
 	inline cwGeometryGenerator* getGeoGenerator() { return m_pGeoGenerator; }
 	inline cwEventManager* getEventManager() { return m_pEventManager; }
 	inline cwSchedulerManager* getSchedulerManager() { return m_pSchedulerManager; }
-	inline cwParserManager* getParserManager() { return m_pParserManager; }
+	//inline cwParserManager* getParserManager() { return m_pParserManager; }
 	inline cwResourceLoader* getResourceLoader() { return m_pResourceLoader; }
 	inline cwSpatialFactory* getSpatialFactory() { return m_pSpatialFactory; }
 	inline cwEffectManager* getEffectManager() { return m_pEffectManager; }
 	inline cwObjectMonitor* getObjectMonitor() { return m_pObjectMonitor; }
+	inline cwRendererFactory* getRendererFactory() { return m_pRendererFactory; }
 
 	virtual CWVOID refreshWindowTitle(const CWSTRING& strTitle) {}
 
@@ -94,11 +96,12 @@ protected:
 	cwGeometryGenerator* m_pGeoGenerator;
 	cwEventManager* m_pEventManager;
 	cwSchedulerManager* m_pSchedulerManager;
-	cwParserManager* m_pParserManager;
+	//cwParserManager* m_pParserManager;
 	cwResourceLoader* m_pResourceLoader;
 	cwSpatialFactory* m_pSpatialFactory;
 	cwEffectManager* m_pEffectManager;
 	cwObjectMonitor* m_pObjectMonitor;
+	cwRendererFactory* m_pRendererFactory;
 
 	unordered_map<string, cwValueMap> m_mapData;
 

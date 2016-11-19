@@ -53,6 +53,19 @@ cwD3D11RTTexture* cwD3D11RTTexture::create(CWFLOAT fWidth, CWFLOAT fHeight, eFor
 	return nullptr;
 }
 
+cwD3D11RTTexture* cwD3D11RTTexture::create(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples, CWBOOL bShaderUsage, CWBOOL bThreadSafe)
+{
+	cwD3D11RTTexture* pTexture = new cwD3D11RTTexture();
+	if (pTexture && pTexture->init(fWidth, fHeight, format, iMSAASamples, bShaderUsage)) {
+		if (!bThreadSafe)
+			pTexture->autorelease();
+		return pTexture;
+	}
+
+	CW_SAFE_DELETE(pTexture);
+	return nullptr;
+}
+
 cwD3D11RTTexture::cwD3D11RTTexture() :
 m_pRenderTargetView(nullptr)
 {
@@ -79,6 +92,18 @@ CWBOOL cwD3D11RTTexture::init(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, C
 	m_fHeight = fHeight;
 	m_eTextureFormat = format;
 	m_bShaderUsage = bShaderUsage;
+
+	if (!buildRenderTarget()) return CWFALSE;
+	return CWTRUE;
+}
+
+CWBOOL cwD3D11RTTexture::init(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples, CWBOOL bShaderUsage)
+{
+	m_fWidth = fWidth;
+	m_fHeight = fHeight;
+	m_eTextureFormat = format;
+	m_bShaderUsage = bShaderUsage;
+	m_iMSAASamples = iMSAASamples == 4 || iMSAASamples == 8 ? iMSAASamples : 1;
 
 	if (!buildRenderTarget()) return CWFALSE;
 	return CWTRUE;
@@ -133,7 +158,8 @@ CWBOOL cwD3D11RTTexture::buildRenderTarget()
 	texDesc.MipLevels = 1;
 	texDesc.ArraySize = 1;
 	texDesc.Format = pDevice->getFormatType(m_eTextureFormat);
-	texDesc.SampleDesc.Count = 1;
+	texDesc.SampleDesc.Count = m_iMSAASamples;
+	texDesc.SampleDesc.Quality = 0;
 	texDesc.Usage = D3D11_USAGE_DEFAULT;
 
 	if (m_bShaderUsage)
@@ -149,7 +175,7 @@ CWBOOL cwD3D11RTTexture::buildRenderTarget()
 
 	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
 	rtvDesc.Format = texDesc.Format;
-	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	rtvDesc.ViewDimension = m_iMSAASamples == 1 ? D3D11_RTV_DIMENSION_TEXTURE2D : D3D11_RTV_DIMENSION_TEXTURE2DMS;
 	rtvDesc.Texture2D.MipSlice = 0;
 
 	CW_HR(pDevice->getD3D11Device()->CreateRenderTargetView(pTex, &rtvDesc, &m_pRenderTargetView));
@@ -157,7 +183,7 @@ CWBOOL cwD3D11RTTexture::buildRenderTarget()
 	if (m_bShaderUsage) {
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 		srvDesc.Format = texDesc.Format;
-		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.ViewDimension = m_iMSAASamples == 1 ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS;
 		srvDesc.Texture2D.MostDetailedMip = 0;
 		srvDesc.Texture2D.MipLevels = 1;
 

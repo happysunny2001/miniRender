@@ -76,7 +76,7 @@ CWBOOL cwApplication::buildWindow()
 
 	cwRepertory& repertory = cwRepertory::getInstance();
 
-	m_uWindowWidth = 800;
+	m_uWindowWidth = 1280;
 	m_uWindowHeight = 600;
 
 	repertory.addValue(gValueWinWidth, cwValueMap(CWUINT(m_uWindowWidth)));

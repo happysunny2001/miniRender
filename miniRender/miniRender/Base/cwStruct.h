@@ -24,54 +24,141 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwBasicType.h"
 #include "cwUtils.h"
 #include "Math/cwMath.h"
+#include "Generator/cwGeometryGenerator.h"
 
 NS_MINIR_BEGIN
 
-typedef struct
+struct cwVertexPos
 {
 	cwVector3D pos;
-}cwVertexPos;
+
+	cwVertexPos() {}
+	cwVertexPos(const cwGeometryGenerator::cwVertex& vertex) {
+		pos = vertex.pos;
+	}
+
+	cwVertexPos& operator =(const cwGeometryGenerator::cwVertex& vertex) {
+		pos = vertex.pos;
+		return *this;
+	}
+};
 
 //vertex structure
-typedef struct 
+struct cwVertexPosColor
 {
 	cwVector3D pos;
 	cwVector4D color;
-}cwVertexPosColor;
 
-typedef struct 
+	cwVertexPosColor() {}
+	cwVertexPosColor(const cwGeometryGenerator::cwVertex& vertex) {
+		pos = vertex.pos;
+	}
+
+	cwVertexPosColor& operator =(const cwGeometryGenerator::cwVertex& vertex) {
+		pos = vertex.pos;
+		return *this;
+	}
+};
+
+struct cwVertexPosNormal
 {
 	cwVector3D pos;
 	cwVector3D normal;
-}cwVertexPosNormal;
 
-typedef struct 
+	cwVertexPosNormal() {}
+	cwVertexPosNormal(const cwGeometryGenerator::cwVertex& vertex) {
+		pos = vertex.pos;
+		normal = vertex.normal;
+	}
+
+	cwVertexPosNormal& operator =(const cwGeometryGenerator::cwVertex& vertex) {
+		pos = vertex.pos;
+		normal = vertex.normal;
+		return *this;
+	}
+};
+
+struct cwVertexPosNormalTex
 {
 	cwVector3D pos;
 	cwVector3D normal;
 	cwVector2D tex;
-}cwVertexPosNormalTex;
 
-typedef struct
+	cwVertexPosNormalTex() {}
+	cwVertexPosNormalTex(const cwGeometryGenerator::cwVertex& vertex) {
+		pos = vertex.pos;
+		normal = vertex.normal;
+		tex = vertex.tex;
+	}
+
+	cwVertexPosNormalTex& operator =(const cwGeometryGenerator::cwVertex& vertex) {
+		pos = vertex.pos;
+		normal = vertex.normal;
+		tex = vertex.tex;
+		return *this;
+	}
+};
+
+struct cwVertexPosNormalTexTan
 {
 	cwVector3D pos;
 	cwVector3D normal;
 	cwVector2D tex;
 	cwVector3D tan;
-}cwVertexPosNormalTexTan;
 
-typedef struct  
+	cwVertexPosNormalTexTan() {}
+	cwVertexPosNormalTexTan(const cwGeometryGenerator::cwVertex& vertex) {
+		pos = vertex.pos;
+		normal = vertex.normal;
+		tex = vertex.tex;
+		tan = vertex.tangentU;
+	}
+
+	cwVertexPosNormalTexTan& operator =(const cwGeometryGenerator::cwVertex& vertex) {
+		pos = vertex.pos;
+		normal = vertex.normal;
+		tex = vertex.tex;
+		tan = vertex.tangentU;
+		return *this;
+	}
+};
+
+struct cwVertexPosTex
 {
 	cwVector3D pos;
 	cwVector2D tex;
-}cwVertexPosTex;
 
-typedef struct  
+	cwVertexPosTex() {}
+	cwVertexPosTex(const cwGeometryGenerator::cwVertex& vertex) {
+		pos = vertex.pos;
+		tex = vertex.tex;
+	}
+
+	cwVertexPosTex& operator =(const cwGeometryGenerator::cwVertex& vertex) {
+		pos = vertex.pos;
+		tex = vertex.tex;
+		return *this;
+	}
+};
+
+struct cwVertexPosTexColor
 {
 	cwVector3D pos;
 	cwVector2D tex;
 	cwVector4D color;
-}cwVertexPosTexColor;
+
+	cwVertexPosTexColor() {}
+	cwVertexPosTexColor(const cwGeometryGenerator::cwVertex& vertex) {
+		pos = vertex.pos;
+		tex = vertex.tex;
+	}
+
+	cwVertexPosTexColor& operator =(const cwGeometryGenerator::cwVertex& vertex) {
+		pos = vertex.pos;
+		tex = vertex.tex;
+		return *this;
+	}
+};
 
 typedef struct CW_BUFFER_DESC
 {

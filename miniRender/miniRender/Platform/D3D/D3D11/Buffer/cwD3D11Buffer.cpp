@@ -63,7 +63,7 @@ CWBOOL cwD3D11Buffer::init(
 	CWVOID* pData,
 	CWUINT uSize,
 	eBufferUsage usage,
-	eBufferBindFlag bindFlag,
+	CWUINT bindFlag,
 	eAccessFlag uCpuFlag,
 	CWUINT miscFlag,
 	CWUINT structureByteStride,
@@ -137,7 +137,7 @@ CWBOOL cwD3D11Buffer::rebuild(
 	CWVOID* pData,
 	CWUINT uSize,
 	eBufferUsage usage,
-	eBufferBindFlag bindFlag,
+	CWUINT bindFlag,
 	eAccessFlag uCpuFlag,
 	CWUINT miscFlag,
 	CWUINT structureByteStride,
@@ -156,7 +156,7 @@ CWVOID cwD3D11Buffer::buildD3D11Buffer(CWVOID* pData)
 {
 	CWUINT uD3D11CpuFlag = cwD3D11Device::getAccessFlag(m_nAccessFlag);
 	D3D11_USAGE uD3D11Usage = cwD3D11Device::getBufferUsage(m_nUsage);
-	CWUINT uBindFlag = cwD3D11Device::getBufferBindFlag(m_nBindingFlag);
+	CWUINT uBindFlag = cwD3D11Device::getBufferBindFlags(m_nBindingFlag);
 
 	D3D11_BUFFER_DESC d3dDesc;
 	d3dDesc.BindFlags = uBindFlag;

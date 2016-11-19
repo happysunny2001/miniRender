@@ -29,12 +29,14 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Generator/cwGeometryGenerator.h"
 #include "Event/cwEventManager.h"
 #include "Scheduler/cwSchedulerManager.h"
-#include "Parser/cwParserManager.h"
+//#include "Parser/cwParserManager.h"
 #include "Math/cwMath.h"
 #include "Resource/cwResourceLoader.h"
 #include "SpatialSorting/cwSpatialFactory.h"
 #include "effect/cwEffectManager.h"
 #include "Ref/cwObjectMonitor.h"
+#include "Render/cwRendererFactory.h"
+#include "Timer/cwPerformanceTimer.h"
 
 #ifdef _CW_D3D11_
 #include "Platform/D3D/D3D11/Repertory/cwD3D11Repertory.h"
@@ -60,11 +62,12 @@ m_pEngine(nullptr),
 m_pGeoGenerator(nullptr),
 m_pEventManager(nullptr),
 m_pSchedulerManager(nullptr),
-m_pParserManager(nullptr),
+//m_pParserManager(nullptr),
 m_pResourceLoader(nullptr),
 m_pSpatialFactory(nullptr),
 m_pEffectManager(nullptr),
-m_pObjectMonitor(nullptr)
+m_pObjectMonitor(nullptr),
+m_pRendererFactory(nullptr)
 {
 	m_pAutoReleasePool = new cwAutoReleasePool();
 }
@@ -80,8 +83,9 @@ cwRepertory::~cwRepertory()
 	CW_SAFE_RELEASE_NULL(m_pGeoGenerator);
 	CW_SAFE_RELEASE_NULL(m_pEventManager);
 	CW_SAFE_RELEASE_NULL(m_pSchedulerManager);
-	CW_SAFE_RELEASE_NULL(m_pParserManager);
+	//CW_SAFE_RELEASE_NULL(m_pParserManager);
 	CW_SAFE_RELEASE_NULL(m_pEffectManager);
+	CW_SAFE_RELEASE_NULL(m_pRendererFactory);
 	CW_SAFE_DELETE(m_pSpatialFactory);
 	CW_SAFE_DELETE(m_pDevice);
 	CW_SAFE_DELETE(m_pObjectMonitor);
@@ -91,43 +95,68 @@ CWVOID cwRepertory::initAll()
 {
 	m_pObjectMonitor = new cwObjectMonitor();
 
-	this->addValue(gValueWinWidth, cwValueMap(CWUINT(800)));
-	this->addValue(gValueWinHeight, cwValueMap(CWUINT(600)));
+	//this->addValue(gValueWinWidth, cwValueMap(CWUINT(800)));
+	//this->addValue(gValueWinHeight, cwValueMap(CWUINT(600)));
 
 	addValue(gValueNearZ, cwValueMap(1.0f));
 	addValue(gValueFarZ, cwValueMap(1000.0f));
 	addValue(gValueFov, cwValueMap(0.25f*cwMathUtil::cwPI));
 
+	cwPerformanceTimer timer;
+
 	m_pSpatialFactory = new cwSpatialFactory();
 
-	m_pParserManager = cwParserManager::create();
-	CW_SAFE_RETAIN(m_pParserManager);
+	timer.begin();
+	m_pRendererFactory = cwRendererFactory::create();
+	CW_SAFE_RETAIN(m_pRendererFactory);
+	timer.print("render factory");
 
+	//m_pParserManager = cwParserManager::create();
+	//CW_SAFE_RETAIN(m_pParserManager);
+
+	timer.begin();
 	m_pFileSystem = cwFileSystem::create();
 	CW_SAFE_RETAIN(m_pFileSystem);
+	timer.print("file system");
 
+	timer.begin();
 	m_pResourceLoader = cwResourceLoader::create();
 	CW_SAFE_RETAIN(m_pResourceLoader);
+	timer.print("resource loader");
 
+	timer.begin();
 	m_pEventManager = cwEventManager::create();
 	CW_SAFE_RETAIN(m_pEventManager);
+	timer.print("event manager");
 
+	timer.begin();
 	m_pGeoGenerator = cwGeometryGenerator::create();
 	CW_SAFE_RETAIN(m_pGeoGenerator);
+	timer.print("geometry generator");
 
+	timer.begin();
 	m_pSchedulerManager = cwSchedulerManager::create();
 	CW_SAFE_RETAIN(m_pSchedulerManager);
+	timer.print("scheduler manager");
 
+	timer.begin();
 	m_pTextureManager = cwTextureManager::create();
 	CW_SAFE_RETAIN(m_pTextureManager);
+	timer.print("texture manager");
 
+	timer.begin();
 	specialInit();
+	timer.print("special init");
 
+	timer.begin();
 	m_pEffectManager = cwEffectManager::create();
 	CW_SAFE_RETAIN(m_pEffectManager);
+	timer.print("effect manager");
 
+	timer.begin();
 	m_pEngine = cwEngine::create();
 	CW_SAFE_RETAIN(m_pEngine);
+	timer.print("engine");
 }
 
 CWVOID cwRepertory::releaseAll()

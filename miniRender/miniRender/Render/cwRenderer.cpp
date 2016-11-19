@@ -25,11 +25,14 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Entity/cwPrimitiveEntity.h"
 #include "Engine/cwEngine.h"
 #include "Shader/cwShader.h"
+#include "Shader/cwShaderManager.h"
 #include "Material/cwMaterial.h"
 #include "Effect/cwEffect.h"
-#include "Sprite/cwSpriteManager.h"
+#include "effect/Parameter/cwEffectTextureParameter.h"
 #include "Stage/cwStage.h"
-#include "cwRenderBatch.h"
+#include "Stage/cwStageLayer.h"
+#include "2D/cw2DStageLayer.h"
+#include "Generator/cwRenderObjectGenerator.hpp"
 
 #include "utlist.h"
 
@@ -48,15 +51,18 @@ cwRenderer* cwRenderer::create()
 }
 
 cwRenderer::cwRenderer():
-m_pCurrCamera(nullptr),
-m_pCurrShader(nullptr),
+//m_pCurrCamera(nullptr),
+//m_pCurrShader(nullptr),
 m_iListPoolIndex(0),
 m_pRenderListHead(nullptr),
 m_pCurrRenderStage(nullptr),
-m_pPrimitiveEntity(nullptr),
-m_pPrimitiveBatch(nullptr),
-m_pViewPort(nullptr),
-m_pRendererCamera(nullptr)
+m_pFinalStage(nullptr),
+m_pTexFinalRenderTarget(nullptr),
+m_p2DStage(nullptr)
+//m_pPrimitiveEntity(nullptr),
+//m_pPrimitiveBatch(nullptr)
+//m_pViewPort(nullptr),
+//m_pRendererCamera(nullptr)
 {
 
 }
@@ -64,13 +70,16 @@ m_pRendererCamera(nullptr)
 cwRenderer::~cwRenderer()
 {
 	m_nVecStage.clear();
-	CW_SAFE_RELEASE_NULL(m_pPrimitiveEntity);
-	CW_SAFE_DELETE(m_pPrimitiveBatch);
-	CW_SAFE_RELEASE_NULL(m_pViewPort);
-	CW_SAFE_RELEASE_NULL(m_pRendererCamera);
+	//CW_SAFE_RELEASE_NULL(m_pPrimitiveEntity);
+	//CW_SAFE_DELETE(m_pPrimitiveBatch);
+	//CW_SAFE_RELEASE_NULL(m_pViewPort);
+	//CW_SAFE_RELEASE_NULL(m_pRendererCamera);
 
-	m_pCurrCamera = nullptr;
-	m_pCurrShader = nullptr;
+	//m_pCurrCamera = nullptr;
+	//m_pCurrShader = nullptr;
+	CW_SAFE_RELEASE_NULL(m_pFinalStage);
+	CW_SAFE_RELEASE_NULL(m_pTexFinalRenderTarget);
+	CW_SAFE_RELEASE_NULL(m_p2DStage);
 	m_pRenderListHead = nullptr;
 	m_pCurrRenderStage = nullptr;
 }
@@ -78,129 +87,231 @@ cwRenderer::~cwRenderer()
 CWBOOL cwRenderer::init()
 {
 	buildPrimitiveEntity();
+	if (!buildFinalRenderTarget()) return CWFALSE;
+
+	return CWTRUE;
+}
+
+CWBOOL cwRenderer::buildFinalRenderTarget()
+{
+	cwRepertory& repertory = cwRepertory::getInstance();
+	m_pTexFinalRenderTarget = repertory.getDevice()->createRTTexture();
+	if (!m_pTexFinalRenderTarget) return CWFALSE;
+	CW_SAFE_RETAIN(m_pTexFinalRenderTarget);
+
+	return CWTRUE;
+}
+
+CWBOOL cwRenderer::buildFinalStage()
+{
+	if (m_nVecStage.empty()) return CWFALSE;
+	cwStage* pLastStage = m_nVecStage.back();
+
+	{
+		m_pFinalStage = cwStage::create(m_pTexFinalRenderTarget);
+		if (!m_pFinalStage) return CWFALSE;
+		CW_SAFE_RETAIN(m_pFinalStage);
+		m_pFinalStage->setName("FinalStage");
+	}
+
+	cwRepertory& repertory = cwRepertory::getInstance();
+	cwShader* pSpriteShader = repertory.getShaderManager()->createShader("SpriteRenderTechnique.hlsl");
+	if (!pSpriteShader) return CWFALSE;
+
+	cwEffect* pSpriteEffect = cwEffect::create();
+	pSpriteEffect->setShader(pSpriteShader);
+	pSpriteEffect->setTech("SpriteRender");
+
+	{
+		cwEffectTextureParameter* pTexParameter = cwEffectTextureParameter::create();
+		pTexParameter->setParameterName("gSpriteTexture");
+		pTexParameter->setTexture(pLastStage->getRenderTarget());
+		pSpriteEffect->addParameter(pTexParameter);
+	}
+
+	cwRenderObjectGenerator<cwVertexPosTex> generator;
+	cwRenderObject* pScreenObject = generator.generateQuad("PosTex");
+	cwEntity* pScreenQuad = cwEntity::create();
+	pScreenQuad->setRenderObject(pScreenObject);
+
+	{
+		cwCamera* pHomoCamera = cwRepertory::getInstance().getEngine()->getCamera("Homo");
+		if (!pHomoCamera) return CWFALSE;
+
+		cwStageLayer* pStageLayer = cwStageLayer::create();
+		pStageLayer->setCamera(pHomoCamera);
+		pStageLayer->setRenderTarget(m_pFinalStage->getRenderTarget());
+		pStageLayer->setIsRefreshRenderTarget(CWTRUE);
+		pStageLayer->setDepthStencil(nullptr);
+		pStageLayer->setIsClearColor(CWFALSE);
+		pStageLayer->setIsClearDepth(CWFALSE);
+		pStageLayer->setIsClearStencil(CWFALSE);
+		pStageLayer->setUniformEffect(pSpriteEffect);
+		pStageLayer->setFilterType(eStageLayerFliterSelf);
+		pStageLayer->addSelfRenderNode(pScreenQuad);
+
+		m_pFinalStage->addStageLayer(pStageLayer);
+	}
+
+	return CWTRUE;
+}
+
+CWBOOL cwRenderer::build2DStage()
+{
+	m_p2DStage = cwStage::create(m_pTexFinalRenderTarget);
+	if (!m_p2DStage) return CWFALSE;
+	CW_SAFE_RETAIN(m_p2DStage);
+
+	cwRepertory& repertory = cwRepertory::getInstance();
+	cwShader* pSpriteShader = repertory.getShaderManager()->createShader("SpriteRenderTechnique.hlsl");
+	if (!pSpriteShader) return CWFALSE;
+
+	cwEffect* pSpriteEffect = cwEffect::create();
+	pSpriteEffect->setShader(pSpriteShader);
+	pSpriteEffect->setTech("SpriteRender");
+
+	{
+		cwCamera* pOrthoCamera = cwRepertory::getInstance().getEngine()->getCamera("Ortho");
+		if (!pOrthoCamera) return CWFALSE;
+
+		//cwTexture* pDepthStencil = repertory.getDevice()->createDSTexture();
+
+		cw2DStageLayer* pStageLayer = cw2DStageLayer::create();
+		pStageLayer->setCamera(pOrthoCamera);
+		pStageLayer->setRenderTarget(m_pTexFinalRenderTarget);
+		pStageLayer->setIsRefreshRenderTarget(CWTRUE);
+		pStageLayer->setDepthStencil(nullptr);
+		pStageLayer->setIsClearColor(CWFALSE);
+		pStageLayer->setIsClearDepth(CWFALSE);
+		pStageLayer->setIsClearStencil(CWFALSE);
+		pStageLayer->setUniformEffect(pSpriteEffect);
+		pStageLayer->setFilterType(eStageLayerFliter2D);
+
+		m_pFinalStage->addStageLayer(pStageLayer);
+	}
 
 	return CWTRUE;
 }
 
 CWVOID cwRenderer::buildPrimitiveEntity()
 {
-	CW_SAFE_RELEASE_NULL(m_pPrimitiveEntity);
-	m_pPrimitiveEntity = cwPrimitiveEntity::create();
-	CW_SAFE_RETAIN(m_pPrimitiveEntity);
+	//CW_SAFE_RELEASE_NULL(m_pPrimitiveEntity);
+	//m_pPrimitiveEntity = cwPrimitiveEntity::create();
+	//CW_SAFE_RETAIN(m_pPrimitiveEntity);
 
-	CW_SAFE_DELETE(m_pPrimitiveBatch);
-	m_pPrimitiveBatch = new cwRenderBatch();
-	m_pPrimitiveBatch->m_pEffect = m_pPrimitiveEntity->getEffect();
-	m_pPrimitiveBatch->m_pBlend = m_pPrimitiveEntity->getBlend();
-	m_pPrimitiveBatch->m_pStencil = m_pPrimitiveEntity->getStencil();
-	m_pPrimitiveBatch->m_pEntity = m_pPrimitiveEntity;
-	m_pPrimitiveBatch->m_nWorldTrans = cwMatrix4X4::identityMatrix;
+	//CW_SAFE_DELETE(m_pPrimitiveBatch);
+	//m_pPrimitiveBatch = new cwRenderBatch();
+	//m_pPrimitiveBatch->m_pEffect = m_pPrimitiveEntity->getEffect();
+	//m_pPrimitiveBatch->m_pBlend = m_pPrimitiveEntity->getBlend();
+	//m_pPrimitiveBatch->m_pStencil = m_pPrimitiveEntity->getStencil();
+	//m_pPrimitiveBatch->m_pEntity = m_pPrimitiveEntity;
+	//m_pPrimitiveBatch->m_nWorldTrans = cwMatrix4X4::identityMatrix;
 }
 
 CWVOID cwRenderer::renderPrimitiveEntity()
 {
-	if (m_pPrimitiveBatch)
-		this->render(m_pPrimitiveBatch);
+	//if (m_pPrimitiveBatch)
+	//	this->render(m_pPrimitiveBatch);
 }
 
 CWVOID cwRenderer::renderPrimitive(const cwAABB& aabb)
 {
-	if (m_pPrimitiveEntity) {
-		m_pPrimitiveEntity->addPrimitive(aabb);
-	}
+	//if (m_pPrimitiveEntity) {
+	//	m_pPrimitiveEntity->addPrimitive(aabb);
+	//}
 }
 
 CWVOID cwRenderer::renderPrimitive(const cwAABB& aabb, const cwVector4D& color)
 {
-	if (m_pPrimitiveEntity) {
-		m_pPrimitiveEntity->addPrimitive(aabb, color);
-	}
+	//if (m_pPrimitiveEntity) {
+	//	m_pPrimitiveEntity->addPrimitive(aabb, color);
+	//}
 }
 
 CWVOID cwRenderer::renderPrimitive(const cwRay& ray)
 {
-	if (m_pPrimitiveEntity) {
-		m_pPrimitiveEntity->addPrimitive(ray);
-	}
+	//if (m_pPrimitiveEntity) {
+	//	m_pPrimitiveEntity->addPrimitive(ray);
+	//}
 }
 
 CWVOID cwRenderer::renderPrimitive(const cwRay& ray, CWFLOAT fLen, const cwVector4D& color)
 {
-	if (m_pPrimitiveEntity) {
-		m_pPrimitiveEntity->addPrimitive(ray, fLen, color);
-	}
+	//if (m_pPrimitiveEntity) {
+	//	m_pPrimitiveEntity->addPrimitive(ray, fLen, color);
+	//}
 }
 
 CWVOID cwRenderer::renderPrimitive(cwCamera* pCamera)
 {
-	if (m_pPrimitiveEntity) {
-		m_pPrimitiveEntity->addPrimitive(pCamera);
-	}
+	//if (m_pPrimitiveEntity) {
+	//	m_pPrimitiveEntity->addPrimitive(pCamera);
+	//}
 }
 
 CWVOID cwRenderer::renderPrimitive(cwCamera* pCamera, const cwVector4D& color)
 {
-	if (m_pPrimitiveEntity) {
-		m_pPrimitiveEntity->addPrimitive(pCamera, color);
-	}
+	//if (m_pPrimitiveEntity) {
+	//	m_pPrimitiveEntity->addPrimitive(pCamera, color);
+	//}
 }
 
-CWVOID cwRenderer::setCurrCamera(cwCamera* pCamera)
-{
-	m_pCurrCamera = pCamera;
-}
+//CWVOID cwRenderer::setCurrCamera(cwCamera* pCamera)
+//{
+//	m_pCurrCamera = pCamera;
+//}
+//
+//CWVOID cwRenderer::setRendererCamera(cwCamera* pCamera)
+//{
+//	if (m_pRendererCamera == pCamera) return;
+//	CW_SAFE_RETAIN(pCamera);
+//	CW_SAFE_RELEASE_NULL(m_pRendererCamera);
+//	m_pRendererCamera = pCamera;
+//}
 
-CWVOID cwRenderer::setRendererCamera(cwCamera* pCamera)
-{
-	if (m_pRendererCamera == pCamera) return;
-	CW_SAFE_RETAIN(pCamera);
-	CW_SAFE_RELEASE_NULL(m_pRendererCamera);
-	m_pRendererCamera = pCamera;
-}
+//CWVOID cwRenderer::setCurrShader(cwShader* pShader)
+//{
+//	if (m_pCurrShader == pShader) return;
+//	m_pCurrShader = pShader;
+//
+//	if (m_pCurrShader) {
+//		perFrameConfig();
+//		configLight();
+//	}
+//}
 
-CWVOID cwRenderer::setCurrShader(cwShader* pShader)
-{
-	if (m_pCurrShader == pShader) return;
-	m_pCurrShader = pShader;
-
-	if (m_pCurrShader) {
-		perFrameConfig();
-		configLight();
-	}
-}
-
-CWVOID cwRenderer::createViewPort(CWFLOAT fTopLeftX, CWFLOAT fTopLeftY, CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fMinDepth, CWFLOAT fMaxDepth)
-{
-	m_fViewPortTopLeftX = fTopLeftX;
-	m_fViewPortTopLeftY = fTopLeftY;
-	m_fViewPortWidth = fWidth;
-	m_fViewPortHeight = fHeight;
-	m_fViewPortMinDepth = fMinDepth;
-	m_fViewPortMaxDepth = fMaxDepth;
-
-	CW_SAFE_RELEASE_NULL(m_pViewPort);
-
-	CWUINT winWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
-	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
-
-	m_pViewPort = cwRepertory::getInstance().getDevice()->createViewPort(
-		m_fViewPortTopLeftX*(CWFLOAT)winWidth, m_fViewPortTopLeftY*(CWFLOAT)winHeight,
-		m_fViewPortWidth*(CWFLOAT)winWidth, m_fViewPortHeight*(CWFLOAT)winHeight,
-		m_fViewPortMinDepth, m_fViewPortMaxDepth);
-	CW_SAFE_RETAIN(m_pViewPort);
-}
+//CWVOID cwRenderer::createViewPort(CWFLOAT fTopLeftX, CWFLOAT fTopLeftY, CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fMinDepth, CWFLOAT fMaxDepth)
+//{
+//	m_fViewPortTopLeftX = fTopLeftX;
+//	m_fViewPortTopLeftY = fTopLeftY;
+//	m_fViewPortWidth = fWidth;
+//	m_fViewPortHeight = fHeight;
+//	m_fViewPortMinDepth = fMinDepth;
+//	m_fViewPortMaxDepth = fMaxDepth;
+//
+//	CW_SAFE_RELEASE_NULL(m_pViewPort);
+//
+//	CWUINT winWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
+//	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
+//
+//	m_pViewPort = cwRepertory::getInstance().getDevice()->createViewPort(
+//		m_fViewPortTopLeftX*(CWFLOAT)winWidth, m_fViewPortTopLeftY*(CWFLOAT)winHeight,
+//		m_fViewPortWidth*(CWFLOAT)winWidth, m_fViewPortHeight*(CWFLOAT)winHeight,
+//		m_fViewPortMinDepth, m_fViewPortMaxDepth);
+//	CW_SAFE_RETAIN(m_pViewPort);
+//}
 
 CWVOID cwRenderer::resize()
 {
-	CWUINT winWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
-	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
+	//CWUINT winWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
+	//CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
 
-	if (m_pViewPort) {
-		m_pViewPort->refresh(
-			m_fViewPortTopLeftX*(CWFLOAT)winWidth, m_fViewPortTopLeftY*(CWFLOAT)winHeight,
-			m_fViewPortWidth*(CWFLOAT)winWidth, m_fViewPortHeight*(CWFLOAT)winHeight,
-			m_fViewPortMinDepth, m_fViewPortMaxDepth);
-	}
+	//if (m_pViewPort) {
+	//	m_pViewPort->refresh(
+	//		m_fViewPortTopLeftX*(CWFLOAT)winWidth, m_fViewPortTopLeftY*(CWFLOAT)winHeight,
+	//		m_fViewPortWidth*(CWFLOAT)winWidth, m_fViewPortHeight*(CWFLOAT)winHeight,
+	//		m_fViewPortMinDepth, m_fViewPortMaxDepth);
+	//}
 }
 
 CWVOID cwRenderer::addStage(cwStage* pStage)
@@ -230,8 +341,8 @@ CWVOID cwRenderer::addStageRealTime(cwStage* pStage)
 
 CWVOID cwRenderer::begin()
 {
-	m_pCurrCamera = nullptr;
-	m_pCurrShader = nullptr;
+	//m_pCurrCamera = nullptr;
+	//m_pCurrShader = nullptr;
 	m_pCurrRenderStage = nullptr;
 
 	m_pRenderListHead = buildStageList();
@@ -239,14 +350,14 @@ CWVOID cwRenderer::begin()
 
 CWVOID cwRenderer::render()
 {
-	cwRepertory::getInstance().getDevice()->setViewPort(m_pViewPort);
+	//cwRepertory::getInstance().getDevice()->setViewPort(m_pViewPort);
 
 	if (m_pRenderListHead) {
 		sRendererListNode* pElement = nullptr;
 
 		DL_FOREACH(m_pRenderListHead, pElement) {
 			m_pCurrRenderStage = pElement->m_pStage;
-			if (m_pCurrRenderStage->getEnable())
+			if (m_pCurrRenderStage->enable())
 				this->render(m_pCurrRenderStage);
 		}
 	}
@@ -261,65 +372,65 @@ CWVOID cwRenderer::render(cwStage* pStage)
 {
 	if (!pStage) return;
 
-	m_pCurrCamera = nullptr;
-	m_pCurrShader = nullptr;
+	//m_pCurrCamera = nullptr;
+	//m_pCurrShader = nullptr;
 
 	pStage->begin();
 	pStage->render();
 	pStage->end();
 }
 
-CWVOID cwRenderer::render(cwRenderBatch* pBatch)
-{
-	if (pBatch && pBatch->m_pEffect) {
-		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+//CWVOID cwRenderer::render(cwRenderBatch* pBatch)
+//{
+//	if (pBatch && pBatch->m_pEffect) {
+//		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+//
+//		this->setCurrShader(pBatch->m_pEffect->getShader());
+//		this->batchConfig(pBatch);
+//		//pDevice->setShaderWorldTrans(pBatch->m_pEffect->getShader(), pBatch->m_nWorldTrans, m_pCurrCamera);
+//
+//		pBatch->m_pEffect->render(pBatch);
+//	}
+//}
 
-		this->setCurrShader(pBatch->m_pEffect->getShader());
-		this->batchConfig(pBatch);
-		//pDevice->setShaderWorldTrans(pBatch->m_pEffect->getShader(), pBatch->m_nWorldTrans, m_pCurrCamera);
+//CWVOID cwRenderer::batchConfig(cwRenderBatch* pBatch)
+//{
+//	cwShader* pShader = pBatch->m_pEffect->getShader();
+//
+//	cwMatrix4X4& worldTrans = pBatch->m_nWorldTrans;
+//	pShader->setVariableMatrix("gMatWorld", worldTrans);
+//
+//	if (worldTrans.inverseExist()) {
+//		cwMatrix4X4 matWorldInvTrans = worldTrans.inverse().transpose();
+//		pShader->setVariableMatrix("gMatWorldInvTranspose", matWorldInvTrans);
+//	}
+//	else {
+//		cwMatrix4X4& M = cwMatrix4X4::identityMatrix;
+//		pShader->setVariableMatrix("gMatWorldInvTranspose", M);
+//	}
+//}
 
-		pBatch->m_pEffect->render(pBatch);
-	}
-}
-
-CWVOID cwRenderer::batchConfig(cwRenderBatch* pBatch)
-{
-	cwShader* pShader = pBatch->m_pEffect->getShader();
-
-	cwMatrix4X4& worldTrans = pBatch->m_nWorldTrans;
-	pShader->setVariableMatrix("gMatWorld", worldTrans);
-
-	if (worldTrans.inverseExist()) {
-		cwMatrix4X4 matWorldInvTrans = worldTrans.inverse().transpose();
-		pShader->setVariableMatrix("gMatWorldInvTranspose", matWorldInvTrans);
-	}
-	else {
-		cwMatrix4X4& M = cwMatrix4X4::identityMatrix;
-		pShader->setVariableMatrix("gMatWorldInvTranspose", M);
-	}
-}
-
-CWVOID cwRenderer::perFrameConfig()
-{
-	if (!m_pCurrCamera || !m_pCurrShader) return;
-
-	m_pCurrShader->setVariableMatrix("gMatViewProj", m_pCurrCamera->getViewProjMatrix());
-	m_pCurrShader->setVariableMatrix("gMatView", m_pCurrCamera->getViewMatrix());
-	m_pCurrShader->setVariableMatrix("gMatProj", m_pCurrCamera->getProjMatrix());
-
-	const cwVector3D& pos = m_pCurrCamera->getPos();
-	m_pCurrShader->setVariableData("gEyePosWorld", (CWVOID*)&pos, 0, sizeof(cwVector3D));
-
-	cwVector4D nearFar = cwVector4D::ZERO;
-	nearFar.x = m_pCurrCamera->getFarZ();
-	nearFar.y = m_pCurrCamera->getNearZ();
-	m_pCurrShader->setVariableData("gCameraNearFarZ", (CWVOID*)&nearFar, 0, sizeof(cwVector4D));
-}
+//CWVOID cwRenderer::perFrameConfig()
+//{
+//	if (!m_pCurrCamera || !m_pCurrShader) return;
+//
+//	m_pCurrShader->setVariableMatrix("gMatViewProj", m_pCurrCamera->getViewProjMatrix());
+//	m_pCurrShader->setVariableMatrix("gMatView", m_pCurrCamera->getViewMatrix());
+//	m_pCurrShader->setVariableMatrix("gMatProj", m_pCurrCamera->getProjMatrix());
+//
+//	const cwVector3D& pos = m_pCurrCamera->getPos();
+//	m_pCurrShader->setVariableData("gEyePosWorld", (CWVOID*)&pos, 0, sizeof(cwVector3D));
+//
+//	cwVector4D nearFar = cwVector4D::ZERO;
+//	nearFar.x = m_pCurrCamera->getFarZ();
+//	nearFar.y = m_pCurrCamera->getNearZ();
+//	m_pCurrShader->setVariableData("gCameraNearFarZ", (CWVOID*)&nearFar, 0, sizeof(cwVector4D));
+//}
 
 cwStage* cwRenderer::getStage(const CWSTRING& strName)
 {
 	for (auto pStage : m_nVecStage) {
-		if (pStage->getName() == strName) return pStage;
+		if (pStage->name() == strName) return pStage;
 	}
 
 	return nullptr;
@@ -343,28 +454,50 @@ cwRenderer::sRendererListNode* cwRenderer::buildStageList()
 		}
 	}
 
+	if (!m_pFinalStage)
+		buildFinalStage();
+
+	if (!m_p2DStage)
+		build2DStage();
+
+	if (m_pFinalStage) {
+		sRendererListNode* pNode = getAvaiableListNode();
+		if (pNode) {
+			pNode->m_pStage = m_pFinalStage;
+			DL_APPEND(pHead, pNode);
+		}
+	}
+
+	if (m_p2DStage) {
+		sRendererListNode* pNode = getAvaiableListNode();
+		if (pNode) {
+			pNode->m_pStage = m_p2DStage;
+			DL_APPEND(pHead, pNode);
+		}
+	}
+
 	return pHead;
 }
 
-CWVOID cwRenderer::configLight()
-{
-	if (!m_pCurrShader) return;
-	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
-	if (!pCurrScene) return;
+//CWVOID cwRenderer::configLight()
+//{
+//	if (!m_pCurrShader) return;
+//	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
+//	if (!pCurrScene) return;
+//
+//	configDirectionalLight();
+//	configPointLight();
+//	configSpotLight();
+//}
 
-	configDirectionalLight();
-	configPointLight();
-	configSpotLight();
-}
-
-CWVOID cwRenderer::configDirectionalLight()
-{
-	if (!m_pCurrShader->hasVariable(eShaderParamDirectionalLight) || 
+//CWVOID cwRenderer::configDirectionalLight()
+//{
+/*	if (!m_pCurrShader->hasVariable(eShaderParamDirectionalLight) || 
 		!m_pCurrShader->hasVariable(eShaderParamDirectionalLightCnt)) return;
 
 	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
 	if (!pCurrScene) return;
-	const cwVector<cwDirectionalLight*>& vecLight = pCurrScene->getDirectionalLights();
+	const cwVector<cwDirectionalLight*>& vecLight = pCurrScene->getDirectionalLight();
 	if (vecLight.empty()) {
 		m_pCurrShader->setVariableInt(eShaderParamDirectionalLightCnt, 0);
 		return;
@@ -375,69 +508,70 @@ CWVOID cwRenderer::configDirectionalLight()
 		m_pCurrShader->setVariableData(eShaderParamDirectionalLight, index, (*it)->data(), 0, (*it)->size());
 	}
 
-	m_pCurrShader->setVariableInt(eShaderParamDirectionalLightCnt, (CWINT)(vecLight.size()));
-}
+	m_pCurrShader->setVariableInt(eShaderParamDirectionalLightCnt, (CWINT)(vecLight.size()));*/
+//}
 
-CWVOID cwRenderer::configPointLight()
-{
-	if (!m_pCurrShader->hasVariable(eShaderParamPointLight) ||
-		!m_pCurrShader->hasVariable(eShaderParamPointLightCnt)) return;
+//CWVOID cwRenderer::configPointLight()
+//{
+//	if (!m_pCurrShader->hasVariable(eShaderParamPointLight) ||
+//		!m_pCurrShader->hasVariable(eShaderParamPointLightCnt)) return;
+//
+//	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
+//	if (!pCurrScene) return;
+//	const cwVector<cwPointLight*>& vecLight = pCurrScene->getPointLights();
+//	if (vecLight.empty()) {
+//		m_pCurrShader->setVariableInt(eShaderParamPointLightCnt, 0);
+//		return;
+//	}
+//
+//	CWUINT index = 0;
+//	for (auto it = vecLight.begin(); it != vecLight.end(); ++it, ++index) {
+//		m_pCurrShader->setVariableData(eShaderParamPointLight, index, (*it)->data(), 0, (*it)->size());
+//	}
+//
+//	m_pCurrShader->setVariableInt(eShaderParamPointLightCnt, (CWINT)(vecLight.size()));
+//}
 
-	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
-	if (!pCurrScene) return;
-	const cwVector<cwPointLight*>& vecLight = pCurrScene->getPointLights();
-	if (vecLight.empty()) {
-		m_pCurrShader->setVariableInt(eShaderParamPointLightCnt, 0);
-		return;
-	}
-
-	CWUINT index = 0;
-	for (auto it = vecLight.begin(); it != vecLight.end(); ++it, ++index) {
-		m_pCurrShader->setVariableData(eShaderParamPointLight, index, (*it)->data(), 0, (*it)->size());
-	}
-
-	m_pCurrShader->setVariableInt(eShaderParamPointLightCnt, (CWINT)(vecLight.size()));
-}
-
-CWVOID cwRenderer::configSpotLight()
-{
-	if (!m_pCurrShader->hasVariable(eShaderParamSpotLight) ||
-		!m_pCurrShader->hasVariable(eShaderParamSpotLightCnt)) return;
-
-	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
-	if (!pCurrScene) return;
-	const cwVector<cwSpotLight*>& vecLight = pCurrScene->getSpotLights();
-	if (vecLight.empty()) {
-		m_pCurrShader->setVariableInt(eShaderParamSpotLightCnt, 0);
-		return;
-	}
-
-	CWUINT index = 0;
-	for (auto it = vecLight.begin(); it != vecLight.end(); ++it, ++index) {
-		m_pCurrShader->setVariableData(eShaderParamSpotLight, index, (*it)->data(), 0, (*it)->size());
-	}
-
-	m_pCurrShader->setVariableInt(eShaderParamSpotLightCnt, (CWINT)(vecLight.size()));
-}
+//CWVOID cwRenderer::configSpotLight()
+//{
+//	if (!m_pCurrShader->hasVariable(eShaderParamSpotLight) ||
+//		!m_pCurrShader->hasVariable(eShaderParamSpotLightCnt)) return;
+//
+//	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
+//	if (!pCurrScene) return;
+//	const cwVector<cwSpotLight*>& vecLight = pCurrScene->getSpotLights();
+//	if (vecLight.empty()) {
+//		m_pCurrShader->setVariableInt(eShaderParamSpotLightCnt, 0);
+//		return;
+//	}
+//
+//	CWUINT index = 0;
+//	for (auto it = vecLight.begin(); it != vecLight.end(); ++it, ++index) {
+//		m_pCurrShader->setVariableData(eShaderParamSpotLight, index, (*it)->data(), 0, (*it)->size());
+//	}
+//
+//	m_pCurrShader->setVariableInt(eShaderParamSpotLightCnt, (CWINT)(vecLight.size()));
+//}
 
 cwRay cwRenderer::getPickingRayWorld(CWFLOAT fPosX, CWFLOAT fPosY)
 {
+	cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getCamera("Default");
 	cwRay ray;
 
-	const cwMatrix4X4& matProj = m_pRendererCamera->getProjMatrix();
+	const cwMatrix4X4& matProj = pCamera->getProjMatrix();
 	CWUINT winWidth = cwRepertory::getInstance().getUInt(gValueWinWidth);
 	CWUINT winHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
 
-	CWFLOAT fViewPortLeftX = fPosX - (CWFLOAT)winWidth*m_fViewPortTopLeftX;
-	CWFLOAT fViewPortLeftY = fPosY - (CWFLOAT)winHeight*m_fViewPortTopLeftY;
+	CWFLOAT fViewPortLeftX = fPosX - (CWFLOAT)winWidth;
+	CWFLOAT fViewPortLeftY = fPosY - (CWFLOAT)winHeight;
 
-	CWFLOAT fViewWidth  = (CWFLOAT)winWidth*m_fViewPortWidth;
-	CWFLOAT fViewHeight = (CWFLOAT)winHeight*m_fViewPortHeight;
+	CWFLOAT fViewWidth  = (CWFLOAT)winWidth;
+	CWFLOAT fViewHeight = (CWFLOAT)winHeight;
 
 	CWFLOAT vx = (+2.0f * fViewPortLeftX / fViewWidth - 1.0f) / matProj.m11;
 	CWFLOAT vy = (-2.0f * fViewPortLeftY / fViewHeight + 1.0f) / matProj.m22;
 
-	const cwMatrix4X4& matView = m_pRendererCamera->getViewMatrix();
+	const cwMatrix4X4& matView = pCamera->getViewMatrix();
 	if (matView.inverseExist()) {
 		cwMatrix4X4 matInvView = matView.inverse();
 

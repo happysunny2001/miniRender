@@ -53,6 +53,19 @@ cwD3D11DSTexture* cwD3D11DSTexture::create(CWFLOAT fWidth, CWFLOAT fHeight, CWBO
 	return nullptr;
 }
 
+cwD3D11DSTexture* cwD3D11DSTexture::create(CWFLOAT fWidth, CWFLOAT fHeight, CWUINT iMSAASamples, CWBOOL bShaderUsage, CWBOOL bThreadSafe)
+{
+	cwD3D11DSTexture* pTexture = new cwD3D11DSTexture();
+	if (pTexture && pTexture->init(fWidth, fHeight, iMSAASamples, bShaderUsage)) {
+		if (!bThreadSafe)
+			pTexture->autorelease();
+		return pTexture;
+	}
+
+	CW_SAFE_DELETE(pTexture);
+	return nullptr;
+}
+
 cwD3D11DSTexture::cwD3D11DSTexture() :
 m_pDepthStencilView(NULL)
 {
@@ -69,6 +82,16 @@ CWBOOL cwD3D11DSTexture::init(CWFLOAT fWidth, CWFLOAT fHeight, CWBOOL bShaderUsa
 	m_fWidth = fWidth;
 	m_fHeight = fHeight;
 	m_bShaderUsage = bShaderUsage;
+
+	return buildDepthStencil();
+}
+
+CWBOOL cwD3D11DSTexture::init(CWFLOAT fWidth, CWFLOAT fHeight, CWUINT iMSAASamples, CWBOOL bShaderUsage)
+{
+	m_fWidth = fWidth;
+	m_fHeight = fHeight;
+	m_bShaderUsage = bShaderUsage;
+	m_iMSAASamples = iMSAASamples == 4 || iMSAASamples == 8 ? iMSAASamples : 1;
 
 	return buildDepthStencil();
 }
@@ -98,6 +121,9 @@ CWBOOL cwD3D11DSTexture::init()
 	CW_HR(pDevice->getD3D11Device()->CreateDepthStencilView(pTex, NULL, &m_pDepthStencilView));
 	CW_RELEASE_COM(pTex);
 
+	m_fWidth = static_cast<CWFLOAT>(texDesc.Width);
+	m_fHeight = static_cast<CWFLOAT>(texDesc.Height);
+
 	return CWTRUE;
 }
 
@@ -118,7 +144,7 @@ CWBOOL cwD3D11DSTexture::buildDepthStencil()
 	texDesc.Height = static_cast<UINT>(m_fHeight);
 	texDesc.MipLevels = 1;
 	texDesc.ArraySize = 1;
-	texDesc.SampleDesc.Count = 1;
+	texDesc.SampleDesc.Count = m_iMSAASamples;
 	texDesc.SampleDesc.Quality = 0;
 	texDesc.Usage = D3D11_USAGE_DEFAULT;
 
@@ -141,7 +167,7 @@ CWBOOL cwD3D11DSTexture::buildDepthStencil()
 	memset(&dsvDesc, 0, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
 
 	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	dsvDesc.ViewDimension = m_iMSAASamples == 1 ? D3D11_DSV_DIMENSION_TEXTURE2D : D3D11_DSV_DIMENSION_TEXTURE2DMS;
 	dsvDesc.Texture2D.MipSlice = 0;
 
 	CW_HR(pDevice->getD3D11Device()->CreateDepthStencilView(pTex, &dsvDesc, &m_pDepthStencilView));
@@ -151,12 +177,14 @@ CWBOOL cwD3D11DSTexture::buildDepthStencil()
 		memset(&srvDesc, 0, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
 
 		srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.ViewDimension = m_iMSAASamples == 1 ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS;
 		srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
 		srvDesc.Texture2D.MostDetailedMip = 0;
 
 		CW_HR(pDevice->getD3D11Device()->CreateShaderResourceView(pTex, &srvDesc, &m_pShaderResource));
 	}
+
+	CW_RELEASE_COM(pTex);
 
 	return CWTRUE;
 }

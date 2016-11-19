@@ -39,7 +39,7 @@ cwTextureManager* cwTextureManager::create()
 
 cwTextureManager::~cwTextureManager()
 {
-	m_vecRenderTexture.clear();
+	//m_vecRenderTexture.clear();
 }
 
 cwTexture* cwTextureManager::createTexture(const CWSTRING& strName)
@@ -178,6 +178,19 @@ cwTexture* cwTextureManager::createRWTexture(CWFLOAT fWidth, CWFLOAT fHeight, eF
 	return pTexture;
 }
 
+cwTexture* cwTextureManager::createRWTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples, CWBOOL bThreadSafe)
+{
+	cwTexture* pTexture = cwRepertory::getInstance().getDevice()->createRWTexture(fWidth, fHeight, format, iMSAASamples, bThreadSafe);
+	if (pTexture) {
+		pTexture->setName(cwCommon::getNewTextureID());
+		appendTexture(pTexture);
+		if (bThreadSafe)
+			CW_SAFE_RELEASE(pTexture);
+	}
+
+	return pTexture;
+}
+
 cwTexture* cwTextureManager::createRTTexture(CWBOOL bThreadSafe)
 {
 	cwTexture* pTexture = cwRepertory::getInstance().getDevice()->createRTTexture(bThreadSafe);
@@ -204,9 +217,35 @@ cwTexture* cwTextureManager::createRTTexture(CWFLOAT fWidth, CWFLOAT fHeight, eF
 	return pTexture;
 }
 
+cwTexture* cwTextureManager::createRTTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples, CWBOOL bShaderUsage, CWBOOL bThreadSafe)
+{
+	cwTexture* pTexture = cwRepertory::getInstance().getDevice()->createRTTexture(fWidth, fHeight, format, iMSAASamples, bShaderUsage, bThreadSafe);
+	if (pTexture) {
+		pTexture->setName(cwCommon::getNewTextureID());
+		appendTexture(pTexture);
+		if (bThreadSafe)
+			CW_SAFE_RELEASE(pTexture);
+	}
+
+	return pTexture;
+}
+
 cwTexture* cwTextureManager::createDSTexture(CWFLOAT fWidth, CWFLOAT fHeight, CWBOOL bShaderUsage, CWBOOL bThreadSafe)
 {
 	cwTexture* pTexture = cwRepertory::getInstance().getDevice()->createDSTexture(fWidth, fHeight, bShaderUsage, bThreadSafe);
+	if (pTexture) {
+		pTexture->setName(cwCommon::getNewTextureID());
+		appendTexture(pTexture);
+		if (bThreadSafe)
+			CW_SAFE_RELEASE(pTexture);
+	}
+
+	return pTexture;
+}
+
+cwTexture* cwTextureManager::createDSTexture(CWFLOAT fWidth, CWFLOAT fHeight, CWUINT iMSAASamples, CWBOOL bShaderUsage, CWBOOL bThreadSafe)
+{
+	cwTexture* pTexture = cwRepertory::getInstance().getDevice()->createDSTexture(fWidth, fHeight, iMSAASamples, bShaderUsage, bThreadSafe);
 	if (pTexture) {
 		pTexture->setName(cwCommon::getNewTextureID());
 		appendTexture(pTexture);
@@ -254,15 +293,15 @@ cwTexture* cwTextureManager::createTextureArray(const std::vector<CWSTRING>& vec
 	return nullptr;
 }
 
-cwRenderTexture* cwTextureManager::createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType, CWBOOL bThreading)
-{
-	cwRenderTexture* pRenderTex = cwRepertory::getInstance().getDevice()->createRenderTexture(fWidth, fHeight, eType, bThreading);
-	if (pRenderTex) {
-		m_vecRenderTexture.pushBack(pRenderTex);
-	}
-
-	return pRenderTex;
-}
+//cwRenderTexture* cwTextureManager::createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType, CWBOOL bThreading)
+//{
+//	cwRenderTexture* pRenderTex = cwRepertory::getInstance().getDevice()->createRenderTexture(fWidth, fHeight, eType, bThreading);
+//	if (pRenderTex) {
+//		m_vecRenderTexture.pushBack(pRenderTex);
+//	}
+//
+//	return pRenderTex;
+//}
 
 cwTexture* cwTextureManager::getTexture(const string& strName)
 {
@@ -332,27 +371,27 @@ CWVOID cwTextureManager::removeTexture(cwTexture* pTex)
 	}
 }
 
-void cwTextureManager::removeRenderTexture(cwRenderTexture* pTex)
-{
-	if (pTex) {
-		m_vecRenderTexture.erase(pTex);
-	}
-}
+//void cwTextureManager::removeRenderTexture(cwRenderTexture* pTex)
+//{
+//	if (pTex) {
+//		m_vecRenderTexture.erase(pTex);
+//	}
+//}
 
-void cwTextureManager::beginResize()
-{
-	for (auto pRenderTex : m_vecRenderTexture) {
-		if (pRenderTex && pRenderTex->getResizeable())
-			pRenderTex->beginResize();
-	}
-}
-
-void cwTextureManager::onResize()
-{
-	for (auto pRenderTex : m_vecRenderTexture) {
-		if (pRenderTex && pRenderTex->getResizeable())
-			pRenderTex->onResize();
-	}
-}
+//void cwTextureManager::beginResize()
+//{
+//	for (auto pRenderTex : m_vecRenderTexture) {
+//		if (pRenderTex && pRenderTex->getResizeable())
+//			pRenderTex->beginResize();
+//	}
+//}
+//
+//void cwTextureManager::onResize()
+//{
+//	for (auto pRenderTex : m_vecRenderTexture) {
+//		if (pRenderTex && pRenderTex->getResizeable())
+//			pRenderTex->onResize();
+//	}
+//}
 
 NS_MINIR_END

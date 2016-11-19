@@ -24,7 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Shader/cwShader.h"
 #include "Shader/cwShaderManager.h"
 #include "effect/cwEffect.h"
-#include "effect/cwEffectFloatParameter.h"
+#include "effect/Parameter/cwEffectFloatParameter.h"
 #include "RenderObject/cwRenderObject.h"
 #include "RenderObject/cwStaticRenderObject.h"
 #include "Terrain/cwTerrainTile.h"

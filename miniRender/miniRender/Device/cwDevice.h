@@ -45,6 +45,8 @@ class cwTextureArray;
 class cwBatchEntity;
 class cwCubeTexture;
 class cwTerrain;
+class cwEffect;
+class cwGPEffect;
 
 class CW_DLL cwDevice
 {
@@ -103,14 +105,16 @@ public:
 	virtual cwTexture* createCubeTexture(CWVOID* pData, CWUINT64 uSize) = 0;
 	virtual cwTexture* createCubeTextureThreadSafe(CWVOID* pData, CWUINT64 uSize) = 0;
 
-	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader, CWBOOL bThreading=CWFALSE) = 0;
 	virtual cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles) = 0;
 	virtual cwTexture* createTextureArrayThreadSafe(const std::vector<CWSTRING>& vecFiles) = 0;
 
 	virtual cwTexture* createRTTexture(CWBOOL bThreadSafe = CWFALSE) = 0;
 	virtual cwTexture* createRTTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE) = 0;
+	virtual cwTexture* createRTTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE) = 0;
 	virtual cwTexture* createRWTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bThreadSafe = CWFALSE) = 0;
+	virtual cwTexture* createRWTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples, CWBOOL bThreadSafe = CWFALSE) = 0;
 	virtual cwTexture* createDSTexture(CWFLOAT fWidth, CWFLOAT fHeight, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE) = 0;
+	virtual cwTexture* createDSTexture(CWFLOAT fWidth, CWFLOAT fHeight, CWUINT iMSAASamples, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE) = 0;
 	virtual cwTexture* createDSTexture(CWBOOL bThreadSafe = CWFALSE) = 0;
 
 	virtual cwBatchEntity* createBatchEntity() = 0;
@@ -131,9 +135,13 @@ public:
 	virtual CWVOID clearShaderResource() = 0;
 
 	virtual CWVOID render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) = 0;
-	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj) = 0;
-	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, std::vector<cwRenderObject*>& vecRenderObject, CWUINT uCnt) = 0;
-	virtual CWVOID drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo) = 0;
+	//virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj) = 0;
+	//virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, std::vector<cwRenderObject*>& vecRenderObject, CWUINT uCnt) = 0;
+	//virtual CWVOID drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo) = 0;
+
+	virtual CWVOID draw(cwEffect* pEffect, cwRenderObject* pRenderObj) = 0;
+	virtual CWVOID draw(cwEffect* pEffect, std::vector<cwRenderObject*>& vecRenderObject, CWUINT uCnt) = 0;
+	virtual CWVOID draw(cwGPEffect* pEffect) = 0;
 
 	virtual CWVOID pushDeviceStatus();
 	virtual CWVOID popDeviceStatus();
@@ -147,7 +155,7 @@ protected:
 	cwDevice();
 
 	virtual CWVOID createDefaultViewPort();
-	virtual CWVOID createDefaultRenderTarget();
+	//virtual CWVOID createDefaultRenderTarget();
 	virtual CWVOID createDefaultStencil();
 
 protected:
@@ -158,7 +166,7 @@ protected:
 	cwStencil* m_pDisableZBuffer; //for disable z-buffer
 	CWBOOL m_bEnableMsaa4x;
 
-	cwTexture* m_pRenderTargetBkBuffer;
+	//cwTexture* m_pRenderTargetBkBuffer;
 	//cwTexture* m_pCurrRenderTarget;
 	CWBOOL m_bRefreshRenderTarget;
 

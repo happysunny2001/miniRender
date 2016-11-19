@@ -31,45 +31,67 @@ NS_MINIR_BEGIN
 class CW_DLL cwDirectionalLight : public cwLight
 {
 public:
+	struct DirectionalLight_Struct
+	{
+		cwVector4D m_nDirection;
+		cwVector3D m_nColor;
+		CWFLOAT m_fAttr; //shadow flag, 0:not cast shadow, 1:cast shadow, default is 0
+	};
+public:
+	//static cwDirectionalLight* create(
+	//	const cwVector4D& direction,
+	//	const cwVector4D& ambient,
+	//	const cwVector4D& diffuse,
+	//	const cwVector4D& specular);
+
 	static cwDirectionalLight* create(
-		const cwVector4D& direction,
-		const cwVector4D& ambient,
-		const cwVector4D& diffuse,
-		const cwVector4D& specular);
+		const cwVector4D& direction, 
+		const cwVector3D& color);
 
 	cwDirectionalLight();
+	cwDirectionalLight(cwDirectionalLight& light);
 	virtual ~cwDirectionalLight();
+
+	//virtual CWBOOL init(
+	//	const cwVector4D& direction,
+	//	const cwVector4D& ambient,
+	//	const cwVector4D& diffuse,
+	//	const cwVector4D& specular);
 
 	virtual CWBOOL init(
 		const cwVector4D& direction,
-		const cwVector4D& ambient,
-		const cwVector4D& diffuse,
-		const cwVector4D& specular);
+		const cwVector3D& color);
 
-	inline CWVOID setDirection(const cwVector4D& dir) { m_nDirection = dir; }
-	inline const cwVector4D& getDirection() const { return m_nDirection; }
+	inline CWVOID setDirection(const cwVector4D& dir) { 
+		m_nDirectionalLight.m_nDirection = dir; 
+		m_nDirectionalLight.m_nDirection.w = 0;
+	}
+	inline const cwVector4D& getDirection() const { return m_nDirectionalLight.m_nDirection; }
 
-	inline CWVOID setAmbient(const cwVector4D& color) { m_nAmbient = color; }
-	inline const cwVector4D& getAmbient() const{ return m_nAmbient; }
+	//inline CWVOID setAmbient(const cwVector4D& color) { m_nAmbient = color; }
+	//inline const cwVector4D& getAmbient() const{ return m_nAmbient; }
 
-	inline CWVOID setDiffuse(const cwVector4D& color) { m_nDiffuse = color; }
-	inline const cwVector4D& getDiffuse() const { return m_nDiffuse; }
+	//inline CWVOID setDiffuse(const cwVector4D& color) { m_nDiffuse = color; }
+	//inline const cwVector4D& getDiffuse() const { return m_nDiffuse; }
 
-	inline CWVOID setSpecular(const cwVector4D& color) { m_nSpecular = color; }
-	inline const cwVector4D& getSpecular() const { return m_nSpecular; }
+	//inline CWVOID setSpecular(const cwVector4D& color) { m_nSpecular = color; }
+	//inline const cwVector4D& getSpecular() const { return m_nSpecular; }
 
 	virtual CWUINT size() const override;
 	virtual CWVOID* data() const override;
+	cwDirectionalLight::DirectionalLight_Struct& getData() { return m_nDirectionalLight; }
 
 	virtual CWVOID setCastShadow(CWBOOL b) override;
 	virtual CWBOOL getCastShadow() const override;
 
 protected:
-	cwVector4D m_nDirection;
-	cwVector4D m_nAmbient;
-	cwVector4D m_nDiffuse;
-	cwVector4D m_nSpecular;
-	cwVector4D m_nLightAttr; //x:shadow flag, 0:not cast shadow, 1:cast shadow, default is 0
+	//cwVector4D m_nDirection;
+	//cwVector4D m_nAmbient;
+	//cwVector4D m_nDiffuse;
+	//cwVector4D m_nSpecular;
+	//cwVector4D m_nLightAttr; //x:shadow flag, 0:not cast shadow, 1:cast shadow, default is 0
+
+	DirectionalLight_Struct m_nDirectionalLight;
 
 };
 

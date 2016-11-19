@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -19,7 +19,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwTimer.h"
 
+#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
 #include <windows.h>
+#endif
 
 NS_MINIR_BEGIN
 
@@ -32,9 +34,11 @@ m_iFPS(0),
 m_dFPSTimeCounter(0),
 m_iFPSCounter(0)
 {
+#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
 	CWINT64 countsPerSecond;
 	QueryPerformanceFrequency((LARGE_INTEGER*)&countsPerSecond);
 	m_dSecondPerCount = 1.0 / (CWDOUBLE)countsPerSecond;
+#endif
 }
 
 cwTimer::~cwTimer()
@@ -54,15 +58,18 @@ CWUINT cwTimer::fps() const
 
 void cwTimer::reset()
 {
+#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
 	CWINT64 currCounter;
 	QueryPerformanceCounter((LARGE_INTEGER*)&currCounter);
 	m_iPrevTimeCounter = currCounter;
 	m_iCurrTimeCounter = currCounter;
 	m_dDeltaTime = 0;
+#endif
 }
 
 void cwTimer::tick()
 {
+#if _CW_PLATFORM_ == _CW_PLATFORM_WINDOWS_
 	CWINT64 currCounter;
 	QueryPerformanceCounter((LARGE_INTEGER*)&currCounter);
 
@@ -79,6 +86,7 @@ void cwTimer::tick()
 		m_iFPSCounter = 0;
 		m_dFPSTimeCounter = 0;
 	}
+#endif
 }
 
 NS_MINIR_END

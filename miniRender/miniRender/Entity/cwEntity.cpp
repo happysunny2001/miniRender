@@ -26,7 +26,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Shader/cwShader.h"
 #include "Engine/cwEngine.h"
 #include "Render/cwRenderer.h"
-#include "Render/cwRenderBatch.h"
+//#include "Render/cwRenderBatch.h"
 #include "effect/cwEffect.h"
 #include "Engine/cwEngine.h"
 
@@ -90,18 +90,36 @@ CWVOID cwEntity::setMaterial(cwMaterial* pMaterial)
 	m_pMaterial = pMaterial;
 }
 
-CWVOID cwEntity::render(cwRenderBatch* pRenderBatch)
+CWVOID cwEntity::render(cwEffect* pEffect)
 {
-	if (pRenderBatch && pRenderBatch->m_pEffect) {
+	if (pEffect) {
 		if (m_pMaterial)
-			m_pMaterial->configEffect(pRenderBatch->m_pEffect);
+			m_pMaterial->configEffect(pEffect);
 
 		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
-		pDevice->draw(pRenderBatch->m_pEffect->getShader(), pRenderBatch->m_pEffect->getTech(), m_pRenderObj);
+
+		if (m_pStencil)
+			pDevice->setStencil(m_pStencil);
+		if (m_pBlend)
+			pDevice->setBlend(m_pBlend);
+		pDevice->draw(pEffect, m_pRenderObj);
 	}
 
 	this->render();
 }
+
+//CWVOID cwEntity::render(cwRenderBatch* pRenderBatch)
+//{
+//	if (pRenderBatch && pRenderBatch->m_pEffect) {
+//		if (m_pMaterial)
+//			m_pMaterial->configEffect(pRenderBatch->m_pEffect);
+//
+//		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+//		pDevice->draw(pRenderBatch->m_pEffect->getShader(), pRenderBatch->m_pEffect->getTech(), m_pRenderObj);
+//	}
+//
+//	this->render();
+//}
 
 CWVOID cwEntity::render()
 {

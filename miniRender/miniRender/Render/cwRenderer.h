@@ -38,6 +38,7 @@ class cwPrimitiveEntity;
 class cwSpriteManager;
 class cwViewPort;
 class cwTouch;
+class cwTexture;
 
 class cwRenderer : public cwRef
 {
@@ -57,19 +58,19 @@ public:
 
 	virtual CWBOOL init();
 
-	virtual CWVOID setCurrCamera(cwCamera* pCamera);
-	virtual CWVOID setRendererCamera(cwCamera* pCamera);
-	virtual CWVOID setCurrShader(cwShader* pShader);
+	//virtual CWVOID setCurrCamera(cwCamera* pCamera);
+	//virtual CWVOID setRendererCamera(cwCamera* pCamera);
+	//virtual CWVOID setCurrShader(cwShader* pShader);
 
-	virtual CWVOID createViewPort(CWFLOAT fTopLeftX, CWFLOAT fTopLeftY, CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fMinDepth, CWFLOAT fMaxDepth);
+	//virtual CWVOID createViewPort(CWFLOAT fTopLeftX, CWFLOAT fTopLeftY, CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fMinDepth, CWFLOAT fMaxDepth);
 
 	virtual CWVOID addStage(cwStage* pStage);
 	virtual CWVOID addStageRealTime(cwStage* pStage);
 
 	virtual cwStage* getStage(const CWSTRING& strName);
 	inline cwStage* getCurrRenderStage() const { return m_pCurrRenderStage; }
-	inline cwCamera* getCurrCamera() const { return m_pCurrCamera; }
-	inline cwCamera* getRendererCamera() const { return m_pRendererCamera; }
+	//inline cwCamera* getCurrCamera() const { return m_pCurrCamera; }
+	//inline cwCamera* getRendererCamera() const { return m_pRendererCamera; }
 	virtual cwRay getPickingRayWorld(CWFLOAT fPosX, CWFLOAT fPosY);
 	virtual cwRay getPickingRayWorld(cwTouch* pTouch);
 
@@ -81,8 +82,8 @@ public:
 	virtual CWVOID end();
 	virtual CWVOID resize();
 
-	virtual CWVOID render(cwRenderBatch* pBatch);
-	virtual CWVOID configLight();
+	//virtual CWVOID render(cwRenderBatch* pBatch);
+	//virtual CWVOID configLight();
 
 	CWVOID renderPrimitive(const cwAABB& aabb);
 	CWVOID renderPrimitive(const cwAABB& aabb, const cwVector4D& color);
@@ -96,12 +97,16 @@ public:
 	CWVOID renderPrimitiveEntity();
 
 protected:
+	virtual CWBOOL buildFinalRenderTarget();
+	virtual CWBOOL buildFinalStage();
+	virtual CWBOOL build2DStage();
+
 	virtual CWVOID render(cwStage* pStage);
-	virtual CWVOID batchConfig(cwRenderBatch* pBatch);
-	virtual CWVOID perFrameConfig();
-	virtual CWVOID configDirectionalLight();
-	virtual CWVOID configPointLight();
-	virtual CWVOID configSpotLight();
+	//virtual CWVOID batchConfig(cwRenderBatch* pBatch);
+	//virtual CWVOID perFrameConfig();
+	//virtual CWVOID configDirectionalLight();
+	//virtual CWVOID configPointLight();
+	//virtual CWVOID configSpotLight();
 
 	CWVOID buildPrimitiveEntity();
 
@@ -113,26 +118,29 @@ protected:
 
 	cwVector<cwStage*> m_nVecStage;
 	cwStage* m_pCurrRenderStage;
+	cwStage* m_pFinalStage;
+	cwStage* m_p2DStage;
+	cwTexture* m_pTexFinalRenderTarget;
 
-	cwPrimitiveEntity* m_pPrimitiveEntity;
-	cwRenderBatch* m_pPrimitiveBatch;
+	//cwPrimitiveEntity* m_pPrimitiveEntity;
+	//cwRenderBatch* m_pPrimitiveBatch;
 
 	sRendererListNode m_nListNodePool[CW_RENDERER_LIST_POOL_SIZE];
 	CWUINT m_iListPoolIndex;
 	sRendererListNode* m_pRenderListHead;
 
-	cwViewPort* m_pViewPort;
-	CWFLOAT m_fViewPortTopLeftX;
-	CWFLOAT m_fViewPortTopLeftY;
-	CWFLOAT m_fViewPortWidth;
-	CWFLOAT m_fViewPortHeight;
-	CWFLOAT m_fViewPortMinDepth;
-	CWFLOAT m_fViewPortMaxDepth;
+	//cwViewPort* m_pViewPort;
+	//CWFLOAT m_fViewPortTopLeftX;
+	//CWFLOAT m_fViewPortTopLeftY;
+	//CWFLOAT m_fViewPortWidth;
+	//CWFLOAT m_fViewPortHeight;
+	//CWFLOAT m_fViewPortMinDepth;
+	//CWFLOAT m_fViewPortMaxDepth;
 
-	cwCamera* m_pRendererCamera;
+	//cwCamera* m_pRendererCamera;
 
-	cwCamera* m_pCurrCamera;
-	cwShader* m_pCurrShader;
+	//cwCamera* m_pCurrCamera;
+	//cwShader* m_pCurrShader;
 
 };
 

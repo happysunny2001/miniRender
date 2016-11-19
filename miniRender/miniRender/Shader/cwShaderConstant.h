@@ -30,19 +30,30 @@ NS_MINIR_BEGIN
 #define CW_SIG_COLOR    "COLOR"
 
 #define CW_SHADER_MAT_WORLDVIEWPROJ        "gMatWorldViewProj"
-#define CW_SHADER_MAT_VIEWPROJ             "gViewProj"
+#define CW_SHADER_MAT_VIEWPROJ             "gMatViewProj"
+#define CW_SHADER_MAT_VIEW				   "gMatView"
+#define CW_SHADER_MAT_PROJ				   "gMatProj"
+#define CW_SHADER_POS_EYE_WORLD            "gEyePosWorld"
+#define CW_SHADER_CAMERA_NEAR_FAR_Z        "gCameraNearFarZ"
 #define CW_SHADER_MAT_WORLD                "gMatWorld"
 #define CW_SHADER_MAT_WORLD_INV_TRANS      "gMatWorldInvTranspose"
+
 #define CW_SHADER_MATERIAL                 "gMaterial"
+#define CW_SHADER_DIFFUSE_TEXTURE          "gDiffuseTexture"
+#define CW_SHADER_DIFF_TEX_TRANS           "gDiffTexTransform"
+
 #define CW_SHADER_DIRECTIONAL_LIGHT        "gDirectionalLight"
+#define CW_SHADER_DIRECTIONAL_LIGHT_ENABLE "gEnableDirectionalLight"
+
+#define CW_SHADER_POINT_LIGHTS             "gPointLights"
+#define CW_SHADER_POINT_LIGHTS_CNT         "gPointLightCnt"
+
 #define CW_SHADER_DIRECTIONAL_LIGHT_CNT    "gDirectionalLightCount"
 #define CW_SHADER_POINT_LIGHT              "gPointLight"
 #define CW_SHADER_POINT_LIGHT_CNT          "gPointLightCount"
 #define CW_SHADER_SPOT_LIGHT			   "gSpotLight"
 #define CW_SHADER_SPOT_LIGHT_CNT		   "gSpotLightCount"
 #define CW_SHADER_EYE_POSW                 "gEyePosWorld"
-#define CW_SHADER_DIFFUSE_TEXTURE          "gDiffuseTexture"
-#define CW_SHADER_DIFF_TEX_TRANS           "gDiffTexTransform"
 #define CW_SHADER_FOG_START                "gFogStart"
 #define CW_SHADER_FOG_RANGE                "gFogRange"
 #define CW_SHADER_FOG_COLOR                "gFogColor"
@@ -52,13 +63,13 @@ NS_MINIR_BEGIN
 #define CW_SHADER_DYNAMIC_REFLECT_CUBE_MAP "gDynamicReflectCubeMap"
 
 typedef enum {
-	eDefShaderColor = 0,
-	eDefShaderLighting,
-	eDefShaderLightingTex,
+	//eDefShaderColor = 0,
+	eDefShaderLighting = 0,
+	//eDefShaderLightingTex,
 	eDefShaderTex,
-	eDefShaderPosTexColor,
+	//eDefShaderPosTexColor,
 	eDefShaderSkyDome,
-	eDefShaderNormalMap,
+	//eDefShaderNormalMap,
 	eDefShaderMax
 }eDefShaderID;
 

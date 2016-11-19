@@ -264,15 +264,15 @@ typedef enum {
 
 typedef enum {
 	eBufferBindNone = 0,
-	eBufferBindVertex,
-	eBufferBindIndex,
-	eBufferBindConstant,
-	eBufferBindShader,
-	eBufferBindSteam,
-	eBufferBindRenderTarget,
-	eBufferBindDepthStencil,
-	eBufferBindWritable,
-	eBufferBindMaxCount,
+	eBufferBindVertex = 1,
+	eBufferBindIndex = 2,
+	eBufferBindConstant = 4,
+	eBufferBindShader = 8,
+	eBufferBindSteam = 16,
+	eBufferBindRenderTarget = 32,
+	eBufferBindDepthStencil = 64,
+	eBufferBindWritable = 128,
+	eBufferBindMaxCount = 9,
 }eBufferBindFlag;
 
 typedef enum {
@@ -352,15 +352,15 @@ typedef enum {
 	eCubeFaceMax
 }eCubeTextureFace;
 
-typedef enum {
-	eRenderTextureNone = 0,
-	eRenderTextureTexture,
-	eRenderTextureTarget,
-	eRenderTextureShader,
-	eRenderTextureWritable,
-	eRenderTextureShadowMap,
-	eRenderTextureMultiTarget,
-}eRenderTextureType;
+//typedef enum {
+//	eRenderTextureNone = 0,
+//	eRenderTextureTexture,
+//	eRenderTextureTarget,
+//	//eRenderTextureShader,
+//	//eRenderTextureWritable,
+//	//eRenderTextureShadowMap,
+//	//eRenderTextureMultiTarget,
+//}eRenderTextureType;
 
 typedef enum {
 	eColorWriteEnableNone = 0,
@@ -428,9 +428,13 @@ typedef enum {
 }eParserType;
 
 typedef enum {
-	eStageLayerFliterEntity = 1,
-	eStageLayerFliterMirror,
-	eStageLayerFliterStage,
+	//eStageLayerFliterEntity = 1,
+	//eStageLayerFliterMirror,
+	//eStageLayerFliterStage,
+	eStageLayerFliterNone = 0,
+	eStageLayerFliterSelf = 1,
+	eStageLayerFliterScene = 2,
+	eStageLayerFliter2D = 4,
 }eStageLayerFliterType;
 
 typedef enum {

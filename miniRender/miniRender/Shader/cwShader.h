@@ -30,7 +30,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 NS_MINIR_BEGIN
 
 class cwTexture;
-class cwRenderTexture;
+//class cwRenderTexture;
 class cwBuffer;
 class cwMatrix4X4;
 
@@ -52,7 +52,6 @@ public:
 	virtual CWVOID setVariableFloat(const CWSTRING& strVariable, CWFLOAT value) = 0;
 	virtual CWVOID setVariableFloatArray(const CWSTRING& strVariable, CWFLOAT* pData, CWUINT count) = 0;
 	virtual CWVOID setVariableTexture(const CWSTRING& strVariable, const cwTexture* pTexture) = 0;
-	virtual CWVOID setVariableTextureWritable(const CWSTRING& strVariable, const cwRenderTexture* pTexture) = 0;
 	virtual CWVOID setVariableTextureWritable(const CWSTRING& strVariable, const cwTexture* pTexture) = 0;
 	virtual CWVOID setVariableBuffer(const CWSTRING& strVariable, cwBuffer* pBuffer) = 0;
 	virtual CWVOID setVariableBufferWritable(const CWSTRING& strVariable, cwBuffer* pBuffer) = 0;
@@ -66,7 +65,7 @@ public:
 	virtual CWVOID setVariableFloat(eShaderParamIndex eParam, CWFLOAT value) = 0;
 	virtual CWVOID setVariableFloatArray(eShaderParamIndex eParam, CWFLOAT* pData, CWUINT count) = 0;
 	virtual CWVOID setVariableTexture(eShaderParamIndex eParam, const cwTexture* pTexture) = 0;
-	virtual CWVOID setVariableTextureWritable(eShaderParamIndex eParam, const cwRenderTexture* pTexture) = 0;
+	virtual CWVOID setVariableTextureWritable(eShaderParamIndex eParam, const cwTexture* pTexture) = 0;
 	virtual CWVOID setVariableBuffer(eShaderParamIndex eParam, cwBuffer* pBuffer) = 0;
 	virtual CWVOID setVariableBufferWritable(eShaderParamIndex eParam, cwBuffer* pBuffer) = 0;
 

@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -27,6 +27,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Shader/cwShader.h"
 #include "Shader/cwShaderManager.h"
 #include "Effect/cwEffect.h"
+#include "effect/cwEffectManager.h"
 
 #include <fstream>
 #include <iostream>
@@ -481,10 +482,14 @@ cwRenderObject* cwGeometryGenerator::generateCoordinateAxisRenderObject(CWFLOAT 
 cwEntity* cwGeometryGenerator::generateCoordinateAxisEntity(CWFLOAT scale)
 {
 	cwRenderObject* pRenderObject = generateCoordinateAxisRenderObject(scale);
+
 	cwMaterial* pMaterial = cwMaterial::create();
-	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getDefShader(eDefShaderColor);
-	cwEffect* pEffect = cwEffect::create();
-	pEffect->setShader(pShader);
+
+	//cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getDefShader(eDefShaderColor);
+	//cwEffect* pEffect = cwEffect::create();
+	//pEffect->setShader(pShader);
+
+	cwEffect* pEffect = cwRepertory::getInstance().getEffectManager()->getDefEffect(eEffectIDColor);
 
 	cwEntity* pEntity = cwEntity::create();
 	pEntity->setMaterial(pMaterial);

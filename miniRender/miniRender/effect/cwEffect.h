@@ -24,11 +24,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwVector.h"
 #include "Ref/cwRef.h"
 #include "Shader/cwShader.h"
-#include "cwEffectParameter.h"
+#include "Parameter/cwEffectParameter.h"
 
 NS_MINIR_BEGIN
 
-class cwRenderBatch;
+//class cwRenderBatch;
+class cwRenderNode;
 
 class cwEffect : public cwRef
 {
@@ -50,7 +51,8 @@ public:
 	CWVOID addParameter(cwEffectParameter* pEffectParameter);
 	virtual CWVOID config();
 
-	virtual CWVOID render(cwRenderBatch* pBatch);
+	virtual CWVOID render(cwRenderNode* pNode);
+	//virtual CWVOID render(cwRenderBatch* pBatch);
 
 protected:
 	CWSTRING m_nStrName;

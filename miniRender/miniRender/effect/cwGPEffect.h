@@ -36,7 +36,8 @@ public:
 
 	cwGPInfo& getGPInfo() { return m_nGPInfo; }
 
-	virtual CWVOID render(cwRenderBatch* pBatch) override;
+	virtual CWVOID render(cwRenderNode* pNode) override;
+	//virtual CWVOID render(cwRenderBatch* pBatch) override;
 
 protected:
 	cwGPInfo m_nGPInfo;

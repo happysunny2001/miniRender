@@ -22,13 +22,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 NS_MINIR_BEGIN
 
 cwDirectionalLight* cwDirectionalLight::create(
-const cwVector4D& direction,
-		const cwVector4D& ambient,
-		const cwVector4D& diffuse,
-		const cwVector4D& specular)
+	const cwVector4D& direction,
+	const cwVector3D& color)
 {
 	cwDirectionalLight* pLight = new cwDirectionalLight();
-	if (pLight && pLight->init(direction, ambient, diffuse, specular)) {
+	if (pLight && pLight->init(direction, color)) {
 		pLight->autorelease();
 		return pLight;
 	}
@@ -37,9 +35,30 @@ const cwVector4D& direction,
 	return nullptr;
 }
 
+//cwDirectionalLight* cwDirectionalLight::create(
+//const cwVector4D& direction,
+//		const cwVector4D& ambient,
+//		const cwVector4D& diffuse,
+//		const cwVector4D& specular)
+//{
+//	cwDirectionalLight* pLight = new cwDirectionalLight();
+//	if (pLight && pLight->init(direction, ambient, diffuse, specular)) {
+//		pLight->autorelease();
+//		return pLight;
+//	}
+//
+//	CW_SAFE_DELETE(pLight);
+//	return nullptr;
+//}
+
 cwDirectionalLight::cwDirectionalLight()
 {
 
+}
+
+cwDirectionalLight::cwDirectionalLight(cwDirectionalLight& light)
+{
+	m_nDirectionalLight = light.m_nDirectionalLight;
 }
 
 cwDirectionalLight::~cwDirectionalLight()
@@ -49,43 +68,55 @@ cwDirectionalLight::~cwDirectionalLight()
 
 CWBOOL cwDirectionalLight::init(
 	const cwVector4D& direction,
-	const cwVector4D& ambient,
-	const cwVector4D& diffuse,
-	const cwVector4D& specular)
+	const cwVector3D& color)
 {
-	this->setDirection(direction);
-	this->setAmbient(ambient);
-	this->setDiffuse(diffuse);
-	this->setSpecular(specular);
-
-	m_nLightAttr.set(0, 0, 0, 0);
+	m_nDirectionalLight.m_nDirection = direction;
+	m_nDirectionalLight.m_nDirection.w = 0;
+	m_nDirectionalLight.m_nColor = color;
+	m_nDirectionalLight.m_fAttr = 0;
 
 	return CWTRUE;
 }
 
+//CWBOOL cwDirectionalLight::init(
+//	const cwVector4D& direction,
+//	const cwVector4D& ambient,
+//	const cwVector4D& diffuse,
+//	const cwVector4D& specular)
+//{
+//	this->setDirection(direction);
+//	this->setAmbient(ambient);
+//	this->setDiffuse(diffuse);
+//	this->setSpecular(specular);
+//
+//	m_nLightAttr.set(0, 0, 0, 0);
+//
+//	return CWTRUE;
+//}
+
 CWUINT cwDirectionalLight::size() const
 {
-	return sizeof(cwVector4D)* 5;
+	return sizeof(m_nDirectionalLight);
 }
 
 CWVOID* cwDirectionalLight::data() const
 {
-	return (CWVOID*)&(this->m_nDirection);
+	return (CWVOID*)&(this->m_nDirectionalLight);
 }
 
 CWVOID cwDirectionalLight::setCastShadow(CWBOOL b)
 {
 	if (b) {
-		m_nLightAttr.x = 1.0f;
+		m_nDirectionalLight.m_fAttr = 1.0f;
 	}
 	else {
-		m_nLightAttr.x = 0.0f;
+		m_nDirectionalLight.m_fAttr = 0.0f;
 	}
 }
 
 CWBOOL cwDirectionalLight::getCastShadow() const
 {
-	if (m_nLightAttr.x == 0) return CWFALSE;
+	if (m_nDirectionalLight.m_fAttr == 0) return CWFALSE;
 	return CWTRUE;
 }
 

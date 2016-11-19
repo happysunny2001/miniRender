@@ -22,10 +22,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 NS_MINIR_BEGIN
 
 cwBuffer::cwBuffer():
-m_iElementCnt(0),
+m_uElementCnt(0),
 m_nStride(0),
 m_nOffset(0),
-m_uBufferSize(0)
+m_uBufferSize(0),
+m_nMiscFlag(0)
 {
 
 }
@@ -39,14 +40,14 @@ CWBOOL cwBuffer::init(
 	CWVOID* pData,
 	CWUINT uSize,
 	eBufferUsage usage,
-	eBufferBindFlag bindFlag,
+	CWUINT bindFlag,
 	eAccessFlag uCpuFlag,
 	CWUINT miscFlag,
 	CWUINT structureByteStride,
 	CWUINT offset)
 {
 	if (structureByteStride > 0)
-		m_iElementCnt = uSize / structureByteStride;
+		m_uElementCnt = uSize / structureByteStride;
 
 	m_uBufferSize = uSize;
 	m_nStride = structureByteStride;
@@ -69,7 +70,7 @@ CWHANDLE cwBuffer::getShaderHandle()
 	return NULL;
 }
 
-CWHANDLE cwBuffer::getWritablehandle()
+CWHANDLE cwBuffer::getWritableHandle()
 {
 	return NULL;
 }
@@ -98,14 +99,14 @@ CWBOOL cwBuffer::rebuild(
 	CWVOID* pData,
 	CWUINT uSize,
 	eBufferUsage usage,
-	eBufferBindFlag bindFlag,
+	CWUINT bindFlag,
 	eAccessFlag uCpuFlag,
 	CWUINT miscFlag,
 	CWUINT structureByteStride,
 	CWUINT offset)
 {
 	if (structureByteStride > 0)
-		m_iElementCnt = uSize / structureByteStride;
+		m_uElementCnt = uSize / structureByteStride;
 
 	m_uBufferSize = uSize;
 	m_nStride = structureByteStride;

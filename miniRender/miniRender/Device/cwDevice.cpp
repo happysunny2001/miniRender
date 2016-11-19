@@ -20,7 +20,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwDevice.h"
 #include "Base/cwColor.h"
 #include "Base/cwMacros.h"
-#include "Texture/cwRenderTexture.h"
+//#include "Texture/cwRenderTexture.h"
 #include "Texture/cwTextureManager.h"
 #include "ViewPort/cwViewPort.h"
 #include "Repertory/cwRepertory.h"
@@ -33,7 +33,7 @@ m_fvClearColor(cwColor::black),
 m_eRenderState(eRenderStateSolid),
 m_bEnableMsaa4x(CWTRUE),
 m_pBlendState(nullptr),
-m_pRenderTargetBkBuffer(nullptr),
+//m_pRenderTargetBkBuffer(nullptr),
 //m_pCurrRenderTarget(nullptr),
 m_bRefreshRenderTarget(false),
 m_pDefaultViewPort(nullptr),
@@ -54,7 +54,7 @@ cwDevice::~cwDevice()
 	CW_SAFE_RELEASE_NULL(m_pDefaultViewPort);
 	CW_SAFE_RELEASE_NULL(m_pCurrViewPort);
 
-	CW_SAFE_RELEASE_NULL(m_pRenderTargetBkBuffer);
+	//CW_SAFE_RELEASE_NULL(m_pRenderTargetBkBuffer);
 	//CW_SAFE_RELEASE_NULL(m_pCurrRenderTarget);
 	CW_SAFE_RELEASE_NULL(m_pDisableZBuffer);
 	CW_SAFE_RELEASE_NULL(m_pRenderTarget);
@@ -133,18 +133,18 @@ CWVOID cwDevice::createDefaultViewPort()
 	setViewPort(m_pDefaultViewPort);
 }
 
-CWVOID cwDevice::createDefaultRenderTarget()
-{
-	if (m_pRenderTargetBkBuffer) {
-		CW_SAFE_RELEASE_NULL(m_pRenderTargetBkBuffer);
-	}
-
-	cwRenderTexture* pTex = cwRepertory::getInstance().getTextureManager()->createRenderTexture(1.0f, 1.0f, eRenderTextureTarget);
-	pTex->setClearColor(cwColor::red);
-	m_pRenderTargetBkBuffer = pTex;
-	CW_SAFE_RETAIN(m_pRenderTargetBkBuffer);
-	this->setRenderTarget(m_pRenderTargetBkBuffer);
-}
+//CWVOID cwDevice::createDefaultRenderTarget()
+//{
+//	if (m_pRenderTargetBkBuffer) {
+//		CW_SAFE_RELEASE_NULL(m_pRenderTargetBkBuffer);
+//	}
+//
+//	cwRenderTexture* pTex = cwRepertory::getInstance().getTextureManager()->createRenderTexture(1.0f, 1.0f, eRenderTextureTarget);
+//	pTex->setClearColor(cwColor::red);
+//	m_pRenderTargetBkBuffer = pTex;
+//	CW_SAFE_RETAIN(m_pRenderTargetBkBuffer);
+//	this->setRenderTarget(m_pRenderTargetBkBuffer);
+//}
 
 CWVOID cwDevice::createDefaultStencil()
 {

@@ -42,6 +42,9 @@ protected:
 	CWVOID buildLight();
 	CWVOID initScene();
 
+	CWVOID movingLights(CWFLOAT dt);
+	CWVOID movingDirectionalLight(CWFLOAT dt);
+
 protected:
 	cwRenderObject* m_pPlaneObject;
 	cwRenderObject* m_pSphereObject;

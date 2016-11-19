@@ -29,7 +29,7 @@ NS_MINIR_BEGIN
 
 class cwRenderObject;
 class cwRenderDevice;
-class cwEffects;
+class cwEffect;
 class cwCamera;
 class cwMaterial;
 class cwLight;
@@ -55,7 +55,8 @@ public:
 	inline cwMaterial* getMaterial() { return m_pMaterial; }
 	
 	virtual CWVOID render() override;
-	virtual CWVOID render(cwRenderBatch* pRenderBatch) override;
+	//virtual CWVOID render(cwRenderBatch* pRenderBatch) override;
+	virtual CWVOID render(cwEffect* pEffect) override;
 
 protected:
 	virtual CWVOID buildMaterial();

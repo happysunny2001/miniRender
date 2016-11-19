@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -18,238 +18,130 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwStage.h"
-#include "Camera/cwCamera.h"
-#include "Effect/cwEffect.h"
+#include "cwStageLayer.h"
+#include "Texture/cwTexture.h"
 #include "Repertory/cwRepertory.h"
-#include "Engine/cwEngine.h"
-#include "Entity/cwScene.h"
-#include "Entity/cwEntity.h"
 #include "Device/cwDevice.h"
-#include "Layer/cwStageLayer.h"
-#include "Render/cwRenderer.h"
-#include "Render/Generator/cwRenderGenerator.h"
 
 NS_MINIR_BEGIN
 
 cwStage* cwStage::create()
 {
 	cwStage* pStage = new cwStage();
-	if (pStage) {
+	if (pStage && pStage->init()) {
 		pStage->autorelease();
 		return pStage;
 	}
 
+	CW_SAFE_DELETE(pStage);
+	return nullptr;
+}
+
+cwStage* cwStage::create(cwTexture* pRenderTexture)
+{
+	cwStage* pStage = new cwStage();
+	if (pStage && pStage->init(pRenderTexture)) {
+		pStage->autorelease();
+		return pStage;
+	}
+
+	CW_SAFE_DELETE(pStage);
 	return nullptr;
 }
 
 cwStage::cwStage() :
-m_pCamera(nullptr),
-m_bEnable(CWTRUE),
-m_eType(eStageTypeNormal),
-m_pRenderTarget(nullptr),
-m_pDepthStencil(nullptr),
-m_bClearColor(CWTRUE),
-m_bClearDepth(CWTRUE),
-m_bClearStencil(CWTRUE),
-m_bRefreshRenderTarget(CWFALSE)
+m_pCurrUsingCamera(nullptr),
+m_pResultRenderTexture(nullptr)
 {
 
 }
 
 cwStage::~cwStage()
 {
-	CW_SAFE_RELEASE_NULL(m_pCamera);
-	CW_SAFE_RELEASE_NULL(m_pRenderTarget);
-	CW_SAFE_RELEASE_NULL(m_pDepthStencil);
-
-	clearStageEntity();
-	clearStageLayer(CWTRUE);
-	clearStageGenerator();
+	CW_SAFE_RELEASE_NULL(m_pResultRenderTexture);
 }
 
-CWVOID cwStage::setRenderTexture(cwTexture* pRenderTexture)
+CWBOOL cwStage::init()
 {
-	if (pRenderTexture == m_pRenderTarget) return;
+	if (!buildRenderTexture()) return CWFALSE;
+	return CWTRUE;
+}
 
+CWBOOL cwStage::init(cwTexture* pRenderTexture)
+{
 	CW_SAFE_RETAIN(pRenderTexture);
-	CW_SAFE_RELEASE_NULL(m_pRenderTarget);
-	m_pRenderTarget = pRenderTexture;
+	m_pResultRenderTexture = pRenderTexture;
+	return CWTRUE;
 }
 
-CWVOID cwStage::setDepthStencil(cwTexture* pDepthStencil)
+CWBOOL cwStage::buildRenderTexture()
 {
-	if (pDepthStencil == m_pDepthStencil) return;
+	cwRepertory& repertory = cwRepertory::getInstance();
 
-	CW_SAFE_RETAIN(pDepthStencil);
-	CW_SAFE_RELEASE_NULL(m_pDepthStencil);
-	m_pDepthStencil = pDepthStencil;
+	CWFLOAT winWidth = static_cast<CWFLOAT>(repertory.getUInt(gValueWinWidth));
+	CWFLOAT winHeight = static_cast<CWFLOAT>(repertory.getUInt(gValueWinHeight));
+
+	m_pResultRenderTexture = repertory.getDevice()->createRTTexture(winWidth, winHeight, eFormatR8g8b8a8Unorm, CWTRUE);
+	if (!m_pResultRenderTexture) return CWFALSE;
+	CW_SAFE_RETAIN(m_pResultRenderTexture);
+
+	return CWTRUE;
 }
 
-CWVOID cwStage::setRefreshRenderTarget(CWBOOL bRefresh)
-{
-	m_bRefreshRenderTarget = bRefresh;
-}
-
-CWVOID cwStage::addRenderGenerator(cwRenderGenerator* pGenerator)
-{
-	if (pGenerator) {
-		m_nVecGenerator.pushBack(pGenerator);
-	}
-}
-
-CWVOID cwStage::setCamera(cwCamera* pCamera)
-{
-	if (m_pCamera == pCamera) return;
-	CW_SAFE_RETAIN(pCamera);
-	CW_SAFE_RELEASE_NULL(m_pCamera);
-	m_pCamera = pCamera;
-}
-
-CWVOID cwStage::reset()
+CWVOID cwStage::bindingResultParameter(cwShader* pShader)
 {
 
 }
 
-CWVOID cwStage::begin()
+CWVOID cwStage::showResult(const cwVector2D& pos, const cwVector2D& scale)
 {
-	reset();
 
-	cwRepertory::getInstance().getEngine()->getRenderer()->setCurrCamera(m_pCamera);
-	if (m_bRefreshRenderTarget) {
-		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
-		pDevice->setRenderTarget(m_pRenderTarget);
-		pDevice->setDepthStencil(m_pDepthStencil);
-		pDevice->beginDraw(m_bClearColor, m_bClearDepth, m_bClearStencil);
-	}
 }
 
-std::vector<cwRenderNode*>* cwStage::getRenderEntities(cwStageLayer* pStageLayer)
+cwTexture* cwStage::getRenderResult() const
 {
-	eStageLayerFliterType eType = pStageLayer->getFliterType();
-	if (eType == eStageLayerFliterStage) return &m_nVecStageEntities;
-
-	m_nVecRenderNodes.clear();
-	cwCamera* pCamera = pStageLayer->getCamera();
-	if (!pCamera) {
-		pCamera = this->getCamera();
-	}
-
-	switch (eType) {
-		case eStageLayerFliterEntity:
-			cwRepertory::getInstance().getEngine()->getVisibleNodes(pCamera, eRenderTypeEntity, m_nVecRenderNodes);
-		case eStageLayerFliterMirror:
-			cwRepertory::getInstance().getEngine()->getVisibleNodes(pCamera, eRenderTypeMirror, m_nVecRenderNodes);
-	}
-
-	return &m_nVecRenderNodes;
+	return m_pResultRenderTexture;
 }
 
-CWVOID cwStage::render()
+cwStageLayer* cwStage::getStageLayer(const CWSTRING& name)
 {
-	for (auto pLayer : m_nVecLayer) {
-		std::vector<cwRenderNode*>* vecEntities = getRenderEntities(pLayer);
-		if (vecEntities) {
-			pLayer->begin(vecEntities);
-		}
-
-		pLayer->render();
-
-		pLayer->end();
-	}
-}
-
-CWVOID cwStage::end()
-{
-	cwRepertory::getInstance().getDevice()->endDraw();
-
-	for (auto pGenerator : m_nVecGenerator) {
-		pGenerator->generate();
-	}
-
-	cwRepertory::getInstance().getDevice()->clearShaderResource();
-}
-
-CWVOID cwStage::addStageEntity(cwEntity* pEntity)
-{
-	if (!pEntity) return;
-	m_nVecStageEntities.push_back(pEntity);
-	CW_SAFE_RETAIN(pEntity);
-}
-
-CWVOID cwStage::addStageLayer(cwStageLayer* pLayer)
-{
-	if (!pLayer) return;
-	m_nVecLayer.pushBack(pLayer);
-}
-
-CWUINT cwStage::getStageLayerCount() const
-{
-	return static_cast<CWUINT>(m_nVecLayer.size());
-}
-
-cwStageLayer* cwStage::getStageLayer(CWUINT index)
-{
-	if (index >= m_nVecLayer.size()) return nullptr;
-	return m_nVecLayer.at(index);
-}
-
-cwStageLayer* cwStage::getStageLayer(const CWSTRING& strName)
-{
-	for (auto pStageLayer : m_nVecLayer) {
-		if (pStageLayer->getName() == strName) return pStageLayer;
+	for (auto it = m_nVecStageLayers.begin(); it != m_nVecStageLayers.end(); ++it) {
+		if ((*it)->name() == name) return (*it);
 	}
 
 	return nullptr;
 }
 
-CWVOID cwStage::addStageTexture(const CWSTRING& strName, cwTexture* pTexture)
+CWVOID cwStage::addStageLayer(cwStageLayer* pStageLayer)
 {
-	if (!pTexture) return;
-
-	m_nMapStageTextures.insert(strName, pTexture);
+	m_nVecStageLayers.pushBack(pStageLayer);
 }
 
-cwTexture* cwStage::getStageTexture(const CWSTRING& strName)
+CWVOID cwStage::removeStageLayer(cwStageLayer* pStageLayer)
 {
-	auto it = m_nMapStageTextures.find(strName);
-	if (it == m_nMapStageTextures.end()) return nullptr;
-
-	return it->second;
+	m_nVecStageLayers.erase(pStageLayer);
 }
 
-CWBOOL cwStage::removeStageTexture(const CWSTRING& strName)
+CWVOID cwStage::begin()
 {
-	return m_nMapStageTextures.erase(strName) ? CWTRUE : CWFALSE;
+	m_pCurrUsingCamera = nullptr;
 }
 
-CWBOOL cwStage::removeStageTexture(cwTexture* pTexture)
+CWVOID cwStage::render()
 {
-	for (auto it = m_nMapStageTextures.begin(); it != m_nMapStageTextures.end(); ++it) {
-		if (it->second == pTexture) {
-			m_nMapStageTextures.erase(it->first);
-			return CWTRUE;
-		}
+	for (auto it = m_nVecStageLayers.begin(); it != m_nVecStageLayers.end(); ++it) {
+		cwStageLayer* pStageLayer = (*it);
+		m_pCurrUsingCamera = pStageLayer->getCamera();
+		pStageLayer->begin();
+		pStageLayer->render();
+		pStageLayer->end();
 	}
-
-	return CWFALSE;
 }
 
-CWVOID cwStage::clearStageLayer(CWBOOL bClear)
+CWVOID cwStage::end()
 {
-	m_nVecLayer.clear();
-}
 
-CWVOID cwStage::clearStageGenerator()
-{
-	m_nVecGenerator.clear();
-}
-
-CWVOID cwStage::clearStageEntity()
-{
-	for (auto pNode : m_nVecStageEntities) {
-		CW_SAFE_RELEASE(pNode);
-	}
-	m_nVecStageEntities.clear();
 }
 
 NS_MINIR_END
+

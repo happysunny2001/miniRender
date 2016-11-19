@@ -22,6 +22,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwMacros.h"
 #include "cwBasicType.h"
+#include "cwUtils.h"
+
+#include <unordered_map>
 
 NS_MINIR_BEGIN
 
@@ -29,9 +32,33 @@ class cwCommon
 {
 public:
 	static CWSTRING getNewTextureID();
+	static cwCommon& getInstance();
+
+	CWBOOL getBool(const CWSTRING& strBool) const;
+	eColorWriteEnable getColorEnable(const CWSTRING& strColor) const;
+	eFormat getFormatType(const CWSTRING& strFormat) const;
+	eClassification getClassificationType(const CWSTRING& strClass) const;
+
+	CWBOOL getBool(const char* strBool) const;
+	eColorWriteEnable getColorEnable(const char* strColor) const;
+	eFormat getFormatType(const char* strFormat) const;
+	eClassification getClassificationType(const char* strClass) const;
+
+private:
+	cwCommon();
+	cwCommon(cwCommon const&) {}
+	cwCommon& operator=(cwCommon const&) {}
+	virtual ~cwCommon();
+
+	CWVOID initFormat();
 
 private:
 	static CWUINT m_iGTextureID;
+
+	std::unordered_map<CWSTRING, CWBOOL> m_nMapBool;
+	std::unordered_map<CWSTRING, eColorWriteEnable> m_nMapColorEnable;
+	std::unordered_map<CWSTRING, eFormat> m_nMapFormat;
+	std::unordered_map<CWSTRING, eClassification> m_nMapClassification;
 
 };
 

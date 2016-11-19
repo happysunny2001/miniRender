@@ -33,7 +33,8 @@ TBDR::~TBDR()
 CWVOID TBDR::gameBegin()
 {
 	//cwRepertory::getInstance().getEngine()->loadRenderer("Render/renderDeferredShading.xml");
-	cwTBDRRenderer* pRenderer = cwTBDRRenderer::create();
+	//cwTBDRRenderer* pRenderer = cwTBDRRenderer::create();
+	cwRenderer* pRenderer = cwRepertory::getInstance().getRendererFactory()->createTBDRRenderer();
 	cwRepertory::getInstance().getEngine()->setRenderer(pRenderer);
 	cwRepertory::getInstance().getEngine()->getDefaultCamera()->updateCamera(0, 10.0f, -30.0f);
 	cwRepertory::getInstance().getEngine()->setFrameEnable(CWTRUE);

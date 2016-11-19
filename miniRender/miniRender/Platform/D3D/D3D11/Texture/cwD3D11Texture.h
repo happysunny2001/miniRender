@@ -62,6 +62,7 @@ protected:
 protected:
 	ID3D11ShaderResourceView* m_pShaderResource;
 	CWBOOL m_bShaderUsage;
+	CWUINT m_iMSAASamples;
 
 };
 

@@ -32,9 +32,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Entity/cwEntity.h"
 #include "Material/cwMaterial.h"
 #include "Texture/cwTexture.h"
-#include "Texture/cwRenderTexture.h"
 #include "Texture/cwTextureManager.h"
 #include "Effect/cwEffect.h"
+#include "effect/cwGPEffect.h"
 #include "Stencil/cwStencil.h"
 #include "Engine/cwEngine.h"
 #include "Platform/Windows/cwWinUtils.h"
@@ -45,13 +45,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/D3D/D3D11/Buffer/cwD3D11BufferWritable.h"
 #include "Platform/D3D/D3D11/Stencil/cwD3D11Stencil.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11Texture.h"
-#include "Platform/D3D/D3D11/Texture/cwD3D11RenderTarget.h"
-#include "Platform/D3D/D3D11/Texture/cwD3D11RenderTexture.h"
-#include "Platform/D3D/D3D11/Texture/cwD3D11RenderTextureWritable.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11TextureArray.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11CubeTexture.h"
-#include "Platform/D3D/D3D11/Texture/cwD3D11ShadowMapTexture.h"
-#include "Platform/D3D/D3D11/Texture/cwD3D11MultiRenderTarget.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11RWTexture.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11RTTexture.h"
 #include "Platform/D3D/D3D11/Texture/cwD3D11DSTexture.h"
@@ -121,7 +116,7 @@ cwD3D11Device::~cwD3D11Device()
 	CW_RELEASE_COM(m_pNoCullRenderState);
 	CW_RELEASE_COM(m_pCullCWRenderState);
 	CW_SAFE_RELEASE_NULL(m_pMaterialDefault);
-	CW_SAFE_RELEASE_NULL(m_pRenderTargetBkBuffer);
+	//CW_SAFE_RELEASE_NULL(m_pRenderTargetBkBuffer);
 
 #if CW_DEBUG
 	if (m_pD3D11Debug) {
@@ -255,9 +250,9 @@ bool cwD3D11Device::initDevice()
 
 void cwD3D11Device::resize(CWUINT width, CWUINT height)
 {
-	cwRepertory::getInstance().getTextureManager()->beginResize();
+	//cwRepertory::getInstance().getTextureManager()->beginResize();
 	CW_HR(m_pDxgiSwapChain->ResizeBuffers(1, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
-	cwRepertory::getInstance().getTextureManager()->onResize();
+	//cwRepertory::getInstance().getTextureManager()->onResize();
 
 	createDefaultViewPort();
 
@@ -336,15 +331,9 @@ void cwD3D11Device::createRenderState()
 
 void cwD3D11Device::beginDraw(CWBOOL bClearColor, CWBOOL bClearDepth, CWBOOL bClearStencil)
 {
-	//m_pCurrRenderTarget = m_pRenderTargetBkBuffer;
-	//if (m_bRefreshRenderTarget && m_pCurrRenderTarget) {
-	//	m_pCurrRenderTarget->binding();
-	//}
-
-	//m_pCurrRenderTarget->beginDraw(bClearColor, bClearDepth, bClearStencil);
-
 	if (m_bRefreshViewPort && m_pCurrViewPort) {
 		m_pCurrViewPort->binding();
+		m_bRefreshViewPort = CWFALSE;
 	}
 
 	ID3D11DepthStencilView* pDepthStencilView = NULL;
@@ -675,24 +664,24 @@ cwTexture* cwD3D11Device::createCubeTextureThreadSafe(CWVOID* pData, CWUINT64 uS
 	return cwD3D11CubeTexture::createThreadSafe(pData, uSize);
 }
 
-cwRenderTexture* cwD3D11Device::createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType, CWBOOL bThreading)
-{
-	switch (eType)
-	{
-	case eRenderTextureTarget:
-		return cwD3D11RenderTarget::create(bThreading);
-	case eRenderTextureShader:
-		return cwD3D11RenderTexture::create(fWidth, fHeight, bThreading);
-	case eRenderTextureWritable:
-		return cwD3D11RenderTextureWritable::create(fWidth, fHeight, bThreading);
-	case eRenderTextureShadowMap:
-		return cwD3D11ShadowMapTexture::create(fWidth, fHeight, bThreading);
-	case eRenderTextureMultiTarget:
-		return cwD3D11MultiRenderTarget::create(fWidth, fHeight, bThreading);
-	}
-
-	return nullptr;
-}
+//cwRenderTexture* cwD3D11Device::createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType, CWBOOL bThreading)
+//{
+//	switch (eType)
+//	{
+//	case eRenderTextureTarget:
+//		return cwD3D11RenderTarget::create(bThreading);
+//	//case eRenderTextureShader:
+//	//	return cwD3D11RenderTexture::create(fWidth, fHeight, bThreading);
+//	//case eRenderTextureWritable:
+//	//	return cwD3D11RenderTextureWritable::create(fWidth, fHeight, bThreading);
+//	case eRenderTextureShadowMap:
+//		return cwD3D11ShadowMapTexture::create(fWidth, fHeight, bThreading);
+//	//case eRenderTextureMultiTarget:
+//	//	return cwD3D11MultiRenderTarget::create(fWidth, fHeight, bThreading);
+//	}
+//
+//	return nullptr;
+//}
 
 cwTexture* cwD3D11Device::createTextureArray(const std::vector<CWSTRING>& vecFiles)
 {
@@ -714,14 +703,29 @@ cwTexture* cwD3D11Device::createRTTexture(CWFLOAT fWidth, CWFLOAT fHeight, eForm
 	return cwD3D11RTTexture::create(fWidth, fHeight, format, bShaderUsage, bThreadSafe);
 }
 
+cwTexture* cwD3D11Device::createRTTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples, CWBOOL bShaderUsage, CWBOOL bThreadSafe)
+{
+	return cwD3D11RTTexture::create(fWidth, fHeight, format, iMSAASamples, bShaderUsage, bThreadSafe);
+}
+
 cwTexture* cwD3D11Device::createRWTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bThreadSafe)
 {
 	return cwD3D11RWTexture::create(fWidth, fHeight, format, bThreadSafe);
 }
 
+cwTexture* cwD3D11Device::createRWTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples, CWBOOL bThreadSafe)
+{
+	return cwD3D11RWTexture::create(fWidth, fHeight, format, iMSAASamples, bThreadSafe);
+}
+
 cwTexture* cwD3D11Device::createDSTexture(CWFLOAT fWidth, CWFLOAT fHeight, CWBOOL bShaderUsage, CWBOOL bThreadSafe)
 {
 	return cwD3D11DSTexture::create(fWidth, fHeight, bShaderUsage, bThreadSafe);
+}
+
+cwTexture* cwD3D11Device::createDSTexture(CWFLOAT fWidth, CWFLOAT fHeight, CWUINT iMSAASamples, CWBOOL bShaderUsage, CWBOOL bThreadSafe)
+{
+	return cwD3D11DSTexture::create(fWidth, fHeight, iMSAASamples, bShaderUsage, bThreadSafe);
 }
 
 cwTexture* cwD3D11Device::createDSTexture(CWBOOL bThreadSafe)
@@ -800,8 +804,10 @@ void cwD3D11Device::render(cwRenderObject* pRenderObj, const cwVector3D& worldPo
 	}
 }
 
-void cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj)
+CWVOID cwD3D11Device::draw(cwEffect* pEffect, cwRenderObject* pRenderObj)
 {
+	if (!pEffect->getShader()) return;
+
 	this->setInputLayout(pRenderObj->getInputLayout());
 	this->setPrimitiveTopology(pRenderObj->getPrimitiveTopology());
 
@@ -809,14 +815,13 @@ void cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObj
 
 	D3DX11_TECHNIQUE_DESC techDesc;
 	ID3DX11EffectTechnique* pTech = nullptr;
+	cwD3D11Shader* pD3D11Shader = static_cast<cwD3D11Shader*>(pEffect->getShader());
 
-	cwD3D11Shader* pD3D11Shader = static_cast<cwD3D11Shader*>(pShader);
-
-	if (strTech.empty()) {
+	if (pEffect->getTech().empty()) {
 		pTech = pD3D11Shader->getTechnique(0);
 	}
 	else {
-		pTech = pD3D11Shader->getTechnique(strTech);
+		pTech = pD3D11Shader->getTechnique(pEffect->getTech());
 	}
 
 	if (!pTech) return;
@@ -828,7 +833,6 @@ void cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObj
 			this->setIndexBuffer(pRenderObj->getIndexBuffer());
 
 			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
-			//m_pD3D11DeviceContext->DrawIndexed(pRenderObj->getIndexBuffer()->getElementCount(), 0, 0);
 			m_pD3D11DeviceContext->DrawIndexed(pRenderObj->getValidIndexCnt(), 0, 0);
 		}
 	}
@@ -837,20 +841,64 @@ void cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObj
 			this->setVertexBuffer(pRenderObj->getVertexBuffer());
 
 			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
-			//m_pD3D11DeviceContext->Draw(pRenderObj->getVertexBuffer()->getElementCount(), 0);
 			m_pD3D11DeviceContext->Draw(pRenderObj->getValidVertexCnt(), 0);
 		}
 	}
 }
 
-CWVOID cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, std::vector<cwRenderObject*>& vecRenderObject, CWUINT uCnt)
+//void cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj)
+//{
+//	this->setInputLayout(pRenderObj->getInputLayout());
+//	this->setPrimitiveTopology(pRenderObj->getPrimitiveTopology());
+//
+//	pRenderObj->preRender();
+//
+//	D3DX11_TECHNIQUE_DESC techDesc;
+//	ID3DX11EffectTechnique* pTech = nullptr;
+//
+//	cwD3D11Shader* pD3D11Shader = static_cast<cwD3D11Shader*>(pShader);
+//
+//	if (strTech.empty()) {
+//		pTech = pD3D11Shader->getTechnique(0);
+//	}
+//	else {
+//		pTech = pD3D11Shader->getTechnique(strTech);
+//	}
+//
+//	if (!pTech) return;
+//	pTech->GetDesc(&techDesc);
+//
+//	if (pRenderObj->getIndexBuffer()) {
+//		for (CWUINT i = 0; i < techDesc.Passes; ++i) {
+//			this->setVertexBuffer(pRenderObj->getVertexBuffer());
+//			this->setIndexBuffer(pRenderObj->getIndexBuffer());
+//
+//			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
+//			//m_pD3D11DeviceContext->DrawIndexed(pRenderObj->getIndexBuffer()->getElementCount(), 0, 0);
+//			m_pD3D11DeviceContext->DrawIndexed(pRenderObj->getValidIndexCnt(), 0, 0);
+//		}
+//	}
+//	else {
+//		for (CWUINT i = 0; i < techDesc.Passes; ++i) {
+//			this->setVertexBuffer(pRenderObj->getVertexBuffer());
+//
+//			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
+//			//m_pD3D11DeviceContext->Draw(pRenderObj->getVertexBuffer()->getElementCount(), 0);
+//			m_pD3D11DeviceContext->Draw(pRenderObj->getValidVertexCnt(), 0);
+//		}
+//	}
+//}
+
+CWVOID cwD3D11Device::draw(cwEffect* pEffect, std::vector<cwRenderObject*>& vecRenderObject, CWUINT uCnt)
 {
+	if (!pEffect->getShader()) return;
+
 	cwRenderObject* pMeshRenderObj = vecRenderObject[0];
 
 	this->setInputLayout(pMeshRenderObj->getInputLayout());
 	this->setPrimitiveTopology(pMeshRenderObj->getPrimitiveTopology());
 
-	cwBuffer* arrBuffer[D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT] = {NULL};
+	cwBuffer* arrBuffer[D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT] = { NULL };
 	CWUINT iSize = (CWUINT)vecRenderObject.size();
 	iSize = iSize < D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT ? iSize : D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT;
 	for (CWUINT i = 0; i < iSize; ++i) {
@@ -860,14 +908,13 @@ CWVOID cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, std::vect
 
 	D3DX11_TECHNIQUE_DESC techDesc;
 	ID3DX11EffectTechnique* pTech = nullptr;
+	cwD3D11Shader* pD3D11Shader = static_cast<cwD3D11Shader*>(pEffect->getShader());
 
-	cwD3D11Shader* pD3D11Shader = static_cast<cwD3D11Shader*>(pShader);
-
-	if (strTech.empty()) {
+	if (pEffect->getTech().empty()) {
 		pTech = pD3D11Shader->getTechnique(0);
 	}
 	else {
-		pTech = pD3D11Shader->getTechnique(strTech);
+		pTech = pD3D11Shader->getTechnique(pEffect->getTech());
 	}
 
 	if (!pTech) return;
@@ -879,7 +926,6 @@ CWVOID cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, std::vect
 			this->setIndexBuffer(pMeshRenderObj->getIndexBuffer());
 
 			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
-			//m_pD3D11DeviceContext->DrawIndexedInstanced(pMeshRenderObj->getIndexBuffer()->getElementCount(), uCnt, 0, 0, 0);
 			m_pD3D11DeviceContext->DrawIndexedInstanced(pMeshRenderObj->getValidIndexCnt(), uCnt, 0, 0, 0);
 		}
 	}
@@ -888,39 +934,118 @@ CWVOID cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, std::vect
 			this->setVertexBuffer(arrBuffer, iSize);
 
 			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
-			//m_pD3D11DeviceContext->DrawInstanced(pMeshRenderObj->getVertexBuffer()->getElementCount(), uCnt, 0, 0);
 			m_pD3D11DeviceContext->DrawInstanced(pMeshRenderObj->getValidVertexCnt(), uCnt, 0, 0);
 		}
 	}
 }
 
-CWVOID cwD3D11Device::drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo)
+//CWVOID cwD3D11Device::draw(cwShader* pShader, const CWSTRING& strTech, std::vector<cwRenderObject*>& vecRenderObject, CWUINT uCnt)
+//{
+//	cwRenderObject* pMeshRenderObj = vecRenderObject[0];
+//
+//	this->setInputLayout(pMeshRenderObj->getInputLayout());
+//	this->setPrimitiveTopology(pMeshRenderObj->getPrimitiveTopology());
+//
+//	cwBuffer* arrBuffer[D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT] = {NULL};
+//	CWUINT iSize = (CWUINT)vecRenderObject.size();
+//	iSize = iSize < D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT ? iSize : D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT;
+//	for (CWUINT i = 0; i < iSize; ++i) {
+//		vecRenderObject[i]->preRender();
+//		arrBuffer[i] = vecRenderObject[i]->getVertexBuffer();
+//	}
+//
+//	D3DX11_TECHNIQUE_DESC techDesc;
+//	ID3DX11EffectTechnique* pTech = nullptr;
+//
+//	cwD3D11Shader* pD3D11Shader = static_cast<cwD3D11Shader*>(pShader);
+//
+//	if (strTech.empty()) {
+//		pTech = pD3D11Shader->getTechnique(0);
+//	}
+//	else {
+//		pTech = pD3D11Shader->getTechnique(strTech);
+//	}
+//
+//	if (!pTech) return;
+//	pTech->GetDesc(&techDesc);
+//
+//	if (pMeshRenderObj->getIndexBuffer()) {
+//		for (CWUINT i = 0; i < techDesc.Passes; ++i) {
+//			this->setVertexBuffer(arrBuffer, iSize);
+//			this->setIndexBuffer(pMeshRenderObj->getIndexBuffer());
+//
+//			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
+//			//m_pD3D11DeviceContext->DrawIndexedInstanced(pMeshRenderObj->getIndexBuffer()->getElementCount(), uCnt, 0, 0, 0);
+//			m_pD3D11DeviceContext->DrawIndexedInstanced(pMeshRenderObj->getValidIndexCnt(), uCnt, 0, 0, 0);
+//		}
+//	}
+//	else {
+//		for (CWUINT i = 0; i < techDesc.Passes; ++i) {
+//			this->setVertexBuffer(arrBuffer, iSize);
+//
+//			pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
+//			//m_pD3D11DeviceContext->DrawInstanced(pMeshRenderObj->getVertexBuffer()->getElementCount(), uCnt, 0, 0);
+//			m_pD3D11DeviceContext->DrawInstanced(pMeshRenderObj->getValidVertexCnt(), uCnt, 0, 0);
+//		}
+//	}
+//}
+
+CWVOID cwD3D11Device::draw(cwGPEffect* pEffect)
 {
-	if (!pShader || !pGPInfo) return;
+	if (!pEffect->getShader()) return;
 
 	D3DX11_TECHNIQUE_DESC techDesc;
 	ID3DX11EffectTechnique* pTech = nullptr;
+	cwD3D11Shader* pD3D11Shader = static_cast<cwD3D11Shader*>(pEffect->getShader());
 
-	cwD3D11Shader* pD3D11Shader = static_cast<cwD3D11Shader*>(pShader);
-
-	if (strTech.empty()) {
+	if (pEffect->getTech().empty()) {
 		pTech = pD3D11Shader->getTechnique(0);
 	}
 	else {
-		pTech = pD3D11Shader->getTechnique(strTech);
+		pTech = pD3D11Shader->getTechnique(pEffect->getTech());
 	}
 
 	if (!pTech) return;
 	pTech->GetDesc(&techDesc);
 
+	cwGPInfo& gpInfo = pEffect->getGPInfo();
+
 	for (CWUINT i = 0; i < techDesc.Passes; ++i) {
 		pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
-		m_pD3D11DeviceContext->Dispatch(pGPInfo->groupX, pGPInfo->groupY, pGPInfo->groupZ);
+		m_pD3D11DeviceContext->Dispatch(gpInfo.groupX, gpInfo.groupY, gpInfo.groupZ);
 	}
 
 	ID3D11ShaderResourceView* nullSRV[10] = { 0 };
 	m_pD3D11DeviceContext->CSSetShaderResources(0, 10, nullSRV);
 }
+
+//CWVOID cwD3D11Device::drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo)
+//{
+//	if (!pShader || !pGPInfo) return;
+//
+//	D3DX11_TECHNIQUE_DESC techDesc;
+//	ID3DX11EffectTechnique* pTech = nullptr;
+//
+//	cwD3D11Shader* pD3D11Shader = static_cast<cwD3D11Shader*>(pShader);
+//
+//	if (strTech.empty()) {
+//		pTech = pD3D11Shader->getTechnique(0);
+//	}
+//	else {
+//		pTech = pD3D11Shader->getTechnique(strTech);
+//	}
+//
+//	if (!pTech) return;
+//	pTech->GetDesc(&techDesc);
+//
+//	for (CWUINT i = 0; i < techDesc.Passes; ++i) {
+//		pTech->GetPassByIndex(i)->Apply(0, m_pD3D11DeviceContext);
+//		m_pD3D11DeviceContext->Dispatch(pGPInfo->groupX, pGPInfo->groupY, pGPInfo->groupZ);
+//	}
+//
+//	ID3D11ShaderResourceView* nullSRV[10] = { 0 };
+//	m_pD3D11DeviceContext->CSSetShaderResources(0, 10, nullSRV);
+//}
 
 CWVOID cwD3D11Device::clearShaderResource()
 {
@@ -996,15 +1121,15 @@ void cwD3D11Device::initAccessFlagData()
 
 void cwD3D11Device::initBufferBindFlagData()
 {
-	bufferBindFlag[eBufferBindNone]         = 0;
-	bufferBindFlag[eBufferBindVertex]       = D3D11_BIND_FLAG::D3D11_BIND_VERTEX_BUFFER;
-	bufferBindFlag[eBufferBindIndex]        = D3D11_BIND_FLAG::D3D11_BIND_INDEX_BUFFER;
-	bufferBindFlag[eBufferBindConstant]     = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;
-	bufferBindFlag[eBufferBindShader]       = D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE;
-	bufferBindFlag[eBufferBindSteam]        = D3D11_BIND_FLAG::D3D11_BIND_STREAM_OUTPUT;
-	bufferBindFlag[eBufferBindRenderTarget] = D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET;
-	bufferBindFlag[eBufferBindDepthStencil] = D3D11_BIND_FLAG::D3D11_BIND_DEPTH_STENCIL;
-	bufferBindFlag[eBufferBindWritable]     = D3D11_BIND_FLAG::D3D11_BIND_UNORDERED_ACCESS;
+	bufferBindFlag[eBufferBindNone] = 0;
+	bufferBindFlag[1]               = D3D11_BIND_FLAG::D3D11_BIND_VERTEX_BUFFER;    //eBufferBindVertex
+	bufferBindFlag[2]               = D3D11_BIND_FLAG::D3D11_BIND_INDEX_BUFFER;     //eBufferBindIndex
+	bufferBindFlag[3]               = D3D11_BIND_FLAG::D3D11_BIND_CONSTANT_BUFFER;  //eBufferBindConstant
+	bufferBindFlag[4]               = D3D11_BIND_FLAG::D3D11_BIND_SHADER_RESOURCE;  //eBufferBindShader
+	bufferBindFlag[5]               = D3D11_BIND_FLAG::D3D11_BIND_STREAM_OUTPUT;    //eBufferBindSteam
+	bufferBindFlag[6]               = D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET;    //eBufferBindRenderTarget
+	bufferBindFlag[7]               = D3D11_BIND_FLAG::D3D11_BIND_DEPTH_STENCIL;    //eBufferBindDepthStencil
+	bufferBindFlag[8]               = D3D11_BIND_FLAG::D3D11_BIND_UNORDERED_ACCESS; //eBufferBindWritable
 }
 
 void cwD3D11Device::initBufferUsageData()
@@ -1317,9 +1442,10 @@ CWUINT cwD3D11Device::getBufferBindFlags(CWUINT flags)
 	if (flags == 0) return 0;
 
 	CWUINT f = 0;
-	for (CWUINT i = eBufferBindVertex; i < eBufferBindMaxCount; ++i) {
-		if (i & flags) {
-			f |= getBufferBindFlags(i);
+	for (CWUINT i = 1; i < eBufferBindMaxCount; ++i) {
+		if ((1<<(i-1)) & flags) {
+			D3D11_BIND_FLAG d3dFlag = getBufferBindFlag(i);
+			f |= d3dFlag;
 		}
 	}
 

@@ -39,6 +39,19 @@ cwD3D11RWTexture* cwD3D11RWTexture::create(CWFLOAT fWidth, CWFLOAT fHeight, eFor
 	return pTexture;
 }
 
+cwD3D11RWTexture* cwD3D11RWTexture::create(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples, CWBOOL bThreadSafe)
+{
+	cwD3D11RWTexture* pTexture = new cwD3D11RWTexture();
+	if (pTexture && pTexture->init(fWidth, fHeight, format, iMSAASamples)) {
+		if (!bThreadSafe)
+			pTexture->autorelease();
+		return pTexture;
+	}
+
+	CW_SAFE_DELETE(pTexture);
+	return pTexture;
+}
+
 cwD3D11RWTexture::cwD3D11RWTexture() :
 m_pUnorderedAccessView(NULL)
 {
@@ -60,6 +73,16 @@ CWBOOL cwD3D11RWTexture::init(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format)
 	return buildTexture();
 }
 
+CWBOOL cwD3D11RWTexture::init(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples)
+{
+	m_eTextureFormat = format;
+	m_fWidth = fWidth;
+	m_fHeight = fHeight;
+	m_iMSAASamples = iMSAASamples == 4 || iMSAASamples == 8 ? iMSAASamples : 1;
+
+	return buildTexture();
+}
+
 CWBOOL cwD3D11RWTexture::buildTexture()
 {
 	cwD3D11Device* pDevice = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
@@ -67,12 +90,14 @@ CWBOOL cwD3D11RWTexture::buildTexture()
 	D3D11_TEXTURE2D_DESC texDesc;
 	memset(&texDesc, 0, sizeof(D3D11_TEXTURE2D_DESC));
 
+	DXGI_FORMAT d3d11Format = pDevice->getFormatType(m_eTextureFormat);
+
 	texDesc.Width = static_cast<UINT>(m_fWidth);
 	texDesc.Height = static_cast<UINT>(m_fHeight);
 	texDesc.MipLevels = 1;
 	texDesc.ArraySize = 1;
-	texDesc.Format = pDevice->getFormatType(m_eTextureFormat);
-	texDesc.SampleDesc.Count = 1;
+	texDesc.Format = d3d11Format;
+	texDesc.SampleDesc.Count = m_iMSAASamples;
 	texDesc.SampleDesc.Quality = 0;
 	texDesc.Usage = D3D11_USAGE_DEFAULT;
 	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
@@ -82,8 +107,35 @@ CWBOOL cwD3D11RWTexture::buildTexture()
 	ID3D11Texture2D* pTex = NULL;
 
 	CW_HR(pDevice->getD3D11Device()->CreateTexture2D(&texDesc, NULL, &pTex));
-	CW_HR(pDevice->getD3D11Device()->CreateShaderResourceView(pTex, NULL, &m_pShaderResource));
-	CW_HR(pDevice->getD3D11Device()->CreateUnorderedAccessView(pTex, NULL, &m_pUnorderedAccessView));
+
+	if (m_iMSAASamples == 1) {
+		CW_HR(pDevice->getD3D11Device()->CreateShaderResourceView(pTex, NULL, &m_pShaderResource));
+	}
+	else {
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+		memset(&srvDesc, 0, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
+
+		srvDesc.Format = d3d11Format;
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+		srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
+		srvDesc.Texture2D.MostDetailedMip = 0;
+
+		CW_HR(pDevice->getD3D11Device()->CreateShaderResourceView(pTex, &srvDesc, &m_pShaderResource));
+	}
+
+	if (m_iMSAASamples == 1) {
+		CW_HR(pDevice->getD3D11Device()->CreateUnorderedAccessView(pTex, NULL, &m_pUnorderedAccessView));
+	}
+	else {
+		D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+		memset(&uavDesc, 0, sizeof(D3D11_UNORDERED_ACCESS_VIEW_DESC));
+
+		uavDesc.Format = d3d11Format;
+		uavDesc.ViewDimension = D3D11_UAV_DIMENSION_UNKNOWN;
+		uavDesc.Texture2D.MipSlice = 0;
+
+		CW_HR(pDevice->getD3D11Device()->CreateUnorderedAccessView(pTex, &uavDesc, &m_pUnorderedAccessView));
+	}
 
 	CW_RELEASE_COM(pTex);
 

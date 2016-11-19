@@ -25,10 +25,11 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Platform/D3D/D3D11/Shader/cwD3D11Shader.h"
 #include "Shader/cwShaderManager.h"
 #include "Platform/cwFileSystem.h"
-#include "Parser/cwParserManager.h"
+//#include "Parser/cwParserManager.h"
 #include "Device/cwDevice.h"
 #include "Platform/D3D/D3D11/Device/cwD3D11Device.h"
 #include "Resource/cwResourceLoader.h"
+#include "Base/cwCommon.h"
 
 NS_MINIR_BEGIN
 
@@ -65,7 +66,7 @@ cwInputElementDesc* cwD3D11LayoutsManager::createElementDesc(tinyxml2::XMLElemen
 {
 	if (!pLayoutElement) return nullptr;
 
-	cwParserManager* pParserManager = cwRepertory::getInstance().getParserManager();
+	//cwParserManager* pParserManager = cwRepertory::getInstance().getParserManager();
 	cwD3D11Device* pD3D11Device = static_cast<cwD3D11Device*>(cwRepertory::getInstance().getDevice());
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> vecElement;
@@ -83,10 +84,10 @@ cwInputElementDesc* cwD3D11LayoutsManager::createElementDesc(tinyxml2::XMLElemen
 		D3D11_INPUT_ELEMENT_DESC desc;
 		desc.SemanticName = pcName;
 		desc.SemanticIndex = iIndex;
-		desc.Format = pD3D11Device->getFormatType(pParserManager->getFormatType(pcFormat));
+		desc.Format = pD3D11Device->getFormatType(cwCommon::getInstance().getFormatType(pcFormat));
 		desc.InputSlot = iSlot;
 		desc.AlignedByteOffset = iOffset;
-		desc.InputSlotClass = pD3D11Device->getClassificationType(pParserManager->getClassificationType(pcClass));
+		desc.InputSlotClass = pD3D11Device->getClassificationType(cwCommon::getInstance().getClassificationType(pcClass));
 		desc.InstanceDataStepRate = iInsRate;
 
 		vecElement.push_back(desc);
@@ -127,10 +128,17 @@ CWVOID cwD3D11LayoutsManager::loadLayout()
 	while (pLayoutElement) {
 		const char* pcName = pLayoutElement->Attribute("Name");
 		const char* pcShader = pLayoutElement->Attribute("Shader");
+		const char* pcTech = pLayoutElement->Attribute("Tech");
 
 		cwInputElementDesc* pDesc = createElementDesc(pLayoutElement);
-		if (pDesc) {
-			cwLayouts* pLayout = cwD3D11Layouts::create(pDesc, static_cast<cwD3D11Shader*>(shaderManager->getShader(pcShader)));
+		cwD3D11Shader* pShader = static_cast<cwD3D11Shader*>(shaderManager->getShader(pcShader));
+		if (pDesc && pShader) {
+			cwLayouts* pLayout = nullptr;
+			if (pcTech)
+				pLayout = cwD3D11Layouts::create(pDesc, pShader, pcTech);
+			else
+				pLayout = cwD3D11Layouts::create(pDesc, pShader);
+
 			m_nMapLayouts.insert(pcName, pLayout);
 		}
 

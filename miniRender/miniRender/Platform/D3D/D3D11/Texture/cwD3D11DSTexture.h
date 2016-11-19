@@ -32,6 +32,7 @@ class cwD3D11DSTexture : public cwD3D11Texture
 public:
 	static cwD3D11DSTexture* create(CWBOOL bThreadSafe = CWFALSE);
 	static cwD3D11DSTexture* create(CWFLOAT fWidth, CWFLOAT fHeight, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE);
+	static cwD3D11DSTexture* create(CWFLOAT fWidth, CWFLOAT fHeight, CWUINT iMSAASamples, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE);
 
 	cwD3D11DSTexture();
 	virtual ~cwD3D11DSTexture();
@@ -41,6 +42,7 @@ public:
 protected:
 	virtual CWBOOL init();
 	virtual CWBOOL init(CWFLOAT fWidth, CWFLOAT fHeight, CWBOOL bShaderUsage);
+	virtual CWBOOL init(CWFLOAT fWidth, CWFLOAT fHeight, CWUINT iMSAASamples, CWBOOL bShaderUsage);
 	CWBOOL buildDepthStencil();
 
 protected:

@@ -27,7 +27,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "cwTexture.h"
 #include "cwCubeTexture.h"
-#include "cwRenderTexture.h"
+//#include "cwRenderTexture.h"
 
 #include <mutex>
 
@@ -43,16 +43,19 @@ public:
 	cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles);
 	cwTexture* createCubeTexture(const CWSTRING& strName);
 	cwTexture* createCubeTexture(CWUINT iSize);
-	cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader, CWBOOL bThreading=CWFALSE);
+	//cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader, CWBOOL bThreading=CWFALSE);
 
 	cwTexture* createTextureThreadSafe(const CWSTRING& strName);
 	cwTexture* createTextureThreadSafe(const CWSTRING& strName, CWVOID* pData, CWUINT iWidth, CWUINT iHeight, CWUINT iElementSize, eFormat format);
 	cwTexture* createCubeTextureThreadSafe(const CWSTRING& strName);
 
 	cwTexture* createRWTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bThreadSafe=CWFALSE);
+	cwTexture* createRWTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples, CWBOOL bThreadSafe = CWFALSE);
 	cwTexture* createRTTexture(CWBOOL bThreadSafe = CWFALSE);
 	cwTexture* createRTTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE);
+	cwTexture* createRTTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE);
 	cwTexture* createDSTexture(CWFLOAT fWidth, CWFLOAT fHeight, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE);
+	cwTexture* createDSTexture(CWFLOAT fWidth, CWFLOAT fHeight, CWUINT iMSAASamples, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE);
 	cwTexture* createDSTexture(CWBOOL bThreadSafe = CWFALSE);
 
 	cwTexture* getTexture(const CWSTRING& strName);
@@ -65,10 +68,10 @@ public:
 
 	CWVOID removeTexture(const CWSTRING& strName);
 	CWVOID removeTexture(cwTexture* pTex);
-	CWVOID removeRenderTexture(cwRenderTexture* pTex);
+	//CWVOID removeRenderTexture(cwRenderTexture* pTex);
 
-	CWVOID beginResize();
-	CWVOID onResize();
+	//CWVOID beginResize();
+	//CWVOID onResize();
 
 protected:
 	static cwTextureManager* create();
@@ -78,7 +81,7 @@ protected:
 
 private:
 	cwMap<CWSTRING, cwTexture*> m_mapTexture;
-	cwVector<cwRenderTexture*> m_vecRenderTexture;
+	//cwVector<cwRenderTexture*> m_vecRenderTexture;
 
 	std::mutex m_nMutex;
 

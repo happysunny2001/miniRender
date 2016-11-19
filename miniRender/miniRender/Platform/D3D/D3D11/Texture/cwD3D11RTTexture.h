@@ -33,6 +33,7 @@ class cwD3D11RTTexture : public cwD3D11Texture
 public:
 	static cwD3D11RTTexture* create(CWBOOL bThreadSafe=CWFALSE);
 	static cwD3D11RTTexture* create(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE);
+	static cwD3D11RTTexture* create(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE);
 
 	cwD3D11RTTexture();
 	virtual ~cwD3D11RTTexture();
@@ -44,6 +45,7 @@ public:
 protected:
 	virtual CWBOOL init();
 	virtual CWBOOL init(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bShaderUsage);
+	virtual CWBOOL init(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples, CWBOOL bShaderUsage);
 
 	CWBOOL buildRenderTargetBackBuffer();
 	CWBOOL buildRenderTarget();

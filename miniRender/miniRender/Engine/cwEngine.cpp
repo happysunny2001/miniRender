@@ -31,15 +31,16 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Shader/cwShader.h"
 #include "Effect/cwEffect.h"
 #include "Render/cwRenderer.h"
-#include "Parser/cwParserManager.h"
-#include "Parser/cwRendererParser.h"
+//#include "Parser/cwParserManager.h"
+//#include "Parser/cwRendererParser.h"
 #include "Platform/cwFileSystem.h"
 #include "Repertory/cwRepertory.h"
 #include "SpatialSorting/cwSpatial.h"
 #include "SpatialSorting/cwSpatialFactory.h"
 #include "Sprite/cwRenderNode2D.h"
-#include "Sprite/cwSpriteManager.h"
-#include "Sprite/cwLabel.h"
+//#include "Sprite/cwSpriteManager.h"
+//#include "Sprite/cwLabel.h"
+#include "Sprite/cwFrameRateLabel.h"
 #include "Event/cwTouchEvent.h"
 #include "Resource/cwResourceLoader.h"
 #include "Base/cwLog.h"
@@ -66,10 +67,6 @@ m_pRenderer(nullptr),
 m_pDefaultCamera(nullptr),
 m_pSpatial(nullptr),
 m_uNodeVectorCounter(0),
-m_pSpriteManager(nullptr),
-m_fFrameCounter(0),
-m_uFrameRate(0),
-m_uFrameCounter(0),
 m_bShowFrame(CWFALSE),
 m_pLabelFrameRate(nullptr)
 {
@@ -81,7 +78,6 @@ cwEngine::~cwEngine()
 	CW_SAFE_RELEASE_NULL(m_pCurrScene);
 	CW_SAFE_RELEASE_NULL(m_pRenderer);
 	CW_SAFE_RELEASE_NULL(m_pSpatial);
-	CW_SAFE_RELEASE_NULL(m_pSpriteManager);
 	CW_SAFE_RELEASE_NULL(m_pLabelFrameRate);
 	m_pDefaultCamera = nullptr;
 }
@@ -93,7 +89,6 @@ CWBOOL cwEngine::init()
 	m_pSpatial = cwRepertory::getInstance().getSpatialFactory()->createSpatial("LooseOctree");
 	CW_SAFE_RETAIN(m_pSpatial);
 
-	buildSpriteManager();
 	buildFrameRateLabel();
 
 	return true;
@@ -101,16 +96,16 @@ CWBOOL cwEngine::init()
 
 CWVOID cwEngine::loadRenderer(const CWSTRING& strConfFile)
 {
-	CW_SAFE_RELEASE_NULL(m_pRenderer);
+	//CW_SAFE_RELEASE_NULL(m_pRenderer);
 
-	cwRendererParser* pRendererParser = static_cast<cwRendererParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserRenderer));
-	if (pRendererParser) {
-		CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strConfFile);
-		m_pRenderer = pRendererParser->parse(strFilePath);
-		CW_SAFE_RETAIN(m_pRenderer);
+	//cwRendererParser* pRendererParser = static_cast<cwRendererParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserRenderer));
+	//if (pRendererParser) {
+	//	CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath(strConfFile);
+	//	m_pRenderer = pRendererParser->parse(strFilePath);
+	//	CW_SAFE_RETAIN(m_pRenderer);
 
-		pRendererParser->deferParse(m_pRenderer);
-	}
+	//	pRendererParser->deferParse(m_pRenderer);
+	//}
 }
 
 CWVOID cwEngine::setRenderer(cwRenderer* pRenderer)
@@ -121,22 +116,15 @@ CWVOID cwEngine::setRenderer(cwRenderer* pRenderer)
 	m_pRenderer = pRenderer;
 }
 
-CWVOID cwEngine::buildSpriteManager()
-{
-	m_pSpriteManager = cwSpriteManager::create();
-	CW_SAFE_RETAIN(m_pSpriteManager);
-}
-
 CWVOID cwEngine::buildFrameRateLabel()
 {
-	m_pLabelFrameRate = cwLabel::create("0", "frame_text.png", '0', 10);
+	m_pLabelFrameRate = cwFrameRateLabel::create("0", "frame_text.png", '0', 10);
 	CW_SAFE_RETAIN(m_pLabelFrameRate);
 
 	CWINT m_uScreenWidth  = cwRepertory::getInstance().getUInt(gValueWinWidth);
 	CWINT m_uScreenHeight = cwRepertory::getInstance().getUInt(gValueWinHeight);
 
 	m_pLabelFrameRate->setPosition(CWFLOAT(-(m_uScreenWidth >> 1)) + 30.0f, CWFLOAT(-(m_uScreenHeight >> 1)) + 10.0f);
-	//m_pLabelFrameRate->setPosition(cwVector3D::ZERO);
 	m_pLabelFrameRate->transform();
 	m_pLabelFrameRate->refreshTransform();
 	m_pLabelFrameRate->refreshBoundingBox();
@@ -187,21 +175,7 @@ CWVOID cwEngine::mainLoop(CWFLOAT dt)
 
 CWVOID cwEngine::refreshFrameRate(CWFLOAT dt)
 {
-	if (m_bShowFrame) {
-		m_uFrameCounter++;
-		m_fFrameCounter += dt;
-		if (m_fFrameCounter >= 1.0f) {
-			m_fFrameCounter = 0;
-			m_uFrameRate = m_uFrameCounter;
-			m_uFrameCounter = 0;
-
-			stringstream ss;
-			ss << m_uFrameRate;
-			if (m_pLabelFrameRate) {
-				m_pLabelFrameRate->setString(ss.str());
-			}
-		}
-	}
+	m_pLabelFrameRate->update(dt);
 }
 
 CWVOID cwEngine::buildDefaultCamera()
@@ -276,32 +250,6 @@ CWVOID cwEngine::render()
 	clearVisibleNodes();
 }
 
-CWVOID cwEngine::renderSprite()
-{
-	if (m_pSpriteManager) {
-		m_pSpriteManager->begin();
-		m_pSpriteManager->render();
-
-		if (m_bShowFrame && m_pLabelFrameRate) {
-			m_pSpriteManager->render(m_pLabelFrameRate);
-		}
-
-		m_pSpriteManager->end();
-	}
-}
-
-CWVOID cwEngine::addNode2D(cwRenderNode2D* pNode2D)
-{
-	if (m_pSpriteManager)
-		m_pSpriteManager->addNode(pNode2D);
-}
-
-CWVOID cwEngine::removeNode2D(cwRenderNode2D* pNode2D)
-{
-	if (m_pSpriteManager)
-		m_pSpriteManager->removeNode(pNode2D);
-}
-
 CWBOOL cwEngine::insertSpatialNode(cwRenderNode* pNode)
 {
 	if (m_pSpatial)
@@ -366,7 +314,8 @@ cwRenderNode* cwEngine::getScreenClickNode(cwTouch* pTouch)
 	m_pSpatial->intersection(ray, vecRet, CWTRUE);
 	if (vecRet.empty()) return nullptr;
 
-	const cwMatrix4X4& matView = m_pRenderer->getRendererCamera()->getViewMatrix();
+	cwCamera* pCamera = this->getCamera("Default");
+	const cwMatrix4X4& matView = pCamera->getViewMatrix();
 
 	cwRenderNode* pNearestNode = nullptr;
 	CWFLOAT fMinDist = cwMathUtil::cwInfinity;

@@ -49,13 +49,40 @@ cwEffectManager::~cwEffectManager()
 cwEffect* cwEffectManager::defaultSpriteEffect()
 {
 	if (m_pDefaultSpriteEffect == nullptr) {
+		cwShader* pSpriteShader = cwRepertory::getInstance().getShaderManager()->createShader("SpriteRenderTechnique.hlsl");
 		m_pDefaultSpriteEffect = cwEffect::create();
-		m_pDefaultSpriteEffect->setShader(cwRepertory::getInstance().getShaderManager()->getDefShader(eDefShaderTex));
-		m_pDefaultSpriteEffect->setTech("ColorTech");
+		m_pDefaultSpriteEffect->setShader(pSpriteShader);
+		m_pDefaultSpriteEffect->setTech("SpriteRender");
 		CW_SAFE_RETAIN(m_pDefaultSpriteEffect);
 	}
 
 	return m_pDefaultSpriteEffect;
+}
+
+cwEffect* cwEffectManager::getDefEffect(eDefEffectID effectID)
+{
+	auto it = m_nMapDefEffect.find(effectID);
+	return it != m_nMapDefEffect.end() ? it->second : nullptr;
+}
+
+CWVOID cwEffectManager::loadDefEffect()
+{
+	cwShaderManager* pShaderManager = cwRepertory::getInstance().getShaderManager();
+
+	cwShader* pShader = pShaderManager->getShader("colorTex.fx");
+	{
+		cwEffect* pEffectPosTexColor = cwEffect::create();
+		pEffectPosTexColor->setShader(pShader);
+		pEffectPosTexColor->setTech("TechPosTexColor");
+		m_nMapDefEffect.insert(eEffectIDPosTexColor, pEffectPosTexColor);
+	}
+
+	{
+		cwEffect* pEffectColor = cwEffect::create();
+		pEffectColor->setShader(pShader);
+		pEffectColor->setTech("TechPosColor");
+		m_nMapDefEffect.insert(eEffectIDColor, pEffectColor);
+	}
 }
 
 NS_MINIR_END

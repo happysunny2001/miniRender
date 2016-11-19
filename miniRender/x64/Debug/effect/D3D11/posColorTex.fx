@@ -1,23 +1,24 @@
 #include "material.fx"
 #include "util.fx"
+#include "VertexLayout.hlsl"
 
-struct VertexIn
-{
-	float3 PosW  : POSITION;
-	float2 Tex   : TEXCOORD;
-	float4 Color : COLOR;
-};
+//struct VertexIn
+//{
+//	float3 PosW  : POSITION;
+//	float2 Tex   : TEXCOORD;
+//	float4 Color : COLOR;
+//};
 
-struct VertexOut
+struct VertexPosTexColorOut
 {
 	float4 PosH  : SV_POSITION;
 	float2 Tex   : TEXCOORD;
 	float4 Color : COLOR;
 };
 
-VertexOut VS(VertexIn vin)
+VertexPosTexColorOut VS(VertexPosTexColor vin)
 {
-	VertexOut vout;
+	VertexPosTexColorOut vout;
 	
 	// Transform to homogeneous clip space.
 	vout.PosH = mul(float4(vin.PosW, 1.0f), gViewProj);
@@ -27,7 +28,7 @@ VertexOut VS(VertexIn vin)
 	return vout;
 }
 
-float4 PS(VertexOut pin) : SV_Target
+float4 PS(VertexPosTexColorOut pin) : SV_Target
 {
 	float4 texColor = gDiffuseTexture.Sample( samAnisotropic, pin.Tex );
 	return texColor*pin.Color;

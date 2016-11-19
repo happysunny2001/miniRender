@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Engine/cwEngine.h"
 #include "cwEntity.h"
 #include "cwSkyDome.h"
+#include "Sprite/cwRenderNode2D.h"
 
 NS_MINIR_BEGIN
 
@@ -38,7 +39,8 @@ cwScene* cwScene::create()
 }
 
 cwScene::cwScene():
-m_pSkyDome(nullptr)
+m_pSkyDome(nullptr),
+m_pRootNode2D(nullptr)
 {
 	m_eRenderType = eRenderTypeScene;
 }
@@ -46,20 +48,127 @@ m_pSkyDome(nullptr)
 cwScene::~cwScene()
 {
 	CW_SAFE_RELEASE_NULL(m_pSkyDome);
+	CW_SAFE_RELEASE_NULL(m_pRootNode2D);
 }
 
 CWBOOL cwScene::init()
 {
 	if (!cwRenderNode::init()) return CWFALSE;
+	if (!buildRootNode2D()) return CWFALSE;
 
 	return CWTRUE;
 }
 
+CWBOOL cwScene::buildRootNode2D()
+{
+	m_pRootNode2D = cwRenderNode2D::create();
+	if (!m_pRootNode2D) return CWFALSE;
+	CW_SAFE_RETAIN(m_pRootNode2D);
+
+	m_nVecNode2DStack.reserve(100);
+	m_nVecDirty2DStack.reserve(100);
+	m_nVecRefresh2DStack.reserve(50);
+
+	return CWTRUE;
+}
+
+CWVOID cwScene::addChild2D(cwRenderNode2D* pNode2D)
+{
+	m_pRootNode2D->addChild(pNode2D);
+}
+
+CWVOID cwScene::removeChild2D(cwRenderNode2D* pNode2D)
+{
+	m_pRootNode2D->removeChild(pNode2D);
+}
+
+std::vector<cwRenderNode2D*>& cwScene::getRenderNodes2D()
+{
+	refreshNode2D();
+
+	m_nVecRender2DQueue.clear();
+
+	m_nVecRender2DQueue.push_back(m_pRootNode2D);
+	for (CWUINT64 index = 0; index < m_nVecRender2DQueue.size(); ++index) {
+		cwRenderNode2D* pNode2D = m_nVecRender2DQueue[index];
+
+		if (!pNode2D || !pNode2D->getVisible()) continue;
+
+		cwVector<cwRenderNode*>& nVecChildren = pNode2D->getChildren();
+		if (!nVecChildren.empty()) {
+			for (auto it = nVecChildren.begin(); it != nVecChildren.end(); ++it) {
+				m_nVecRender2DQueue.push_back(static_cast<cwRenderNode2D*>(*it));
+			}
+		}
+	}
+
+	return m_nVecRender2DQueue;
+}
+
+CWVOID cwScene::refreshNode2D()
+{
+	m_nVecNode2DStack.clear();
+	m_nVecDirty2DStack.clear();
+
+	m_nVecNode2DStack.push_back(m_pRootNode2D);
+
+	while (!m_nVecNode2DStack.empty()) {
+		cwRenderNode2D* pLastNode2D = m_nVecNode2DStack.back();
+		m_nVecNode2DStack.pop_back();
+
+		if (!pLastNode2D->getVisible()) continue;
+
+		if (pLastNode2D->getTransDirty()) {
+			refreshDirtyNode2D(pLastNode2D);
+		}
+
+		cwVector<cwRenderNode*>& nVecChildren = pLastNode2D->getChildren();
+		if (!nVecChildren.empty()) {
+			for (auto pChildNode : nVecChildren) {
+				m_nVecNode2DStack.push_back(static_cast<cwRenderNode2D*>(pChildNode));
+			}
+		}
+	}
+}
+
+CWVOID cwScene::refreshDirtyNode2D(cwRenderNode2D* pNode2D)
+{
+	m_nVecDirty2DStack.clear();
+	m_nVecRefresh2DStack.clear();
+
+	m_nVecRefresh2DStack.push_back(pNode2D);
+	while (!m_nVecRefresh2DStack.empty()) {
+		cwRenderNode2D* pLastNode2D = m_nVecRefresh2DStack.back();
+		m_nVecRefresh2DStack.pop_back();
+
+		if (pLastNode2D->getTransDirty()) {
+			pLastNode2D->transform();
+		}
+
+		m_nVecDirty2DStack.push_back(pLastNode2D);
+
+		cwVector<cwRenderNode*>& nVecChildren = pLastNode2D->getChildren();
+		if (!nVecChildren.empty()) {
+			for (auto pChildNode : nVecChildren) {
+				if (pChildNode && pChildNode->getVisible())
+					m_nVecRefresh2DStack.push_back(static_cast<cwRenderNode2D*>(pChildNode));
+			}
+		}
+	}
+
+	for (auto pNode : m_nVecDirty2DStack) {
+		pNode->refreshTransform();
+		pNode->refreshBoundingBox();
+	}
+}
+
 CWVOID cwScene::addDirectionalLight(cwDirectionalLight* pLight)
 {
-	if (!pLight) return;
-	if (m_nVecDirectionalLights.contains(pLight)) return;
-	m_nVecDirectionalLights.pushBack(pLight);
+	//if (m_nVecDirectionalLights.contains(pLight)) return;
+	//m_nVecDirectionalLights.pushBack(pLight);
+	CW_SAFE_RETAIN(pLight);
+	CW_SAFE_RELEASE(m_pDirectionalLight);
+	m_pDirectionalLight = pLight;
 }
 
 CWVOID cwScene::addPointLight(cwPointLight* pLight)
@@ -76,10 +185,9 @@ CWVOID cwScene::addSpotLight(cwSpotLight* pLight)
 	m_nVecSpotLights.pushBack(pLight);
 }
 
-CWVOID cwScene::removeDirectionalLight(cwDirectionalLight* pLight)
+CWVOID cwScene::removeDirectionalLight()
 {
-	if (!pLight) return;
-	m_nVecDirectionalLights.erase(pLight);
+	CW_SAFE_RELEASE_NULL(m_pDirectionalLight);
 }
 
 CWVOID cwScene::removePointLight(cwPointLight* pLight)
@@ -94,9 +202,9 @@ CWVOID cwScene::removeSpotLight(cwSpotLight* pLight)
 	m_nVecSpotLights.erase(pLight);
 }
 
-const cwVector<cwDirectionalLight*>& cwScene::getDirectionalLights() const
+cwDirectionalLight* cwScene::getDirectionalLight() const
 {
-	return m_nVecDirectionalLights;
+	return m_pDirectionalLight;
 }
 
 const cwVector<cwPointLight*>& cwScene::getPointLights() const

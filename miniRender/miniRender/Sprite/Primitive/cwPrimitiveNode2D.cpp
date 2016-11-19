@@ -20,6 +20,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "cwPrimitiveNode2D.h"
 #include "Base/cwColor.h"
 #include "effect/cwEffect.h"
+#include "effect/cwEffectManager.h"
 #include "Repertory/cwRepertory.h"
 #include "Shader/cwShaderManager.h"
 #include "Device/cwDevice.h"
@@ -102,10 +103,15 @@ CWVOID cwPrimitiveNode2D::buildRenderBuffer()
 
 CWVOID cwPrimitiveNode2D::buildEffect()
 {
-	cwEffect* pEffect = cwEffect::create();
-	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getDefShader(eDefShaderColor);
-	if (pShader && pEffect) {
-		pEffect->setShader(pShader);
+	//cwEffect* pEffect = cwEffect::create();
+	//cwShader* pShader = cwRepertory::getInstance().getShaderManager()->getDefShader(eDefShaderColor);
+	//if (pShader && pEffect) {
+	//	pEffect->setShader(pShader);
+	//	this->setEffect(pEffect);
+	//}
+
+	cwEffect* pEffect = cwRepertory::getInstance().getEffectManager()->getDefEffect(eEffectIDColor);
+	if (pEffect) {
 		this->setEffect(pEffect);
 	}
 }
@@ -191,13 +197,15 @@ CWVOID cwPrimitiveNode2D::render(cwCamera* pCamera)
 		if (m_uFrameVertexCnt > 0) {
 			m_pFrameRenderObjects->setValidVertexCnt(m_uFrameVertexCnt);
 			m_pFrameRenderObjects->updateVertexData(m_pFrameVertexBuffer, m_uFrameVertexCnt);
-			repertory.getDevice()->draw(pShader, m_pEffect->getTech(), m_pFrameRenderObjects);
+			//repertory.getDevice()->draw(pShader, m_pEffect->getTech(), m_pFrameRenderObjects);
+			repertory.getDevice()->draw(m_pEffect, m_pFrameRenderObjects);
 		}
 
 		if (m_uSolidVertexCnt > 0) {
 			m_pSolidRenderObjects->setValidVertexCnt(m_uSolidVertexCnt);
 			m_pSolidRenderObjects->updateVertexData(m_pSolidVertexBuffer, m_uSolidVertexCnt);
-			repertory.getDevice()->draw(pShader, m_pEffect->getTech(), m_pSolidRenderObjects);
+			//repertory.getDevice()->draw(pShader, m_pEffect->getTech(), m_pSolidRenderObjects);
+			repertory.getDevice()->draw(m_pEffect, m_pSolidRenderObjects);
 		}
 	}
 

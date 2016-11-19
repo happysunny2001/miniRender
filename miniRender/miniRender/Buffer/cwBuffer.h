@@ -39,7 +39,7 @@ public:
 		CWVOID* pData,
 		CWUINT uSize,
 		eBufferUsage usage,
-		eBufferBindFlag bindFlag,
+		CWUINT bindFlag,
 		eAccessFlag uCpuFlag,
 		CWUINT miscFlag,
 		CWUINT structureByteStride,
@@ -47,7 +47,7 @@ public:
 
 	virtual CWHANDLE getHandle();
 	virtual CWHANDLE getShaderHandle();
-	virtual CWHANDLE getWritablehandle();
+	virtual CWHANDLE getWritableHandle();
 
 	virtual CWVOID refresh(CWVOID* pData);
 	virtual CWVOID refresh(CWVOID* pData, CWUINT uSize);
@@ -57,29 +57,29 @@ public:
 		CWVOID* pData,
 		CWUINT uSize,
 		eBufferUsage usage,
-		eBufferBindFlag bindFlag,
+		CWUINT bindFlag,
 		eAccessFlag uCpuFlag,
 		CWUINT miscFlag,
 		CWUINT structureByteStride,
 		CWUINT offset);
 
-	inline CWUINT getSize() const { return m_iElementCnt*m_nStride; }
+	inline CWUINT getSize() const { return m_uElementCnt*m_nStride; }
 	inline eAccessFlag getAcessFlag() const { return m_nAccessFlag; }
 	inline eBufferUsage getUsage() const { return m_nUsage; }
 	inline CWUINT getStride() const { return m_nStride; }
 	inline CWUINT getOffset() const { return m_nOffset; }
 	inline CWVOID setOffset(CWUINT uOffset) { m_nOffset = uOffset; }
 	
-	inline CWVOID setElementCount(CWUINT u) { m_iElementCnt = u; }
+	inline CWVOID setElementCount(CWUINT u) { m_uElementCnt = u; }
 
 protected:
 	eAccessFlag m_nAccessFlag;
 	eBufferUsage m_nUsage;
-	eBufferBindFlag m_nBindingFlag;
+	CWUINT m_nBindingFlag;
 	CWUINT m_nStride;
 	CWUINT m_nOffset;
 	CWUINT m_nMiscFlag;
-	CWUINT m_iElementCnt;
+	CWUINT m_uElementCnt;
 	CWUINT m_uBufferSize;
 
 };

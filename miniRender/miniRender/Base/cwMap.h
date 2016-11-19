@@ -40,7 +40,7 @@ public:
 	const_iterator end() const { return m_nData.end(); }
 
 	cwMap<K, V>() : m_nData() {
-		static_assert(std::is_convertible<V, cwRef*>::value, "Invalid Type for apoca::cwMap<K, V>!");
+		static_assert(std::is_convertible<V, cwRef*>::value, "Invalid Type for minir::cwMap<K, V>!");
 	}
 
 	~cwMap<K, V>() {

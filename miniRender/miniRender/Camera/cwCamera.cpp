@@ -152,8 +152,13 @@ CWVOID cwCamera::updateViewMatrix()
 	if (m_nViewProjMatrix.inverseExist()) {
 		m_nInvertViewProjMatrix = m_nViewProjMatrix.inverse();
 	}
+
 	if (m_nProjMatrix.inverseExist()) {
 		m_nInvertProjMatrix = m_nProjMatrix.inverse();
+	}
+
+	if (m_nViewMatrix.inverseExist()) {
+		m_nInvertViewMatrix = m_nViewMatrix.inverse();
 	}
 
 	m_nFrustum.refresh(this);

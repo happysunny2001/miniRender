@@ -360,15 +360,6 @@
     <ClInclude Include="Scheduler\cwScheduleInterface.h">
       <Filter>源文件\Scheduler</Filter>
     </ClInclude>
-    <ClInclude Include="Texture\cwRenderTexture.h">
-      <Filter>源文件\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTexture.h">
-      <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTarget.h">
-      <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="ViewPort\cwViewPort.h">
       <Filter>源文件\ViewPort</Filter>
     </ClInclude>
@@ -378,44 +369,11 @@
     <ClInclude Include="Effect\cwEffect.h">
       <Filter>源文件\Effect</Filter>
     </ClInclude>
-    <ClInclude Include="Render\cwRenderPipeline.h">
-      <Filter>源文件\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\cwRenderBatch.h">
-      <Filter>源文件\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Render\cwRenderer.h">
       <Filter>源文件\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Parser\cwRendererParser.h">
-      <Filter>源文件\Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser\cwStageParser.h">
-      <Filter>源文件\Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser\cwParserManager.h">
-      <Filter>源文件\Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="Effect\cwEffectParameter.h">
-      <Filter>源文件\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="Effect\cwEffectFloatParameter.h">
-      <Filter>源文件\Effect</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser\cwEntityParser.h">
-      <Filter>源文件\Parser</Filter>
-    </ClInclude>
     <ClInclude Include="Camera\cwHomogeneousCamera.h">
       <Filter>源文件\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser\cwBlendParser.h">
-      <Filter>源文件\Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser\cwStencilParser.h">
-      <Filter>源文件\Parser</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser\cwStageLayerParser.h">
-      <Filter>源文件\Parser</Filter>
     </ClInclude>
     <ClInclude Include="Base\cwCommon.h">
       <Filter>源文件\Base</Filter>
@@ -471,15 +429,6 @@
     <ClInclude Include="external\uthash\include\utstring.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Generator\cwRenderGenerator.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\Generator\cwStageMirrorGenerator.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser\cwPUStageLayerParser.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Light\cwDirectionalLight.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -498,15 +447,6 @@
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11TextureArray.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Effect\cwEffectTextureParameter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Effect\cwEffectMatrixParameter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureWritable.h">
-      <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
-    </ClInclude>
     <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11Buffer.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -516,40 +456,7 @@
     <ClInclude Include="Platform\D3D\D3D11\Buffer\cwD3D11BufferWritable.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Parser\cwTextureParser.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="effect\cwEffectFloatArrayParameter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser\cwEffectParser.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Effect\cwGPEffect.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerBlend.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerEffect.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerLightTrans.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerStencil.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerWorldTrans.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerRenderState.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser\cwRenderStateParser.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Event\cwKeyboardEvent.h">
@@ -594,31 +501,16 @@
     <ClInclude Include="Sprite\cwSprite.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Sprite\cwSpriteManager.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Sprite\cwRenderNode2D.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Sprite\cwLabel.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Stage\cwSpriteStage.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\Stage\cwStage.h">
-      <Filter>源文件\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\Stage\cwPrimitiveStage.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\cwBaseScene.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Entity\cwSkyDome.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\Stage\cwSkyDomeStage.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Material\MaterialUnit\cwMaterialUnit.h">
@@ -628,9 +520,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11CubeTexture.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\Stage\cwReflectionStage.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Material\MaterialUnit\cwMaterialUnitTexture.h">
@@ -657,9 +546,6 @@
     <ClInclude Include="Resource\cwRemoveBatch.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Parser\cwResourceConfParser.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderInclude.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -667,9 +553,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Terrain\cwTerrain.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser\cwTerrainParser.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Platform\D3D\D3D11\Terrain\cwD3D11Terrain.h">
@@ -699,49 +582,7 @@
     <ClInclude Include="effect\cwEffectManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11ShadowMapTexture.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Device\cwDeviceStatus.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\Stage\Layer\cwStageLayer.h">
-      <Filter>源文件\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\Stage\Layer\cwShadowMapStageLayer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\Batch\cwPUBatch.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\Batch\cwPUBatchShadowMap.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser\cwPUBatchParser.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\Stage\Shadow\cwShadowMapStage.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Parser\cwRenderTargetParser.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11MultiRenderTarget.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\Batch\ShaderParam\cwPUBatchShaderParamFloat.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\Batch\ShaderParam\cwPUBatchShaderParam.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\Batch\ShaderParam\cwPUBatchShaderParamFloatArray.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\Batch\ShaderParam\cwPUBatchShaderParamMatrix.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\ProcessingUnit\Batch\ShaderParam\cwPUBatchShaderParamTexture.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Platform\D3D\D3D11\Texture\cwD3D11RWTexture.h">
@@ -756,11 +597,83 @@
     <ClInclude Include="Texture\cwMultiRTTexture.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Render\TBDR\cwTBDRRenderer.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Ref\cwObjectMonitor.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Stage\cwStage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Stage\cwStageLayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Stage\cwCommandBatch.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Stage\cwCommandNode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\cwRendererFactory.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\TBDR\cwTBDRCoreStageLayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\TBDR\cwTBDRConstants.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\TBDR\cwTBDRStage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser\cwTerrainParser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser\cwResourceConfParser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Generator\cwRenderObjectGenerator.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\2D\cw2DStageLayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite\cwFrameRateLabel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Shadow\ShadowMap\cwShadowMapConstant.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Shadow\ShadowMap\cwShadowMapStage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Shadow\ShadowMap\cwShadowMapStageLayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer\cwPerformanceTimer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\cwEffectConstant.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\Parameter\cwEffectBufferParameter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\Parameter\cwEffectDataParameter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\Parameter\cwEffectFloatArrayParameter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\Parameter\cwEffectFloatParameter.h">
+      <Filter>源文件\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\Parameter\cwEffectTextureParameter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\Parameter\cwEffectMatrixParameter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\Parameter\cwEffectParameter.h">
+      <Filter>源文件\Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -938,15 +851,6 @@
     <ClCompile Include="Scheduler\cwScheduleInterface.cpp">
       <Filter>源文件\Scheduler</Filter>
     </ClCompile>
-    <ClCompile Include="Texture\cwRenderTexture.cpp">
-      <Filter>源文件\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTexture.cpp">
-      <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTarget.cpp">
-      <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="ViewPort\cwViewPort.cpp">
       <Filter>源文件\ViewPort</Filter>
     </ClCompile>
@@ -956,44 +860,11 @@
     <ClCompile Include="Effect\cwEffect.cpp">
       <Filter>源文件\Effect</Filter>
     </ClCompile>
-    <ClCompile Include="Render\cwRenderPipeline.cpp">
-      <Filter>源文件\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\cwRenderBatch.cpp">
-      <Filter>源文件\Render</Filter>
-    </ClCompile>
     <ClCompile Include="Render\cwRenderer.cpp">
       <Filter>源文件\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Parser\cwRendererParser.cpp">
-      <Filter>源文件\Parser</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser\cwStageParser.cpp">
-      <Filter>源文件\Parser</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser\cwParserManager.cpp">
-      <Filter>源文件\Parser</Filter>
-    </ClCompile>
-    <ClCompile Include="Effect\cwEffectParameter.cpp">
-      <Filter>源文件\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="Effect\cwEffectFloatParameter.cpp">
-      <Filter>源文件\Effect</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser\cwEntityParser.cpp">
-      <Filter>源文件\Parser</Filter>
-    </ClCompile>
     <ClCompile Include="Camera\cwHomogeneousCamera.cpp">
       <Filter>源文件\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser\cwBlendParser.cpp">
-      <Filter>源文件\Parser</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser\cwStencilParser.cpp">
-      <Filter>源文件\Parser</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser\cwStageLayerParser.cpp">
-      <Filter>源文件\Parser</Filter>
     </ClCompile>
     <ClCompile Include="Base\cwCommon.cpp">
       <Filter>源文件\Base</Filter>
@@ -1016,15 +887,6 @@
     <ClCompile Include="external\tinyxml2\tinyxml2.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Render\Generator\cwRenderGenerator.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Generator\cwStageMirrorGenerator.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser\cwPUStageLayerParser.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Light\cwDirectionalLight.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -1043,15 +905,6 @@
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11TextureArray.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Effect\cwEffectTextureParameter.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Effect\cwEffectMatrixParameter.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RenderTextureWritable.cpp">
-      <Filter>源文件\Platform\D3D\D3D11\Texture</Filter>
-    </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11Buffer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -1061,40 +914,7 @@
     <ClCompile Include="Platform\D3D\D3D11\Buffer\cwD3D11BufferWritable.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Parser\cwTextureParser.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="effect\cwEffectFloatArrayParameter.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser\cwEffectParser.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Effect\cwGPEffect.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerBlend.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerEffect.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerLightTrans.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerStencil.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerWorldTrans.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\StageLayer\cwPUStageLayerRenderState.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser\cwRenderStateParser.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Platform\Windows\cwWinUtils.cpp">
@@ -1142,31 +962,16 @@
     <ClCompile Include="Sprite\cwSprite.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Sprite\cwSpriteManager.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Sprite\cwRenderNode2D.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Sprite\cwLabel.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Render\Stage\cwSpriteStage.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Stage\cwStage.cpp">
-      <Filter>源文件\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Stage\cwPrimitiveStage.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Utils\cwBaseScene.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Entity\cwSkyDome.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Stage\cwSkyDomeStage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Material\MaterialUnit\cwMaterialUnit.cpp">
@@ -1176,9 +981,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11CubeTexture.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Stage\cwReflectionStage.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Material\MaterialUnit\cwMaterialUnitTexture.cpp">
@@ -1205,9 +1007,6 @@
     <ClCompile Include="Resource\cwRemoveBatch.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Parser\cwResourceConfParser.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Shader\cwD3D11ShaderInclude.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -1215,9 +1014,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Terrain\cwTerrain.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser\cwTerrainParser.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Terrain\cwD3D11Terrain.cpp">
@@ -1247,49 +1043,7 @@
     <ClCompile Include="effect\cwEffectManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11ShadowMapTexture.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Device\cwDeviceStatus.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Stage\Layer\cwStageLayer.cpp">
-      <Filter>源文件\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Stage\Layer\cwShadowMapStageLayer.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\Batch\cwPUBatch.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\Batch\cwPUBatchShadowMap.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser\cwPUBatchParser.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Stage\Shadow\cwShadowMapStage.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser\cwRenderTargetParser.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11MultiRenderTarget.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\Batch\ShaderParam\cwPUBatchShaderParamFloat.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\Batch\ShaderParam\cwPUBatchShaderParam.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\Batch\ShaderParam\cwPUBatchShaderParamFloatArray.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\Batch\ShaderParam\cwPUBatchShaderParamMatrix.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\ProcessingUnit\Batch\ShaderParam\cwPUBatchShaderParamTexture.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Platform\D3D\D3D11\Texture\cwD3D11RWTexture.cpp">
@@ -1304,10 +1058,70 @@
     <ClCompile Include="Texture\cwMultiRTTexture.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Render\TBDR\cwTBDRRenderer.cpp">
+    <ClCompile Include="Ref\cwObjectMonitor.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Ref\cwObjectMonitor.cpp">
+    <ClCompile Include="Render\Stage\cwStage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Stage\cwStageLayer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Stage\cwCommandBatch.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Stage\cwCommandNode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\cwRendererFactory.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\TBDR\cwTBDRCoreStageLayer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\TBDR\cwTBDRStage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser\cwTerrainParser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser\cwResourceConfParser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\2D\cw2DStageLayer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite\cwFrameRateLabel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Shadow\ShadowMap\cwShadowMapStage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Shadow\ShadowMap\cwShadowMapStageLayer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer\cwPerformanceTimer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="effect\Parameter\cwEffectBufferParameter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="effect\Parameter\cwEffectDataParameter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="effect\Parameter\cwEffectFloatArrayParameter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="effect\Parameter\cwEffectFloatParameter.cpp">
+      <Filter>源文件\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="effect\Parameter\cwEffectMatrixParameter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="effect\Parameter\cwEffectParameter.cpp">
+      <Filter>源文件\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="effect\Parameter\cwEffectTextureParameter.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -18,10 +18,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwEffect.h"
-#include "Render/cwRenderBatch.h"
+//#include "Render/cwRenderBatch.h"
 #include "Render/cwRenderer.h"
 #include "RenderObject/cwRenderObject.h"
-#include "Entity/cwEntity.h"
+#include "Entity/cwRenderNode.h"
 #include "Material/cwMaterial.h"
 #include "Device/cwDevice.h"
 #include "Repertory/cwRepertory.h"
@@ -80,29 +80,37 @@ CWVOID cwEffect::config()
 	}
 }
 
-CWVOID cwEffect::render(cwRenderBatch* pBatch)
+CWVOID cwEffect::render(cwRenderNode* pNode)
 {
-	if (!pBatch) return;
-	if (!pBatch->m_pEntity) return;
-
-	//cwRepertory::getInstance().getEngine()->getRenderer()->setCurrShader(m_pShader);
-	this->config();
-
-	//cwMaterial* pMaterial = pBatch->m_pEntity->getMaterial();
-	//if (pMaterial)
-	//	pMaterial->configShader(m_pShader);
-
-	//cwDevice* pDevice = cwRepertory::getInstance().getDevice();
-	//cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getRenderer()->getCurrCamera();
-
-	//pDevice->setBlend(pBatch->m_pBlend);
-	//pDevice->setStencil(pBatch->m_pStencil);
-	//pDevice->setShaderWorldTrans(m_pShader, pBatch->m_nWorldTrans, pCamera);
-	pBatch->m_pEntity->render(pBatch);
-	//pDevice->draw(m_pShader, m_strTech, pRenderObj);
-
-	//pBatch->m_pEntity->render();
+	if (pNode) {
+		this->config();
+		pNode->render(this);
+	}
 }
+
+//CWVOID cwEffect::render(cwRenderBatch* pBatch)
+//{
+//	if (!pBatch) return;
+//	if (!pBatch->m_pEntity) return;
+//
+//	//cwRepertory::getInstance().getEngine()->getRenderer()->setCurrShader(m_pShader);
+//	this->config();
+//
+//	//cwMaterial* pMaterial = pBatch->m_pEntity->getMaterial();
+//	//if (pMaterial)
+//	//	pMaterial->configShader(m_pShader);
+//
+//	//cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+//	//cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getRenderer()->getCurrCamera();
+//
+//	//pDevice->setBlend(pBatch->m_pBlend);
+//	//pDevice->setStencil(pBatch->m_pStencil);
+//	//pDevice->setShaderWorldTrans(m_pShader, pBatch->m_nWorldTrans, pCamera);
+//	pBatch->m_pEntity->render(pBatch);
+//	//pDevice->draw(m_pShader, m_strTech, pRenderObj);
+//
+//	//pBatch->m_pEntity->render();
+//}
 
 NS_MINIR_END
 

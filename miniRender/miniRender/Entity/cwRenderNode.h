@@ -106,9 +106,10 @@ public:
 
 	virtual CWVOID transform();
 	virtual CWVOID refreshTransform();
-	const cwMatrix4X4& getTransformMatrix() const { return m_nTrans; }
+	inline const cwMatrix4X4& getTransformMatrix() const { return m_nTrans; }
 	CWVOID setTransformMatrix(const cwMatrix4X4& mat);
-	const cwMatrix4X4& getLocalTransMatrix() const { return m_nLocalTrans; }
+	inline const cwMatrix4X4& getLocalTransMatrix() const { return m_nLocalTrans; }
+	inline const cwMatrix4X4& getTransInvTranspose() const { return m_nMatTransInvTranspose; }
 
 	virtual CWVOID addEventListener(cwEventListener* pListener);
 	virtual CWVOID addEventListener(cwEventListener* pListener, CWINT iPriority, CWBOOL swallow);
@@ -116,10 +117,11 @@ public:
 
 	virtual CWVOID update(CWFLOAT dt);
 	virtual CWVOID render();
-	virtual CWVOID render(cwRenderBatch* pRenderBatch);
+	//virtual CWVOID render(cwRenderBatch* pRenderBatch);
+	virtual CWVOID render(cwEffect* pEffect);
 
 protected:
-	CWVOID clearChildren();
+	virtual CWVOID clearChildren();
 	CWVOID clearEventListener();
 	CWVOID updateChildrenTransform();
 
@@ -138,6 +140,7 @@ protected:
 	cwVector3D m_nScale;
 	cwMatrix4X4 m_nLocalTrans;
 	cwMatrix4X4 m_nTrans; 
+	cwMatrix4X4 m_nMatTransInvTranspose;
 	CWBOOL m_bTransDirty;
 
 	cwEffect* m_pEffect; //effect for render, contains shader and tech

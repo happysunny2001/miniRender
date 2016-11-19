@@ -40,7 +40,8 @@ public:
 	virtual CWBOOL setEntityData(CWVOID* pData, CWUINT uStride, CWUINT uInstanceCount) override;
 	virtual CWVOID refreshEntityData(CWVOID* pData, CWUINT uInstanceCount) override;
 
-	virtual CWVOID render(cwRenderBatch* pRenderBatch) override;
+	//virtual CWVOID render(cwRenderBatch* pRenderBatch) override;
+	virtual CWVOID render(cwEffect* pEffect) override;
 
 protected:
 	static cwD3D11BatchEntity* create();

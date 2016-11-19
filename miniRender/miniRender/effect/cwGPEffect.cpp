@@ -24,7 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Engine/cwEngine.h"
 #include "Render/cwRenderer.h"
-#include "Render/cwRenderBatch.h"
+//#include "Render/cwRenderBatch.h"
 
 NS_MINIR_BEGIN
 
@@ -50,19 +50,26 @@ cwGPEffect::~cwGPEffect()
 
 }
 
-CWVOID cwGPEffect::render(cwRenderBatch* pBatch)
+CWVOID cwGPEffect::render(cwRenderNode* pNode)
 {
-	if (!pBatch) return;
-
-	//cwRepertory::getInstance().getEngine()->getRenderer()->setCurrShader(m_pShader);
 	this->config();
-
-	//cwMaterial* pMaterial = pBatch->m_pEntity->getMaterial();
-	//if (pMaterial)
-	//	pMaterial->configShader(m_pShader);
-
 	cwDevice* pDevice = cwRepertory::getInstance().getDevice();
-	pDevice->drawGP(m_pShader, m_strTech, &m_nGPInfo);
+	pDevice->draw(this);
 }
+
+//CWVOID cwGPEffect::render(cwRenderBatch* pBatch)
+//{
+//	if (!pBatch) return;
+//
+//	//cwRepertory::getInstance().getEngine()->getRenderer()->setCurrShader(m_pShader);
+//	this->config();
+//
+//	//cwMaterial* pMaterial = pBatch->m_pEntity->getMaterial();
+//	//if (pMaterial)
+//	//	pMaterial->configShader(m_pShader);
+//
+//	cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+//	pDevice->drawGP(m_pShader, m_strTech, &m_nGPInfo);
+//}
 
 NS_MINIR_END

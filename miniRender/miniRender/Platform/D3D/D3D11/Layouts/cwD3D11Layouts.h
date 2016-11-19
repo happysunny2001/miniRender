@@ -34,11 +34,13 @@ class cwD3D11Layouts : public cwLayouts
 {
 public:
 	static cwD3D11Layouts* create(cwInputElementDesc* pElementDesc, cwD3D11Shader* pShader);
+	static cwD3D11Layouts* create(cwInputElementDesc* pElementDesc, cwD3D11Shader* pShader, const char* pcTech);
 
 	cwD3D11Layouts();
 	virtual ~cwD3D11Layouts();
 
-	virtual bool init(cwInputElementDesc* pElementDesc, cwD3D11Shader* pShader);
+	virtual CWBOOL init(cwInputElementDesc* pElementDesc, cwD3D11Shader* pShader);
+	virtual CWBOOL init(cwInputElementDesc* pElementDesc, cwD3D11Shader* pShader, const char* pcTech);
 	virtual CWHANDLE getHandle() override { return m_pInputLayout; }
 
 private:

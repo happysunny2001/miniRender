@@ -31,6 +31,9 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
+/*
+	Draw 2D Primitives, Line, Quad etc.
+*/
 class cwPrimitiveNode2D : public cwRenderNode2D
 {
 public:

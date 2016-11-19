@@ -55,7 +55,7 @@ public:
 		CWVOID* pData,
 		CWUINT uSize,
 		eBufferUsage usage,
-		eBufferBindFlag bindFlag,
+		CWUINT bindFlag,
 		eAccessFlag uCpuFlag,
 		CWUINT miscFlag,
 		CWUINT structureByteStride,

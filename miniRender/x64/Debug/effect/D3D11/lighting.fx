@@ -32,6 +32,7 @@ VertexOut VS(VertexIn vIn)
 	return vOut;
 }
 
+/*
 VertexShadowOut VSShadow(VertexIn vIn)
 {
 	VertexShadowOut vOut;
@@ -41,8 +42,9 @@ VertexShadowOut VSShadow(VertexIn vIn)
 	vOut.ShadowPosH = mul(float4(vIn.PosL, 1.0f), gMatShadowTransform);
 
 	return vOut;
-}
+}*/
 
+/*
 float4 PS(VertexOut pIn) : SV_Target
 {
 	pIn.NormalW = normalize(pIn.NormalW);
@@ -89,7 +91,7 @@ float4 PSReflect(VertexOut pIn) : SV_Target
 	finalColor.a = gMaterial.diffuse.a;
 
 	return finalColor;
-}
+}*/
 
 float4 PSDynamicReflect(VertexOut pIn) : SV_Target
 {
@@ -111,6 +113,7 @@ float4 PSDynamicReflect(VertexOut pIn) : SV_Target
 	return finalColor;
 }
 
+/*
 technique11 LightTech
 {
     pass P0
@@ -145,7 +148,8 @@ technique11 LightTechReflect
 	SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_5_0, PSReflect() ) );
     }
-}
+}*/
+
 
 technique11 LightTechDynamicReflect
 {

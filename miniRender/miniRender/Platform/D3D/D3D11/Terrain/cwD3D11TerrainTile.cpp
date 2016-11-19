@@ -165,7 +165,21 @@ CWVOID cwD3D11TerrainTile::buildMaterial()
 
 }
 
-CWVOID cwD3D11TerrainTile::render(cwRenderBatch* pRenderBatch)
+//CWVOID cwD3D11TerrainTile::render(cwRenderBatch* pRenderBatch)
+//{
+//	if (m_pMaterial && m_pMatUnitFrustum) {
+//		cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getDefaultCamera();
+//		if (pCamera) {
+//			const cwFrustum& frustum = pCamera->getFrustum();
+//			const CWFLOAT* pFloats = (const CWFLOAT*)(frustum.getPlane());
+//			m_pMatUnitFrustum->refresh(pFloats);
+//		}
+//	}
+//
+//	cwTerrainTile::render(pRenderBatch);
+//}
+
+CWVOID cwD3D11TerrainTile::render(cwEffect* pEffect)
 {
 	if (m_pMaterial && m_pMatUnitFrustum) {
 		cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getDefaultCamera();
@@ -176,7 +190,7 @@ CWVOID cwD3D11TerrainTile::render(cwRenderBatch* pRenderBatch)
 		}
 	}
 
-	cwTerrainTile::render(pRenderBatch);
+	cwTerrainTile::render(pEffect);
 }
 
 CWVOID cwD3D11TerrainTile::streamPrepare()

@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -21,6 +21,6 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 NS_MINIR_BEGIN
 
-cwVector4D cwVector4D::ZERO(0.0f, 0.0f, 0.0f);
+const cwVector4D cwVector4D::ZERO(0.0f, 0.0f, 0.0f);
 
 NS_MINIR_END

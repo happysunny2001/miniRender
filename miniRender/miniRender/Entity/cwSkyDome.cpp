@@ -29,7 +29,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Shader/cwShader.h"
 #include "Shader/cwShaderManager.h"
 #include "effect/cwEffect.h"
-#include "effect/cwEffectTextureParameter.h"
+#include "effect/Parameter/cwEffectTextureParameter.h"
 
 NS_MINIR_BEGIN
 

@@ -51,6 +51,38 @@ CWBOOL cwRenderNode2D::init()
 	return CWTRUE;
 }
 
+CWBOOL cwRenderNode2D::addChild(cwRenderNode* pNode)
+{
+	return CWFALSE;
+}
+
+CWBOOL cwRenderNode2D::addChild(cwRenderNode2D* pNode)
+{
+	if (pNode && !pNode->getParent()) {
+		if (!m_nVecChildren.contains(pNode)) {
+
+			CWUINT64 iSize = m_nVecChildren.size();
+			CWUINT64 index = 0;
+			CWBOOL bAdded = CWFALSE;
+			for (; index < iSize; ++index) {
+				cwRenderNode2D* pNode2D = static_cast<cwRenderNode2D*>(m_nVecChildren.at(index));
+				if (pNode->getRenderOrder() <= pNode2D->getRenderOrder()) {
+					m_nVecChildren.insert(index, pNode2D);
+					bAdded = CWTRUE;
+					break;
+				}
+			}
+
+			if (!bAdded) {
+				m_nVecChildren.pushBack(pNode);
+			}
+			return CWTRUE;
+		}
+	}
+
+	return CWFALSE;
+}
+
 CWVOID cwRenderNode2D::refreshBoundingBox()
 {
 	cwAABB nAabb = m_nBoundingBox;

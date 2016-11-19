@@ -31,11 +31,12 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Generator/cwGeometryGenerator.h"
 #include "Event/cwEventManager.h"
 #include "Platform/cwFileSystem.h"
-#include "Parser/cwParserManager.h"
+//#include "Parser/cwParserManager.h"
 #include "SpatialSorting/cwSpatialFactory.h"
 #include "Resource/cwResourceLoader.h"
 #include "Ref/cwObjectMonitor.h"
 #include "Base/cwLog.h"
+#include "Timer/cwPerformanceTimer.h"
 
 #include <assert.h>
 
@@ -53,18 +54,26 @@ cwD3D11Repertory::~cwD3D11Repertory()
 
 CWBOOL cwD3D11Repertory::specialInit()
 {
+	cwPerformanceTimer timer;
+
+	timer.begin();
 	m_pDevice = new cwD3D11Device();
 	assert(m_pDevice != nullptr);
 	bool b = m_pDevice->initDevice();
 	assert(b);
+	timer.print("device");
 
+	timer.begin();
 	m_pShaderManager = cwD3D11ShaderManager::create();
 	CW_SAFE_RETAIN(m_pShaderManager);
 	m_pShaderManager->loadDefaultShader();
+	timer.print("shader manager");
 
+	timer.begin();
 	m_pLayoutManager = cwD3D11LayoutsManager::create();
 	assert(m_pLayoutManager != nullptr);
 	CW_SAFE_RETAIN(m_pLayoutManager);
+	timer.print("layout manager");
 
 	return CWTRUE;
 }
@@ -85,7 +94,7 @@ CWVOID cwD3D11Repertory::releaseAll()
 
 	CW_SAFE_RELEASE_NULL(m_pGeoGenerator);
 	CW_SAFE_RELEASE_NULL(m_pFileSystem);
-	CW_SAFE_RELEASE_NULL(m_pParserManager);
+	//CW_SAFE_RELEASE_NULL(m_pParserManager);
 	CW_SAFE_DELETE(m_pSpatialFactory);
 }
 

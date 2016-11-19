@@ -192,9 +192,11 @@ void cwMaterial::configEffect(cwEffect* pEffect)
 CWVOID cwMaterial::configShader(cwShader* pShader)
 {
 	if (pShader) {
-		pShader->setVariableData(eShaderParamMaterial, this->getColorData(), 0, this->getColorDataSize());
-		pShader->setVariableTexture(eShaderParamDiffuseTexture, this->getDiffuseTexture());
-		pShader->setVariableMatrix("gDiffTexTransform", &(m_nDiffuseTrans.m11));
+		pShader->setVariableData(CW_SHADER_MATERIAL, this->getColorData(), 0, this->getColorDataSize());
+		if (m_pDiffuseTexture) {
+			pShader->setVariableTexture(CW_SHADER_DIFFUSE_TEXTURE, m_pDiffuseTexture);
+			pShader->setVariableMatrix(CW_SHADER_DIFF_TEX_TRANS, m_nDiffuseTrans);
+		}
 	}
 }
 

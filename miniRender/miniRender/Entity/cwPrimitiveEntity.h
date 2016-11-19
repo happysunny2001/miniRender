@@ -42,7 +42,8 @@ public:
 	virtual ~cwPrimitiveEntity();
 
 	virtual CWBOOL init() override;
-	virtual CWVOID render(cwRenderBatch* pRenderBatch) override;
+	//virtual CWVOID render(cwRenderBatch* pRenderBatch) override;
+	virtual CWVOID render(cwEffect* pEffect) override;
 
 	CWVOID addPrimitive(const cwAABB& aabb);
 	CWVOID addPrimitive(const cwAABB& aabb, const cwVector4D& color);

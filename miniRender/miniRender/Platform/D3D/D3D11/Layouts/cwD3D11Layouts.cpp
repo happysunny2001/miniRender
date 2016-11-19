@@ -39,6 +39,18 @@ cwD3D11Layouts* cwD3D11Layouts::create(cwInputElementDesc* pElementDesc, cwD3D11
 	return NULL;
 }
 
+cwD3D11Layouts* cwD3D11Layouts::create(cwInputElementDesc* pElementDesc, cwD3D11Shader* pShader, const char* pcTech)
+{
+	cwD3D11Layouts* pLayout = new cwD3D11Layouts();
+	if (pLayout && pLayout->init(pElementDesc, pShader, pcTech)) {
+		pLayout->autorelease();
+		return pLayout;
+	}
+
+	CW_SAFE_DELETE(pLayout);
+	return NULL;
+}
+
 cwD3D11Layouts::cwD3D11Layouts() :
 m_pInputLayout(NULL)
 {
@@ -51,7 +63,7 @@ cwD3D11Layouts::~cwD3D11Layouts()
 
 bool cwD3D11Layouts::init(cwInputElementDesc* pElementDesc, cwD3D11Shader* pShader)
 {
-	if (!pElementDesc || !pShader) return false;
+	if (!pElementDesc || !pShader) return CWFALSE;
 	D3DX11_PASS_DESC passDesc;
 	pShader->getPass(0, 0)->GetDesc(&passDesc);
 
@@ -64,7 +76,25 @@ bool cwD3D11Layouts::init(cwInputElementDesc* pElementDesc, cwD3D11Shader* pShad
 		passDesc.IAInputSignatureSize,
 		&m_pInputLayout));
 
-	return true;
+	return CWTRUE;
+}
+
+CWBOOL cwD3D11Layouts::init(cwInputElementDesc* pElementDesc, cwD3D11Shader* pShader, const char* pcTech)
+{
+	if (!pElementDesc || !pShader) return CWFALSE;
+	D3DX11_PASS_DESC passDesc;
+	pShader->getPass(pcTech, 0)->GetDesc(&passDesc);
+
+	ID3D11Device* pDevice = NULL;
+	pShader->getEffect()->GetDevice(&pDevice);
+	CW_HR(pDevice->CreateInputLayout(
+		pElementDesc->getElementDesc(),
+		pElementDesc->getDescCnt(),
+		passDesc.pIAInputSignature,
+		passDesc.IAInputSignatureSize,
+		&m_pInputLayout));
+
+	return CWTRUE;
 }
 
 NS_MINIR_END

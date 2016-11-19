@@ -48,16 +48,18 @@ public:
 		CWVOID* pData,
 		CWUINT uSize,
 		eBufferUsage usage,
-		eBufferBindFlag bindFlag,
+		CWUINT bindFlag,
 		eAccessFlag uCpuFlag,
 		CWUINT miscFlag,
 		CWUINT structureByteStride,
 		CWUINT offset,
 		CWBOOL bAppend);
 
+	virtual CWHANDLE getWritableHandle() override;
 	virtual CWHANDLE getShaderHandle() override;
 
 protected:
+	ID3D11ShaderResourceView* m_pShaderResource;
 	ID3D11UnorderedAccessView* m_pUnorderedResource;
 
 };

@@ -24,7 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "RenderObject/cwDynamicRenderObject.h"
 #include "Repertory/cwRepertory.h"
 #include "Layouts/cwLayoutsManager.h"
-#include "Render/cwRenderBatch.h"
+//#include "Render/cwRenderBatch.h"
 #include "Effect/cwEffect.h"
 
 NS_MINIR_BEGIN
@@ -88,11 +88,22 @@ CWVOID cwD3D11BatchEntity::refreshEntityData(CWVOID* pData, CWUINT uInstanceCoun
 	}
 }
 
-CWVOID cwD3D11BatchEntity::render(cwRenderBatch* pRenderBatch)
+//CWVOID cwD3D11BatchEntity::render(cwRenderBatch* pRenderBatch)
+//{
+//	if (pRenderBatch && pRenderBatch->m_pEffect) {
+//		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+//		pDevice->draw(pRenderBatch->m_pEffect->getShader(), pRenderBatch->m_pEffect->getTech(), m_nVecRenderObject, m_uInstanceCount);
+//	}
+//
+//	cwRenderNode::render();
+//}
+
+CWVOID cwD3D11BatchEntity::render(cwEffect* pEffect)
 {
-	if (pRenderBatch && pRenderBatch->m_pEffect) {
+	if (pEffect) {
 		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
-		pDevice->draw(pRenderBatch->m_pEffect->getShader(), pRenderBatch->m_pEffect->getTech(), m_nVecRenderObject, m_uInstanceCount);
+		//pDevice->draw(pEffect->getShader(), pEffect->getTech(), m_nVecRenderObject, m_uInstanceCount);
+		pDevice->draw(pEffect, m_nVecRenderObject, m_uInstanceCount);
 	}
 
 	cwRenderNode::render();

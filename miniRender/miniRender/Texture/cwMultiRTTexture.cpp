@@ -68,6 +68,20 @@ CWBOOL cwMultiRTTexture::addRTTexture(eFormat format, CWBOOL bThreadSafe)
 	return CWFALSE;
 }
 
+CWBOOL cwMultiRTTexture::addRTTexture(eFormat format, CWUINT iMSAASamples, CWBOOL bThreadSafe)
+{
+	cwTexture* pTexture = cwRepertory::getInstance().getDevice()->createRTTexture(m_fWidth, m_fHeight, format, iMSAASamples, CWTRUE, bThreadSafe);
+	if (pTexture) {
+		m_nVecRTTextures.pushBack(pTexture);
+		if (bThreadSafe)
+			CW_SAFE_RELEASE(pTexture);
+
+		return CWTRUE;
+	}
+
+	return CWFALSE;
+}
+
 CWHANDLE cwMultiRTTexture::getHandle() const
 {
 	return nullptr;

@@ -125,7 +125,8 @@ cwD3D11Texture* cwD3D11Texture::create(CWVOID* pData, const CW_TEXTURE_DESC& tex
 
 cwD3D11Texture::cwD3D11Texture() :
 m_pShaderResource(nullptr),
-m_bShaderUsage(CWTRUE)
+m_bShaderUsage(CWTRUE),
+m_iMSAASamples(1)
 {
 
 }

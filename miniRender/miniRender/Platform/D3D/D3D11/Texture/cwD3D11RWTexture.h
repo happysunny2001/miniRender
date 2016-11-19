@@ -31,6 +31,7 @@ class cwD3D11RWTexture : public cwD3D11Texture
 {
 public:
 	static cwD3D11RWTexture* create(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bThreadSafe = CWFALSE);
+	static cwD3D11RWTexture* create(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples, CWBOOL bThreadSafe = CWFALSE);
 
 	cwD3D11RWTexture();
 	virtual ~cwD3D11RWTexture();
@@ -39,6 +40,7 @@ public:
 
 protected:
 	virtual CWBOOL init(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format);
+	virtual CWBOOL init(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples);
 	CWBOOL buildTexture();
 
 protected:

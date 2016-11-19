@@ -79,7 +79,7 @@ CWBOOL cwD3D11BufferShader::init(
 	CWVOID* pData,
 	CWUINT uSize,
 	eBufferUsage usage,
-	eBufferBindFlag bindFlag,
+	CWUINT bindFlag,
 	eAccessFlag uCpuFlag,
 	CWUINT miscFlag,
 	CWUINT structureByteStride,
@@ -94,7 +94,7 @@ CWBOOL cwD3D11BufferShader::init(
 	shaderDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFEREX;
 	shaderDesc.BufferEx.FirstElement = 0;
 	shaderDesc.BufferEx.Flags = 0;
-	shaderDesc.BufferEx.NumElements = m_iElementCnt;
+	shaderDesc.BufferEx.NumElements = m_uElementCnt;
 
 	CW_HR(pD3D11Device->getD3D11Device()->CreateShaderResourceView(m_pD3D11Buffer, &shaderDesc, &m_pShaderResource));
 

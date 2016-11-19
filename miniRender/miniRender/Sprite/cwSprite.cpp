@@ -62,6 +62,7 @@ m_pRenderObject(nullptr)
 {
 	m_eRenderType = eRenderTypeSprite;
 	m_nColor.set(1.0f, 1.0f, 1.0f, 1.0f);
+	m_nAnchorPoint.zero();
 }
 
 cwSprite::~cwSprite()
@@ -149,6 +150,19 @@ CWBOOL cwSprite::buildVertexBuffer()
 	return CWTRUE;
 }
 
+CWVOID cwSprite::setAnchorPoint(const cwVector2D& anchorPoint)
+{
+	m_nAnchorPoint.x = anchorPoint.x;
+	m_nAnchorPoint.y = anchorPoint.y;
+	m_bTransDirty = CWTRUE;
+}
+
+CWVOID cwSprite::setAnchorPoint(const cwVector3D& anchorPoint)
+{
+	m_nAnchorPoint = anchorPoint;
+	m_bTransDirty = CWTRUE;
+}
+
 //CWVOID cwSprite::initVertexBuffer(cwVertexPosTexColor* pVertexBuffer)
 //{
 //	CWFLOAT fHalfTexWidth  = 0.5f;
@@ -206,6 +220,19 @@ CWBOOL cwSprite::buildVertexBuffer()
 //	pVertexBuffer[5].set(fHalfTexWidth, -fHalfTexHeight, 0, 1.0f);
 //}
 
+CWVOID cwSprite::transform()
+{
+	if (m_bTransDirty) {
+		cwRenderNode2D::transform();
+
+		cwVector3D vecTexture(m_pTexture->getWidth(), m_pTexture->getHeight(), 0);
+		cwVector4D offset = (cwVector3D::ZERO - m_nAnchorPoint)*m_nScale*vecTexture;
+		m_nLocalTrans.m41 += offset.x;
+		m_nLocalTrans.m42 += offset.y;
+		m_nLocalTrans.m43 += offset.z;
+	}
+}
+
 CWVOID cwSprite::refreshTransform()
 {
 	cwRenderNode::refreshTransform();
@@ -244,7 +271,27 @@ CWVOID cwSprite::render(cwCamera* pCamera)
 	if (pShader) {
 		repertory.getDevice()->setShaderWorldTrans(pShader, this->getTransformMatrix(), pCamera);
 		pShader->setVariableTexture(eShaderParamDiffuseTexture, this->getTexture());
-		repertory.getDevice()->draw(pShader, m_pEffect->getTech(), m_pRenderObject);
+		//repertory.getDevice()->draw(pShader, m_pEffect->getTech(), m_pRenderObject);
+		repertory.getDevice()->draw(m_pEffect, m_pRenderObject);
+	}
+}
+
+CWVOID cwSprite::render(cwEffect* pEffect)
+{
+	if (pEffect) {
+		cwShader* pShader = m_pEffect->getShader();
+		if (pShader && this->getTexture()) {
+			pShader->setVariableTexture("gSpriteTexture", this->getTexture());
+		}
+
+		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+
+		if (m_pStencil)
+			pDevice->setStencil(m_pStencil);
+		if (m_pBlend)
+			pDevice->setBlend(m_pBlend);
+
+		pDevice->draw(pEffect, m_pRenderObject);
 	}
 }
 

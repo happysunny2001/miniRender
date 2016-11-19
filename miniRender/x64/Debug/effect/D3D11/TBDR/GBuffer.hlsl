@@ -4,6 +4,7 @@
 #include "PerFrameConstant.hlsl"
 #include "Material.hlsl"
 #include "SurfaceData.hlsl"
+#include "TBDRDefines.hlsl"
 
 struct GBuffer
 {
@@ -12,10 +13,11 @@ struct GBuffer
 	float4 Specular_Power : SV_Target2;
 };
 
-Texture2D gNormalTexture;
-Texture2D gDiffuseTexture;
-Texture2D gSpecularTexture;
-Texture2D gDepthTexture;
+Texture2DMS<float4, MSAA_SAMPLES> gNormalTexture;
+Texture2DMS<float4, MSAA_SAMPLES> gDiffuseTexture;
+//Texture2D gDiffuseTexture;
+Texture2DMS<float4, MSAA_SAMPLES> gSpecularTexture;
+Texture2DMS<float4, MSAA_SAMPLES> gDepthTexture;
 
 struct VertexVSInput
 {
@@ -91,20 +93,22 @@ float3 ComputePositionViewFromZ(float2 positionScreen, float viewSpaceZ)
     return positionView;
 }
 
-SurfaceData ComputeSurfaceFromGBuffer(uint2 globalCoords)
+SurfaceData ComputeSurfaceFromGBuffer(uint2 globalCoords, uint sampleIndex)
 {
 	SurfaceData sData;
 
-	sData.diffuse  = gDiffuseTexture.Load(int3(globalCoords.xy, 0));
-	sData.specular = gSpecularTexture.Load(int3(globalCoords.xy, 0));
-	float depth = gDepthTexture.Load(int3(globalCoords.xy, 0)).x;
-	float4 normal = gNormalTexture.Load(int3(globalCoords.xy, 0));
+	sData.diffuse = gDiffuseTexture.Load(int2(globalCoords.xy), sampleIndex);
+	//sData.diffuse = gDiffuseTexture.Load(int3(globalCoords.xy, 0));
+	sData.specular = gSpecularTexture.Load(int2(globalCoords.xy), sampleIndex);
+	float depth = gDepthTexture.Load(int2(globalCoords.xy), sampleIndex).x;
+	float4 normal = gNormalTexture.Load(int2(globalCoords.xy), sampleIndex);
 
-	sData.normalView = DecodeSphereMap(normal.xy);
+	sData.normalView = normalize(DecodeSphereMap(normal.xy));
 	//sData.normalView = decodeNormal(normal);
 	
 	float2 dim;
-	gDepthTexture.GetDimensions(dim.x, dim.y);
+	uint temp;
+	gDepthTexture.GetDimensions(dim.x, dim.y, temp);
 
 	float2 screenPixelOffset = float2(2.0f, -2.0f) / dim;
     float2 positionScreen = (float2(globalCoords.xy) + 0.5f) * screenPixelOffset.xy + float2(-1.0f, 1.0f);
@@ -113,8 +117,17 @@ SurfaceData ComputeSurfaceFromGBuffer(uint2 globalCoords)
 
     float viewSpaceZ = gMatProj._43 / (depth - gMatProj._33);
     sData.positionView = float4(ComputePositionViewFromZ(positionScreen, viewSpaceZ).xyz, 1.0f);
+    sData.positionWorld = mul(sData.positionView, gMatViewInv);
 
 	return sData;
+}
+
+void ComputeSurfaceFromGBufferAllSamples(uint2 globalCoords, out SurfaceData surface[MSAA_SAMPLES])
+{
+	[unroll]
+	for(uint i = 0; i < MSAA_SAMPLES; ++i) {
+		surface[i] = ComputeSurfaceFromGBuffer(globalCoords, i);
+	}
 }
 
 float3 ComputeFaceNormal(float3 position)

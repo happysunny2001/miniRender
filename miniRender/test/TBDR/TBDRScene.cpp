@@ -71,7 +71,34 @@ CWBOOL TBDRScene::init()
 
 CWVOID TBDRScene::update(CWFLOAT dt)
 {
-	CWFLOAT angle = cwMathUtil::cwPI*0.1f*dt;
+	//if (isKeyDown(KeyCode::X)) {
+	//	cwRenderer* pRender = cwRepertory::getInstance().getEngine()->getRenderer();
+	//	if (pRender) {
+	//		cwStage* pDebugStage = pRender->getStage("DebugStage");
+	//		cwStage* pMLAAStage = pRender->getStage("MLAAStage");
+
+	//		if(pDebugStage) pDebugStage->setEnable(CWTRUE);
+	//		if(pMLAAStage) pMLAAStage->setEnable(CWFALSE);
+	//	}
+	//}
+	//else if (isKeyDown(KeyCode::M)) {
+	//	cwRenderer* pRender = cwRepertory::getInstance().getEngine()->getRenderer();
+	//	if (pRender) {
+	//		cwStage* pDebugStage = pRender->getStage("DebugStage");
+	//		cwStage* pMLAAStage = pRender->getStage("MLAAStage");
+
+	//		if (pDebugStage) pDebugStage->setEnable(CWFALSE);
+	//		if (pMLAAStage) pMLAAStage->setEnable(CWTRUE);
+	//	}
+	//}
+
+	//movingLights(dt);
+	movingDirectionalLight(dt);
+}
+
+CWVOID TBDRScene::movingLights(CWFLOAT dt)
+{
+	CWFLOAT angle = cwMathUtil::cwPI*0.02f*dt;
 	cwMatrix4X4 matRot;
 	matRot.setRotation(angle, 0, 0);
 
@@ -83,59 +110,37 @@ CWVOID TBDRScene::update(CWFLOAT dt)
 	}
 }
 
+CWVOID TBDRScene::movingDirectionalLight(CWFLOAT dt)
+{
+	if (m_pDirectionalLight) {
+		static CWFLOAT fSpeed = cwMathUtil::cwPI*0.1f;
+		CWFLOAT fAngle = fSpeed*dt;
+
+		cwMatrix4X4 matRot;
+		matRot.setRotation(cwVector3D(0, fAngle, 0));
+
+		cwVector4D dir = m_pDirectionalLight->getDirection();
+		dir *= matRot;
+		m_pDirectionalLight->setDirection(dir);
+	}
+}
+
 CWVOID TBDRScene::buildRenderObject()
 {
-	cwRepertory& repertory = cwRepertory::getInstance();
+	cwRenderObjectGenerator<cwVertexPosNormal> roGenerator;
 
-	cwGeometryGenerator::cwMeshData mesh;
-	repertory.getGeoGenerator()->generateGrid(200, 200, 40, 40, mesh);
-
-	vector<cwVertexPosNormal> vecPlane(mesh.nVertex.size());
-	for (CWUINT i = 0; i < mesh.nVertex.size(); ++i) {
-		vecPlane[i].pos = mesh.nVertex[i].pos;
-		vecPlane[i].normal = mesh.nVertex[i].normal;
-	}
-
-	m_pPlaneObject = cwStaticRenderObject::create(
-		ePrimitiveTypeTriangleList,
-		(CWVOID*)&vecPlane[0], sizeof(cwVertexPosNormal), static_cast<CWUINT>(mesh.nVertex.size()),
-		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosNormal");
+	m_pPlaneObject = roGenerator.generateGrid(200, 200, 40, 40, "PosNormal");
 	CW_SAFE_RETAIN(m_pPlaneObject);
 
-	repertory.getGeoGenerator()->generateBox(mesh);
-	vector<cwVertexPosNormal> vecBox(mesh.nVertex.size());
-	for (int i = 0; i < mesh.nVertex.size(); ++i) {
-		vecBox[i].pos = mesh.nVertex[i].pos;
-		vecBox[i].normal = mesh.nVertex[i].normal;
-	}
-
-	m_pBoxObject = cwStaticRenderObject::create(
-		ePrimitiveTypeTriangleList,
-		(CWVOID*)&vecBox[0], sizeof(cwVertexPosNormal), static_cast<CWUINT>(mesh.nVertex.size()),
-		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosNormal");
+	m_pBoxObject = roGenerator.generateBox("PosNormal");
 	CW_SAFE_RETAIN(m_pBoxObject);
 
-	repertory.getGeoGenerator()->generateSphere(1.0, 20, 20, mesh);
-	vector<cwVertexPosNormal> vecSphere(mesh.nVertex.size());
-	for (CWUINT i = 0; i < mesh.nVertex.size(); ++i) {
-		vecSphere[i].pos = mesh.nVertex[i].pos;
-		vecSphere[i].normal = mesh.nVertex[i].normal;
-	}
-
-	m_pSphereObject = cwStaticRenderObject::create(
-		ePrimitiveTypeTriangleList,
-		(CWVOID*)&vecSphere[0], sizeof(cwVertexPosNormal), static_cast<CWUINT>(mesh.nVertex.size()),
-		(CWVOID*)&(mesh.nIndex[0]), static_cast<CWUINT>(mesh.nIndex.size()), "PosNormal");
+	m_pSphereObject = roGenerator.generateSphere(1.0, 20, 20, "PosNormal");
 	CW_SAFE_RETAIN(m_pSphereObject);
 }
 
 CWVOID TBDRScene::buildEntity()
 {
-	cwShader* pShader = cwRepertory::getInstance().getShaderManager()->createShader("TBDR/TBDRTechnique.hlsl");
-	cwEffect* pEffect = cwEffect::create();
-	pEffect->setShader(pShader);
-	pEffect->setTech("GBufferBuild");
-
 	cwMaterial* pMaterial = cwMaterial::create();
 	pMaterial->setDiffuse(cwVector4D(0.8f, 0.8f, 0.8f, 1.0f));
 	pMaterial->setSpecular(cwVector4D(1.0f, 1.0f, 1.0f, 8.0f));
@@ -145,9 +150,13 @@ CWVOID TBDRScene::buildEntity()
 		for (CWUINT z = 0; z < 10; ++z) {
 			cwEntity* pEntity = cwEntity::create();
 			pEntity->setRenderObject(m_pBoxObject);
-			pEntity->setEffect(pEffect);
 			pEntity->setMaterial(pMaterial);
-			pEntity->setScale(4.0f, 4.0f, 4.0f);
+
+			if (x == 5 && z == 5)
+				pEntity->setScale(4.0f, 34.0f, 4.0f);
+			else
+				pEntity->setScale(4.0f, 4.0f, 4.0f);
+
 			pEntity->setPosition(startPos);
 			this->addChild(pEntity);
 
@@ -160,7 +169,6 @@ CWVOID TBDRScene::buildEntity()
 
 	m_pEntityPlane = cwEntity::create();
 	m_pEntityPlane->setRenderObject(m_pPlaneObject);
-	m_pEntityPlane->setEffect(pEffect);
 	m_pEntityPlane->setCastShadow(CWFALSE);
 	CW_SAFE_RETAIN(m_pEntityPlane);
 
@@ -191,25 +199,25 @@ CWVOID TBDRScene::buildEntity()
 
 CWVOID TBDRScene::buildLight()
 {
-	cwVector3D startPos(-95.0f, 6.0f, 95.0f);
-	CWFLOAT step = 8.0f;
+	cwVector3D startPos(-100.0f, 6.0f, 100.0f);
+	CWFLOAT step = 20.0f;
 
-	for (CWUINT x = 0; x < 20; ++x) {
-		for (CWUINT z = 0; z < 20; ++z) {
-			CWFLOAT r = 0.5f + cwMathUtil::randFloat()*0.5f;
-			CWFLOAT g = 0.5f + cwMathUtil::randFloat()*0.5f;
-			CWFLOAT b = 0.5f + cwMathUtil::randFloat()*0.5f;
+	for (CWUINT x = 0; x < 10; ++x) {
+		for (CWUINT z = 0; z < 10; ++z) {
+			CWFLOAT r = cwMathUtil::randFloat()*0.1f;
+			CWFLOAT g = cwMathUtil::randFloat()*0.1f;
+			CWFLOAT b = cwMathUtil::randFloat()*0.1f;
 
-			CWFLOAT radius = 1.0f + cwMathUtil::randFloat()*8.0f;
+			CWFLOAT radius = 10.0f + 6.0f;// *cwMathUtil::randFloat();
 
-			if (r >= g && r >= b) g = b = r*0.3f;
-			if (g >= r && r >= b) r = b = g*0.3f;
-			if (b >= r && b >= g) r = g = b*0.3f;
+			if (r >= g && r >= b) r *= 2.0f;
+			if (g >= r && r >= b) g *= 2.0f;
+			if (b >= r && b >= g) b *= 2.0f;
 
 			cwPointLight* pLightPoint = cwPointLight::create(
 				startPos,
-				cwVector4D(r, g, b, 1.0f),
-				3.0f, 3.0f+radius);
+				cwVector4D(0.1f+r, 0.1f+g, 0.1f+b, 1.0f),
+				2.0f, 2.0f+radius);
 			this->addPointLight(pLightPoint);
 
 			startPos.z -= step;
@@ -218,6 +226,12 @@ CWVOID TBDRScene::buildLight()
 		startPos.x += step;
 		startPos.z = 95.0f;
 	}
+
+	cwVector3D dir(1.0, -1.0, 1.0);
+	dir.normalize();
+	cwDirectionalLight* pDirLight = cwDirectionalLight::create(cwVector4D(dir), cwVector3D(0.2f, 0.2f, 0.2f));
+	pDirLight->setCastShadow(CWTRUE);
+	this->addDirectionalLight(pDirLight);
 
 	//cwVector4D startPos(-40.0f, 5.0f, 40.0f, 1.0f);
 	//for (CWUINT y = 0; y < 4; ++y) {

@@ -24,7 +24,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Repertory/cwRepertory.h"
 #include "Shader/cwShaderManager.h"
 #include "Texture/cwTextureManager.h"
-#include "Parser/cwParserManager.h"
+//#include "Parser/cwParserManager.h"
 #include "Parser/cwResourceConfParser.h"
 #include "Platform/cwFileSystem.h"
 #include "cwStreaming.h"
@@ -74,7 +74,7 @@ CWBOOL cwResourceLoader::init()
 
 CWVOID cwResourceLoader::loadConfigure()
 {
-	cwResourceConfParser* pParser = static_cast<cwResourceConfParser*>(cwRepertory::getInstance().getParserManager()->getParser(eParserResourceConf));
+	cwResourceConfParser* pParser = cwResourceConfParser::create();
 	CWSTRING strFilePath = cwRepertory::getInstance().getFileSystem()->getFullFilePath("Configure/resource.xml");
 	m_nMapResLocation = pParser->parse(strFilePath);
 }

@@ -77,6 +77,7 @@ CWBOOL cwRenderNode::init()
 CWVOID cwRenderNode::clearChildren()
 {
 	for (auto it = m_nVecChildren.begin(); it != m_nVecChildren.end(); ++it) {
+		removeSpatialNode(*it);
 		(*it)->setParent(nullptr);
 	}
 
@@ -359,6 +360,13 @@ CWVOID cwRenderNode::refreshTransform()
 		m_nTrans *= pParent->getLocalTransMatrix();
 		pParent = pParent->getParent();
 	}
+
+	if (m_nTrans.inverseExist()) {
+		m_nMatTransInvTranspose = m_nTrans.inverse().transpose();
+	}
+	else {
+		m_nMatTransInvTranspose.identity();
+	}
 }
 
 CWVOID cwRenderNode::refreshBoundingBox()
@@ -405,7 +413,12 @@ CWVOID cwRenderNode::render()
 
 }
 
-CWVOID cwRenderNode::render(cwRenderBatch* pRenderBatch)
+//CWVOID cwRenderNode::render(cwRenderBatch* pRenderBatch)
+//{
+//
+//}
+
+CWVOID cwRenderNode::render(cwEffect* pEffect)
 {
 
 }

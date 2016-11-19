@@ -47,10 +47,16 @@ public:
 	inline cwTexture* getTexture() { return m_pTexture; }
 	CWVOID setTexture(cwTexture* pTexture);
 
+	virtual CWVOID transform() override;
 	virtual CWVOID refreshTransform() override;
 	virtual CWVOID refreshBoundingBox() override;
 
 	virtual CWVOID render(cwCamera* pCamera) override;
+	virtual CWVOID render(cwEffect* pEffect) override;
+
+	CWVOID setAnchorPoint(const cwVector2D& anchorPoint);
+	CWVOID setAnchorPoint(const cwVector3D& anchorPoint);
+	const cwVector3D& getAnchorPoint() const { return m_nAnchorPoint; }
 
 protected:
 	CWBOOL loadTexture(const std::string& strFile);
@@ -63,6 +69,8 @@ protected:
 protected:
 	cwTexture* m_pTexture;
 	cwVector4D m_nColor;
+	cwVector3D m_nAnchorPoint;
+
 	cwMatrix4X4 m_nMatSizeScale;
 	cwRenderObject* m_pRenderObject;
 	//cwVertexPosTexColor* m_pVertexBuffer;

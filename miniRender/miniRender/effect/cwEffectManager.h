@@ -22,17 +22,19 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
+#include "Base/cwMap.h"
 #include "Ref/cwRef.h"
 #include "Repertory/cwRepertory.h"
+#include "cwEffect.h"
+#include "cwEffectConstant.h"
 
 NS_MINIR_BEGIN
-
-class cwEffect;
 
 class cwEffectManager : public cwRef
 {
 public:
 	cwEffect* defaultSpriteEffect();
+	cwEffect* getDefEffect(eDefEffectID effectID);
 
 private:
 	static cwEffectManager* create();
@@ -41,10 +43,13 @@ private:
 	cwEffectManager& operator=(cwEffectManager const&){}
 	~cwEffectManager();
 
+	CWVOID loadDefEffect();
+
 	friend class cwRepertory;
 
 private:
 	cwEffect* m_pDefaultSpriteEffect;
+	cwMap<eDefEffectID, cwEffect*> m_nMapDefEffect;
 
 };
 

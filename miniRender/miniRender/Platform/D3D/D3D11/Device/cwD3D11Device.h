@@ -87,14 +87,16 @@ public:
 	virtual cwTexture* createCubeTexture(CWVOID* pData, CWUINT64 uSize) override;
 	virtual cwTexture* createCubeTextureThreadSafe(CWVOID* pData, CWUINT64 uSize) override;
 
-	virtual cwRenderTexture* createRenderTexture(CWFLOAT fWidth, CWFLOAT fHeight, eRenderTextureType eType = eRenderTextureShader, CWBOOL bThreading = CWFALSE) override;
 	virtual cwTexture* createTextureArray(const std::vector<CWSTRING>& vecFiles) override;
 	virtual cwTexture* createTextureArrayThreadSafe(const std::vector<CWSTRING>& vecFiles) override;
 
 	virtual cwTexture* createRTTexture(CWBOOL bThreadSafe = CWFALSE) override;
 	virtual cwTexture* createRTTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE) override;
+	virtual cwTexture* createRTTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE) override;
 	virtual cwTexture* createRWTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWBOOL bThreadSafe = CWFALSE) override;
+	virtual cwTexture* createRWTexture(CWFLOAT fWidth, CWFLOAT fHeight, eFormat format, CWUINT iMSAASamples, CWBOOL bThreadSafe = CWFALSE) override;
 	virtual cwTexture* createDSTexture(CWFLOAT fWidth, CWFLOAT fHeight, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE) override;
+	virtual cwTexture* createDSTexture(CWFLOAT fWidth, CWFLOAT fHeight, CWUINT iMSAASamples, CWBOOL bShaderUsage = CWFALSE, CWBOOL bThreadSafe = CWFALSE) override;
 	virtual cwTexture* createDSTexture(CWBOOL bThreadSafe = CWFALSE) override;
 
 	virtual cwBatchEntity* createBatchEntity() override;
@@ -111,9 +113,13 @@ public:
 	virtual CWVOID clearShaderResource() override;
 
 	virtual CWVOID render(cwRenderObject* pRenderObj, const cwVector3D& worldPos, cwShader* pShader, cwCamera* pCamera) override;
-	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj) override;
-	virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, std::vector<cwRenderObject*>& vecRenderObject, CWUINT uCnt) override;
-	virtual CWVOID drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo) override;
+	//virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, cwRenderObject* pRenderObj) override;
+	//virtual CWVOID draw(cwShader* pShader, const CWSTRING& strTech, std::vector<cwRenderObject*>& vecRenderObject, CWUINT uCnt) override;
+	//virtual CWVOID drawGP(cwShader* pShader, const CWSTRING& strTech, cwGPInfo* pGPInfo) override;
+
+	virtual CWVOID draw(cwEffect* pEffect, cwRenderObject* pRenderObj) override;
+	virtual CWVOID draw(cwEffect* pEffect, std::vector<cwRenderObject*>& vecRenderObject, CWUINT uCnt) override;
+	virtual CWVOID draw(cwGPEffect* pEffect) override;
 
 public:
 	IDXGISwapChain* getSwapChain() { return m_pDxgiSwapChain; }
@@ -179,7 +185,7 @@ public:
 	static inline D3D11_DEPTH_WRITE_MASK getDepthWriteMask(eDepthWriteMask index) { return static_cast<D3D11_DEPTH_WRITE_MASK>(depthWriteMask[index]); }
 
 	static inline CWUINT getAccessFlag(eAccessFlag index) { return accessFlag[index]; }
-	static inline D3D11_BIND_FLAG getBufferBindFlag(eBufferBindFlag index) { return static_cast<D3D11_BIND_FLAG>(bufferBindFlag[index]); }
+	static D3D11_BIND_FLAG getBufferBindFlag(CWUINT index) { return static_cast<D3D11_BIND_FLAG>(bufferBindFlag[index]); }
 	static CWUINT getBufferBindFlags(CWUINT flags);
 	static inline D3D11_USAGE getBufferUsage(eBufferUsage index) { return static_cast<D3D11_USAGE>(bufferUsage[index]); }
 

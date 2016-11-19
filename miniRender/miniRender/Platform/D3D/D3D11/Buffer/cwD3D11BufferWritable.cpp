@@ -37,7 +37,7 @@ CWUINT offset,
 CWBOOL bAppend)
 {
 	cwD3D11BufferWritable* pBuffer = new cwD3D11BufferWritable();
-	if (pBuffer && pBuffer->init(pData, uSize, eBufferUsageDefault, eBufferBindWritable, uCpuFlag, D3D11_RESOURCE_MISC_BUFFER_STRUCTURED, structureByteStride, offset, bAppend)) {
+	if (pBuffer && pBuffer->init(pData, uSize, eBufferUsageDefault, eBufferBindWritable|eBufferBindShader, uCpuFlag, D3D11_RESOURCE_MISC_BUFFER_STRUCTURED, structureByteStride, offset, bAppend)) {
 		pBuffer->autorelease();
 		return pBuffer;
 	}
@@ -47,7 +47,8 @@ CWBOOL bAppend)
 }
 
 cwD3D11BufferWritable::cwD3D11BufferWritable() : 
-m_pUnorderedResource(NULL)
+m_pUnorderedResource(NULL),
+m_pShaderResource(NULL)
 {
 
 }
@@ -55,14 +56,14 @@ m_pUnorderedResource(NULL)
 cwD3D11BufferWritable::~cwD3D11BufferWritable()
 {
 	CW_RELEASE_COM(m_pUnorderedResource);
-	m_pUnorderedResource = NULL;
+	CW_RELEASE_COM(m_pShaderResource);
 }
 
 CWBOOL cwD3D11BufferWritable::init(
 	CWVOID* pData,
 	CWUINT uSize,
 	eBufferUsage usage,
-	eBufferBindFlag bindFlag,
+	CWUINT bindFlag,
 	eAccessFlag uCpuFlag,
 	CWUINT miscFlag,
 	CWUINT structureByteStride,
@@ -81,16 +82,24 @@ CWBOOL cwD3D11BufferWritable::init(
 		unorderedDesc.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_APPEND;
 	else
 		unorderedDesc.Buffer.Flags = 0;
-	unorderedDesc.Buffer.NumElements = m_iElementCnt;
+	unorderedDesc.Buffer.NumElements = m_uElementCnt;
 
 	CW_HR(pD3D11Device->getD3D11Device()->CreateUnorderedAccessView(m_pD3D11Buffer, &unorderedDesc, &m_pUnorderedResource));
+
+	if (bindFlag | eBufferBindShader)
+		CW_HR(pD3D11Device->getD3D11Device()->CreateShaderResourceView(m_pD3D11Buffer, 0, &m_pShaderResource));
 
 	return CWTRUE;
 }
 
-CWHANDLE cwD3D11BufferWritable::getShaderHandle()
+CWHANDLE cwD3D11BufferWritable::getWritableHandle()
 {
 	return m_pUnorderedResource;
+}
+
+CWHANDLE cwD3D11BufferWritable::getShaderHandle()
+{
+	return m_pShaderResource;
 }
 
 NS_MINIR_END

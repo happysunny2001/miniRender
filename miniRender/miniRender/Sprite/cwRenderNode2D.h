@@ -34,6 +34,9 @@ public:
 	virtual ~cwRenderNode2D();
 
 	virtual CWBOOL init() override;
+	virtual CWBOOL addChild(cwRenderNode* pNode) override;
+
+	virtual CWBOOL addChild(cwRenderNode2D* pNode);
 
 	virtual CWVOID setPosition(CWFLOAT x, CWFLOAT y);
 	virtual CWVOID move(CWFLOAT x, CWFLOAT y);

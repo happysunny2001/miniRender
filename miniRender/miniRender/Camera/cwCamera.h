@@ -60,6 +60,7 @@ public:
 	inline const cwMatrix4X4& getViewProjMatrix() const { return m_nViewProjMatrix; }
 	inline const cwMatrix4X4& getInvertViewProjMatrix() const { return m_nInvertViewProjMatrix; }
 	inline const cwMatrix4X4& getInvertProjMatrix() const { return m_nInvertProjMatrix; }
+	inline const cwMatrix4X4& getInvertViewMatrix() const { return m_nInvertViewMatrix; }
 
 	inline const cwVector3D& getPos() const { return m_nPos; }
 	CWVOID setPos(const cwVector3D& pos);
@@ -83,6 +84,7 @@ protected:
 	cwMatrix4X4 m_nViewMatrix;
 	cwMatrix4X4 m_nProjMatrix;
 	cwMatrix4X4 m_nViewProjMatrix;
+	cwMatrix4X4 m_nInvertViewMatrix;
 	cwMatrix4X4 m_nInvertViewProjMatrix;
 	cwMatrix4X4 m_nInvertProjMatrix;
 

@@ -5,14 +5,54 @@
 #include "Light.hlsl"
 #include "GBuffer.hlsl"
 #include "GeometryTest.hlsl"
+#include "FrameBuffer.hlsl"
 
-RWTexture2D<float4> gLitTexture;
+RWStructuredBuffer<float4> gLitFrameBuffer;
 
 groupshared uint sTileLightIndeces[MAX_LIGHTS];
 groupshared uint sTileLightCount;
 
+groupshared uint sPerSamplePixel[COMPUTE_SHADER_TILE_GROUP_SIZE];
+groupshared uint sPreSamplePixelCount;
+
 groupshared uint sMinZ;
 groupshared uint sMaxZ;
+
+void WriteSample(uint2 globalCoords, uint sampleIndex, float4 value)
+{
+	gLitFrameBuffer[GetFrameBufferAddress(globalCoords, sampleIndex)] = value;
+}
+
+uint packCoords(uint2 coords) 
+{
+	return coords.y<<16|(0x0000FFFF&coords.x);
+}
+
+uint2 unpackCoords(uint coord) 
+{
+	return uint2(coord&0xFFFF, coord>>16);
+}
+
+bool IsRequestPerSampleShading(SurfaceData surfaceSamples[MSAA_SAMPLES])
+{
+	bool bComplexSample = false;
+	float sample0Depth = surfaceSamples[0].positionView.z;
+	float3 sample0Normal = surfaceSamples[0].normalView;
+
+	[unroll]
+	for(uint iSample = 1; iSample < MSAA_SAMPLES; ++iSample) {
+		float sampleIDepth = surfaceSamples[iSample].positionView.z;
+		float3 sampleINormal = surfaceSamples[iSample].normalView;
+
+		[branch]
+		if(abs(sampleIDepth-sample0Depth) > 1.0f || abs(dot(abs(sample0Normal-sampleINormal), float3(1,1,1))) > 0.1f) {
+			bComplexSample = true;
+			break;
+		}
+	}
+
+	return bComplexSample;
+}
 
 [numthreads(COMPUTE_SHADER_TILE_GROUP_DIM, COMPUTE_SHADER_TILE_GROUP_DIM, 1)]
 void TBDRCS(uint3 groupId          : SV_GroupID,
@@ -22,23 +62,31 @@ void TBDRCS(uint3 groupId          : SV_GroupID,
 	uint groupIndex = groupThreadId.y * COMPUTE_SHADER_TILE_GROUP_DIM + groupThreadId.x;
 
 	uint2 globalCoords = dispatchThreadId.xy;
-	SurfaceData sData = ComputeSurfaceFromGBuffer(globalCoords);
+
+	SurfaceData surfaceSamples[MSAA_SAMPLES];
+	ComputeSurfaceFromGBufferAllSamples(globalCoords, surfaceSamples);
 
 	//gCameraNearFarZ, x:Far Plane Z value, y:Near Plane Z value
 	float fMinSampleZ = gCameraNearFarZ.x;
 	float fMaxSampleZ = gCameraNearFarZ.y;
-	float fViewSpaceZ = sData.positionView.z;
-	bool bValidPixel = fViewSpaceZ >= gCameraNearFarZ.y && fViewSpaceZ < gCameraNearFarZ.x;
 
-	[flatten] if(bValidPixel) {
-		fMinSampleZ = min(fMinSampleZ, fViewSpaceZ);
-		fMaxSampleZ = max(fMaxSampleZ, fViewSpaceZ);
+	{
+		[unroll]
+		for(uint iSample = 0; iSample < MSAA_SAMPLES; ++iSample) {
+			float fViewSpaceZ = surfaceSamples[iSample].positionView.z;
+			bool bValidPixel = fViewSpaceZ >= gCameraNearFarZ.y && fViewSpaceZ < gCameraNearFarZ.x;
+			[flatten] if(bValidPixel) {
+				fMinSampleZ = min(fMinSampleZ, fViewSpaceZ);
+				fMaxSampleZ = max(fMaxSampleZ, fViewSpaceZ);
+			}
+		} 
 	}
 
 	if(groupIndex == 0) {
 		sTileLightCount = 0;
 		sMinZ = 0x7F7FFFFF;
 		sMaxZ = 0;
+		sPreSamplePixelCount = 0;
 	}
 
 	GroupMemoryBarrierWithGroupSync();
@@ -75,7 +123,7 @@ void TBDRCS(uint3 groupId          : SV_GroupID,
         frustumPlanes[i] *= rcp(length(frustumPlanes[i].xyz));
     }
 
-	for(uint lightIndex = groupIndex; lightIndex < gPointLightCnt; lightIndex += COMPUTE_SHADER_TILE_GROUP_DIM) {
+	for(uint lightIndex = groupIndex; lightIndex < gPointLightCnt; lightIndex += COMPUTE_SHADER_TILE_GROUP_SIZE) {
 		PointLight light = gPointLights[lightIndex];
 
 		bool inFrustum = true;
@@ -96,15 +144,66 @@ void TBDRCS(uint3 groupId          : SV_GroupID,
 	uint numLights = sTileLightCount;
 
 	if(all(globalCoords < gFrameBufferDimensions.xy)) {
-		float3 lit = float3(0.0f, 0.0f, 0.0f);
-		for(uint tileLightIndex = 0; tileLightIndex < numLights; ++tileLightIndex) {
-			PointLight light = gPointLights[sTileLightIndeces[tileLightIndex]];
-			PointLightAccumulate(light, sData, lit);
+		float3 lightDiffuse = float3(0, 0, 0);
+		[flatten]
+		if(gEnableDirectionalLight == 1) {
+			DirectionalLightAccumulate(gDirectionalLight, surfaceSamples[0], lightDiffuse);
 		}
 
-		//float f = numLights * rcp(gPointLightCnt);
-		//gLitTexture[globalCoords.xy] = float4(f, f, f, 1.0f);
-		gLitTexture[globalCoords.xy] = float4(lit, 1.0f);
+		bool bComplex = IsRequestPerSampleShading(surfaceSamples);
+		float3 lightFinal = float3(0, 0, 0);
+
+		if(numLights > 0) {
+			float3 lit = float3(0.0f, 0.0f, 0.0f);
+			for(uint tileLightIndex = 0; tileLightIndex < numLights; ++tileLightIndex) {
+				PointLight light = gPointLights[sTileLightIndeces[tileLightIndex]];
+				PointLightAccumulate(light, surfaceSamples[0], lit);
+			}
+
+			lightFinal = lit+lightDiffuse;
+		}
+		else {
+			lightFinal = lightDiffuse;
+		}
+
+		WriteSample(globalCoords, 0, float4(lightFinal, 1.0f));
+
+		if(bComplex) {
+			uint perSampleIndex;
+			InterlockedAdd(sPreSamplePixelCount, 1, perSampleIndex);
+			sPerSamplePixel[perSampleIndex] = packCoords(globalCoords);
+		}
+		else {
+			[unroll]
+			for(uint iSample = 1; iSample < MSAA_SAMPLES; ++iSample) {
+				WriteSample(globalCoords, iSample, float4(lightFinal, 1.0f));
+			}
+		}
+	}
+
+	GroupMemoryBarrierWithGroupSync();
+
+	const uint cSampleCountPerPixel = MSAA_SAMPLES-1;
+	uint uMaxSampleCount = sPreSamplePixelCount*cSampleCountPerPixel;
+	for(uint iSample = groupIndex; iSample < uMaxSampleCount; iSample += COMPUTE_SHADER_TILE_GROUP_SIZE) {
+		uint uPixelIndex = iSample / cSampleCountPerPixel;
+		uint uSampleIndex = iSample % cSampleCountPerPixel + 1;
+
+		uint2 sampleCoord = unpackCoords(sPerSamplePixel[uPixelIndex]);
+		SurfaceData surface = ComputeSurfaceFromGBuffer(sampleCoord, uSampleIndex);
+
+		float3 litSample = float3(0.0f, 0.0f, 0.0f);
+		for(uint tileLightIndex = 0; tileLightIndex < numLights; ++tileLightIndex) {
+			PointLight light = gPointLights[sTileLightIndeces[tileLightIndex]];
+			PointLightAccumulate(light, surface, litSample);
+		}
+
+		[flatten]
+		if(gEnableDirectionalLight == 1) {
+			DirectionalLightAccumulate(gDirectionalLight, surface, litSample);
+		}
+
+		WriteSample(sampleCoord, uSampleIndex, float4(litSample, 1.0f));
 	}
 }
 

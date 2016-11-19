@@ -22,9 +22,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "RenderObject/cwRenderObject.h"
 #include "RenderObject/cwDynamicRenderObject.h"
 #include "Effect/cwEffect.h"
+#include "effect/cwEffectManager.h"
 #include "Repertory/cwRepertory.h"
 #include "Shader/cwShaderManager.h"
-#include "Render/cwRenderBatch.h"
+//#include "Render/cwRenderBatch.h"
 #include "Device/cwDevice.h"
 
 NS_MINIR_BEGIN
@@ -70,14 +71,28 @@ CWBOOL cwPrimitiveEntity::init()
 	return CWTRUE;
 }
 
-CWVOID cwPrimitiveEntity::render(cwRenderBatch* pRenderBatch)
+//CWVOID cwPrimitiveEntity::render(cwRenderBatch* pRenderBatch)
+//{
+//	if (m_uVertexCnt == 0) return;
+//	m_pRenderObj->updateVertexData(m_pVertexData, m_uVertexCnt);
+//
+//	if (pRenderBatch && pRenderBatch->m_pEffect) {
+//		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
+//		pDevice->draw(pRenderBatch->m_pEffect->getShader(), pRenderBatch->m_pEffect->getTech(), m_pRenderObj);
+//	}
+//
+//	m_uVertexCnt = 0;
+//}
+
+CWVOID cwPrimitiveEntity::render(cwEffect* pEffect)
 {
 	if (m_uVertexCnt == 0) return;
 	m_pRenderObj->updateVertexData(m_pVertexData, m_uVertexCnt);
 
-	if (pRenderBatch && pRenderBatch->m_pEffect) {
+	if (pEffect) {
 		cwDevice* pDevice = cwRepertory::getInstance().getDevice();
-		pDevice->draw(pRenderBatch->m_pEffect->getShader(), pRenderBatch->m_pEffect->getTech(), m_pRenderObj);
+		//pDevice->draw(pEffect->getShader(), pEffect->getTech(), m_pRenderObj);
+		pDevice->draw(pEffect, m_pRenderObj);
 	}
 
 	m_uVertexCnt = 0;
@@ -90,10 +105,12 @@ CWVOID cwPrimitiveEntity::buildMaterial()
 
 CWVOID cwPrimitiveEntity::buildEffect()
 {
-	cwRepertory& repertory = cwRepertory::getInstance();
-	cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderColor);
-	cwEffect* pEffect = cwEffect::create();
-	pEffect->setShader(pShader);
+	//cwRepertory& repertory = cwRepertory::getInstance();
+	//cwShader* pShader = repertory.getShaderManager()->getDefShader(eDefShaderColor);
+	//cwEffect* pEffect = cwEffect::create();
+	//pEffect->setShader(pShader);
+
+	cwEffect* pEffect = cwRepertory::getInstance().getEffectManager()->getDefEffect(eEffectIDColor);
 
 	this->setEffect(pEffect);
 }

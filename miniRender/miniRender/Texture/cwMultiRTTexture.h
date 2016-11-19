@@ -40,6 +40,7 @@ public:
 	virtual CWHANDLE getHandle(CWUINT index) const;
 	virtual cwTexture* getTexture(CWUINT index) const;
 	virtual CWBOOL addRTTexture(eFormat format, CWBOOL bThreadSafe = CWFALSE);
+	virtual CWBOOL addRTTexture(eFormat format, CWUINT iMSAASamples, CWBOOL bThreadSafe = CWFALSE);
 
 protected:
 	virtual CWBOOL init(CWFLOAT fWidth, CWFLOAT fHeight);

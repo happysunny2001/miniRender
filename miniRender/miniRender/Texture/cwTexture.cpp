@@ -24,7 +24,7 @@ NS_MINIR_BEGIN
 cwTexture::cwTexture() :
 m_eTextureFormat(eFormatUnknown)
 {
-	m_eType = eRenderTextureTexture;
+	//m_eType = eRenderTextureTexture;
 }
 
 const CWSTRING& cwTexture::getName() const

@@ -18,7 +18,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 */
 
 #include "cwTerrain.h"
-#include "Parser/cwParserManager.h"
+//#include "Parser/cwParserManager.h"
 #include "Parser/cwTerrainParser.h"
 #include "Repertory/cwRepertory.h"
 #include "Resource/cwLoadBatch.h"
@@ -122,8 +122,9 @@ CWBOOL cwTerrain::init(const CWSTRING& strConfFile)
 {
 	if (!cwRenderNode::init()) return CWFALSE;
 
-	cwParserManager* pParserManager = cwRepertory::getInstance().getParserManager();
-	cwTerrainParser* pTerrainParser = static_cast<cwTerrainParser*>(pParserManager->getParser(eParserTerrain));
+	//cwParserManager* pParserManager = cwRepertory::getInstance().getParserManager();
+	//cwTerrainParser* pTerrainParser = static_cast<cwTerrainParser*>(pParserManager->getParser(eParserTerrain));
+	cwTerrainParser* pTerrainParser = cwTerrainParser::create();
 	if (!pTerrainParser) return CWFALSE;
 
 	if (!pTerrainParser->parse(this, strConfFile)) return CWFALSE;
