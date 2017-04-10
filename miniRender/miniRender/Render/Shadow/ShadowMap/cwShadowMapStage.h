@@ -36,13 +36,13 @@ public:
 	cwShadowMapStage();
 	virtual ~cwShadowMapStage();
 
-	virtual CWVOID render() override;
 	virtual CWVOID bindingResultParameter(cwShader* pShader) override;
 	virtual CWVOID showResult(const cwVector2D& pos, const cwVector2D& scale) override;
 
 protected:
 	virtual CWBOOL init() override;
 	virtual CWBOOL buildRenderTexture() override;
+	virtual CWVOID showResult() override;
 	virtual CWBOOL buildShadowMapStageLayer();
 
 protected:

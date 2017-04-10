@@ -17,24 +17,36 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_EFFECT_PARAMETER_H__
-#define __CW_EFFECT_PARAMETER_H__
+#ifndef __CW_PIPELINE_NODE_H__
+#define __CW_PIPELINE_NODE_H__
 
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
-#include "Shader/cwShader.h"
 #include "Ref/cwRef.h"
 
 NS_MINIR_BEGIN
 
-class cwEffectParameter : public cwRef
+class cwShader;
+
+class cwPipelineNode : public cwRef
 {
 public:
-	virtual CWVOID binding(cwShader* pShader) = 0;
-	inline CWVOID setParameterName(const CWSTRING& strName) { m_nStrParamName = strName; }
+	cwPipelineNode();
 
-public:
-	CWSTRING m_nStrParamName;
+	virtual CWVOID doRender() = 0;
+
+	inline CWBOOL isEnable() const { return m_bEnable; }
+	inline CWVOID setEnable(CWBOOL b) { m_bEnable = b; }
+
+	inline const CWSTRING& name() const { return m_nName; }
+	inline CWVOID setName(const CWSTRING& name) { m_nName = name; }
+
+	virtual CWVOID bindingResultParameter(cwShader* pShader) {}
+	virtual CWVOID addOuterPipeline(cwPipelineNode* pPipelineNode) {}
+
+protected:
+	CWSTRING m_nName;
+	CWBOOL m_bEnable;
 
 };
 

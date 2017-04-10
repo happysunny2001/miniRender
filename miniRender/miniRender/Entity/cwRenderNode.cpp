@@ -61,7 +61,7 @@ m_bCastShadow(CWFALSE)
 
 cwRenderNode::~cwRenderNode()
 {
-	CW_SAFE_RELEASE_NULL(m_pParent);
+	//CW_SAFE_RELEASE_NULL(m_pParent);
 	CW_SAFE_RELEASE_NULL(m_pEffect);
 	CW_SAFE_RELEASE_NULL(m_pBlend);
 	CW_SAFE_RELEASE_NULL(m_pStencil);

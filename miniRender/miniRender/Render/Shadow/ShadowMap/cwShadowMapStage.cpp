@@ -66,6 +66,8 @@ CWBOOL cwShadowMapStage::buildRenderTexture()
 	if (!m_pResultRenderTexture) return CWFALSE;
 	CW_SAFE_RETAIN(m_pResultRenderTexture);
 
+	m_pResultRenderTexture->setName("ShadowMap");
+
 	return CWTRUE;
 }
 
@@ -99,40 +101,32 @@ CWBOOL cwShadowMapStage::buildShadowMapStageLayer()
 	m_pShadowStageLayer->setFilterType(eStageLayerFliterScene);
 	m_pShadowStageLayer->setUniformEffect(pShadowEffect);
 
-	this->addStageLayer(m_pShadowStageLayer);
+	this->addChildPipelineNode(m_pShadowStageLayer);
 
 	return CWTRUE;
 }
 
 CWVOID cwShadowMapStage::showResult(const cwVector2D& pos, const cwVector2D& scale)
 {
+	cwStage::showResult(pos, scale);
+
 	if (!m_pShadowSprite) {
-		m_pShadowSprite = cwSprite::create();
-
-		m_pShadowSprite->setTexture(m_pResultRenderTexture);
-		m_pShadowSprite->setScale(scale.x, scale.y, 1.0f);
-		m_pShadowSprite->setPosition(pos.x, pos.y);
-		m_pShadowSprite->setAnchorPoint(cwVector2D(-0.5f, -0.5f));
-
 		cwShader* pShader = cwRepertory::getInstance().getShaderManager()->createShader("SpriteRenderTechnique.hlsl");
 		cwEffect* pSpriteEffect = cwEffect::create();
 		pSpriteEffect->setShader(pShader);
 		pSpriteEffect->setTech("SpriteGrayTech");
-		m_pShadowSprite->setEffect(pSpriteEffect);
+
+		m_pShadowSprite = this->createResultSprite(m_pResultRenderTexture, pSpriteEffect);
 		CW_SAFE_RETAIN(m_pShadowSprite);
 	}
-
-	if (!m_pShadowSprite->getParent())
-		cwRepertory::getInstance().getEngine()->getCurrScene()->addChild2D(m_pShadowSprite);
 }
 
-CWVOID cwShadowMapStage::render()
+CWVOID cwShadowMapStage::showResult()
 {
-	cwStage::render();
-
-	CWUINT width = cwRepertory::getInstance().getUInt(gValueWinWidth);
-	CWUINT height = cwRepertory::getInstance().getUInt(gValueWinHeight);
-	this->showResult(cwVector2D(-(CWFLOAT)(width / 2), -(CWFLOAT)(height / 2)), cwVector2D(0.1f, 0.1f));
+	if (m_pShadowSprite && !m_pShadowSprite->getParent()) {
+		cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
+		pCurrScene->addChild2D(m_pShadowSprite);
+	}
 }
 
 NS_MINIR_END

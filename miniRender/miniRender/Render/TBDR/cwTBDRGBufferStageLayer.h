@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015-2016 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang (happy.sunny.2001@163.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -17,24 +17,22 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_EFFECT_PARAMETER_H__
-#define __CW_EFFECT_PARAMETER_H__
+#ifndef __CW_TBDR_GBUFFER_STAGE_LAYER_H__
+#define __CW_TBDR_GBUFFER_STAGE_LAYER_H__
 
 #include "Base/cwMacros.h"
-#include "Base/cwBasicType.h"
-#include "Shader/cwShader.h"
-#include "Ref/cwRef.h"
+#include "Render/Stage/cwStageLayer.h"
 
 NS_MINIR_BEGIN
 
-class cwEffectParameter : public cwRef
+class cwTBDRGBufferStageLayer : public cwStageLayer
 {
 public:
-	virtual CWVOID binding(cwShader* pShader) = 0;
-	inline CWVOID setParameterName(const CWSTRING& strName) { m_nStrParamName = strName; }
+	CW_CREATE_FUNC(cwTBDRGBufferStageLayer);
 
-public:
-	CWSTRING m_nStrParamName;
+	virtual CWVOID bindingResultParameter(cwShader* pShader) override;
+
+protected:
 
 };
 

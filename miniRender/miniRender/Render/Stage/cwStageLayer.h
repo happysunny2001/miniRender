@@ -24,8 +24,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwBasicType.h"
 #include "Base/cwUtils.h"
 #include "Base/cwVector.h"
-#include "Ref/cwRef.h"
 #include "cwCommandBatch.h"
+#include "cwPipelineNode.h"
 
 #include <unordered_map>
 #include <vector>
@@ -44,16 +44,13 @@ class cwStencil;
 class cwBlend;
 class cwStage;
 
-class cwStageLayer : public cwRef
+class cwStageLayer : public cwPipelineNode
 {
 public:
 	static cwStageLayer* create();
 	
 	cwStageLayer();
 	virtual ~cwStageLayer();
-
-	inline const CWSTRING& name() const { return m_nName; }
-	inline CWVOID setName(const CWSTRING& name) { m_nName = name; }
 
 	inline CWUINT getFilterType() const { return m_nFilterType; }
 	inline CWVOID setFilterType(eStageLayerFliterType type) { m_nFilterType = type; }
@@ -85,13 +82,10 @@ public:
 	CWVOID addSelfRenderNode(cwRenderNode* pRenderNode);
 	CWVOID removeSelfRenderNode(cwRenderNode* pRenderNode);
 
-	CWVOID addOuterStage(cwStage* pStage);
+	virtual CWVOID addOuterPipeline(cwPipelineNode* pPipelineNode) override;
+	virtual CWVOID setUniformEffect(cwEffect* pEffect);
 
-	CWVOID setUniformEffect(cwEffect* pEffect);
-
-	virtual CWVOID begin();
-	virtual CWVOID render();
-	virtual CWVOID end();
+	virtual CWVOID doRender() override;
 
 	virtual CWBOOL buildViewPort(CWFLOAT fLeft, CWFLOAT fTop, CWFLOAT fWidth, CWFLOAT fHeight, CWFLOAT fMinDepth, CWFLOAT fMaxDepth);
 
@@ -101,11 +95,15 @@ protected:
 	virtual CWBOOL buildStencil();
 	virtual CWBOOL buildBlend();
 
+	virtual CWVOID begin();
+	virtual CWVOID render();
+	virtual CWVOID end();
+
 	virtual CWVOID reset();
 	virtual CWVOID bindingRenderTarget();
 
 	virtual CWVOID preFrameConfig(cwShader* pShader);
-	virtual CWVOID configOuterStageParam(cwShader* pShader);
+	virtual CWVOID configPipelineNodeParam(cwShader* pShader);
 	virtual CWVOID configLight(cwScene* pScene, cwShader* pShader);
 	virtual CWVOID configDirectionalLight(cwScene* pScene, cwShader* pShader);
 	virtual CWVOID configPointLight(cwScene* pScene, cwShader* pShader);
@@ -124,7 +122,6 @@ protected:
 	cwCommandBatch* getCommandBatch(cwShader* pKeyShader);
 
 protected:
-	CWSTRING m_nName;
 	CWUINT m_nFilterType;
 	cwCamera* m_pCamera;
 	cwViewPort* m_pViewPort;
@@ -150,7 +147,7 @@ protected:
 	CWUINT m_iCommandBatchIndex;
 	cwCommandBatch* m_pLastUsingBatch;
 
-	cwVector<cwStage*> m_nVecOuterStage;
+	cwVector<cwPipelineNode*> m_nVecOuterPipelineNode;
 
 };
 

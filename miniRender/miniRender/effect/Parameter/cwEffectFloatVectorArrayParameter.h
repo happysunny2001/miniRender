@@ -17,25 +17,29 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_EFFECT_PARAMETER_H__
-#define __CW_EFFECT_PARAMETER_H__
+#ifndef __CW_EFFECT_FLOAT_VECTOR_ARRAY_PARAMETER_H__
+#define __CW_EFFECT_FLOAT_VECTOR_ARRAY_PARAMETER_H__
 
 #include "Base/cwMacros.h"
-#include "Base/cwBasicType.h"
-#include "Shader/cwShader.h"
-#include "Ref/cwRef.h"
+#include "cwEffectParameter.h"
+#include "Math/cwVector4D.h"
 
 NS_MINIR_BEGIN
 
-class cwEffectParameter : public cwRef
+class cwEffectFloatVectorArrayParameter : public cwEffectParameter
 {
 public:
-	virtual CWVOID binding(cwShader* pShader) = 0;
-	inline CWVOID setParameterName(const CWSTRING& strName) { m_nStrParamName = strName; }
+	static cwEffectFloatVectorArrayParameter* create();
 
-public:
-	CWSTRING m_nStrParamName;
+	cwEffectFloatVectorArrayParameter();
+	virtual ~cwEffectFloatVectorArrayParameter();
 
+	CWVOID setVectorArray(cwVector4D* pVec, CWUINT iCnt);
+	virtual CWVOID binding(cwShader* pShader) override;
+
+protected:
+	cwVector4D* m_pVector;
+	CWUINT m_iCnt;
 };
 
 NS_MINIR_END

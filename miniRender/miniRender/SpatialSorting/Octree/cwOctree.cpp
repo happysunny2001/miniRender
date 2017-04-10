@@ -625,10 +625,10 @@ CWVOID cwOctree::renderOctreeNodePrimitiveFrame(sOctreeNode* pOctreeNode)
 			renderOctreeNodePrimitiveFrame(pOctreeNode->m_pChildren[i]);
 	}
 
-	if (pOctreeNode->m_nListObjs.empty())
-		cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(pOctreeNode->m_nBox);
-	else
-		cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(pOctreeNode->m_nBox, cwColor::blue);
+	//if (pOctreeNode->m_nListObjs.empty())
+	//	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(pOctreeNode->m_nBox);
+	//else
+	//	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(pOctreeNode->m_nBox, cwColor::blue);
 }
 
 const cwAABB& cwOctree::getBoundingBox()

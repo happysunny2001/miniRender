@@ -17,68 +17,35 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_TBDR_STAGE_H__
-#define __CW_TBDR_STAGE_H__
+#ifndef __CW_SSAO_STAGE_LAYER_H__
+#define __CW_SSAO_STAGE_LAYER_H__
 
 #include "Base/cwMacros.h"
-#include "Render/Stage/cwStage.h"
-#include "cwTBDRConstants.h"
+#include "Render/Stage/cwStageLayer.h"
+#include "Math/cwVector4D.h"
 
 NS_MINIR_BEGIN
 
-class cwTexture;
-class cwMultiRTTexture;
-class cwEntity;
-class cwBuffer;
-class cwEffectParameter;
-class cwSprite;
-
-class cwTBDRStage : public cwStage
+class cwSSAOStageLayer : public cwStageLayer
 {
 public:
-	CW_CREATE_FUNC(cwTBDRStage);
+	CW_CREATE_FUNC(cwSSAOStageLayer);
 
-	cwTBDRStage();
-	virtual ~cwTBDRStage();
+	cwSSAOStageLayer();
+	virtual ~cwSSAOStageLayer();
+
+	virtual CWVOID setUniformEffect(cwEffect* pEffect) override;
 
 protected:
 	virtual CWBOOL init() override;
+	virtual CWVOID preFrameConfig(cwShader* pShader) override;
 
-	virtual CWBOOL buildParam();
-	virtual CWBOOL buildGBuffer();
-	virtual CWBOOL buildDepthStencil();
-	virtual CWBOOL buildLitTexture();
-	//virtual CWBOOL buildSSAOTexture();
-	//virtual CWBOOL buildFinalRenderTarget();
-	virtual CWBOOL buildEntity();
-
-	virtual CWBOOL buildClearStageLayer();
-	virtual CWBOOL buildRenderScreenStageLayer();
-	virtual CWBOOL buildTBDRCoreStageLayer();
-	virtual CWBOOL buildResultStageLayer();
-	virtual CWBOOL buildSSAOStage();
+	CWBOOL buildRandVector();
+	CWBOOL buildRandVectorTexture();
 
 protected:
-	typedef struct sLitBuffer
-	{
-		CWFLOAT r;
-		CWFLOAT g;
-		CWFLOAT b;
-		CWFLOAT a;
-	};
-
-protected:
-	cwMultiRTTexture* m_pGBuffer;
-	cwTexture* m_pDepthStencil;
-#if CW_ENABLE_MSAA
-	cwBuffer* m_pLitTexture;
-#else
-	cwTexture* m_pLitTexture;
-#endif
-	//cwTexture* m_pFinalRenderTarget;
-
-	cwEntity* m_pScreenQuad;
-	cwEffectParameter* m_pParamFrameDim;
+	cwVector4D m_nRandVector[14];
+	cwTexture* m_pRandVectorTexture;
 
 };
 

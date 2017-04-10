@@ -2,12 +2,6 @@
 #include "util.fx"
 #include "VertexLayout.hlsl"
 
-//struct VertexIn
-//{
-//	float3 PosL  : POSITION;
-//	float2 Tex   : TEXCOORD;
-//};
-
 ///////////////////////////////////////////Vertex///////////////////////////////////////////
 struct VertexPosTexOut
 {

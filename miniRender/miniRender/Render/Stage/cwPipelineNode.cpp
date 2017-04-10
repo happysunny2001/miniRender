@@ -17,27 +17,14 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_EFFECT_PARAMETER_H__
-#define __CW_EFFECT_PARAMETER_H__
-
-#include "Base/cwMacros.h"
-#include "Base/cwBasicType.h"
-#include "Shader/cwShader.h"
-#include "Ref/cwRef.h"
+#include "cwPipelineNode.h"
 
 NS_MINIR_BEGIN
 
-class cwEffectParameter : public cwRef
+cwPipelineNode::cwPipelineNode() : 
+m_bEnable(CWTRUE)
 {
-public:
-	virtual CWVOID binding(cwShader* pShader) = 0;
-	inline CWVOID setParameterName(const CWSTRING& strName) { m_nStrParamName = strName; }
 
-public:
-	CWSTRING m_nStrParamName;
-
-};
+}
 
 NS_MINIR_END
-
-#endif

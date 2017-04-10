@@ -22,6 +22,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Texture/cwTexture.h"
 #include "Repertory/cwRepertory.h"
 #include "Device/cwDevice.h"
+#include "Sprite/cwSprite.h"
 
 NS_MINIR_BEGIN
 
@@ -50,8 +51,8 @@ cwStage* cwStage::create(cwTexture* pRenderTexture)
 }
 
 cwStage::cwStage() :
-m_pCurrUsingCamera(nullptr),
-m_pResultRenderTexture(nullptr)
+m_pResultRenderTexture(nullptr),
+m_bShowResult(CWFALSE)
 {
 
 }
@@ -88,12 +89,14 @@ CWBOOL cwStage::buildRenderTexture()
 	return CWTRUE;
 }
 
-CWVOID cwStage::bindingResultParameter(cwShader* pShader)
+CWVOID cwStage::showResult(const cwVector2D& pos, const cwVector2D& scale)
 {
-
+	m_bShowResult = CWTRUE;
+	m_nResultPos = pos;
+	m_nResultScale = scale;
 }
 
-CWVOID cwStage::showResult(const cwVector2D& pos, const cwVector2D& scale)
+CWVOID cwStage::showResult()
 {
 
 }
@@ -103,7 +106,7 @@ cwTexture* cwStage::getRenderResult() const
 	return m_pResultRenderTexture;
 }
 
-cwStageLayer* cwStage::getStageLayer(const CWSTRING& name)
+cwPipelineNode* cwStage::getChildPipelineNode(const CWSTRING& name)
 {
 	for (auto it = m_nVecStageLayers.begin(); it != m_nVecStageLayers.end(); ++it) {
 		if ((*it)->name() == name) return (*it);
@@ -112,35 +115,55 @@ cwStageLayer* cwStage::getStageLayer(const CWSTRING& name)
 	return nullptr;
 }
 
-CWVOID cwStage::addStageLayer(cwStageLayer* pStageLayer)
+CWVOID cwStage::addChildPipelineNode(cwPipelineNode* pPipelineNode)
 {
-	m_nVecStageLayers.pushBack(pStageLayer);
+	m_nVecStageLayers.pushBack(pPipelineNode);
 }
 
-CWVOID cwStage::removeStageLayer(cwStageLayer* pStageLayer)
+CWVOID cwStage::removeChildPipelineNode(cwPipelineNode* pPipelineNode)
 {
-	m_nVecStageLayers.erase(pStageLayer);
+	m_nVecStageLayers.erase(pPipelineNode);
+}
+
+CWVOID cwStage::doRender()
+{
+	this->begin();
+	this->render();
+	this->end();
 }
 
 CWVOID cwStage::begin()
 {
-	m_pCurrUsingCamera = nullptr;
+
 }
 
 CWVOID cwStage::render()
 {
 	for (auto it = m_nVecStageLayers.begin(); it != m_nVecStageLayers.end(); ++it) {
-		cwStageLayer* pStageLayer = (*it);
-		m_pCurrUsingCamera = pStageLayer->getCamera();
-		pStageLayer->begin();
-		pStageLayer->render();
-		pStageLayer->end();
+		(*it)->doRender();
 	}
+
+	if (m_bShowResult)
+		showResult();
 }
 
 CWVOID cwStage::end()
 {
 
+}
+
+cwSprite* cwStage::createResultSprite(cwTexture* pTexture, cwEffect* pEffect)
+{
+	cwSprite* pSprite = cwSprite::create();
+	if (pSprite) {
+		pSprite->setTexture(pTexture);
+		pSprite->setScale(m_nResultScale.x, m_nResultScale.y, 1.0f);
+		pSprite->setPosition(m_nResultPos.x, m_nResultPos.y);
+		pSprite->setAnchorPoint(cwVector2D(-0.5f, -0.5f));
+		pSprite->setEffect(pEffect);
+	}
+
+	return pSprite;
 }
 
 NS_MINIR_END

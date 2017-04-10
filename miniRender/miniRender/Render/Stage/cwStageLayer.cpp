@@ -152,12 +152,27 @@ CWVOID cwStageLayer::removeSelfRenderNode(cwRenderNode* pRenderNode)
 	m_nVecSelfNode.erase(pRenderNode);
 }
 
-CWVOID cwStageLayer::addOuterStage(cwStage* pStage)
+CWVOID cwStageLayer::addOuterPipeline(cwPipelineNode* pPipelineNode)
 {
-	if (pStage) {
-		m_nVecOuterStage.pushBack(pStage);
+	if (pPipelineNode) {
+		for (auto pOuterStage : m_nVecOuterPipelineNode) {
+			if (pOuterStage == pPipelineNode) return;
+		}
+
+		m_nVecOuterPipelineNode.pushBack(pPipelineNode);
 	}
 }
+
+//CWVOID cwStageLayer::addOuterStageLayer(cwStageLayer* pStageLayer)
+//{
+//	if (pStageLayer) {
+//		for (auto pOuterStageLayer : m_nVecOuterStageLayer) {
+//			if (pOuterStageLayer == pStageLayer) return;
+//		}
+//
+//		m_nVecOuterStageLayer.pushBack(pStageLayer);
+//	}
+//}
 
 CWVOID cwStageLayer::setUniformEffect(cwEffect* pEffect)
 {
@@ -183,6 +198,13 @@ CWVOID cwStageLayer::bindingRenderTarget()
 	}
 }
 
+CWVOID cwStageLayer::doRender()
+{
+	this->begin();
+	this->render();
+	this->end();
+}
+
 CWVOID cwStageLayer::begin()
 {
 	this->reset();
@@ -203,7 +225,7 @@ CWVOID cwStageLayer::render()
 		cwShader* pShader = it->first;
 		if (pShader) {
 			this->preFrameConfig(pShader);
-			this->configOuterStageParam(pShader);
+			this->configPipelineNodeParam(pShader);
 
 			cwScene* pScene = cwRepertory::getInstance().getEngine()->getCurrScene();
 			if (pScene) {
@@ -220,7 +242,6 @@ CWVOID cwStageLayer::render()
 CWVOID cwStageLayer::end()
 {
 	cwRepertory::getInstance().getDevice()->endDraw();
-	cwRepertory::getInstance().getDevice()->clearShaderResource();
 }
 
 CWVOID cwStageLayer::preFrameConfig(cwShader* pShader)
@@ -240,16 +261,25 @@ CWVOID cwStageLayer::preFrameConfig(cwShader* pShader)
 	}
 }
 
-CWVOID cwStageLayer::configOuterStageParam(cwShader* pShader)
+CWVOID cwStageLayer::configPipelineNodeParam(cwShader* pShader)
 {
-	if (m_nVecOuterStage.size() > 0) {
-		for (auto pStage : m_nVecOuterStage) {
+	if (m_nVecOuterPipelineNode.size() > 0) {
+		for (auto pStage : m_nVecOuterPipelineNode) {
 			if (pStage) {
 				pStage->bindingResultParameter(pShader);
 			}
 		}
 	}
 }
+
+//CWVOID cwStageLayer::configOuterStageLayerParam(cwShader* pShader)
+//{
+//	if (m_nVecOuterStageLayer.size() > 0) {
+//		for (auto pStageLayer : m_nVecOuterStageLayer) {
+//			pStageLayer->bindingResultParameter(pShader);
+//		}
+//	}
+//}
 
 CWVOID cwStageLayer::configLight(cwScene* pScene, cwShader* pShader)
 {
@@ -306,13 +336,7 @@ CWVOID cwStageLayer::batchSceneRenderNodes()
 
 CWVOID cwStageLayer::batchScene2DNodes()
 {
-	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
-	if (!pCurrScene) return;
-
-	std::vector<cwRenderNode2D*>& vecNodes2D = pCurrScene->getRenderNodes2D();
-	for (auto it = vecNodes2D.begin(); it != vecNodes2D.end(); ++it) {
-		this->addRenderNode((*it));
-	}
+	
 }
 
 CWBOOL cwStageLayer::addRenderNode(cwRenderNode* pNode)

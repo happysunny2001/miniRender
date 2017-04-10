@@ -17,27 +17,17 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_EFFECT_PARAMETER_H__
-#define __CW_EFFECT_PARAMETER_H__
+#ifndef __CW_SSAO_CONSTANTS_H__
+#define __CW_SSAO_CONSTANTS_H__
 
-#include "Base/cwMacros.h"
-#include "Base/cwBasicType.h"
-#include "Shader/cwShader.h"
-#include "Ref/cwRef.h"
-
-NS_MINIR_BEGIN
-
-class cwEffectParameter : public cwRef
-{
-public:
-	virtual CWVOID binding(cwShader* pShader) = 0;
-	inline CWVOID setParameterName(const CWSTRING& strName) { m_nStrParamName = strName; }
-
-public:
-	CWSTRING m_nStrParamName;
-
-};
-
-NS_MINIR_END
+#define CW_SSAO_SHADER_FILE "SSAOTechnique.hlsl"
+#define CW_SSAO_SHADER_TECH "TechSSAO"
+#define CW_SSAO_SHADER_HORIZ_BLUR_TECH "TechSSAOHorizBlur"
+#define CW_SSAO_SHADER_VERT_BLUR_TECH  "TechSSAOVertBlur"
+#define CW_SSAO_LAYER_NAME "SSAOStageLayer"
+#define CW_SSAO_HORIZ_BLUR_LAYER_NAME "SSAOHorizBlurStageLayer"
+#define CW_SSAO_VERT_BLUR_LAYER_NAME "SSAOVertBlurStageLayer"
+#define CW_SSAO_STAGE_NAME "SSAOStage"
+#define CW_SSAO_PARAM_TEXTURE "gSSAOTexture"
 
 #endif

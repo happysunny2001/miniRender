@@ -41,7 +41,15 @@ cw2DStageLayer::~cw2DStageLayer()
 
 CWVOID cw2DStageLayer::batchScene2DNodes()
 {
-	cwStageLayer::batchScene2DNodes();
+	cwScene* pCurrScene = cwRepertory::getInstance().getEngine()->getCurrScene();
+
+	if (pCurrScene) {
+		std::vector<cwRenderNode2D*>& vecNodes2D = pCurrScene->getRenderNodes2D();
+		for (auto it = vecNodes2D.begin(); it != vecNodes2D.end(); ++it) {
+			this->addRenderNode((*it));
+		}
+	}
+
 	renderFrameLabel();
 }
 

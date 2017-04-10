@@ -5,6 +5,16 @@
 #include "Material.hlsl"
 #include "SurfaceData.hlsl"
 #include "TBDRDefines.hlsl"
+#include "GBufferTexture.hlsl"
+
+Texture2D gSSAOTexture;
+
+SamplerState samSSAOLinear
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = WRAP;
+	AddressV = WRAP;
+};
 
 struct GBuffer
 {
@@ -12,12 +22,6 @@ struct GBuffer
 	float4 DiffuseRGB     : SV_Target1; 
 	float4 Specular_Power : SV_Target2;
 };
-
-Texture2DMS<float4, MSAA_SAMPLES> gNormalTexture;
-Texture2DMS<float4, MSAA_SAMPLES> gDiffuseTexture;
-//Texture2D gDiffuseTexture;
-Texture2DMS<float4, MSAA_SAMPLES> gSpecularTexture;
-Texture2DMS<float4, MSAA_SAMPLES> gDepthTexture;
 
 struct VertexVSInput
 {
@@ -97,12 +101,13 @@ SurfaceData ComputeSurfaceFromGBuffer(uint2 globalCoords, uint sampleIndex)
 {
 	SurfaceData sData;
 
+	sData.fAOFactor = 1.0f;
 	sData.diffuse = gDiffuseTexture.Load(int2(globalCoords.xy), sampleIndex);
 	//sData.diffuse = gDiffuseTexture.Load(int3(globalCoords.xy, 0));
 	sData.specular = gSpecularTexture.Load(int2(globalCoords.xy), sampleIndex);
 	float depth = gDepthTexture.Load(int2(globalCoords.xy), sampleIndex).x;
 	float4 normal = gNormalTexture.Load(int2(globalCoords.xy), sampleIndex);
-
+	
 	sData.normalView = normalize(DecodeSphereMap(normal.xy));
 	//sData.normalView = decodeNormal(normal);
 	
@@ -112,12 +117,13 @@ SurfaceData ComputeSurfaceFromGBuffer(uint2 globalCoords, uint sampleIndex)
 
 	float2 screenPixelOffset = float2(2.0f, -2.0f) / dim;
     float2 positionScreen = (float2(globalCoords.xy) + 0.5f) * screenPixelOffset.xy + float2(-1.0f, 1.0f);
-    float2 positionScreenX = positionScreen + float2(screenPixelOffset.x, 0.0f);
-    float2 positionScreenY = positionScreen + float2(0.0f, screenPixelOffset.y);
 
     float viewSpaceZ = gMatProj._43 / (depth - gMatProj._33);
     sData.positionView = float4(ComputePositionViewFromZ(positionScreen, viewSpaceZ).xyz, 1.0f);
     sData.positionWorld = mul(sData.positionView, gMatViewInv);
+
+    float cAOFactor = gSSAOTexture.SampleLevel(samSSAOLinear, float2(globalCoords.x, globalCoords.y)/dim, 0).r;
+    sData.fAOFactor = cAOFactor;
 
 	return sData;
 }

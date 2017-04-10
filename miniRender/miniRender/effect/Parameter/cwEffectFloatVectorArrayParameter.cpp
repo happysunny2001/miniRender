@@ -17,27 +17,54 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_EFFECT_PARAMETER_H__
-#define __CW_EFFECT_PARAMETER_H__
-
-#include "Base/cwMacros.h"
-#include "Base/cwBasicType.h"
+#include "cwEffectFloatVectorArrayParameter.h"
 #include "Shader/cwShader.h"
-#include "Ref/cwRef.h"
 
 NS_MINIR_BEGIN
 
-class cwEffectParameter : public cwRef
+cwEffectFloatVectorArrayParameter* cwEffectFloatVectorArrayParameter::create()
 {
-public:
-	virtual CWVOID binding(cwShader* pShader) = 0;
-	inline CWVOID setParameterName(const CWSTRING& strName) { m_nStrParamName = strName; }
+	cwEffectFloatVectorArrayParameter* pParameter = new cwEffectFloatVectorArrayParameter();
+	if (pParameter) {
+		pParameter->autorelease();
+		return pParameter;
+	}
 
-public:
-	CWSTRING m_nStrParamName;
+	return nullptr;
+}
 
-};
+cwEffectFloatVectorArrayParameter::cwEffectFloatVectorArrayParameter() :
+m_pVector(nullptr),
+m_iCnt(0)
+{
+
+}
+
+cwEffectFloatVectorArrayParameter::~cwEffectFloatVectorArrayParameter()
+{
+	CW_SAFE_DELETE_ARRAY(m_pVector);
+	m_iCnt = 0;
+}
+
+CWVOID cwEffectFloatVectorArrayParameter::setVectorArray(cwVector4D* pVec, CWUINT iCnt)
+{
+	CW_SAFE_DELETE_ARRAY(m_pVector);
+	m_iCnt = 0;
+
+	if (pVec && iCnt > 0) {
+		m_pVector = new cwVector4D[iCnt];
+		if (m_pVector) {
+			memcpy_s(m_pVector, sizeof(cwVector4D)*iCnt, pVec, sizeof(cwVector4D)*iCnt);
+			m_iCnt = iCnt;
+		}
+	}
+}
+
+CWVOID cwEffectFloatVectorArrayParameter::binding(cwShader* pShader)
+{
+	if (pShader && m_pVector && m_iCnt > 0) {
+		pShader->setVariableFloatVectorArray(m_nStrParamName, reinterpret_cast<CWFLOAT*>(m_pVector), m_iCnt);
+	}
+}
 
 NS_MINIR_END
-
-#endif

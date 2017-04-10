@@ -17,68 +17,46 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_TBDR_STAGE_H__
-#define __CW_TBDR_STAGE_H__
+#ifndef __CW_SSAO_STAGE_H__
+#define __CW_SSAO_STAGE_H__
 
 #include "Base/cwMacros.h"
 #include "Render/Stage/cwStage.h"
-#include "cwTBDRConstants.h"
 
 NS_MINIR_BEGIN
 
 class cwTexture;
-class cwMultiRTTexture;
 class cwEntity;
-class cwBuffer;
-class cwEffectParameter;
 class cwSprite;
 
-class cwTBDRStage : public cwStage
+class cwSSAOStage : public cwStage
 {
 public:
-	CW_CREATE_FUNC(cwTBDRStage);
+	CW_CREATE_FUNC(cwSSAOStage);
 
-	cwTBDRStage();
-	virtual ~cwTBDRStage();
+	cwSSAOStage();
+	virtual ~cwSSAOStage();
+
+	virtual CWVOID bindingResultParameter(cwShader* pShader) override;
+	virtual CWVOID showResult(const cwVector2D& pos, const cwVector2D& scale) override;
 
 protected:
 	virtual CWBOOL init() override;
-
-	virtual CWBOOL buildParam();
-	virtual CWBOOL buildGBuffer();
-	virtual CWBOOL buildDepthStencil();
-	virtual CWBOOL buildLitTexture();
-	//virtual CWBOOL buildSSAOTexture();
-	//virtual CWBOOL buildFinalRenderTarget();
 	virtual CWBOOL buildEntity();
+	virtual CWBOOL buildRenderTexture() override;
 
-	virtual CWBOOL buildClearStageLayer();
-	virtual CWBOOL buildRenderScreenStageLayer();
-	virtual CWBOOL buildTBDRCoreStageLayer();
-	virtual CWBOOL buildResultStageLayer();
-	virtual CWBOOL buildSSAOStage();
+	virtual CWBOOL buildSSAOLayer();
+	virtual CWBOOL buildBlurTexture();
+	virtual CWBOOL buildHorizBlurLayer();
+	virtual CWBOOL buildVertBlurLayer();
 
-protected:
-	typedef struct sLitBuffer
-	{
-		CWFLOAT r;
-		CWFLOAT g;
-		CWFLOAT b;
-		CWFLOAT a;
-	};
+	virtual CWVOID showResult() override;
 
 protected:
-	cwMultiRTTexture* m_pGBuffer;
-	cwTexture* m_pDepthStencil;
-#if CW_ENABLE_MSAA
-	cwBuffer* m_pLitTexture;
-#else
-	cwTexture* m_pLitTexture;
-#endif
-	//cwTexture* m_pFinalRenderTarget;
-
+	cwTexture* m_pBlurTexture;
 	cwEntity* m_pScreenQuad;
-	cwEffectParameter* m_pParamFrameDim;
+
+	cwSprite* m_pSSAOSprite;
 
 };
 

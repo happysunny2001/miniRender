@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -47,8 +47,7 @@ cwEffectFloatArrayParameter::~cwEffectFloatArrayParameter()
 
 CWVOID cwEffectFloatArrayParameter::binding(cwShader* pShader)
 {
-	//pShader->setVariableFloatArray(m_nStrParamName, m_pFloatArray, m_iCnt);
-	if (m_pFloatArray && m_iCnt > 0) {
+	if (pShader && m_pFloatArray && m_iCnt > 0) {
 		pShader->setVariableData(m_nStrParamName, m_pFloatArray, 0, sizeof(CWFLOAT)*m_iCnt);
 	}
 }

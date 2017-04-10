@@ -365,69 +365,67 @@ CWVOID cwD3D11Shader::setVariableFloatArray(const string& strVariable, CWFLOAT* 
 
 CWVOID cwD3D11Shader::setVariableTexture(const string& strVariable, const cwTexture* pTexture)
 {
-	if (!pTexture) return;
-	auto itVariable = m_mapVariable.find(strVariable);
-	if (itVariable != m_mapVariable.end()) {
-		ID3D11ShaderResourceView* pShaderRes = reinterpret_cast<ID3D11ShaderResourceView*>(pTexture->getHandle());
-		if (pShaderRes) {
-			ID3DX11EffectVariable* pVariable = itVariable->second;
-			CW_HR(pVariable->AsShaderResource()->SetResource(pShaderRes));
+	if (pTexture) {
+		auto itVariable = m_mapVariable.find(strVariable);
+		if (itVariable != m_mapVariable.end()) {
+			ID3D11ShaderResourceView* pShaderRes = reinterpret_cast<ID3D11ShaderResourceView*>(pTexture->getHandle());
+			if (pShaderRes) {
+				ID3DX11EffectVariable* pVariable = itVariable->second;
+				CW_HR(pVariable->AsShaderResource()->SetResource(pShaderRes));
+			}
 		}
 	}
 }
 
 CWVOID cwD3D11Shader::setVariableTextureWritable(const CWSTRING& strVariable, const cwTexture* pTexture)
 {
-	if (!pTexture) return;
-	auto itVariable = m_mapVariable.find(strVariable);
-	if (itVariable != m_mapVariable.end()) {
-		ID3D11UnorderedAccessView* pShaderRes = reinterpret_cast<ID3D11UnorderedAccessView*>(pTexture->getWritablehandle());
-		if (pShaderRes) {
-			ID3DX11EffectVariable* pVariable = itVariable->second;
-			CW_HR(pVariable->AsUnorderedAccessView()->SetUnorderedAccessView(pShaderRes));
+	if (pTexture) {
+		auto itVariable = m_mapVariable.find(strVariable);
+		if (itVariable != m_mapVariable.end()) {
+			ID3D11UnorderedAccessView* pShaderRes = reinterpret_cast<ID3D11UnorderedAccessView*>(pTexture->getWritablehandle());
+			if (pShaderRes) {
+				ID3DX11EffectVariable* pVariable = itVariable->second;
+				CW_HR(pVariable->AsUnorderedAccessView()->SetUnorderedAccessView(pShaderRes));
+			}
 		}
 	}
 }
 
-//CWVOID cwD3D11Shader::setVariableTextureWritable(const CWSTRING& strVariable, const cwTexture* pTexture)
-//{
-//	if (!pTexture) return;
-//	CWHANDLE pHandle = pTexture->getWritablehandle();
-//	if (!pHandle) return;
-//	auto itVariable = m_mapVariable.find(strVariable);
-//	if (itVariable != m_mapVariable.end()) {
-//		ID3D11UnorderedAccessView* pShaderRes = reinterpret_cast<ID3D11UnorderedAccessView*>(pHandle);
-//		if (pShaderRes) {
-//			ID3DX11EffectVariable* pVariable = itVariable->second;
-//			CW_HR(pVariable->AsUnorderedAccessView()->SetUnorderedAccessView(pShaderRes));
-//		}
-//	}
-//}
-
 CWVOID cwD3D11Shader::setVariableBuffer(const CWSTRING& strVariable, cwBuffer* pBuffer)
 {
-	if (!pBuffer) return;
-
-	auto itVariable = m_mapVariable.find(strVariable);
-	if (itVariable != m_mapVariable.end()){
-		ID3D11ShaderResourceView* pShaderRes = reinterpret_cast<ID3D11ShaderResourceView*>(pBuffer->getShaderHandle());
-		if (pShaderRes) {
-			ID3DX11EffectVariable* pVariable = itVariable->second;
-			CW_HR(pVariable->AsShaderResource()->SetResource(pShaderRes));
+	if (pBuffer) {
+		auto itVariable = m_mapVariable.find(strVariable);
+		if (itVariable != m_mapVariable.end()){
+			ID3D11ShaderResourceView* pShaderRes = reinterpret_cast<ID3D11ShaderResourceView*>(pBuffer->getShaderHandle());
+			if (pShaderRes) {
+				ID3DX11EffectVariable* pVariable = itVariable->second;
+				CW_HR(pVariable->AsShaderResource()->SetResource(pShaderRes));
+			}
 		}
 	}
 }
 
 CWVOID cwD3D11Shader::setVariableBufferWritable(const CWSTRING& strVariable, cwBuffer* pBuffer)
 {
-	if (!pBuffer) return;
+	if (pBuffer) {
+		auto itVariable = m_mapVariable.find(strVariable);
+		if (itVariable != m_mapVariable.end()){
+			ID3D11UnorderedAccessView* pShaderRes = reinterpret_cast<ID3D11UnorderedAccessView*>(pBuffer->getWritableHandle());
+			if (pShaderRes) {
+				ID3DX11EffectVariable* pVariable = itVariable->second;
+				CW_HR(pVariable->AsUnorderedAccessView()->SetUnorderedAccessView(pShaderRes));
+			}
+		}
+	}
+}
 
-	auto itVariable = m_mapVariable.find(strVariable);
-	if (itVariable != m_mapVariable.end()){
-		ID3D11UnorderedAccessView* pShaderRes = reinterpret_cast<ID3D11UnorderedAccessView*>(pBuffer->getWritableHandle());
-		if (pShaderRes) {
+CWVOID cwD3D11Shader::setVariableFloatVectorArray(const CWSTRING& strVariable, CWFLOAT* pData, CWUINT count)
+{
+	if (pData) {
+		auto itVariable = m_mapVariable.find(strVariable);
+		if (itVariable != m_mapVariable.end()) {
 			ID3DX11EffectVariable* pVariable = itVariable->second;
-			CW_HR(pVariable->AsUnorderedAccessView()->SetUnorderedAccessView(pShaderRes));
+			pVariable->AsVector()->SetFloatVectorArray(pData, 0, count);
 		}
 	}
 }

@@ -675,6 +675,24 @@
     <ClInclude Include="effect\Parameter\cwEffectParameter.h">
       <Filter>源文件\Effect</Filter>
     </ClInclude>
+    <ClInclude Include="Render\TBDR\cwTBDRGBufferStageLayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Stage\cwPipelineNode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="effect\Parameter\cwEffectFloatVectorArrayParameter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\AO\SSAO\cwSSAOStageLayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\AO\SSAO\cwSSAOStage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\AO\SSAO\cwSSAOConstants.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\cwAABB.cpp">
@@ -1122,6 +1140,21 @@
       <Filter>源文件\Effect</Filter>
     </ClCompile>
     <ClCompile Include="effect\Parameter\cwEffectTextureParameter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\TBDR\cwTBDRGBufferStageLayer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Stage\cwPipelineNode.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="effect\Parameter\cwEffectFloatVectorArrayParameter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\AO\SSAO\cwSSAOStage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\AO\SSAO\cwSSAOStageLayer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

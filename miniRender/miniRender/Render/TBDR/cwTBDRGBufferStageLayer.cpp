@@ -1,5 +1,5 @@
 ﻿/*
-Copyright © 2015-2016 Ziwei Wang
+Copyright © 2015-2016 Ziwei Wang (happy.sunny.2001@163.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
@@ -17,27 +17,24 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,WHETHER IN AN ACTION OF CONTRACT, TORT
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef __CW_EFFECT_PARAMETER_H__
-#define __CW_EFFECT_PARAMETER_H__
-
-#include "Base/cwMacros.h"
-#include "Base/cwBasicType.h"
+#include "cwTBDRGBufferStageLayer.h"
+#include "cwTBDRConstants.h"
+#include "Texture/cwTexture.h"
+#include "Texture/cwMultiRTTexture.h"
 #include "Shader/cwShader.h"
-#include "Ref/cwRef.h"
 
 NS_MINIR_BEGIN
 
-class cwEffectParameter : public cwRef
+CWVOID cwTBDRGBufferStageLayer::bindingResultParameter(cwShader* pShader)
 {
-public:
-	virtual CWVOID binding(cwShader* pShader) = 0;
-	inline CWVOID setParameterName(const CWSTRING& strName) { m_nStrParamName = strName; }
+	if (pShader && m_pRenderTarget && m_pDepthStencil) {
+		cwMultiRTTexture* pGBuffer = reinterpret_cast<cwMultiRTTexture*>(m_pRenderTarget);
 
-public:
-	CWSTRING m_nStrParamName;
-
-};
+		pShader->setVariableTexture(CW_TBDR_SHADER_PARAM_NORMAL_TEXTURE, pGBuffer->getTexture(0));
+		pShader->setVariableTexture(CW_TBDR_SHADER_PARAM_DIFFUSE_TEXTURE, pGBuffer->getTexture(1));
+		pShader->setVariableTexture(CW_TBDR_SHADER_PARAM_SPECULAR_TEXTURE, pGBuffer->getTexture(2));
+		pShader->setVariableTexture(CW_TBDR_SHADER_PARAM_DEPTH_TEXTURE, m_pDepthStencil);
+	}
+}
 
 NS_MINIR_END
-
-#endif

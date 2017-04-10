@@ -213,7 +213,7 @@ const cwAABB& cwNormalSorting::getBoundingBox()
 
 CWVOID cwNormalSorting::renderPrimitiveFrame()
 {
-	cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(getBoundingBox());
+	//cwRepertory::getInstance().getEngine()->getRenderer()->renderPrimitive(getBoundingBox());
 }
 
 CWVOID cwNormalSorting::intersection(const cwFrustum& frustum, cwVector<cwRenderNode*>& vecRet, CWBOOL bVisible)

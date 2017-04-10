@@ -52,7 +52,7 @@ cwEffect* cwEffectManager::defaultSpriteEffect()
 		cwShader* pSpriteShader = cwRepertory::getInstance().getShaderManager()->createShader("SpriteRenderTechnique.hlsl");
 		m_pDefaultSpriteEffect = cwEffect::create();
 		m_pDefaultSpriteEffect->setShader(pSpriteShader);
-		m_pDefaultSpriteEffect->setTech("SpriteRender");
+		m_pDefaultSpriteEffect->setTech("SpriteRenderTech");
 		CW_SAFE_RETAIN(m_pDefaultSpriteEffect);
 	}
 

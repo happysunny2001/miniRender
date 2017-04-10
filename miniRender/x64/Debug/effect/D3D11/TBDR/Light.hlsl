@@ -78,7 +78,7 @@ void PointLightAccumulate(PointLight light, SurfaceData surface, inout float3 li
         AccumulatePhongBRDF(surface.normalView, directionToLight, normalize(surface.positionView.xyz),
             attenuation * light.color.rgb, surface.specular.w, litDiffuse, litSpecular);
 
-        lit += surface.diffuse.rgb * (litDiffuse + surface.specular.r * litSpecular);
+        lit += surface.diffuse.rgb * (litDiffuse + surface.specular.r * litSpecular)*surface.fAOFactor;
     }
 }
 
@@ -120,7 +120,7 @@ void DirectionalLightAccumulate(DirectionalLight light, SurfaceData surface, ino
             fShafowFactor = CalcShadowFactor(samShadow, gShadowMapTexture, posShadowH);
         }
 
-        lit += surface.diffuse.rgb*diffuseFactor*light.color*fShafowFactor;
+        lit += surface.diffuse.rgb*diffuseFactor*light.color*fShafowFactor*surface.fAOFactor;
     }
 }
 

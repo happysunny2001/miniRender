@@ -8,6 +8,7 @@ struct SurfaceData
 	float3 normalView;
 	float4 diffuse;
 	float4 specular;
+	float fAOFactor;
 };
 
 #endif

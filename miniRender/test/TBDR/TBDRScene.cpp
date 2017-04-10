@@ -93,7 +93,7 @@ CWVOID TBDRScene::update(CWFLOAT dt)
 	//}
 
 	//movingLights(dt);
-	movingDirectionalLight(dt);
+	//movingDirectionalLight(dt);
 }
 
 CWVOID TBDRScene::movingLights(CWFLOAT dt)
@@ -113,7 +113,7 @@ CWVOID TBDRScene::movingLights(CWFLOAT dt)
 CWVOID TBDRScene::movingDirectionalLight(CWFLOAT dt)
 {
 	if (m_pDirectionalLight) {
-		static CWFLOAT fSpeed = cwMathUtil::cwPI*0.1f;
+		static CWFLOAT fSpeed = cwMathUtil::cwPI*0.01f;
 		CWFLOAT fAngle = fSpeed*dt;
 
 		cwMatrix4X4 matRot;

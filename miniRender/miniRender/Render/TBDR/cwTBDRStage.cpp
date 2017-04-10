@@ -19,6 +19,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 
 #include "cwTBDRStage.h"
 #include "cwTBDRCoreStageLayer.h"
+#include "cwTBDRGBufferStageLayer.h"
 #include "Render/Stage/cwStageLayer.h"
 #include "Texture/cwTexture.h"
 #include "Texture/cwMultiRTTexture.h"
@@ -37,6 +38,10 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Entity/cwEntity.h"
 #include "RenderObject/cwStaticRenderObject.h"
 #include "Texture/cwTextureManager.h"
+#include "Render/AO/SSAO/cwSSAOStage.h"
+#include "Render/AO/SSAO/cwSSAOConstants.h"
+#include "Sprite/cwSprite.h"
+#include "Entity/cwScene.h"
 
 NS_MINIR_BEGIN
 
@@ -71,9 +76,11 @@ CWBOOL cwTBDRStage::init()
 	if (!buildLitTexture()) return CWFALSE;
 	//if (!buildFinalRenderTarget()) return CWFALSE;
 	if (!buildEntity()) return CWFALSE;
+	//if (!buildSSAOTexture()) return CWFALSE;
 
 	if (!buildClearStageLayer()) return CWFALSE;
 	if (!buildRenderScreenStageLayer()) return CWFALSE;
+	if (!buildSSAOStage()) return CWFALSE;
 	if (!buildTBDRCoreStageLayer()) return CWFALSE;
 	if (!buildResultStageLayer()) return CWFALSE;
 
@@ -154,6 +161,20 @@ CWBOOL cwTBDRStage::buildLitTexture()
 	return CWTRUE;
 }
 
+//CWBOOL cwTBDRStage::buildSSAOTexture()
+//{
+//	cwRepertory& repertory = cwRepertory::getInstance();
+//	CWFLOAT winWidth = (CWFLOAT)repertory.getUInt(gValueWinWidth);
+//	CWFLOAT winHeight = (CWFLOAT)repertory.getUInt(gValueWinHeight);
+//
+//	m_pSSAOTexture = repertory.getTextureManager()->createRTTexture(winWidth, winHeight, eFormatR8g8b8a8Unorm, CWTRUE);
+//	if (!m_pSSAOTexture) return CWFALSE;
+//	CW_SAFE_RETAIN(m_pSSAOTexture);
+//	m_pSSAOTexture->setName("SSAO");
+//
+//	return CWTRUE;
+//}
+
 //CWBOOL cwTBDRStage::buildFinalRenderTarget()
 //{
 //	CWFLOAT winWidth = static_cast<CWFLOAT>(cwRepertory::getInstance().getUInt(gValueWinWidth));
@@ -204,7 +225,7 @@ CWBOOL cwTBDRStage::buildClearStageLayer()
 	pClearStageLayer->setFilterType(eStageLayerFliterSelf);
 	pClearStageLayer->addSelfRenderNode(m_pScreenQuad);
 
-	this->addStageLayer(pClearStageLayer);
+	this->addChildPipelineNode(pClearStageLayer);
 
 	return CWTRUE;
 }
@@ -221,19 +242,20 @@ CWBOOL cwTBDRStage::buildRenderScreenStageLayer()
 	cwCamera* pCamera = cwRepertory::getInstance().getEngine()->getCamera("Default");
 	if (!pCamera) return CWFALSE;
 
-	cwStageLayer* pRenderStageLayer = cwStageLayer::create();
-	pRenderStageLayer->setName(CW_TBDR_RENDER_LAYER_NAME);
-	pRenderStageLayer->setCamera(pCamera);
-	pRenderStageLayer->setRenderTarget(m_pGBuffer);
-	pRenderStageLayer->setDepthStencil(m_pDepthStencil);
-	pRenderStageLayer->setIsRefreshRenderTarget(CWTRUE);
-	pRenderStageLayer->setIsClearColor(CWFALSE);
-	pRenderStageLayer->setIsClearDepth(CWTRUE);
-	pRenderStageLayer->setIsClearStencil(CWTRUE);
-	pRenderStageLayer->setFilterType(eStageLayerFliterScene);
-	pRenderStageLayer->setUniformEffect(pEffect);
+	//cwStageLayer* pRenderStageLayer = cwStageLayer::create();
+	cwTBDRGBufferStageLayer* pGBufferStageLayer = cwTBDRGBufferStageLayer::create();
+	pGBufferStageLayer->setName(CW_TBDR_GBUFFER_LAYER_NAME);
+	pGBufferStageLayer->setCamera(pCamera);
+	pGBufferStageLayer->setRenderTarget(m_pGBuffer);
+	pGBufferStageLayer->setDepthStencil(m_pDepthStencil);
+	pGBufferStageLayer->setIsRefreshRenderTarget(CWTRUE);
+	pGBufferStageLayer->setIsClearColor(CWFALSE);
+	pGBufferStageLayer->setIsClearDepth(CWTRUE);
+	pGBufferStageLayer->setIsClearStencil(CWTRUE);
+	pGBufferStageLayer->setFilterType(eStageLayerFliterScene);
+	pGBufferStageLayer->setUniformEffect(pEffect);
 
-	this->addStageLayer(pRenderStageLayer);
+	this->addChildPipelineNode(pGBufferStageLayer);
 
 	return CWTRUE;
 }
@@ -258,25 +280,25 @@ CWBOOL cwTBDRStage::buildTBDRCoreStageLayer()
 	pTBDRCoreEffect->setShader(pTBDRCoreShader);
 	pTBDRCoreEffect->setTech(CW_TBDR_SHADER_TECH_CORE);
 
-	cwEffectTextureParameter* pTexNormalParam = cwEffectTextureParameter::create();
-	pTexNormalParam->setTexture(m_pGBuffer->getTexture(0));
-	pTexNormalParam->setParameterName(CW_TBDR_SHADER_PARAM_NORMAL_TEXTURE);
-	pTBDRCoreEffect->addParameter(pTexNormalParam);
+	//cwEffectTextureParameter* pTexNormalParam = cwEffectTextureParameter::create();
+	//pTexNormalParam->setTexture(m_pGBuffer->getTexture(0));
+	//pTexNormalParam->setParameterName(CW_TBDR_SHADER_PARAM_NORMAL_TEXTURE);
+	//pTBDRCoreEffect->addParameter(pTexNormalParam);
 
-	cwEffectTextureParameter* pTexDiffuseParam = cwEffectTextureParameter::create();
-	pTexDiffuseParam->setTexture(m_pGBuffer->getTexture(1));
-	pTexDiffuseParam->setParameterName(CW_TBDR_SHADER_PARAM_DIFFUSE_TEXTURE);
-	pTBDRCoreEffect->addParameter(pTexDiffuseParam);
+	//cwEffectTextureParameter* pTexDiffuseParam = cwEffectTextureParameter::create();
+	//pTexDiffuseParam->setTexture(m_pGBuffer->getTexture(1));
+	//pTexDiffuseParam->setParameterName(CW_TBDR_SHADER_PARAM_DIFFUSE_TEXTURE);
+	//pTBDRCoreEffect->addParameter(pTexDiffuseParam);
 
-	cwEffectTextureParameter* pTexSpecularParam = cwEffectTextureParameter::create();
-	pTexSpecularParam->setTexture(m_pGBuffer->getTexture(2));
-	pTexSpecularParam->setParameterName(CW_TBDR_SHADER_PARAM_SPECULAR_TEXTURE);
-	pTBDRCoreEffect->addParameter(pTexSpecularParam);
+	//cwEffectTextureParameter* pTexSpecularParam = cwEffectTextureParameter::create();
+	//pTexSpecularParam->setTexture(m_pGBuffer->getTexture(2));
+	//pTexSpecularParam->setParameterName(CW_TBDR_SHADER_PARAM_SPECULAR_TEXTURE);
+	//pTBDRCoreEffect->addParameter(pTexSpecularParam);
 
-	cwEffectTextureParameter* pTexDepthParam = cwEffectTextureParameter::create();
-	pTexDepthParam->setTexture(m_pDepthStencil);
-	pTexDepthParam->setParameterName(CW_TBDR_SHADER_PARAM_DEPTH_TEXTURE);
-	pTBDRCoreEffect->addParameter(pTexDepthParam);
+	//cwEffectTextureParameter* pTexDepthParam = cwEffectTextureParameter::create();
+	//pTexDepthParam->setTexture(m_pDepthStencil);
+	//pTexDepthParam->setParameterName(CW_TBDR_SHADER_PARAM_DEPTH_TEXTURE);
+	//pTBDRCoreEffect->addParameter(pTexDepthParam);
 
 	pTBDRCoreEffect->addParameter(m_pParamFrameDim);
 
@@ -305,7 +327,17 @@ CWBOOL cwTBDRStage::buildTBDRCoreStageLayer()
 	pTBDRCoreStageLayer->setFilterType(eStageLayerFliterSelf);
 	pTBDRCoreStageLayer->setUniformEffect(pTBDRCoreEffect);
 
-	this->addStageLayer(pTBDRCoreStageLayer);
+	this->addChildPipelineNode(pTBDRCoreStageLayer);
+
+	cwPipelineNode* pGBufferStageLayer = this->getChildPipelineNode(CW_TBDR_GBUFFER_LAYER_NAME);
+	if (pGBufferStageLayer) {
+		pTBDRCoreStageLayer->addOuterPipeline(pGBufferStageLayer);
+	}
+
+	cwPipelineNode* pSSAOStage = this->getChildPipelineNode(CW_SSAO_STAGE_NAME);
+	if (pSSAOStage) {
+		pTBDRCoreStageLayer->addOuterPipeline(pSSAOStage);
+	}
 
 	return CWTRUE;
 }
@@ -350,7 +382,25 @@ CWBOOL cwTBDRStage::buildResultStageLayer()
 	pResultStageLayer->setFilterType(eStageLayerFliterSelf);
 	pResultStageLayer->setUniformEffect(pResultEffect);
 
-	this->addStageLayer(pResultStageLayer);
+	this->addChildPipelineNode(pResultStageLayer);
+
+	return CWTRUE;
+}
+
+CWBOOL cwTBDRStage::buildSSAOStage()
+{
+	cwSSAOStage* pSSAOStage = cwSSAOStage::create();
+	if (!pSSAOStage) return CWFALSE;
+
+	cwPipelineNode* pSSAOLayer = pSSAOStage->getChildPipelineNode(CW_SSAO_LAYER_NAME);
+	if (!pSSAOLayer) return CWFALSE;
+
+	cwPipelineNode* pGBufferStageLayer = this->getChildPipelineNode(CW_TBDR_GBUFFER_LAYER_NAME);
+	if (pGBufferStageLayer) {
+		pSSAOLayer->addOuterPipeline(pGBufferStageLayer);
+	}
+
+	this->addChildPipelineNode(pSSAOStage);
 
 	return CWTRUE;
 }

@@ -55,6 +55,7 @@ public:
 	virtual CWVOID setVariableTextureWritable(const CWSTRING& strVariable, const cwTexture* pTexture) = 0;
 	virtual CWVOID setVariableBuffer(const CWSTRING& strVariable, cwBuffer* pBuffer) = 0;
 	virtual CWVOID setVariableBufferWritable(const CWSTRING& strVariable, cwBuffer* pBuffer) = 0;
+	virtual CWVOID setVariableFloatVectorArray(const CWSTRING& strVariable, CWFLOAT* pData, CWUINT count) = 0;
 
 	virtual CWBOOL hasVariable(eShaderParamIndex eParam) = 0;
 	virtual CWVOID setVariableData(eShaderParamIndex eParam, CWVOID* pData, CWUINT offset, CWUINT iSize) = 0;

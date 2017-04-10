@@ -3,7 +3,7 @@
 
 #include "SpriteRender.hlsl"
 
-technique11 SpriteRender
+technique11 SpriteRenderTech
 {
 	pass P0
 	{

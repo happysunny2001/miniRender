@@ -23,6 +23,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Shadow/ShadowMap/cwShadowMapStage.h"
 #include "Stage/cwStage.h"
 #include "Stage/cwStageLayer.h"
+#include "AO/SSAO/cwSSAOConstants.h"
 
 NS_MINIR_BEGIN
 
@@ -57,10 +58,20 @@ cwRenderer* cwRendererFactory::createTBDRRenderer()
 	cwStage* pTBDRStage = cwTBDRStage::create();
 	pTBDRRenderer->addStage(pTBDRStage);
 
-	cwStageLayer* pTBDRCoreLayer = pTBDRStage->getStageLayer(CW_TBDR_CORE_LAYER_NAME);
+	cwPipelineNode* pTBDRCoreLayer = pTBDRStage->getChildPipelineNode(CW_TBDR_CORE_LAYER_NAME);
 	if (pTBDRCoreLayer) {
-		pTBDRCoreLayer->addOuterStage(pShadowMapStage);
+		pTBDRCoreLayer->addOuterPipeline(pShadowMapStage);
 	}
+
+	cwStage* pSSAOStage = dynamic_cast<cwStage*>(pTBDRStage->getChildPipelineNode(CW_SSAO_STAGE_NAME));
+
+	CWFLOAT width = (CWFLOAT)cwRepertory::getInstance().getUInt(gValueWinWidth);
+	CWFLOAT height = (CWFLOAT)cwRepertory::getInstance().getUInt(gValueWinHeight);
+
+	pShadowMapStage->showResult(cwVector2D(-width / 2, -height / 2), cwVector2D(0.1f, 0.1f));
+
+	if (pSSAOStage)
+		pSSAOStage->showResult(cwVector2D(0, -height / 2), cwVector2D(0.25f, 0.25f));
 
 	return pTBDRRenderer;
 }

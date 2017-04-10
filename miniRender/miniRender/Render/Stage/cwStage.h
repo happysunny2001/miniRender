@@ -23,8 +23,8 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEAL
 #include "Base/cwMacros.h"
 #include "Base/cwBasicType.h"
 #include "Base/cwVector.h"
-#include "Ref/cwRef.h"
 #include "Math/cwVector2D.h"
+#include "cwPipelineNode.h"
 
 NS_MINIR_BEGIN
 
@@ -32,8 +32,10 @@ class cwStageLayer;
 class cwCamera;
 class cwTexture;
 class cwShader;
+class cwSprite;
+class cwEffect;
 
-class cwStage : public cwRef
+class cwStage : public cwPipelineNode
 {
 public:
 	static cwStage* create();
@@ -42,39 +44,40 @@ public:
 	cwStage();
 	virtual ~cwStage();
 
-	inline const CWSTRING& name() const { return m_nName; }
-	inline CWVOID setName(const CWSTRING& name) { m_nName = name; }
+	cwPipelineNode* getChildPipelineNode(const CWSTRING& name);
+	CWVOID addChildPipelineNode(cwPipelineNode* pPipelineNode);
+	CWVOID removeChildPipelineNode(cwPipelineNode* pPipelineNode);
 
-	cwStageLayer* getStageLayer(const CWSTRING& name);
-	CWVOID addStageLayer(cwStageLayer* pStageLayer);
-	CWVOID removeStageLayer(cwStageLayer* pStageLayer);
-
-	inline cwCamera* getCurrUsingCamera() const { return m_pCurrUsingCamera; }
 	inline cwTexture* getRenderTarget() const { return m_pResultRenderTexture; }
 	virtual cwTexture* getRenderResult() const;
-	inline CWBOOL enable() const { return m_bEnable; }
-	inline CWVOID setEnable(CWBOOL b) { m_bEnable = b; }
 
-	virtual CWVOID begin();
-	virtual CWVOID render();
-	virtual CWVOID end();
+	virtual CWVOID doRender() override;
 
-	virtual CWVOID bindingResultParameter(cwShader* pShader);
 	virtual CWVOID showResult(const cwVector2D& pos, const cwVector2D& scale);
+
+	inline CWBOOL isShowResult() const { return m_bShowResult; }
+	inline CWVOID setShowResult(CWBOOL b) { m_bShowResult = b; }
 
 protected:
 	virtual CWBOOL init();
 	virtual CWBOOL init(cwTexture* pRenderTexture);
 	virtual CWBOOL buildRenderTexture();
+	virtual CWVOID showResult();
+
+	virtual CWVOID begin();
+	virtual CWVOID render();
+	virtual CWVOID end();
+
+	cwSprite* createResultSprite(cwTexture* pTexture, cwEffect* pEffect);
 
 protected:
-	CWSTRING m_nName;
-	CWBOOL m_bEnable;
-
-	cwCamera* m_pCurrUsingCamera;
-	cwVector<cwStageLayer*> m_nVecStageLayers;
+	cwVector<cwPipelineNode*> m_nVecStageLayers;
 
 	cwTexture* m_pResultRenderTexture;
+
+	CWBOOL m_bShowResult;
+	cwVector2D m_nResultPos;
+	cwVector2D m_nResultScale;
 	
 };
 

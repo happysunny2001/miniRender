@@ -1059,6 +1059,9 @@ CWVOID cwD3D11Device::clearShaderResource()
 	m_pD3D11DeviceContext->CSSetUnorderedAccessViews(0, 8, nullUAV, 0);
 
 	m_pD3D11DeviceContext->CSSetShader(0, 0, 0);
+
+	ID3D11RenderTargetView* arrTargetView[4] = { 0 };
+	m_pD3D11DeviceContext->OMSetRenderTargets(4, arrTargetView, NULL);
 }
 
 void cwD3D11Device::initBlendBaseData()

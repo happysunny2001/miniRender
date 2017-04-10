@@ -65,9 +65,9 @@ CWBOOL cwRenderNode2D::addChild(cwRenderNode2D* pNode)
 			CWUINT64 index = 0;
 			CWBOOL bAdded = CWFALSE;
 			for (; index < iSize; ++index) {
-				cwRenderNode2D* pNode2D = static_cast<cwRenderNode2D*>(m_nVecChildren.at(index));
-				if (pNode->getRenderOrder() <= pNode2D->getRenderOrder()) {
-					m_nVecChildren.insert(index, pNode2D);
+				cwRenderNode2D* pChildNode2D = static_cast<cwRenderNode2D*>(m_nVecChildren.at(index));
+				if (pNode->getRenderOrder() <= pChildNode2D->getRenderOrder()) {
+					m_nVecChildren.insert(index, pNode);
 					bAdded = CWTRUE;
 					break;
 				}
@@ -76,6 +76,8 @@ CWBOOL cwRenderNode2D::addChild(cwRenderNode2D* pNode)
 			if (!bAdded) {
 				m_nVecChildren.pushBack(pNode);
 			}
+
+			pNode->setParent(this);
 			return CWTRUE;
 		}
 	}

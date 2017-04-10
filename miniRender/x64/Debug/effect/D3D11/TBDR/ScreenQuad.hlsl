@@ -45,9 +45,8 @@ VertexOut ScreenQuadVS(VertexIn vin)
 {
 	VertexOut vout;
 	
-	// Transform to homogeneous clip space.
-	float4x4 matWorldViewProj = mul(gMatWorld, gMatViewProj);
-	vout.PosH = mul(float4(vin.PosL, 1.0f), matWorldViewProj);
+	//Local position already in homogeneous clip space.
+	vout.PosH = float4(vin.PosL, 1.0f);
 	vout.Tex  = vin.Tex;
     
 	return vout;
